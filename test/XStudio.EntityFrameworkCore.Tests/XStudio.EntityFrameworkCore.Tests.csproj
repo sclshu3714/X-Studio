@@ -11,7 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\XStudio.EntityFrameworkCore\XStudio.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\XStudio.Application.Tests\XStudio.Application.Tests.csproj" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
