@@ -16,10 +16,10 @@ namespace XStudio.Controllers.V3
     [Route("api/xstudio/v{version:apiVersion}/[controller]")]
     [ApiVersion(3.0)]
     [ApiController]
-    public class ProjectController : AbpController
+    public class ProjectAggController : AbpController
     {
         private readonly IProjectService _projectService;
-        public ProjectController(IProjectService projectService)
+        public ProjectAggController(IProjectService projectService)
         {
             _projectService = projectService;
         }

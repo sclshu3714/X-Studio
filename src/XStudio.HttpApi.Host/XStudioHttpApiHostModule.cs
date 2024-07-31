@@ -114,7 +114,6 @@ public class XStudioHttpApiHostModule : AbpModule
                 new MediaTypeApiVersionReader("version")
             );
         })
-        .AddMvc()
         .AddApiExplorer(options =>
         {
             options.GroupNameFormat = "'v'VVV";
@@ -216,8 +215,8 @@ public class XStudioHttpApiHostModule : AbpModule
             {
                 //options.SwaggerDoc("v1", new OpenApiInfo { Title = "XStudio V1 API", Version = "v1" });
                 //options.SwaggerDoc("v2", new OpenApiInfo { Title = "XStudio V2 API", Version = "v2" });
-                options.DocInclusionPredicate((docName, description) => true);
-                options.CustomSchemaIds(type => type.FullName);
+                //options.DocInclusionPredicate((docName, description) => true);
+                //options.CustomSchemaIds(type => type.FullName);
             });
     }
 

@@ -25,6 +25,11 @@ namespace XStudio.Swagger
             {
                 options.SwaggerDoc(description.GroupName, CreateInfoForApiVersion(description));
             }
+            options.DocInclusionPredicate((docName, description) =>
+            {
+                var version = description.RelativePath?.Split('/')[2]; // Assuming the version is in the URL path
+                return docName == version;
+            });
         }
 
         static OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)

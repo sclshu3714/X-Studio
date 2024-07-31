@@ -19,6 +19,9 @@ using Volo.Abp.Identity;
 
 namespace XStudio.Projects
 {
+    [Route("api/xstudio/v{version:apiVersion}/[controller]")]
+    [ApiVersion(1.0)]
+    [ApiController]
     [Authorize(XStudioPermissions.Projects.Default)]
     public class ProjectService :
     CrudAppService<
@@ -41,6 +44,7 @@ namespace XStudio.Projects
             _permissionChecker = permissionChecker;
         }
 
+        [HttpGet]
         public override async Task<ProjectDto> GetAsync(Guid id)
         {
             var queryable = await Repository.GetQueryableAsync();
@@ -58,6 +62,30 @@ namespace XStudio.Projects
             //}
             //coursewareDto.AuthorName = queryableUser.Name;
             return coursewareDto;
+        }
+
+        [HttpPost] 
+        public override Task<ProjectDto> CreateAsync(CreateUpdateProjectDto input)
+        {
+            return base.CreateAsync(input);
+        }
+
+        [HttpDelete]
+        public override Task DeleteAsync(Guid id) 
+        { 
+            return base.DeleteAsync(id); 
+        }
+
+        [HttpPut]
+        public override Task<ProjectDto> UpdateAsync(Guid id, CreateUpdateProjectDto input)
+        {
+            return base.UpdateAsync(id, input);
+        }
+
+        [HttpPost("list")]
+        public override Task<PagedResultDto<ProjectDto>> GetListAsync(PagedAndSortedResultRequestDto input)
+        {
+            return base.GetListAsync(input);
         }
 
         private static string NormalizeSorting(string sorting)
