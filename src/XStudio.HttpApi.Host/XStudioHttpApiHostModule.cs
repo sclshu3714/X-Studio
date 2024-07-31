@@ -36,6 +36,8 @@ using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using XStudio.Swagger;
 using XStudio.Filters;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace XStudio;
 
@@ -128,12 +130,28 @@ public class XStudioHttpApiHostModule : AbpModule
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
     {
-        context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
-        context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
+        //context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
+        //context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
+        //{
+        //    options.IsDynamicClaimsEnabled = true;
+        //});
+        //context.Services.AddControllersWithViews(Options => {
+        //    Options.Filters.Add<AbpAuthorizeFilter>();
+        //});
+
+        var configuration = context.Services.GetConfiguration();
+
+        context.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.Authority = configuration["AuthServer:Authority"];
+                options.RequireHttpsMetadata = true;
+                options.Audience = "XStudio";
+            });
+
+        context.Services.AddAuthorization();
+        context.Services.AddControllersWithViews(Options =>
         {
-            options.IsDynamicClaimsEnabled = true;
-        });
-        context.Services.AddControllersWithViews(Options => {
             Options.Filters.Add<AbpAuthorizeFilter>();
         });
     }

@@ -44,7 +44,7 @@ namespace XStudio.Projects
             _permissionChecker = permissionChecker;
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         public override async Task<ProjectDto> GetAsync(Guid id)
         {
             var queryable = await Repository.GetQueryableAsync();
