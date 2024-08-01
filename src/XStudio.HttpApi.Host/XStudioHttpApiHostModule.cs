@@ -38,6 +38,9 @@ using XStudio.Swagger;
 using XStudio.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Volo.Abp.AspNetCore.Authentication.OAuth;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace XStudio;
 
@@ -49,6 +52,7 @@ namespace XStudio;
     typeof(XStudioEntityFrameworkCoreModule),
     typeof(AbpAspNetCoreMvcUiLeptonXLiteThemeModule),
     typeof(AbpAccountWebOpenIddictModule),
+    typeof(AbpAspNetCoreAuthenticationOAuthModule),
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpSwashbuckleModule)
 )]
@@ -67,24 +71,31 @@ public class XStudioHttpApiHostModule : AbpModule
         });
     }
 
-    //public override void PreConfigureApiVersions(ServiceConfigurationContext context)
-    //{
-    //    PreConfigure<AbpAspNetCoreMvcOptions>(options =>
-    //    {
-    //        //2.0 Version
-    //        options.ConventionalControllers.Create(typeof(XStudioHttpApiHostModule).Assembly, opts =>
-    //        {
-    //            opts.TypePredicate = t => t.Namespace == typeof(XStudio.Controllers.ConventionalControllers.v2.TodoAppService).Namespace;
-    //            opts.ApiVersions.Add(new ApiVersion(2, 0));
-    //        });
-    //        //1.0 Compatibility version
-    //        options.ConventionalControllers.Create(typeof(XStudioHttpApiHostModule).Assembly, opts =>
-    //        {
-    //            opts.TypePredicate = t => t.Namespace == typeof(XStudio.Controllers.ConventionalControllers.v1.TodoAppService).Namespace;
-    //            opts.ApiVersions.Add(new ApiVersion(1, 0));
-    //        });
-    //    });
-    //}
+    public void PreConfigureJwtBearer(ServiceConfigurationContext context)
+    {
+        // 配置JWT Bearer认证
+        context.Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("your-secret-key")), // 替换为你的密钥
+                ValidateIssuer = false, // 根据需要设置
+                ValidateAudience = false, // 根据需要设置
+                // 其他TokenValidationParameters属性根据需要设置
+            };
+            // 自定义验证逻辑
+            options.Events.OnTokenValidated += async context =>
+            {
+                // 在这里添加自定义验证逻辑
+            };
+        });
+    }
 
 
 
