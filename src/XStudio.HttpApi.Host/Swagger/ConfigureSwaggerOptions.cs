@@ -29,6 +29,7 @@ namespace XStudio.Swagger
             {
                 var version = description.RelativePath?.Split('/')[2]; // Assuming the version is in the URL path
                 return docName == version;
+                //return true;
             });
         }
 

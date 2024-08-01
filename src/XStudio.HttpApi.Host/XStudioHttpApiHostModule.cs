@@ -71,34 +71,6 @@ public class XStudioHttpApiHostModule : AbpModule
         });
     }
 
-    public void PreConfigureJwtBearer(ServiceConfigurationContext context)
-    {
-        // 配置JWT Bearer认证
-        context.Services.AddAuthentication(options =>
-        {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-        .AddJwtBearer(options =>
-        {
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("your-secret-key")), // 替换为你的密钥
-                ValidateIssuer = false, // 根据需要设置
-                ValidateAudience = false, // 根据需要设置
-                // 其他TokenValidationParameters属性根据需要设置
-            };
-            // 自定义验证逻辑
-            options.Events.OnTokenValidated += async context =>
-            {
-                // 在这里添加自定义验证逻辑
-            };
-        });
-    }
-
-
-
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         var configuration = context.Services.GetConfiguration();
@@ -141,26 +113,11 @@ public class XStudioHttpApiHostModule : AbpModule
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
     {
-        //context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
-        //context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
-        //{
-        //    options.IsDynamicClaimsEnabled = true;
-        //});
-        //context.Services.AddControllersWithViews(Options => {
-        //    Options.Filters.Add<AbpAuthorizeFilter>();
-        //});
-
-        var configuration = context.Services.GetConfiguration();
-
-        context.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                options.Authority = configuration["AuthServer:Authority"];
-                options.RequireHttpsMetadata = true;
-                options.Audience = "XStudio";
-            });
-
-        context.Services.AddAuthorization();
+        context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
+        context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
+        {
+            options.IsDynamicClaimsEnabled = true;
+        });
         context.Services.AddControllersWithViews(Options =>
         {
             Options.Filters.Add<AbpAuthorizeFilter>();
