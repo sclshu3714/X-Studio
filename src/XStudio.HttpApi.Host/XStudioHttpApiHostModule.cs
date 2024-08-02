@@ -77,6 +77,8 @@ public class XStudioHttpApiHostModule : AbpModule
                 options.UseAspNetCore();
             });
         });
+
+        ConfigureAuthentication(context);
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context)
@@ -84,7 +86,6 @@ public class XStudioHttpApiHostModule : AbpModule
         var configuration = context.Services.GetConfiguration();
         var hostingEnvironment = context.Services.GetHostingEnvironment();
 
-        ConfigureAuthentication(context);
         ConfigureBundles();
         ConfigureUrls(configuration);
         ConfigureConventionalControllers();
@@ -121,7 +122,6 @@ public class XStudioHttpApiHostModule : AbpModule
             options.SerializerSettings.Converters.Add(new IpAddressConverter());
             options.SerializerSettings.Converters.Add(new IpEndPointConverter());
         });
-
     }
 
     private void ConfigureAbpApiVersioning(ServiceConfigurationContext context)
@@ -151,15 +151,25 @@ public class XStudioHttpApiHostModule : AbpModule
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
     {
+        context.Services.AddAuthorization(options =>
+        {
+            options.AddPolicy("XStudioPolicy", policy =>
+            {
+                policy.RequireAuthenticatedUser();
+                policy.Requirements.Add(new AbpRequirement());
+            });
+        });
+        context.Services.AddSingleton<IAuthorizationHandler, AbpAuthorizationHandler>();
+
         context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
         context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
         {
             options.IsDynamicClaimsEnabled = true;
         });
-        context.Services.AddControllersWithViews(Options =>
-        {
-            Options.Filters.Add<AbpAuthorizeFilter>();
-        });
+        //context.Services.AddControllersWithViews(Options =>
+        //{
+        //    Options.Filters.Add<AbpAuthorizeFilter>();
+        //});
     }
 
     private void ConfigureBundles()
@@ -285,7 +295,8 @@ public class XStudioHttpApiHostModule : AbpModule
         app.UseStaticFiles();
         app.UseRouting();
         app.UseCors();
-        app.UseMiddleware<ExceptionMiddleware>(); //ExceptionMiddleware 加入管道
+        //app.UseMiddleware<AbpExceptionMiddleware>(); //ExceptionMiddleware 加入管道
+        app.UseMiddleware<AbpTokenValidationMiddleware>(); // token验证
         app.UseAuthentication();
         app.UseAbpOpenIddictValidation();
 
@@ -316,5 +327,10 @@ public class XStudioHttpApiHostModule : AbpModule
         app.UseAuditing();
         app.UseAbpSerilogEnrichers();
         app.UseConfiguredEndpoints();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers().RequireAuthorization("XStudioPolicy");
+        });
     }
 }

@@ -19,10 +19,10 @@ namespace XStudio.Filters
         {
             _env = env;
         }
-        //public void OnAuthorization(AuthorizationFilterContext context)
-        //{
-        //    OnAuthorizationAsync(context);
-        //}
+        public void OnAuthorization(AuthorizationFilterContext context)
+        {
+            OnAuthorizationAsync(context);
+        }
 
         public override Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {

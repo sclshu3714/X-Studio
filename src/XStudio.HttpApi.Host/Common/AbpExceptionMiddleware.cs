@@ -13,12 +13,12 @@ namespace XStudio.Common
     /// <summary>
     /// 异常情况处理的中间件
     /// </summary>
-    public class ExceptionMiddleware
+    public class AbpExceptionMiddleware
     {
         private readonly RequestDelegate next;
         private IWebHostEnvironment environment;
 
-        public ExceptionMiddleware(RequestDelegate next, IWebHostEnvironment environment)
+        public AbpExceptionMiddleware(RequestDelegate next, IWebHostEnvironment environment)
         {
             this.next = next;
             this.environment = environment;
@@ -62,7 +62,10 @@ namespace XStudio.Common
                 var json = new { message = e.Message };
                 error = JsonConvert.SerializeObject(json);
             }
-            else error = "抱歉，出错了\r\n" + e.Message + "\r\n" + e.StackTrace;
+            else
+            {
+                error = "抱歉，出错了\r\n" + e.Message + "\r\n" + e.StackTrace;
+            }
 
             string info = $@"StatusCode:{context.Response.StatusCode}";
             string? remoteIpAddr = context.Connection.RemoteIpAddress?.ToString();
