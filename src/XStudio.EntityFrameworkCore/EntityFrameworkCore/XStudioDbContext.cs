@@ -102,7 +102,7 @@ public class XStudioDbContext :
     }
 
     // 扩展方法：为属性添加注释
-    private void AddCommentsToProperties(EntityTypeBuilder<Project> builder)
+    private void AddCommentsToProperties<TEntity>(EntityTypeBuilder<TEntity> builder) where TEntity : class
     {
         var properties = typeof(Project).GetProperties();
 

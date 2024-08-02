@@ -41,6 +41,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Volo.Abp.AspNetCore.Authentication.OAuth;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using XStudio.Common;
+using XStudio.Converters;
+using Microsoft.EntityFrameworkCore.Internal;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json.Converters;
+using Nacos.V2.DependencyInjection;
+using Nacos.AspNetCore.V2;
 
 namespace XStudio;
 
@@ -84,6 +92,36 @@ public class XStudioHttpApiHostModule : AbpModule
         ConfigureCors(context, configuration);
         ConfigureSwaggerServices(context, configuration);
         ConfigureAbpApiVersioning(context);
+        ConfigureNewtonsoftJson(context);
+        ConfigureNacos(context, configuration);
+    }
+
+    private void ConfigureNacos(ServiceConfigurationContext context, IConfiguration Configuration)
+    {
+        context.Services.AddNacosAspNet(Configuration, "nacos");
+        //AKStreamWebConfig? webConfig = Configuration.Get<AKStreamWebConfig>();
+        //if (webConfig != null)
+        //{
+        //    context.Services.AddSingleton(webConfig);
+        //}
+        context.Services.AddNacosV2Config(Configuration);
+    }
+
+    private void ConfigureNewtonsoftJson(ServiceConfigurationContext context)
+    {
+        context.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
+        {
+            //修改属性名称的序列化方式，首字母小写
+            options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            options.SerializerSettings.MissingMemberHandling = MissingMemberHandling.Ignore;
+            options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            //修改时间的序列化方式
+            options.SerializerSettings.Converters.Add(new IsoDateTimeConverter() { DateTimeFormat = "yyyy-MM-dd HH:mm:ss" });
+            options.SerializerSettings.Converters.Add(new IpAddressConverter());
+            options.SerializerSettings.Converters.Add(new IpEndPointConverter());
+        });
+
     }
 
     private void ConfigureAbpApiVersioning(ServiceConfigurationContext context)
@@ -181,7 +219,7 @@ public class XStudioHttpApiHostModule : AbpModule
         {
             options.ConventionalControllers.Create(typeof(XStudioApplicationModule).Assembly, opts =>
             {
-                // https://localhost:44345/api/xstudio/project 默认 https://localhost:44345/api/app/project
+                // 指定后:https://localhost:44345/api/xstudio/project; 默认:https://localhost:44345/api/app/project
                 opts.RootPath = "xstudio";
                 // opts.TypePredicate = type => { return true; }; //是否公开
             });
@@ -247,6 +285,7 @@ public class XStudioHttpApiHostModule : AbpModule
         app.UseStaticFiles();
         app.UseRouting();
         app.UseCors();
+        app.UseMiddleware<ExceptionMiddleware>(); //ExceptionMiddleware 加入管道
         app.UseAuthentication();
         app.UseAbpOpenIddictValidation();
 
