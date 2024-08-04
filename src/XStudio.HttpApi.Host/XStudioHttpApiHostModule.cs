@@ -49,6 +49,7 @@ using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json.Converters;
 using Nacos.V2.DependencyInjection;
 using Nacos.AspNetCore.V2;
+using static IdentityModel.ClaimComparer;
 
 namespace XStudio;
 
@@ -77,8 +78,13 @@ public class XStudioHttpApiHostModule : AbpModule
                 options.UseAspNetCore();
             });
         });
-
-        ConfigureAuthentication(context);
+        PreConfigure<OpenIddictServerBuilder>(builder =>
+        {
+            builder.Configure(options =>
+            {
+                // options.GrantTypes.Add(DingTalkTokenExtensionGrant.ExtensionGrantName);
+            });
+        });
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context)
@@ -94,7 +100,8 @@ public class XStudioHttpApiHostModule : AbpModule
         ConfigureSwaggerServices(context, configuration);
         ConfigureAbpApiVersioning(context);
         ConfigureNewtonsoftJson(context);
-        ConfigureNacos(context, configuration);
+        //ConfigureNacos(context, configuration);
+        ConfigureAuthentication(context);
     }
 
     private void ConfigureNacos(ServiceConfigurationContext context, IConfiguration Configuration)
@@ -151,15 +158,15 @@ public class XStudioHttpApiHostModule : AbpModule
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
     {
-        context.Services.AddAuthorization(options =>
-        {
-            options.AddPolicy("XStudioPolicy", policy =>
-            {
-                policy.RequireAuthenticatedUser();
-                policy.Requirements.Add(new AbpRequirement());
-            });
-        });
-        context.Services.AddSingleton<IAuthorizationHandler, AbpAuthorizationHandler>();
+        //context.Services.AddAuthorization(options =>
+        //{
+        //    options.AddPolicy("XStudioPolicy", policy =>
+        //    {
+        //        policy.RequireAuthenticatedUser();
+        //        policy.Requirements.Add(new AbpRequirement());
+        //    });
+        //});
+        //context.Services.AddSingleton<IAuthorizationHandler, AbpAuthorizationHandler>();
 
         context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
         context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
@@ -295,8 +302,8 @@ public class XStudioHttpApiHostModule : AbpModule
         app.UseStaticFiles();
         app.UseRouting();
         app.UseCors();
-        //app.UseMiddleware<AbpExceptionMiddleware>(); //ExceptionMiddleware 加入管道
-        app.UseMiddleware<AbpTokenValidationMiddleware>(); // token验证
+        app.UseMiddleware<AbpExceptionMiddleware>(); //ExceptionMiddleware 加入管道
+        //app.UseMiddleware<AbpTokenValidationMiddleware>(); // token验证
         app.UseAuthentication();
         app.UseAbpOpenIddictValidation();
 

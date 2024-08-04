@@ -1,4 +1,5 @@
-﻿using Asp.Versioning.ApiExplorer;
+﻿using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
@@ -27,8 +28,12 @@ namespace XStudio.Swagger
             }
             options.DocInclusionPredicate((docName, description) =>
             {
-                var version = description.RelativePath?.Split('/')[2]; // Assuming the version is in the URL path
-                return docName == version;
+                if (description.Properties.ContainsKey(typeof(ApiVersion)))
+                {
+                    //ApiVersion apiVersion = (ApiVersion)description.Properties[typeof(ApiVersion)];
+                    return docName.Equals(description.GroupName);
+                }
+                return true;
                 //return true;
             });
         }

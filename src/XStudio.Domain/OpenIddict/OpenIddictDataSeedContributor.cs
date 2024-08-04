@@ -80,10 +80,31 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
         var configurationSection = _configuration.GetSection("OpenIddict:Applications");
 
 
+        //Web Client
+        var webClientId = configurationSection["XStudio_Web:ClientId"];
+        if (!webClientId.IsNullOrWhiteSpace())
+        {
+            var webClientRootUrl = configurationSection["XStudio_Web:RootUrl"]?.EnsureEndsWith('/');
 
-
-
-
+            /* StudyAbp_Web client is only needed if you created a tiered
+             * solution. Otherwise, you can delete this client. */
+            await CreateApplicationAsync(
+                name: webClientId,
+                type: OpenIddictConstants.ClientTypes.Confidential,
+                consentType: OpenIddictConstants.ConsentTypes.Implicit,
+                displayName: "Web Application",
+                secret: configurationSection["XStudio_Web:ClientSecret"] ?? "1q2w3E*",
+                grantTypes: new List<string> //Hybrid flow
+                {
+                    OpenIddictConstants.GrantTypes.AuthorizationCode,
+                    OpenIddictConstants.GrantTypes.Implicit
+                },
+                scopes: commonScopes,
+                redirectUri: $"{webClientRootUrl}signin-oidc",
+                clientUri: webClientRootUrl,
+                postLogoutRedirectUri: $"{webClientRootUrl}signout-callback-oidc"
+            );
+        }
         // Swagger Client
         var swaggerClientId = configurationSection["XStudio_Swagger:ClientId"];
         if (!swaggerClientId.IsNullOrWhiteSpace())

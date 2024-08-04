@@ -16,12 +16,14 @@ using Microsoft.AspNetCore.Authorization;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Volo.Abp.Identity;
+using Volo.Abp;
 
 namespace XStudio.Projects
 {
     [Route("api/xstudio/v{version:apiVersion}/[controller]")]
     [ApiVersion(1.0)]
     [ApiController]
+    [RemoteService(true)]
     [Authorize(XStudioPermissions.Projects.Default)]
     public class ProjectService :
     CrudAppService<

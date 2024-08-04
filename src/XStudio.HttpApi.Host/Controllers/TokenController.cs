@@ -19,12 +19,12 @@ namespace XStudio.Controllers
     [Route("api/xstudio/v{version:apiVersion}/[controller]")]
     [ApiVersion(2.0)]
     [ApiController]
-    public class AuthorizationController : AbpController
+    public class TokenController : AbpController
     {
         private readonly IOpenIddictApplicationManager _applicationManager;
         private readonly IOpenIddictScopeManager _scopeManager;
 
-        public AuthorizationController(IOpenIddictApplicationManager applicationManager, IOpenIddictScopeManager scopeManager)
+        public TokenController(IOpenIddictApplicationManager applicationManager, IOpenIddictScopeManager scopeManager)
         {
             _applicationManager = applicationManager;
             _scopeManager = scopeManager;
