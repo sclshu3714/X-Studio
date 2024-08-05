@@ -251,15 +251,5 @@ paket-files/
 .idea/
 *.sln.iml
 
-# XStudio
-src/XStudio.Web/Logs/*
-src/XStudio.Web.Host/Logs/*
-src/XStudio.AuthServer/Logs/*
-src/XStudio.HttpApi.Host/Logs/*
-src/XStudio.HttpApi.Host/Logs/*
-src/XStudio.DbMigrator/Logs/*
-src/XStudio.Blazor.Server/Logs/*
-src/XStudio.Blazor.Server.Tiered/Logs/*
-
-# Use abp install-libs to restore.
-**/wwwroot/libs/*
+# App
+src/XStudio.App.ConsoleApp/Logs/logs.txt
