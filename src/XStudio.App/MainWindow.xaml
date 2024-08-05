@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:XStudio.App"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="X Studio" Height="450" Width="800">
     <Grid>
         <Label Name="HelloLabel" FontSize="90" Margin="58,129,-58,-129"/>
     </Grid>

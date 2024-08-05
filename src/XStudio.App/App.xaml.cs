@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
 using Volo.Abp;
+using XStudio.App.Modules;
 
 namespace XStudio.App;
 

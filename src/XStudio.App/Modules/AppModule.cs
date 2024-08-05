@@ -2,7 +2,7 @@
 using Volo.Abp.Autofac;
 using Volo.Abp.Modularity;
 
-namespace XStudio.App;
+namespace XStudio.App.Modules;
 
 [DependsOn(typeof(AbpAutofacModule))]
 public class AppModule : AbpModule

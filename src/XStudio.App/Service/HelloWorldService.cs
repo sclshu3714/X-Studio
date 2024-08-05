@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging.Abstractions;
 using Volo.Abp.DependencyInjection;
 
-namespace XStudio.App;
+namespace XStudio.App.Service;
 
 public class HelloWorldService : ITransientDependency
 {
