@@ -13,6 +13,7 @@ using Microsoft.AspNetCore;
 using Volo.Abp.OpenIddict;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
+using XStudio.Helpers;
 
 namespace XStudio.Controllers
 {
@@ -87,6 +88,18 @@ namespace XStudio.Controllers
 
                 _ => [Destinations.AccessToken],
             };
+        }
+
+        [HttpPost("encrypt")]
+        public IActionResult Encrypt(string plainText)
+        {
+            return Ok(EncrypterHelper.Encrypt(plainText));
+        }
+
+        [HttpPost("decrypt")]
+        public IActionResult Decrypt(string encryptedText)
+        {
+            return Ok(EncrypterHelper.Decrypt(encryptedText));
         }
     }
 }

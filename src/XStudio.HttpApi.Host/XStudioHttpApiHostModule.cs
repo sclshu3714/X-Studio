@@ -50,6 +50,8 @@ using Newtonsoft.Json.Converters;
 using Nacos.V2.DependencyInjection;
 using Nacos.AspNetCore.V2;
 using static IdentityModel.ClaimComparer;
+using Volo.Abp.OpenIddict.ExtensionGrantTypes;
+using XStudio.ExtensionGrant;
 
 namespace XStudio;
 
@@ -80,9 +82,10 @@ public class XStudioHttpApiHostModule : AbpModule
         });
         PreConfigure<OpenIddictServerBuilder>(builder =>
         {
-            builder.Configure(options =>
+            //添加自定义ITokenExtensionGrant
+            builder.Configure(openIddictServerOptions =>
             {
-                // options.GrantTypes.Add(DingTalkTokenExtensionGrant.ExtensionGrantName);
+                openIddictServerOptions.GrantTypes.Add(MyTokenExtensionGrantConsts.GrantType);
             });
         });
     }
@@ -177,6 +180,12 @@ public class XStudioHttpApiHostModule : AbpModule
         //{
         //    Options.Filters.Add<AbpAuthorizeFilter>();
         //});
+
+        //配置自定义ITokenExtensionGrant
+        Configure<AbpOpenIddictExtensionGrantsOptions>(options =>
+        {
+            options.Grants.Add(MyTokenExtensionGrantConsts.GrantType, new MyTokenExtensionGrant());
+        });
     }
 
     private void ConfigureBundles()

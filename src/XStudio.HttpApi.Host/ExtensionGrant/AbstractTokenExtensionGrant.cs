@@ -19,8 +19,7 @@ using XStudio.Common;
 
 namespace XStudio.ExtensionGrant
 {
-    public abstract class AbstractTokenExtensionGrant 
-        : AbpOpenIdDictControllerBase, ITokenExtensionGrant
+    public abstract class AbstractTokenExtensionGrant : AbpOpenIdDictControllerBase, ITokenExtensionGrant
     {
         protected ExtensionGrantContext? GrantContext { get; set; }
         protected string ProviderKey { get; set; } = string.Empty;
@@ -72,7 +71,7 @@ namespace XStudio.ExtensionGrant
             var results = await GetResultsAsync();
             if (results.ErrorCode != 0)
             {
-                string msg = "errcode:" + results.ErrorCode + ";msg:" + results.ErrorMessage;
+                string msg = "ErrorCode:" + results.ErrorCode + "; ErrorMessage:" + results.ErrorMessage;
                 return await NewForbidResult(msg);
             }
             //ProviderKey = results.UserId;
@@ -124,7 +123,7 @@ namespace XStudio.ExtensionGrant
                 };
                 if (userCode != null)
                 {
-                    /////加密获得的UserId或OpenId等，用于将前段用户登入后进行绑定
+                    //加密获得的UserId或OpenId等，用于将前段用户登入后进行绑定
                     //Encrypter encrypter = new Encrypter();
                     //var ivBytes = encrypter.GenerateRandomHexText(16);
                     //string secureKey = "sKey123456";

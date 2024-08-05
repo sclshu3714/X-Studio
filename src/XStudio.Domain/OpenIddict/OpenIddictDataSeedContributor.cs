@@ -15,6 +15,7 @@ using Volo.Abp.OpenIddict.Applications;
 using Volo.Abp.OpenIddict.Scopes;
 using Volo.Abp.PermissionManagement;
 using Volo.Abp.Uow;
+using XStudio.Common;
 
 namespace XStudio.OpenIddict;
 
@@ -79,30 +80,33 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
 
         var configurationSection = _configuration.GetSection("OpenIddict:Applications");
 
-
         //Web Client
         var webClientId = configurationSection["XStudio_Web:ClientId"];
         if (!webClientId.IsNullOrWhiteSpace())
         {
             var webClientRootUrl = configurationSection["XStudio_Web:RootUrl"]?.EnsureEndsWith('/');
-
-            /* StudyAbp_Web client is only needed if you created a tiered
+            var redirectUri = $"{webClientRootUrl}swagger/oauth2-redirect.html";
+            /* XStudio_Web client is only needed if you created a tiered
              * solution. Otherwise, you can delete this client. */
             await CreateApplicationAsync(
                 name: webClientId,
-                type: OpenIddictConstants.ClientTypes.Confidential,
+                type: OpenIddictConstants.ClientTypes.Public,
                 consentType: OpenIddictConstants.ConsentTypes.Implicit,
                 displayName: "Web Application",
-                secret: configurationSection["XStudio_Web:ClientSecret"] ?? "1q2w3E*",
+                secret: null, // configurationSection["XStudio_Web:ClientSecret"] ?? "1q2w3E*",
                 grantTypes: new List<string> //Hybrid flow
                 {
                     OpenIddictConstants.GrantTypes.AuthorizationCode,
-                    OpenIddictConstants.GrantTypes.Implicit
+                    OpenIddictConstants.GrantTypes.Implicit,
+                    OpenIddictConstants.GrantTypes.Password,
+                    OpenIddictConstants.GrantTypes.ClientCredentials,
+                    OpenIddictConstants.GrantTypes.RefreshToken,
+                    MyTokenExtensionGrantConsts.GrantType
                 },
                 scopes: commonScopes,
-                redirectUri: $"{webClientRootUrl}signin-oidc",
-                clientUri: webClientRootUrl,
-                postLogoutRedirectUri: $"{webClientRootUrl}signout-callback-oidc"
+                redirectUri: redirectUri,
+                clientUri: webClientRootUrl
+                //postLogoutRedirectUri: $"{webClientRootUrl}signout-callback-oidc"
             );
         }
         // Swagger Client
@@ -117,7 +121,15 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
                 consentType: OpenIddictConstants.ConsentTypes.Implicit,
                 displayName: "Swagger Application",
                 secret: null,
-                grantTypes: new List<string> { OpenIddictConstants.GrantTypes.AuthorizationCode, },
+                grantTypes: new List<string> 
+                { 
+                    OpenIddictConstants.GrantTypes.AuthorizationCode,
+                    OpenIddictConstants.GrantTypes.Implicit,
+                    OpenIddictConstants.GrantTypes.Password,
+                    OpenIddictConstants.GrantTypes.ClientCredentials,
+                    OpenIddictConstants.GrantTypes.RefreshToken,
+                    MyTokenExtensionGrantConsts.GrantType
+                },
                 scopes: commonScopes,
                 redirectUri: $"{swaggerRootUrl}/swagger/oauth2-redirect.html",
                 clientUri: swaggerRootUrl
@@ -246,6 +258,11 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
                     application.Permissions.Add(OpenIddictConstants.Permissions.ResponseTypes.IdTokenToken);
                     application.Permissions.Add(OpenIddictConstants.Permissions.ResponseTypes.Token);
                 }
+            }
+
+            if (grantType == MyTokenExtensionGrantConsts.GrantType)
+            {
+                application.Permissions.Add(OpenIddictConstants.Permissions.Prefixes.GrantType + MyTokenExtensionGrantConsts.GrantType);
             }
 
             if (!buildInGrantTypes.Contains(grantType))
