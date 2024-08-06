@@ -14,18 +14,27 @@
         <PackageReference Include="AutoMapper" Version="13.0.1" />
         <PackageReference Include="DryIoc.Microsoft.DependencyInjection" Version="6.2.0" />
         <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
-        <PackageReference Include="Syncfusion.Licensing" Version="26.2.7" />
-        <PackageReference Include="Syncfusion.SfAccordion.WPF" Version="26.2.7" />
-        <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="26.2.7" />
-        <PackageReference Include="Syncfusion.SfChart.WPF" Version="26.2.7" />
-        <PackageReference Include="Syncfusion.SfGrid.WPF" Version="26.2.7" />
-        <PackageReference Include="Syncfusion.SfInput.WPF" Version="26.2.7" />
-        <PackageReference Include="Syncfusion.SfNavigationDrawer.WPF" Version="26.2.7" />
-        <PackageReference Include="Syncfusion.SfProgressBar.WPF" Version="26.2.7" />
-        <PackageReference Include="Syncfusion.SfRadialMenu.WPF" Version="26.2.7" />
-        <PackageReference Include="Syncfusion.SfRichTextBoxAdv.WPF" Version="26.2.7" />
-        <PackageReference Include="Syncfusion.SfSkinManager.WPF" Version="26.2.7" />
-        <PackageReference Include="Syncfusion.SfTreeView.WPF" Version="26.2.7" />
+        <PackageReference Include="Syncfusion.Licensing" Version="26.2.8" />
+        <PackageReference Include="Syncfusion.SfAccordion.WPF" Version="26.2.8" />
+        <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="26.2.8" />
+        <PackageReference Include="Syncfusion.SfChart.WPF" Version="26.2.8" />
+        <PackageReference Include="Syncfusion.SfGrid.WPF" Version="26.2.8" />
+        <PackageReference Include="Syncfusion.SfInput.WPF" Version="26.2.8" />
+        <PackageReference Include="Syncfusion.SfNavigationDrawer.WPF" Version="26.2.8" />
+        <PackageReference Include="Syncfusion.SfProgressBar.WPF" Version="26.2.8" />
+        <PackageReference Include="Syncfusion.SfRadialMenu.WPF" Version="26.2.8" />
+        <PackageReference Include="Syncfusion.SfRichTextBoxAdv.WPF" Version="26.2.8" />
+        <PackageReference Include="Syncfusion.SfSkinManager.WPF" Version="26.2.8" />
+        <PackageReference Include="Syncfusion.SfTreeView.WPF" Version="26.2.8" />
+        <PackageReference Include="Syncfusion.Themes.Blend.WPF" Version="26.2.8" />
+        <PackageReference Include="Syncfusion.Themes.FluentDark.WPF" Version="26.2.8" />
+        <PackageReference Include="Syncfusion.Themes.FluentLight.WPF" Version="26.2.8" />
+        <PackageReference Include="Syncfusion.Themes.Lime.WPF" Version="26.2.8" />
+        <PackageReference Include="Syncfusion.Themes.MaterialDark.WPF" Version="26.2.8" />
+        <PackageReference Include="Syncfusion.Themes.Metro.WPF" Version="26.2.8" />
+        <PackageReference Include="Syncfusion.Themes.Office365.WPF" Version="26.2.8" />
+        <PackageReference Include="Syncfusion.Themes.Saffron.WPF" Version="26.2.8" />
+        <PackageReference Include="Syncfusion.Themes.SystemTheme.WPF" Version="26.2.8" />
         <PackageReference Include="Volo.Abp.Autofac" Version="8.2.1" />
     </ItemGroup>
 
