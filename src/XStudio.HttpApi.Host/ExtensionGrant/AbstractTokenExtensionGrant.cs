@@ -15,6 +15,7 @@ using Volo.Abp.OpenIddict.ExtensionGrantTypes;
 using Volo.Abp.OpenIddict;
 using Microsoft.Extensions.DependencyInjection;
 using XStudio.Common;
+using XStudio.Helpers;
 
 
 namespace XStudio.ExtensionGrant
@@ -25,7 +26,6 @@ namespace XStudio.ExtensionGrant
         protected string ProviderKey { get; set; } = string.Empty;
         protected IOptions<IdentityOptions> IdentityOptions => LazyServiceProvider.LazyGetRequiredService<IOptions<IdentityOptions>>();
         protected IdentitySecurityLogManager IdentitySecurityLogManager => LazyServiceProvider.LazyGetRequiredService<IdentitySecurityLogManager>();
-
         public abstract string Name { get; }
         /// <summary>
         /// 服务器验证
@@ -33,6 +33,7 @@ namespace XStudio.ExtensionGrant
         /// <returns></returns>
         protected virtual async Task<ClaimsPrincipal?> ServerValidate()
         {
+
             var user = await UserManager.FindByLoginAsync(Name, ProviderKey);
             if (user == null)
             {
@@ -127,7 +128,7 @@ namespace XStudio.ExtensionGrant
                     //Encrypter encrypter = new Encrypter();
                     //var ivBytes = encrypter.GenerateRandomHexText(16);
                     //string secureKey = "sKey123456";
-                    //var eCode = encrypter.AES_Encrypt(userCode, secureKey, ivBytes);
+                    var eCode = EncrypterHelper.EncryptAES(userCode);
 
                     //string iv = Convert.ToBase64String(ivBytes).Replace('/', '_');
                     //string url = "/user/login?redirect=%252Fworkplace?m={0}%2526code={1}.{2}";
@@ -135,6 +136,7 @@ namespace XStudio.ExtensionGrant
                     //    OpenIddictServerAspNetCoreConstants.Properties.ErrorUri,
                     //    string.Format(url, Name, eCode, iv));
                 }
+                await Task.CompletedTask;
                 return new AuthenticationProperties(dictionary);
             }
         }

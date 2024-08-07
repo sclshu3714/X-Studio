@@ -1,7 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Regions;
@@ -9,10 +12,10 @@ using Prism.Services.Dialogs;
 using Serilog;
 using Serilog.Events;
 using Volo.Abp;
-using XStudio.App.Common;
-using XStudio.App.Modules;
 using DryIoc;
 using DryIoc.Microsoft.DependencyInjection;
+using XStudio.App.Common;
+using XStudio.App.Modules;
 using XStudio.App.Extensions;
 using XStudio.App.Service.Sessions;
 
@@ -27,18 +30,27 @@ public partial class App : PrismApplication
 
     protected override async void OnStartup(StartupEventArgs e)
     {
+        IConfigurationRoot? configuration = ConfigurationInitialized();
         AppSettings.OnInitialized();
-        Log.Logger = new LoggerConfiguration()
+        if (configuration != null)
+        {
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(configuration)
+                .CreateLogger();
+        }
+        else
+        {
+            Log.Logger = new LoggerConfiguration()
 #if DEBUG
-            .MinimumLevel.Debug()
+                .MinimumLevel.Debug()
 #else
                 .MinimumLevel.Information()
 #endif
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-            .Enrich.FromLogContext()
-            .WriteTo.Async(c => c.File("Logs/logs.txt"))
-            .CreateLogger();
-
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .Enrich.FromLogContext()
+                .WriteTo.Async(c => c.File("Logs/logs.txt"))
+                .CreateLogger();
+        }
         try
         {
             Log.Information("Starting WPF host.");
@@ -46,7 +58,10 @@ public partial class App : PrismApplication
             _abpApplication = await AbpApplicationFactory.CreateAsync<AppModule>(options =>
             {
                 options.UseAutofac();
-                options.Services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
+                options.Services.AddLogging(loggingBuilder =>
+                {
+                    loggingBuilder.AddSerilog(dispose: true);
+                });
             });
 
             await _abpApplication.InitializeAsync();
@@ -58,6 +73,34 @@ public partial class App : PrismApplication
         {
             Log.Fatal(ex, "Host terminated unexpectedly!");
         }
+    }
+
+    private IConfigurationRoot? ConfigurationInitialized()
+    {
+
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", false, true);
+        var configurationRoot = configuration.Build();
+        // 检查环境变量是否已设置，如果没有，则设置为开发环境
+        var environment = configurationRoot["App:Environment"]; // Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        if (string.IsNullOrEmpty(environment) ||
+            (environment != Environments.Development && environment != Environments.Staging && environment != Environments.Production))
+        {
+            // 这里可以根据需要设置不同的环境
+            environment = "Development";
+            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", environment);
+        }
+        else
+        {
+            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", environment);
+        }
+        if (configuration != null && File.Exists($"appsettings.{environment}.json"))
+        {
+            configuration.AddJsonFile($"appsettings.{environment}.json", optional: true, true);
+        }
+        configuration?.AddEnvironmentVariables();
+        return configuration?.Build();
     }
 
     protected override async void OnExit(ExitEventArgs e)

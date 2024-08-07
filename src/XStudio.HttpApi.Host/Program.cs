@@ -30,9 +30,12 @@ public class Program
         {
             Log.Information("Starting XStudio.HttpApi.Host.");
             var builder = WebApplication.CreateBuilder(args);
-            builder.Host.AddAppSettingsSecretsJson()
+            builder.Host
+                .AddAppSettingsSecretsJson()
                 .UseAutofac()
-                .UseSerilog()
+                .UseSerilog((context, logger) => { 
+                    logger.ReadFrom.Configuration(context.Configuration).Enrich.FromLogContext();
+                })
                 .UseNacosConfig("Nacos");
             await builder.AddApplicationAsync<XStudioHttpApiHostModule>();
             var app = builder.Build();

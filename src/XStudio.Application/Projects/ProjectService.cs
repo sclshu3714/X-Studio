@@ -17,6 +17,8 @@ using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Volo.Abp.Identity;
 using Volo.Abp;
+using Volo.Abp.BackgroundJobs;
+using static XStudio.Permissions.XStudioPermissions;
 
 namespace XStudio.Projects
 {
@@ -34,8 +36,14 @@ namespace XStudio.Projects
         CreateUpdateProjectDto>, //Used to create/update a book
         IProjectService //implement the IBookAppService
     {
-        private readonly IPermissionChecker _permissionChecker;
-        public ProjectService(IRepository<Project, Guid> repository, IPermissionChecker permissionChecker)
+        private readonly IPermissionChecker _permissionChecker; 
+        private readonly IBackgroundJobManager _backgroundJobManager;
+        private readonly IdentityUserManager _userManager;
+        public ProjectService(
+            IRepository<Project, Guid> repository, 
+            IPermissionChecker permissionChecker,
+            IBackgroundJobManager backgroundJobManager,
+            IdentityUserManager userManager)
             : base(repository)
         {
             GetPolicyName = XStudioPermissions.Projects.Default;
@@ -44,6 +52,8 @@ namespace XStudio.Projects
             UpdatePolicyName = XStudioPermissions.Projects.Edit;
             DeletePolicyName = XStudioPermissions.Projects.Delete;
             _permissionChecker = permissionChecker;
+            _backgroundJobManager = backgroundJobManager;
+            _userManager = userManager;
         }
 
         [HttpGet("{id}")]
@@ -57,38 +67,54 @@ namespace XStudio.Projects
                 throw new EntityNotFoundException(typeof(Project), id);
             }
             var coursewareDto = ObjectMapper.Map<Project, ProjectDto>(queryResult);
-            //var queryableUser = await _authorRepository.GetAsync(queryResult.AuthorId);
-            //if (queryableUser == null)
-            //{
-            //    throw new EntityNotFoundException(typeof(IUser), queryResult.AuthorId);
-            //}
-            //coursewareDto.AuthorName = queryableUser.Name;
+            var queryableUser = await _userManager.FindByIdAsync($"{queryResult.AuthorId}");
+            if (queryableUser == null)
+            {
+                throw new EntityNotFoundException(typeof(IUser), queryResult.AuthorId);
+            }
+            coursewareDto.AuthorName = queryableUser.Name;
             return coursewareDto;
         }
 
         [HttpPost] 
-        public override Task<ProjectDto> CreateAsync(CreateUpdateProjectDto input)
+        public override async Task<ProjectDto> CreateAsync(CreateUpdateProjectDto input)
         {
-            return base.CreateAsync(input);
+            return await base.CreateAsync(input);
         }
 
         [HttpDelete]
-        public override Task DeleteAsync(Guid id) 
-        { 
+        public override Task DeleteAsync(Guid id)
+        {
             return base.DeleteAsync(id); 
         }
 
         [HttpPut]
-        public override Task<ProjectDto> UpdateAsync(Guid id, CreateUpdateProjectDto input)
+        public override async Task<ProjectDto> UpdateAsync(Guid id, CreateUpdateProjectDto input)
         {
-            return base.UpdateAsync(id, input);
+           return await base.UpdateAsync(id, input);
         }
 
         [HttpPost("list")]
-        public override Task<PagedResultDto<ProjectDto>> GetListAsync(PagedAndSortedResultRequestDto input)
+        public override async Task<PagedResultDto<ProjectDto>> GetListAsync(PagedAndSortedResultRequestDto input)
         {
-            return base.GetListAsync(input);
+            PagedResultDto<ProjectDto> ProjectDtos = await base.GetListAsync(input);
+            ProjectDtos.Items = await UpdateAuthorNames(ProjectDtos.Items.ToList());
+            return ProjectDtos;
         }
+
+        private async Task<List<ProjectDto>> UpdateAuthorNames(List<ProjectDto> projects)
+        {
+            foreach (var project in projects)
+            {
+                var queryableUser = await _userManager.FindByIdAsync($"{project.AuthorId}");
+                if (queryableUser != null)
+                {
+                    project.AuthorName = queryableUser.Name;
+                }
+            }
+            return projects;
+        }
+
 
         private static string NormalizeSorting(string sorting)
         {

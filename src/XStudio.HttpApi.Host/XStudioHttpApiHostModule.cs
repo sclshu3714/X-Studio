@@ -52,6 +52,7 @@ using Nacos.AspNetCore.V2;
 using static IdentityModel.ClaimComparer;
 using Volo.Abp.OpenIddict.ExtensionGrantTypes;
 using XStudio.ExtensionGrant;
+using Serilog;
 
 namespace XStudio;
 
@@ -71,6 +72,8 @@ public class XStudioHttpApiHostModule : AbpModule
 {
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {
+        var configuration = context.Services.GetConfiguration();
+        ConfigureEnvironment(configuration);
         PreConfigure<OpenIddictBuilder>(builder =>
         {
             builder.AddValidation(options =>
@@ -94,7 +97,6 @@ public class XStudioHttpApiHostModule : AbpModule
     {
         var configuration = context.Services.GetConfiguration();
         var hostingEnvironment = context.Services.GetHostingEnvironment();
-
         ConfigureBundles();
         ConfigureUrls(configuration);
         ConfigureConventionalControllers();
@@ -105,6 +107,33 @@ public class XStudioHttpApiHostModule : AbpModule
         ConfigureNewtonsoftJson(context);
         //ConfigureNacos(context, configuration);
         ConfigureAuthentication(context);
+    }
+
+    private void ConfigureEnvironment(IConfiguration configuration)
+    {
+        // 检查环境变量是否已设置，如果没有，则设置为开发环境
+        var environment = configuration["App:Environment"]; // Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        if (string.IsNullOrEmpty(environment) || 
+            (environment != Environments.Development && environment != Environments.Staging && environment != Environments.Production))
+        {
+            // 这里可以根据需要设置不同的环境
+            environment = "Development";
+            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", environment);
+        }
+        else
+        {
+            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", environment);
+        }
+
+        // 根据环境加载不同的配置文件
+        var builder = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile($"appsettings.json", optional: false, reloadOnChange: true);
+        if (File.Exists($"appsettings.{environment}.json"))
+        {
+            builder.AddJsonFile($"appsettings.{environment}.json", optional: true, true);
+        }
+        builder.AddEnvironmentVariables();
     }
 
     private void ConfigureNacos(ServiceConfigurationContext context, IConfiguration Configuration)
@@ -182,7 +211,7 @@ public class XStudioHttpApiHostModule : AbpModule
         //});
 
         //配置自定义ITokenExtensionGrant
-        Configure<AbpOpenIddictExtensionGrantsOptions>(options =>
+        context.Services.Configure<AbpOpenIddictExtensionGrantsOptions>(options =>
         {
             options.Grants.Add(MyTokenExtensionGrantConsts.GrantType, new MyTokenExtensionGrant());
         });
@@ -328,16 +357,26 @@ public class XStudioHttpApiHostModule : AbpModule
         app.UseAbpSwaggerUI(c =>
         {
             //c.SwaggerEndpoint("/swagger/v1/swagger.json", "XStudio API");
-            var provider = app.ApplicationServices.GetRequiredService<IApiVersionDescriptionProvider>();
-            // build a swagger endpoint for each discovered API version
-            foreach (var description in provider.ApiVersionDescriptions)
+            IApiVersionDescriptionProvider provider;
+            IConfiguration configuration;
+            try
             {
-                c.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+                configuration = context.ServiceProvider.GetRequiredService<IConfiguration>();
+                provider = app.ApplicationServices.GetRequiredService<IApiVersionDescriptionProvider>();
+                provider.If(provider.ApiVersionDescriptions != null, (provider) => {
+                    // build a swagger endpoint for each discovered API version
+                    foreach (var description in provider.ApiVersionDescriptions)
+                    {
+                        c.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+                    }
+                });
+                c.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
+                c.OAuthScopes("XStudio");
             }
-
-            var configuration = context.ServiceProvider.GetRequiredService<IConfiguration>();
-            c.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
-            c.OAuthScopes("XStudio");
+            catch (Exception ex)
+            {
+                Log.Error($"构建swagger文档失败,{ex.StackTrace}");
+            }          
         });
 
         app.UseAuditing();

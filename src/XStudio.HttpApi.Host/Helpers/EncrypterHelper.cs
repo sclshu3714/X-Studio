@@ -19,8 +19,9 @@ namespace XStudio.Helpers
             try
             {
                 byte[] key = Encoding.UTF8.GetBytes(EncryptionKey);
+                Array.Resize(ref key, 32);
                 byte[] plainBytes = Encoding.UTF8.GetBytes(plainText);
-                byte[] encryptedBytes = SuiteB.Encrypt(plainBytes, key);
+                byte[] encryptedBytes = SuiteB.Encrypt(plainBytes, key, IV);
                 return Convert.ToBase64String(encryptedBytes);
             }
             catch (Exception ex)
@@ -39,8 +40,9 @@ namespace XStudio.Helpers
             try
             {
                 byte[] key = Encoding.UTF8.GetBytes(EncryptionKey);
+                Array.Resize(ref key, 32);
                 byte[] encryptedBytes = Convert.FromBase64String(encryptedText);
-                byte[] decryptedBytes = SuiteB.Decrypt(encryptedBytes, key);
+                byte[] decryptedBytes = SuiteB.Decrypt(encryptedBytes, key, IV);
                 if (decryptedBytes == null)
                 {
                     return "解密错误";
@@ -61,6 +63,7 @@ namespace XStudio.Helpers
         public static bool Authenticate(string encryptedText)
         {
             byte[] key = Encoding.UTF8.GetBytes(EncryptionKey);
+            Array.Resize(ref key, 32);
             byte[] encryptedBytes = Convert.FromBase64String(encryptedText);
             return SuiteB.Authenticate(key, encryptedBytes);
         }
@@ -73,10 +76,10 @@ namespace XStudio.Helpers
         /// <returns></returns>
         public static string EncryptAES(string plainText)
         {
-
             using (Aes aesAlg = Aes.Create())
             {
                 byte[] key = Encoding.UTF8.GetBytes(EncryptionKey);
+                Array.Resize(ref key, 32);
                 aesAlg.Key = key;
                 aesAlg.IV = IV;
                 ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
@@ -96,6 +99,7 @@ namespace XStudio.Helpers
             using (Aes aesAlg = Aes.Create())
             {
                 byte[] key = Encoding.UTF8.GetBytes(EncryptionKey);
+                Array.Resize(ref key, 32);
                 aesAlg.Key = key;
                 aesAlg.IV = IV;
                 ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
@@ -25,6 +26,7 @@ namespace XStudio.ExtensionGrant
 
         protected IIdentityUserAppService IdentityUserAppService => this.LazyServiceProvider.LazyGetRequiredService<IIdentityUserAppService>();
 
+        [HttpPost]
         public virtual async Task<IActionResult> HandleAsync(ExtensionGrantContext context)
         {
             HttpContext httpContext = context.HttpContext;

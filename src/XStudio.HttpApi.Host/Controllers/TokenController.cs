@@ -14,6 +14,7 @@ using Volo.Abp.OpenIddict;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using XStudio.Helpers;
+using XStudio.Encrypter;
 
 namespace XStudio.Controllers
 {
@@ -91,15 +92,15 @@ namespace XStudio.Controllers
         }
 
         [HttpPost("encrypt")]
-        public IActionResult Encrypt(string plainText)
+        public IActionResult Encrypt(EncryptDto plain)
         {
-            return Ok(EncrypterHelper.Encrypt(plainText));
+            return Ok(EncrypterHelper.Encrypt(plain.PlainText));
         }
 
         [HttpPost("decrypt")]
-        public IActionResult Decrypt(string encryptedText)
+        public IActionResult Decrypt(DecryptDto encrypted)
         {
-            return Ok(EncrypterHelper.Decrypt(encryptedText));
+            return Ok(EncrypterHelper.Decrypt(encrypted.EncryptedText));
         }
     }
 }
