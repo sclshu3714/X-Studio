@@ -1,5 +1,4 @@
 ﻿using Prism.Ioc;
-using Syncfusion.Windows.Shared;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;

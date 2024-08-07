@@ -1,5 +1,4 @@
-﻿using Syncfusion.Windows.Shared;
-using System;
+﻿using System;
 using System.Windows;
 using XStudio.App.Common;
 using XStudio.App.Service;
@@ -9,7 +8,7 @@ namespace XStudio.App;
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
-public partial class MainWindow : ChromelessWindow
+public partial class MainWindow : Window
 {
     private readonly HelloWorldService _helloWorldService;
 

@@ -1,6 +1,5 @@
 ﻿using Prism.Ioc;
 using Prism.Regions;
-using Syncfusion.UI.Xaml.NavigationDrawer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,8 +22,8 @@ namespace XStudio.App.Extensions
             this RegionAdapterMappings regionAdapterMappings,
             IContainerProvider container)
         {
-            regionAdapterMappings.RegisterMapping(typeof(SfNavigationDrawer),
-                container.Resolve<SfNavigationDrawerRegionAdapter>());
+            //regionAdapterMappings.RegisterMapping(typeof(SfNavigationDrawer),
+            //    container.Resolve<SfNavigationDrawerRegionAdapter>());
         }
     }
 }

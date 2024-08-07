@@ -38,9 +38,9 @@ namespace XStudio.App.Common
 
         public static void OnInitialized()
         {
-            Syncfusion.SfSkinManager.SfSkinManager.ApplyStylesOnApplication = true;
-            //Syncfusion LicenseKey
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NCaF1cWmhAYVdpR2Nbe05xdF9CY1ZSRGYuP1ZhSXxXdk1jXH5edXZRRWlcWE0=");
+            //Syncfusion.SfSkinManager.SfSkinManager.ApplyStylesOnApplication = true;
+            ////Syncfusion LicenseKey
+            //Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NCaF1cWmhAYVdpR2Nbe05xdF9CY1ZSRGYuP1ZhSXxXdk1jXH5edXZRRWlcWE0=");
         }
     }
 }
