@@ -11,6 +11,7 @@ using Prism.Regions;
 using Prism.Services.Dialogs;
 using Serilog;
 using Serilog.Events;
+using Serilog.Settings.Configuration;
 using Volo.Abp;
 using DryIoc;
 using DryIoc.Microsoft.DependencyInjection;
