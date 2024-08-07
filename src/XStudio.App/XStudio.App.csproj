@@ -14,6 +14,7 @@
         <PackageReference Include="AutoMapper" Version="13.0.1" />
         <PackageReference Include="DryIoc.Microsoft.DependencyInjection" Version="6.2.0" />
         <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
+        <PackageReference Include="Prism.Wpf" Version="8.1.97" />
         <PackageReference Include="Serilog.Settings.Configuration" Version="8.0.2" />
         <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
         <PackageReference Include="Volo.Abp.Autofac" Version="8.2.1" />
