@@ -19,6 +19,7 @@ using XStudio.App.Common;
 using XStudio.App.Modules;
 using XStudio.App.Extensions;
 using XStudio.App.Service.Sessions;
+using Prism.Modularity;
 
 namespace XStudio.App;
 
@@ -28,6 +29,21 @@ namespace XStudio.App;
 public partial class App : PrismApplication
 {
     private IAbpApplicationWithInternalServiceProvider? _abpApplication;
+
+    protected override Window CreateShell()
+    {
+        return Container.Resolve<MainWindow>();
+    }
+
+    protected override void RegisterTypes(IContainerRegistry containerRegistry)
+    {
+        containerRegistry.ConfigurationServices();
+    }
+    protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
+    {
+        //moduleCatalog.AddModule<ModuleNameModule>();
+    }
+
 
     protected override async void OnStartup(StartupEventArgs e)
     {
@@ -122,16 +138,6 @@ public partial class App : PrismApplication
             (App.Current.MainWindow.DataContext as INavigationAware)?.OnNavigatedTo(null);
             base.OnInitialized();
         }
-    }
-
-    protected override Window CreateShell()
-    {
-        return Container.Resolve<MainWindow>();
-    }
-
-    protected override void RegisterTypes(IContainerRegistry containerRegistry)
-    {
-        containerRegistry.ConfigurationServices();
     }
 
     protected override IContainerExtension CreateContainerExtension()
