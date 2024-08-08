@@ -16577,3 +16577,13 @@ ActivatorChain = Volo.Abp.BackgroundJobs.EntityFrameworkCore.BackgroundJobsDbCon
 2024-08-06 15:55:33.963 +08:00 [INF] Starting XStudio.HttpApi.Host.
 2024-08-06 16:00:54.213 +08:00 [INF] Starting XStudio.HttpApi.Host.
 2024-08-06 16:11:01.331 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-08 15:34:54.815 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-08 15:47:17.494 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-08 16:07:15.297 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-08 16:31:10.133 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-08 16:31:21.671 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-08 16:32:05.372 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-08 16:34:13.567 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-08 16:34:53.156 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-08 16:37:33.870 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-08 16:39:38.703 +08:00 [INF] Starting XStudio.HttpApi.Host.
