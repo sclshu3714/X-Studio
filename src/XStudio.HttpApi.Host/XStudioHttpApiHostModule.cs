@@ -53,6 +53,7 @@ using static IdentityModel.ClaimComparer;
 using Volo.Abp.OpenIddict.ExtensionGrantTypes;
 using XStudio.ExtensionGrant;
 using Serilog;
+using XStudio.Nacos;
 
 namespace XStudio;
 
@@ -139,11 +140,11 @@ public class XStudioHttpApiHostModule : AbpModule
     private void ConfigureNacos(ServiceConfigurationContext context, IConfiguration Configuration)
     {
         context.Services.AddNacosAspNet(Configuration, "nacos");
-        //AKStreamWebConfig? webConfig = Configuration.Get<AKStreamWebConfig>();
-        //if (webConfig != null)
-        //{
-        //    context.Services.AddSingleton(webConfig);
-        //}
+        GlobalConfig.Default.NacosConfig = Configuration.Get<GlobalNacosConfig>();
+        if (GlobalConfig.Default.NacosConfig != null)
+        {
+            context.Services.AddSingleton(GlobalConfig.Default.NacosConfig);
+        }
         context.Services.AddNacosV2Config(Configuration);
     }
 
@@ -383,9 +384,9 @@ public class XStudioHttpApiHostModule : AbpModule
         app.UseAbpSerilogEnrichers();
         app.UseConfiguredEndpoints();
 
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers().RequireAuthorization("XStudioPolicy");
-        });
+        //app.UseEndpoints(endpoints =>
+        //{
+        //    endpoints.MapControllers().RequireAuthorization("XStudioPolicy");
+        //});
     }
 }
