@@ -15,6 +15,8 @@ using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using XStudio.Helpers;
 using XStudio.Encrypter;
+using Nacos.V2;
+using System.Net.Http;
 
 namespace XStudio.Controllers
 {
@@ -25,11 +27,14 @@ namespace XStudio.Controllers
     {
         private readonly IOpenIddictApplicationManager _applicationManager;
         private readonly IOpenIddictScopeManager _scopeManager;
-
-        public TokenController(IOpenIddictApplicationManager applicationManager, IOpenIddictScopeManager scopeManager)
+        private readonly INacosNamingService _nnsvc;
+        private readonly INacosConfigService _ncsvc;
+        public TokenController(IOpenIddictApplicationManager applicationManager, IOpenIddictScopeManager scopeManager, INacosNamingService nnsvc, INacosConfigService ncsvc)
         {
             _applicationManager = applicationManager;
             _scopeManager = scopeManager;
+            _nnsvc = nnsvc;
+            _ncsvc = ncsvc;
         }
 
         [AllowAnonymous]
@@ -101,6 +106,32 @@ namespace XStudio.Controllers
         public IActionResult Decrypt(DecryptDto encrypted)
         {
             return Ok(EncrypterHelper.Decrypt(encrypted.EncryptedText));
+        }
+
+        // GET api/values/test
+        [HttpGet("TestAsync")]
+        public async Task<ActionResult<string>> TestAsync()
+        {
+            var instance = await _nnsvc.SelectOneHealthyInstance("akstream", "wxz");
+            var isHttps = HttpContext.Request.IsHttps; // 检查是否是通过 HTTPS 访问
+            var host = $"{instance.Ip}:{(isHttps ? instance.Metadata["HttpsPort"] : instance.Port)}";
+            var baseUrl = isHttps ? $"https://{host}" : $"http://{host}";
+
+            if (string.IsNullOrWhiteSpace(baseUrl))
+            {
+                return "empty";
+            }
+
+            var url = $"{baseUrl}/WeatherForecast";
+            using (var handler = new HttpClientHandler())
+            {
+                handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
+                using (HttpClient client = new HttpClient(handler))
+                {
+                    var result = await client.GetAsync(url);
+                    return await result.Content.ReadAsStringAsync();
+                }
+            }
         }
     }
 }

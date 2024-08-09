@@ -54,6 +54,8 @@ using Volo.Abp.OpenIddict.ExtensionGrantTypes;
 using XStudio.ExtensionGrant;
 using Serilog;
 using XStudio.Nacos;
+using static Org.BouncyCastle.Math.EC.ECCurve;
+using Nacos.V2;
 
 namespace XStudio;
 
@@ -106,7 +108,7 @@ public class XStudioHttpApiHostModule : AbpModule
         ConfigureSwaggerServices(context, configuration);
         ConfigureAbpApiVersioning(context);
         ConfigureNewtonsoftJson(context);
-        //ConfigureNacos(context, configuration);
+        ConfigureNacos(context, configuration);
         ConfigureAuthentication(context);
     }
 
@@ -139,7 +141,39 @@ public class XStudioHttpApiHostModule : AbpModule
 
     private void ConfigureNacos(ServiceConfigurationContext context, IConfiguration Configuration)
     {
-        context.Services.AddNacosAspNet(Configuration, "nacos");
+        context.Services.AddNacosAspNet(Configuration, "Nacos");
+
+        //context.Services.AddNacosAspNet(a =>
+        //{
+        //    a.Ephemeral = config.Ephemeral;
+        //    a.Ip = config.Ip;
+        //    a.Port = config.Port;
+        //    a.Secure = config.Secure;
+        //    a.ClusterName = config.ClusterName;
+        //    a.GroupName = config.GroupName;
+        //    a.Weight = config.Weight;
+        //    a.ServiceName = config.ServiceName;
+        //    a.Namespace = config.Namespace;
+        //    a.Password = config.Password;
+        //    a.UserName = config.UserName;
+        //    a.AccessKey = config.AccessKey;
+        //    a.ContextPath = config.ContextPath;
+        //    a.EndPoint = config.EndPoint;
+        //    a.ListenInterval = config.ListenInterval;
+        //    a.SecretKey = config.SecretKey;
+        //    a.ServerAddresses = config.ServerAddresses;
+        //    a.ConfigFilterAssemblies = config.ConfigFilterAssemblies;
+        //    a.ConfigUseRpc = config.ConfigUseRpc;
+        //    a.DefaultTimeOut = config.DefaultTimeOut;
+        //    a.NamingUseRpc = config.NamingUseRpc;
+        //    a.RamRoleName = config.RamRoleName;
+        //    a.Metadata = config.Metadata;
+        //    a.ConfigFilterExtInfo = config.ConfigFilterExtInfo;
+        //    a.NamingCacheRegistryDir = config.NamingCacheRegistryDir;
+        //    a.NamingLoadCacheAtStart = config.NamingLoadCacheAtStart;
+        //    a.NamingLoadCacheAtStart = config.NamingLoadCacheAtStart;
+        //});
+
         GlobalConfig.Default.NacosConfig = Configuration.Get<GlobalNacosConfig>();
         if (GlobalConfig.Default.NacosConfig != null)
         {
@@ -330,6 +364,21 @@ public class XStudioHttpApiHostModule : AbpModule
             app.UseDeveloperExceptionPage();
         }
 
+        //nacos 监听
+        IConfiguration configuration = context.ServiceProvider.GetRequiredService<IConfiguration>();
+        IHostApplicationLifetime appLifetime = app.ApplicationServices.GetRequiredService<IHostApplicationLifetime>();
+        INacosConfigService ncsvc = app.ApplicationServices.GetRequiredService<INacosConfigService>();
+        NacosConfigListener _configListen = new NacosConfigListener(appLifetime);
+        // 遍历 Nacos:Listeners 内的值
+        var listeners = configuration.GetSection("Nacos:Listeners").Get<List<NacosListener>>();
+        if (listeners != null)
+        {
+            foreach (var listener in listeners)
+            {
+                ncsvc.AddListener(listener.DataId, listener.Group, _configListen);
+            }
+        }
+
         app.UseAbpRequestLocalization();
 
         if (!env.IsDevelopment())
@@ -359,10 +408,8 @@ public class XStudioHttpApiHostModule : AbpModule
         {
             //c.SwaggerEndpoint("/swagger/v1/swagger.json", "XStudio API");
             IApiVersionDescriptionProvider provider;
-            IConfiguration configuration;
             try
             {
-                configuration = context.ServiceProvider.GetRequiredService<IConfiguration>();
                 provider = app.ApplicationServices.GetRequiredService<IApiVersionDescriptionProvider>();
                 provider.If(provider.ApiVersionDescriptions != null, (provider) => {
                     // build a swagger endpoint for each discovered API version
