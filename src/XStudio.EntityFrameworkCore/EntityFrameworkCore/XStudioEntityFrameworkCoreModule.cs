@@ -49,6 +49,5 @@ public class XStudioEntityFrameworkCoreModule : AbpModule
                  * See also XStudioMigrationsDbContextFactory for EF Core tooling. */
             options.UseMySQL();
         });
-
     }
 }
