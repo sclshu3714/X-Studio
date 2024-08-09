@@ -4,18 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:XStudio.App"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"    
+    mc:Ignorable="d"
     Title="X-Studio"
     MinWidth="1280"
-    MinHeight="768"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
+    MinHeight="680"
     WindowStartupLocation="CenterScreen"
-    mc:Ignorable="d">
-    <Grid>
-        <Label
-            Name="HelloLabel"
-            Margin="58,129,-58,-129"
-            FontSize="90" />
-    </Grid>
+    d:DesignHeight="680"
+    d:DesignWidth="1280"
+    Icon="/Views/icon.ico">
+    <ContentControl Name="ControlMain"/>
 </Window>

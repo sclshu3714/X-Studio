@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="XStudio.App.Views.UserControls.LeftMainContent"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:XStudio.App.Views.UserControls"
+             mc:Ignorable="d" 
+             Margin="16,16,0,16"
+             Background="{DynamicResource RegionBrush}"
+             Effect="{StaticResource EffectShadow4}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <DockPanel>
+        <Button Content="Practical demos"
+            DockPanel.Dock="Top"
+            HorizontalAlignment="Stretch"
+            Margin="10,10,10,4"
+            BorderThickness="0"
+            Background="{DynamicResource SecondaryRegionBrush}" />
+        <TabControl BorderThickness="0 1 0 0"
+                SelectionChanged="TabControl_OnSelectionChanged"
+                ItemsSource="{Binding DemoInfoCollection}"
+                Background="Transparent"
+                SelectedIndex="0">
+            <TabControl.ItemTemplate>
+                <DataTemplate DataType="data:DemoInfoModel">
+                    <TextBlock Text="{Binding Title}" />
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate DataType="data:DemoInfoModel">
+                    <!--<Panel Margin="10">
+                        <ListBox SelectionMode="Single"
+                             Padding="0"
+                             BorderThickness="0"
+                             SelectedIndex="{Binding SelectedIndex}"
+                             ItemsSource="{Binding DemoItemList}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate DataType="data:DemoItemModel">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Rectangle Width="16"
+                                               Height="16"
+                                               Fill="{Binding ImageBrush}" />
+                                        <TextBlock Margin="6,0,0,0"
+                                               Text="{Binding Name}" />
+                                        <Path IsVisible="{Binding IsNew}"
+                                          VerticalAlignment="Center"
+                                          Data="{StaticResource NewGeometry}"
+                                          Stretch="Uniform"
+                                          Margin="10,0,0,0"
+                                          Width="30"
+                                          Height="14"
+                                          Fill="{DynamicResource AccentBrush}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Panel>-->
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
+    </DockPanel>
+</UserControl>

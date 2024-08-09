@@ -12,6 +12,7 @@
     <ItemGroup>
         <PackageReference Include="Abp" Version="9.3.0" />
         <PackageReference Include="AutoMapper" Version="13.0.1" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
         <PackageReference Include="DryIoc.Microsoft.DependencyInjection" Version="6.2.0" />
         <PackageReference Include="HandyControl" Version="3.5.1" />
         <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
@@ -30,9 +31,39 @@
 
     <ItemGroup>
       <None Remove="appsettings.json" />
+      <None Remove="Views\icon.ico" />
+      <Page Remove="Resources\Themes\Basic\Basic.xaml" />
+      <Page Remove="Resources\Themes\Basic\Brushes.xaml" />
+      <Page Remove="Resources\Themes\Basic\Colors\Colors.xaml" />
+      <Page Remove="Resources\Themes\Basic\Colors\ColorsDark.xaml" />
+      <Page Remove="Resources\Themes\Basic\Converters.xaml" />
+      <Page Remove="Resources\Themes\Basic\Fonts.xaml" />
+      <Page Remove="Resources\Themes\Basic\Geometries.xaml" />
+      <Page Remove="Resources\Themes\SkinDark.xaml" />
+      <Page Remove="Resources\Themes\SkinDefault.xaml" />
+      <Page Remove="Resources\Themes\Styles\Style.xaml" />
+      <Page Remove="Resources\Themes\Theme.xaml" />
       <Content Include="appsettings.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="Resources\Themes\Basic\Basic.xaml" />
+      <None Include="Resources\Themes\Basic\Brushes.xaml" />
+      <None Include="Resources\Themes\Basic\Colors\Colors.xaml" />
+      <None Include="Resources\Themes\Basic\Colors\ColorsDark.xaml" />
+      <None Include="Resources\Themes\Basic\Converters.xaml" />
+      <None Include="Resources\Themes\Basic\Fonts.xaml" />
+      <None Include="Resources\Themes\Basic\Geometries.xaml" />
+      <None Include="Resources\Themes\SkinDark.xaml" />
+      <None Include="Resources\Themes\SkinDefault.xaml" />
+      <None Include="Resources\Themes\Styles\Style.xaml" />
+      <None Include="Resources\Themes\Theme.xaml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Resource Include="Views\icon.ico" />
     </ItemGroup>
 
 </Project>

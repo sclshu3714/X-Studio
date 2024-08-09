@@ -10,9 +10,9 @@ namespace XStudio.App;
 /// </summary>
 public partial class MainWindow : Window
 {
-    private readonly HelloWorldService _helloWorldService;
+    private readonly DataService _helloWorldService;
 
-    public MainWindow(HelloWorldService helloWorldService)
+    public MainWindow(DataService helloWorldService)
     {
         _helloWorldService = helloWorldService;
         InitializeComponent();
@@ -20,6 +20,6 @@ public partial class MainWindow : Window
 
     protected override void OnContentRendered(EventArgs e)
     {
-        HelloLabel.Content = _helloWorldService.SayHello();
+        //HelloLabel.Content = _helloWorldService.SayHello();
     }
 }

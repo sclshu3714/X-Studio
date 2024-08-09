@@ -4,13 +4,13 @@ using Volo.Abp.DependencyInjection;
 
 namespace XStudio.App.Service;
 
-public class HelloWorldService : ITransientDependency
+public class DataService : ITransientDependency
 {
-    public ILogger<HelloWorldService> Logger { get; set; }
+    public ILogger<DataService> Logger { get; set; }
 
-    public HelloWorldService()
+    public DataService()
     {
-        Logger = NullLogger<HelloWorldService>.Instance;
+        Logger = NullLogger<DataService>.Instance;
     }
     public string SayHello()
     {
