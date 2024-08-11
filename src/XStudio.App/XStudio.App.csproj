@@ -7,6 +7,7 @@
         <TargetFramework>net8.0-windows</TargetFramework>
         <Nullable>enable</Nullable>
         <UseWPF>true</UseWPF>
+        <ApplicationIcon>Resources\Img\icon.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>
@@ -31,38 +32,262 @@
 
     <ItemGroup>
       <None Remove="appsettings.json" />
+      <None Remove="Resources\Img\1.jpg" />
+      <None Remove="Resources\Img\2.jpg" />
+      <None Remove="Resources\Img\3.jpg" />
+      <None Remove="Resources\Img\4.jpg" />
+      <None Remove="Resources\Img\5.jpg" />
+      <None Remove="Resources\Img\Album\1.jpg" />
+      <None Remove="Resources\Img\Album\10.jpg" />
+      <None Remove="Resources\Img\Album\2.jpg" />
+      <None Remove="Resources\Img\Album\3.jpg" />
+      <None Remove="Resources\Img\Album\4.jpg" />
+      <None Remove="Resources\Img\Album\5.jpg" />
+      <None Remove="Resources\Img\Album\6.jpg" />
+      <None Remove="Resources\Img\Album\7.jpg" />
+      <None Remove="Resources\Img\Album\8.jpg" />
+      <None Remove="Resources\Img\Album\9.jpg" />
+      <None Remove="Resources\Img\Avatar\avatar1.png" />
+      <None Remove="Resources\Img\Avatar\avatar2.png" />
+      <None Remove="Resources\Img\Avatar\avatar3.png" />
+      <None Remove="Resources\Img\Avatar\avatar4.png" />
+      <None Remove="Resources\Img\Avatar\avatar5.png" />
+      <None Remove="Resources\Img\Avatar\avatar6.png" />
+      <None Remove="Resources\Img\b1.jpg" />
+      <None Remove="Resources\Img\b2.jpg" />
+      <None Remove="Resources\Img\car_chase.gif" />
+      <None Remove="Resources\Img\Chat\chat_back1.jpg" />
+      <None Remove="Resources\Img\Chat\chat_back2.jpg" />
+      <None Remove="Resources\Img\chrome_dragon.png" />
+      <None Remove="Resources\Img\cloud.png" />
+      <None Remove="Resources\Img\Cover.png" />
+      <None Remove="Resources\Img\Dance.png" />
+      <None Remove="Resources\Img\DevOps\DevOps-Boards.png" />
+      <None Remove="Resources\Img\DevOps\DevOps-Overview.png" />
+      <None Remove="Resources\Img\DevOps\DevOps-Pipelines.png" />
+      <None Remove="Resources\Img\DevOps\DevOps-Repos.png" />
+      <None Remove="Resources\Img\DevOps\DevOps-TestPlans.png" />
+      <None Remove="Resources\Img\Flag\ca-Es.png" />
+      <None Remove="Resources\Img\Flag\cn.png" />
+      <None Remove="Resources\Img\Flag\cs.png" />
+      <None Remove="Resources\Img\Flag\en.png" />
+      <None Remove="Resources\Img\Flag\es.png" />
+      <None Remove="Resources\Img\Flag\fa.png" />
+      <None Remove="Resources\Img\Flag\fr.png" />
+      <None Remove="Resources\Img\Flag\ja.png" />
+      <None Remove="Resources\Img\Flag\ko-KR.png" />
+      <None Remove="Resources\Img\Flag\pl.png" />
+      <None Remove="Resources\Img\Flag\pt-BR.png" />
+      <None Remove="Resources\Img\Flag\ru.png" />
+      <None Remove="Resources\Img\Flag\tr.png" />
+      <None Remove="Resources\Img\icon-white.ico" />
+      <None Remove="Resources\Img\icon.ico" />
+      <None Remove="Resources\Img\QQ\1.gif" />
+      <None Remove="Resources\Img\QQ\10.gif" />
+      <None Remove="Resources\Img\QQ\2.gif" />
+      <None Remove="Resources\Img\QQ\3.gif" />
+      <None Remove="Resources\Img\QQ\4.gif" />
+      <None Remove="Resources\Img\QQ\5.gif" />
+      <None Remove="Resources\Img\QQ\6.gif" />
+      <None Remove="Resources\Img\QQ\7.gif" />
+      <None Remove="Resources\Img\QQ\8.gif" />
+      <None Remove="Resources\Img\QQ\9.gif" />
+      <None Remove="Resources\Img\Slack.png" />
+      <None Remove="Resources\Img\under_construction.gif" />
       <None Remove="Views\icon.ico" />
-      <Page Remove="Resources\Themes\Basic\Basic.xaml" />
-      <Page Remove="Resources\Themes\Basic\Brushes.xaml" />
-      <Page Remove="Resources\Themes\Basic\Colors\Colors.xaml" />
-      <Page Remove="Resources\Themes\Basic\Colors\ColorsDark.xaml" />
-      <Page Remove="Resources\Themes\Basic\Converters.xaml" />
-      <Page Remove="Resources\Themes\Basic\Fonts.xaml" />
-      <Page Remove="Resources\Themes\Basic\Geometries.xaml" />
-      <Page Remove="Resources\Themes\SkinDark.xaml" />
-      <Page Remove="Resources\Themes\SkinDefault.xaml" />
-      <Page Remove="Resources\Themes\Styles\Style.xaml" />
-      <Page Remove="Resources\Themes\Theme.xaml" />
       <Content Include="appsettings.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
+      <Content Include="Resources\Img\icon.ico" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Include="Resources\Themes\Basic\Basic.xaml" />
-      <None Include="Resources\Themes\Basic\Brushes.xaml" />
-      <None Include="Resources\Themes\Basic\Colors\Colors.xaml" />
-      <None Include="Resources\Themes\Basic\Colors\ColorsDark.xaml" />
-      <None Include="Resources\Themes\Basic\Converters.xaml" />
-      <None Include="Resources\Themes\Basic\Fonts.xaml" />
-      <None Include="Resources\Themes\Basic\Geometries.xaml" />
-      <None Include="Resources\Themes\SkinDark.xaml" />
-      <None Include="Resources\Themes\SkinDefault.xaml" />
-      <None Include="Resources\Themes\Styles\Style.xaml" />
-      <None Include="Resources\Themes\Theme.xaml" />
-    </ItemGroup>
-
-    <ItemGroup>
+      <Resource Include="Resources\Img\1.jpg">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\2.jpg">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\3.jpg">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\4.jpg">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\5.jpg">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Album\1.jpg">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Album\10.jpg">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Album\2.jpg">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Album\3.jpg">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Album\4.jpg">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Album\5.jpg">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Album\6.jpg">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Album\7.jpg">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Album\8.jpg">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Album\9.jpg">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Avatar\avatar1.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Avatar\avatar2.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Avatar\avatar3.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Avatar\avatar4.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Avatar\avatar5.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Avatar\avatar6.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\b1.jpg">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\b2.jpg">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\car_chase.gif">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Chat\chat_back1.jpg">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Chat\chat_back2.jpg">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\chrome_dragon.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\cloud.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Cover.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Dance.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\DevOps\DevOps-Boards.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\DevOps\DevOps-Overview.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\DevOps\DevOps-Pipelines.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\DevOps\DevOps-Repos.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\DevOps\DevOps-TestPlans.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Flag\ca-Es.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Flag\cn.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Flag\cs.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Flag\en.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Flag\es.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Flag\fa.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Flag\fr.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Flag\ja.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Flag\ko-KR.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Flag\pl.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Flag\pt-BR.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Flag\ru.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Flag\tr.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\icon-white.ico">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\icon.ico">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\QQ\1.gif">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\QQ\10.gif">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\QQ\2.gif">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\QQ\3.gif">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\QQ\4.gif">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\QQ\5.gif">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\QQ\6.gif">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\QQ\7.gif">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\QQ\8.gif">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\QQ\9.gif">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\Slack.png">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="Resources\Img\under_construction.gif">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
       <Resource Include="Views\icon.ico" />
     </ItemGroup>
 
