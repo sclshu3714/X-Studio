@@ -3,7 +3,7 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Collections.Generic"#>
 <#@ assembly name="$(TargetPath)" #>
-<#@ import namespace="HandyControlDemo.Properties.Langs" #>
+<#@ import namespace="XStudio.App.Properties.Langs" #>
 <#@ output extension=".cs" #>
 <#
 	var resourceType = typeof(Lang);
@@ -23,7 +23,7 @@ using System.Windows;
 using System.Windows.Data;
 using HandyControl.Tools;
 
-namespace HandyControlDemo.Properties.Langs;
+namespace XStudio.App.Properties.Langs;
 
 public class LangProvider : INotifyPropertyChanged
 {

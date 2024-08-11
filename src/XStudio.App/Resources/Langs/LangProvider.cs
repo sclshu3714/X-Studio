@@ -4,11 +4,11 @@ using System.Windows;
 using System.Windows.Data;
 using HandyControl.Tools;
 
-namespace HandyControlDemo.Properties.Langs;
+namespace XStudio.App.Properties.Langs;
 
 public class LangProvider : INotifyPropertyChanged
 {
-    internal static LangProvider Instance { get; } = ResourceHelper.GetResource<LangProvider>("DemoLangs");
+    public static LangProvider Instance { get; } = ResourceHelper.GetResource<LangProvider>("DemoLangs");
 
     private static string CultureInfoStr = string.Empty;
 

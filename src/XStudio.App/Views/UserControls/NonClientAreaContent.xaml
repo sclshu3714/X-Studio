@@ -5,6 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:XStudio.App.Views.UserControls"
              xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:langs="clr-namespace:XStudio.App.Properties.Langs"
+             xmlns:ex="clr-namespace:XStudio.App.Extensions"
+              xmlns:data="clr-namespace:XStudio.App.Models.Data"
              mc:Ignorable="d" 
              Height="29"
              d:DesignHeight="450" 
@@ -118,43 +121,43 @@
                 <StackPanel Orientation="Horizontal">
                     <hc:UniformSpacingPanel Button.Click="ButtonLangs_OnClick" Orientation="Vertical" Margin="10" Spacing="10" ChildWrapping="Wrap" MaxHeight="134">
                         <Button Tag="zh-cn" Style="{StaticResource ButtonCustom}">
-                            <Image Width="32" Source="/HandyControlDemo;component/Resources/Img/Flag/cn.png"/>
+                            <Image Width="32" Source="/XStudio.App;component/Resources/Img/Flag/cn.png"/>
                         </Button>
                         <Button Tag="en" Style="{StaticResource ButtonCustom}">
-                            <Image Width="32" Source="/HandyControlDemo;component/Resources/Img/Flag/en.png"/>
+                            <Image Width="32" Source="/XStudio.App;component/Resources/Img/Flag/en.png"/>
                         </Button>
                         <Button Tag="fa" Style="{StaticResource ButtonCustom}">
-                            <Image Width="32" Source="/HandyControlDemo;component/Resources/Img/Flag/fa.png"/>
+                            <Image Width="32" Source="/XStudio.App;component/Resources/Img/Flag/fa.png"/>
                         </Button>
                         <Button Tag="fr" Style="{StaticResource ButtonCustom}">
-                            <Image Width="32" Source="/HandyControlDemo;component/Resources/Img/Flag/fr.png"/>
+                            <Image Width="32" Source="/XStudio.App;component/Resources/Img/Flag/fr.png"/>
                         </Button>
                         <Button Tag="ca-ES" Style="{StaticResource ButtonCustom}">
-                            <Image Width="32" Source="/HandyControlDemo;component/Resources/Img/Flag/ca-Es.png"/>
+                            <Image Width="32" Source="/XStudio.App;component/Resources/Img/Flag/ca-Es.png"/>
                         </Button>
                         <Button Tag="ja" Style="{StaticResource ButtonCustom}">
-                            <Image Width="32" Source="/HandyControlDemo;component/Resources/Img/Flag/ja.png"/>
+                            <Image Width="32" Source="/XStudio.App;component/Resources/Img/Flag/ja.png"/>
                         </Button>
                         <Button Tag="ko-KR" Style="{StaticResource ButtonCustom}">
-                            <Image Width="32" Source="/HandyControlDemo;component/Resources/Img/Flag/ko-KR.png"/>
+                            <Image Width="32" Source="/XStudio.App;component/Resources/Img/Flag/ko-KR.png"/>
                         </Button>
                         <Button Tag="ru" Style="{StaticResource ButtonCustom}">
-                            <Image Width="32" Source="/HandyControlDemo;component/Resources/Img/Flag/ru.png"/>
+                            <Image Width="32" Source="/XStudio.App;component/Resources/Img/Flag/ru.png"/>
                         </Button>
                         <Button Tag="tr" Style="{StaticResource ButtonCustom}">
-                            <Image Width="32" Source="/HandyControlDemo;component/Resources/Img/Flag/tr.png"/>
+                            <Image Width="32" Source="/XStudio.App;component/Resources/Img/Flag/tr.png"/>
                         </Button>
                         <Button Tag="pt-BR" Style="{StaticResource ButtonCustom}">
-                            <Image Width="32" Source="/HandyControlDemo;component/Resources/Img/Flag/pt-BR.png"/>
+                            <Image Width="32" Source="/XStudio.App;component/Resources/Img/Flag/pt-BR.png"/>
                         </Button>
                         <Button Tag="pl" Style="{StaticResource ButtonCustom}">
-                            <Image Width="32" Source="/HandyControlDemo;component/Resources/Img/Flag/pl.png" />
+                            <Image Width="32" Source="/XStudio.App;component/Resources/Img/Flag/pl.png" />
                         </Button>
                         <Button Tag="es" Style="{StaticResource ButtonCustom}">
-                            <Image Width="32" Source="/HandyControlDemo;component/Resources/Img/Flag/es.png"/>
+                            <Image Width="32" Source="/XStudio.App;component/Resources/Img/Flag/es.png"/>
                         </Button>
                         <Button Tag="cs" Style="{StaticResource ButtonCustom}">
-                            <Image Width="32" Source="/HandyControlDemo;component/Resources/Img/Flag/cs.png"/>
+                            <Image Width="32" Source="/XStudio.App;component/Resources/Img/Flag/cs.png"/>
                         </Button>
                     </hc:UniformSpacingPanel>
                     <hc:Divider LineStrokeDashArray="2,2" Orientation="Vertical" Margin="0,20" LineStrokeThickness="1"/>

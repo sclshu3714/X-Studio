@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace HandyControlDemo.Properties.Langs
+namespace XStudio.App.Properties.Langs
 {
     using System;
 
@@ -45,7 +45,7 @@ namespace HandyControlDemo.Properties.Langs
             {
                 if (object.ReferenceEquals(resourceMan, null))
                 {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("HandyControlDemo.Properties.Langs.Lang", typeof(Lang).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("XStudio.App.Properties.Langs.Lang", typeof(Lang).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
