@@ -18,7 +18,7 @@ namespace XStudio.App;
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
-public partial class MainWindow : System.Windows.Window
+public partial class MainWindow : HandyControl.Controls.Window
 {
     private readonly DataService _helloWorldService;
 
@@ -33,17 +33,17 @@ public partial class MainWindow : System.Windows.Window
         base.OnContentRendered(e);
 
         DataContext = ViewModelLocator.Instance.Main;
-        //NonClientAreaContent = new NonClientAreaContent();
+        NonClientAreaContent = new NonClientAreaContent();
         ControlMain.Content = new MainWindowContent();
 
-        //GlobalShortcut.Init(new List<KeyBinding>
-        //{
-        //    new(ViewModelLocator.Instance.Main.GlobalShortcutInfoCmd, Key.I, ModifierKeys.Control | ModifierKeys.Alt),
-        //    new(ViewModelLocator.Instance.Main.GlobalShortcutWarningCmd, Key.E, ModifierKeys.Control | ModifierKeys.Alt),
-        //    new(ViewModelLocator.Instance.Main.OpenDocCmd, Key.F1, ModifierKeys.None),
-        //    new(ViewModelLocator.Instance.Main.OpenCodeCmd, Key.F12, ModifierKeys.None)
-        //});
-        //Dialog.SetToken(this, MessageToken.MainWindow);
+        GlobalShortcut.Init(new List<KeyBinding>
+        {
+            new(ViewModelLocator.Instance.Main.GlobalShortcutInfoCmd, Key.I, ModifierKeys.Control | ModifierKeys.Alt),
+            new(ViewModelLocator.Instance.Main.GlobalShortcutWarningCmd, Key.E, ModifierKeys.Control | ModifierKeys.Alt),
+            new(ViewModelLocator.Instance.Main.OpenDocCmd, Key.F1, ModifierKeys.None),
+            new(ViewModelLocator.Instance.Main.OpenCodeCmd, Key.F12, ModifierKeys.None)
+        });
+        Dialog.SetToken(this, MessageToken.MainWindow);
         WindowAttach.SetIgnoreAltF4(this, true);
 
        // Messenger.Default.Send(true, MessageToken.FullSwitch);

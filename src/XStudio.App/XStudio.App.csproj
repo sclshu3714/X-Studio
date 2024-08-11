@@ -94,11 +94,13 @@
       <None Remove="Resources\Img\QQ\9.gif" />
       <None Remove="Resources\Img\Slack.png" />
       <None Remove="Resources\Img\under_construction.gif" />
+      <None Remove="Resources\Langs\LangProvider.tt" />
       <None Remove="Views\icon.ico" />
       <Content Include="appsettings.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <Content Include="Resources\Img\icon.ico" />
+      <Content Include="Resources\Langs\LangProvider.tt" />
     </ItemGroup>
 
     <ItemGroup>
