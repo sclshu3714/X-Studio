@@ -7,7 +7,7 @@ using XStudio.App.Models;
 
 namespace XStudio.App.ViewModel.Main
 {
-    public class WorkspaceInfoModel : ViewModelBase<DataModel>
+    public class WorkspaceInfoModel : ViewModelDataBase<DataModel>
     {
         public string Key { get; set; } = string.Empty;
         private string _title = string.Empty;

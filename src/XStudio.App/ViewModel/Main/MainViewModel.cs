@@ -19,7 +19,7 @@ using XStudio.App.Service;
 
 namespace XStudio.App.ViewModel.Main
 {
-    public class MainViewModel : ViewModelBase<DataModel>
+    public class MainViewModel : ViewModelDataBase<DataModel>
     {
         private object _contentTitle;
         private object _subContent;

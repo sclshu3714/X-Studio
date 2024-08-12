@@ -42,7 +42,7 @@ namespace XStudio.App.Views.UserControls
                 }
 
                 ConfigHelper.Instance.SetLang(langName);
-                //LangProvider.Culture = new CultureInfo(langName);
+                XStudio.App.Properties.Langs.LangProvider.Culture = new CultureInfo(langName);
                 //Messenger.Default.Send<object>(null, MessageToken.LangUpdated);
 
                 GlobalData.Config.Lang = langName;

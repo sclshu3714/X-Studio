@@ -7,7 +7,7 @@ using XStudio.App.Models;
 
 namespace XStudio.App.ViewModel.Main
 {
-    public class WorkspaceItemModel : ViewModelBase<DataModel>
+    public class WorkspaceItemModel : ViewModelDataBase<DataModel>
     {
         private bool _isVisible = true;
         private string _queriesText = string.Empty;

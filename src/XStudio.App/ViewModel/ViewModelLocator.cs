@@ -18,16 +18,20 @@ namespace XStudio.App.ViewModel
 
         private readonly IServiceProvider _serviceProvider;
 
-        private ViewModelLocator()
+        public ViewModelLocator()
         {
             var services = new ServiceCollection();
 
             services.AddSingleton<DataService>();
             services.AddTransient<MainViewModel>();
+            services.AddTransient<NonClientAreaViewModel>();
 
             _serviceProvider = services.BuildServiceProvider();
         }
 
         public MainViewModel Main => _serviceProvider.GetService<MainViewModel>()!;
+
+        public NonClientAreaViewModel NoUser => _serviceProvider.GetService<NonClientAreaViewModel>()!;
+
     }
 }

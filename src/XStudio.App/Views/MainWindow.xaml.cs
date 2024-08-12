@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq.Dynamic.Core;
-using System.Windows;
 using System.Windows.Input;
 using XStudio.App.Common;
 using XStudio.App.Models.Data;
