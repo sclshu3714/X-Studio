@@ -231,11 +231,11 @@ public partial class App : PrismApplication
         skins1.MergedDictionaries.Clear();
         skins1.MergedDictionaries.Add(new ResourceDictionary
         {
-            Source = new Uri("pack://application:,,,/HandyControl;component/Themes/Theme.xaml")
+            Source = new Uri("pack://application:,,,/XStudio.App;component/Themes/Theme.xaml")
         });
         skins1.MergedDictionaries.Add(new ResourceDictionary
         {
-            Source = new Uri("pack://application:,,,/HandyControlDemo;component/Resources/Themes/Theme.xaml")
+            Source = new Uri("pack://application:,,,/XStudio.App;component/Resources/Themes/Theme.xaml")
         });
 
         Current.MainWindow?.OnApplyTemplate();
@@ -246,7 +246,7 @@ public partial class App : PrismApplication
         ShutdownMode = ShutdownMode.OnMainWindowClose;
         GlobalData.Init();
         ConfigHelper.Instance.SetLang(GlobalData.Config.Lang);
-        XStudio.App.Properties.Langs.LangProvider.Culture = new CultureInfo(GlobalData.Config.Lang);
+        //XStudio.App.Properties.Langs.LangProvider.Culture = new CultureInfo(GlobalData.Config.Lang);
 
         if (GlobalData.Config.Skin != SkinType.Default)
         {
@@ -284,7 +284,7 @@ public partial class App : PrismApplication
 
     private void EnsureSingleton()
     {
-        AppMutex = new Mutex(true, "HandyControlDemo", out var createdNew);
+        AppMutex = new Mutex(true, "XStudio.App", out var createdNew);
 
         if (createdNew)
         {

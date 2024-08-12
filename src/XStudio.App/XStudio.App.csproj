@@ -7,8 +7,24 @@
         <TargetFramework>net8.0-windows</TargetFramework>
         <Nullable>enable</Nullable>
         <UseWPF>true</UseWPF>
-        <ApplicationIcon>Resources\Img\icon.ico</ApplicationIcon>
+        <ApplicationIcon>xlogo.ico</ApplicationIcon>
     </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Remove="Resources\Langs\**" />
+      <EmbeddedResource Remove="Resources\Langs\**" />
+      <None Remove="Resources\Langs\**" />
+      <Page Remove="Resources\Langs\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Resources\Lang.Designer.cs" />
+      <Compile Remove="Resources\LangProvider.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Resources\Lang.resx" />
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Abp" Version="9.3.0" />
@@ -94,13 +110,12 @@
       <None Remove="Resources\Img\QQ\9.gif" />
       <None Remove="Resources\Img\Slack.png" />
       <None Remove="Resources\Img\under_construction.gif" />
-      <None Remove="Resources\Langs\LangProvider.tt" />
+      <None Remove="Resources\LangProvider.tt" />
       <None Remove="Views\icon.ico" />
       <Content Include="appsettings.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
-      <Content Include="Resources\Img\icon.ico" />
-      <Content Include="Resources\Langs\LangProvider.tt" />
+      <Content Include="xlogo.ico" />
     </ItemGroup>
 
     <ItemGroup>
@@ -291,6 +306,46 @@
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </Resource>
       <Resource Include="Views\icon.ico" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Properties\Langs\Lang.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Lang.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Properties\Langs\LangProvider.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>LangProvider.tt</DependentUpon>
+      </Compile>
+      <Compile Update="Properties\Resources.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resources.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Properties\Langs\Lang.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Lang.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Properties\Resources.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Properties\Langs\LangProvider.tt">
+        <Generator>TextTemplatingFilePreprocessor</Generator>
+        <LastGenOutput>LangProvider.cs</LastGenOutput>
+      </None>
     </ItemGroup>
 
 </Project>

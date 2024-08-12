@@ -14,7 +14,7 @@ namespace XStudio.App.Extensions
     {
         public LangExtension()
         {
-            Source = XStudio.App.Properties.Langs.LangProvider.Instance;
+            //Source = XStudio.App.Properties.Langs.LangProvider.Instance;
         }
     }
 }
