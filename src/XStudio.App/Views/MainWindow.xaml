@@ -13,6 +13,6 @@
     WindowStartupLocation="CenterScreen"
     d:DesignHeight="680"
     d:DesignWidth="1280"
-    Icon="/Views/icon.ico">
+    Icon="/Views/xlogo.ico">
     <ContentControl Name="ControlMain"/>
 </hc:Window>

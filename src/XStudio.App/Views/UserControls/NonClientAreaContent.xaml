@@ -13,7 +13,7 @@
     d:DesignHeight="30"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid DataContext="{Binding NoUser, Source={StaticResource Locator}}">
+    <!--<Grid DataContext="{Binding NoUser, Source={StaticResource Locator}}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="Auto" />
@@ -331,5 +331,5 @@
                 </StackPanel>
             </Border>
         </Popup>
-    </Grid>
+    </Grid>-->
 </UserControl>

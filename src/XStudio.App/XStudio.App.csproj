@@ -110,12 +110,16 @@
       <None Remove="Resources\Img\QQ\9.gif" />
       <None Remove="Resources\Img\Slack.png" />
       <None Remove="Resources\Img\under_construction.gif" />
+      <None Remove="Resources\Img\xlogo.ico" />
       <None Remove="Resources\LangProvider.tt" />
       <None Remove="Views\icon.ico" />
+      <None Remove="Views\wxz.png" />
+      <None Remove="Views\xlogo.ico" />
       <Content Include="appsettings.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
-      <Content Include="xlogo.ico" />
+      <EmbeddedResource Include="Resources\Img\xlogo.ico" />
+      <EmbeddedResource Include="xlogo.ico" />
     </ItemGroup>
 
     <ItemGroup>
@@ -306,6 +310,8 @@
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </Resource>
       <Resource Include="Views\icon.ico" />
+      <Resource Include="Views\wxz.png" />
+      <Resource Include="Views\xlogo.ico" />
     </ItemGroup>
 
     <ItemGroup>
