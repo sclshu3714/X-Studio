@@ -16,6 +16,8 @@
   <ItemGroup>
     <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
     <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
+    <PackageReference Include="Serilog" Version="4.0.0" />
     <PackageReference Include="Volo.Abp.Account.Application" Version="8.2.1" />
     <PackageReference Include="Volo.Abp.Identity.Application" Version="8.2.1" />
     <PackageReference Include="Volo.Abp.PermissionManagement.Application" Version="8.2.1" />

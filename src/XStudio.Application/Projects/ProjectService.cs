@@ -19,6 +19,13 @@ using Volo.Abp.Identity;
 using Volo.Abp;
 using Volo.Abp.BackgroundJobs;
 using static XStudio.Permissions.XStudioPermissions;
+using System.Collections;
+using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
+using System.Transactions;
+using Serilog;
+using Volo.Abp.Uow;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace XStudio.Projects
 {
@@ -59,22 +66,43 @@ namespace XStudio.Projects
         [HttpGet("{id}")]
         public override async Task<ProjectDto> GetAsync(Guid id)
         {
-            var queryable = await Repository.GetQueryableAsync();
-            IQueryable<Project> query = queryable.Where(x => x.Id == id);
-            var queryResult = await AsyncExecuter.FirstOrDefaultAsync(query);
-            if (queryResult == null)
+            var queryResult = from project in await Repository.GetQueryableAsync()
+                        join author in _userManager.Users on project.AuthorId equals author.Id
+                        select new ProjectDto
+                        {
+                            // Assign project and author properties here
+                            Id = project.Id,
+                            Name = project.Name,
+                            AuthorId = project.AuthorId,
+                            AuthorName = author.Name
+                        };
+
+            var sql = queryResult.ToQueryString(); // Get the generated SQL query
+            Log.Logger.Information(sql);// Print the SQL query for debugging
+
+            if (queryResult == null || !queryResult.Any())
             {
                 throw new EntityNotFoundException(typeof(Project), id);
             }
-            var coursewareDto = ObjectMapper.Map<Project, ProjectDto>(queryResult);
-            var queryableUser = await _userManager.FindByIdAsync($"{queryResult.AuthorId}");
-            if (queryableUser == null)
-            {
-                throw new EntityNotFoundException(typeof(IUser), queryResult.AuthorId);
-            }
-            coursewareDto.AuthorName = queryableUser.Name;
-            return coursewareDto;
+            return await queryResult.FirstAsync();
         }
+
+        //var queryable = await Repository.GetQueryableAsync();
+        //IQueryable<Project> query = queryable.Where(x => x.Id == id);
+        //var queryResult = await AsyncExecuter.FirstOrDefaultAsync(query);
+        //if (queryResult == null)
+        //{
+        //    throw new EntityNotFoundException(typeof(Project), id);
+        //}
+        //var coursewareDto = ObjectMapper.Map<Project, ProjectDto>(queryResult);
+        //var queryableUser = await _userManager.FindByIdAsync($"{queryResult.AuthorId}");
+        //if (queryableUser == null)
+        //{
+        //    throw new EntityNotFoundException(typeof(IUser), queryResult.AuthorId);
+        //}
+        //coursewareDto.AuthorName = queryableUser.Name;
+        //return coursewareDto;
+        //}
 
         [HttpPost] 
         public override async Task<ProjectDto> CreateAsync(CreateUpdateProjectDto input)
@@ -83,23 +111,82 @@ namespace XStudio.Projects
         }
 
         [HttpDelete]
-        public override Task DeleteAsync(Guid id)
+        public override async Task DeleteAsync(Guid id)
         {
-            return base.DeleteAsync(id); 
+            var project = await Repository.GetAsync(id);
+            if (project != null && CurrentUnitOfWork != null)
+            {
+                await Repository.DeleteAsync(project); // 删除主表
+                await CurrentUnitOfWork.SaveChangesAsync(); // 保存更改
+            }
+            else
+            {
+                await base.DeleteAsync(id);
+            }
         }
 
         [HttpPut]
         public override async Task<ProjectDto> UpdateAsync(Guid id, CreateUpdateProjectDto input)
         {
-           return await base.UpdateAsync(id, input);
+            AbpUnitOfWorkOptions options = new AbpUnitOfWorkOptions();
+            using (var uow = UnitOfWorkManager.Begin(options))
+            {
+                try
+                {
+                    var project = await Repository.GetAsync(id);
+                    ObjectMapper.Map(input, project); // Update project with input data
+                    await Repository.UpdateAsync(project);
+
+                    await uow.CompleteAsync(); // Commit the transaction if everything is successful
+
+                    return ObjectMapper.Map<Project, ProjectDto>(project);
+                }
+                catch (Exception ex)
+                {
+                    uow.Dispose();//.DisposeAsync(); // Rollback the transaction if an exception occurs
+                    throw new DbUpdateException("更新失败，已经回滚",ex);
+                }
+            }
+
+
+            //var ou = await Repository.GetAsync(id);
+            //ou.Description = input.Description;
+            //await Repository.UpdateAsync(ou);
+            //if (CurrentUnitOfWork != null)
+            //{
+            //    await CurrentUnitOfWork.SaveChangesAsync();
+            //}
+
+            //return ObjectMapper.Map<Project, ProjectDto>(ou);
+            ////return await base.UpdateAsync(id, input);
         }
 
         [HttpPost("list")]
         public override async Task<PagedResultDto<ProjectDto>> GetListAsync(PagedAndSortedResultRequestDto input)
         {
-            PagedResultDto<ProjectDto> ProjectDtos = await base.GetListAsync(input);
-            ProjectDtos.Items = await UpdateAuthorNames(ProjectDtos.Items.ToList());
-            return ProjectDtos;
+            var query = from project in await Repository.GetQueryableAsync()
+                        join author in _userManager.Users on project.AuthorId equals author.Id
+                        select new ProjectDto
+                        {
+                            // Assign project and author properties here
+                            Id = project.Id,
+                            Name = project.Name,
+                            AuthorId = project.AuthorId,
+                            AuthorName = author.Name
+                        };
+
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .Skip(input.SkipCount)
+                .Take(input.MaxResultCount)
+                .ToListAsync();
+
+            return new PagedResultDto<ProjectDto>(totalCount, items);
+
+
+            //PagedResultDto<ProjectDto> ProjectDtos = await base.GetListAsync(input);
+            //ProjectDtos.Items = await UpdateAuthorNames(ProjectDtos.Items.ToList());
+            //return ProjectDtos;
         }
 
         private async Task<List<ProjectDto>> UpdateAuthorNames(List<ProjectDto> projects)
@@ -133,6 +220,21 @@ namespace XStudio.Projects
             }
 
             return $"project.{sorting}";
+        }
+
+        protected virtual void WithUnitOfWork(AbpUnitOfWorkOptions options, Action action)
+        {
+            using (var scope = LazyServiceProvider.CreateScope())
+            {
+                var uowManager = scope.ServiceProvider.GetRequiredService<IUnitOfWorkManager>();
+
+                using (var uow = uowManager.Begin(options))
+                {
+                    action();
+
+                    uow.CompleteAsync();
+                }
+            }
         }
     }
 }
