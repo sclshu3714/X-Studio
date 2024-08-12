@@ -28,7 +28,7 @@ namespace XStudio.Common
 
             if (IsValidToken(token))
             {
-                context.User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Name, "admin") }, "Bearer"));
+                //context.User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Name, "admin") }, "Bearer"));
             }
             else
             {

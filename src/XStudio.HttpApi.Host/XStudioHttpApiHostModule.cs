@@ -56,6 +56,8 @@ using Serilog;
 using XStudio.Nacos;
 using static Org.BouncyCastle.Math.EC.ECCurve;
 using Nacos.V2;
+using Microsoft.AspNetCore.Identity;
+using AspNetCoreRateLimit;
 
 namespace XStudio;
 
@@ -76,7 +78,7 @@ public class XStudioHttpApiHostModule : AbpModule
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {
         var configuration = context.Services.GetConfiguration();
-        ConfigureEnvironment(configuration);
+        PreConfigureEnvironment(configuration);
         PreConfigure<OpenIddictBuilder>(builder =>
         {
             builder.AddValidation(options =>
@@ -96,27 +98,11 @@ public class XStudioHttpApiHostModule : AbpModule
         });
     }
 
-    public override void ConfigureServices(ServiceConfigurationContext context)
-    {
-        var configuration = context.Services.GetConfiguration();
-        var hostingEnvironment = context.Services.GetHostingEnvironment();
-        ConfigureBundles();
-        ConfigureUrls(configuration);
-        ConfigureConventionalControllers();
-        ConfigureVirtualFileSystem(context);
-        ConfigureCors(context, configuration);
-        ConfigureSwaggerServices(context, configuration);
-        ConfigureAbpApiVersioning(context);
-        ConfigureNewtonsoftJson(context);
-        ConfigureNacos(context, configuration);
-        ConfigureAuthentication(context);
-    }
-
-    private void ConfigureEnvironment(IConfiguration configuration)
+    private void PreConfigureEnvironment(IConfiguration configuration)
     {
         // 检查环境变量是否已设置，如果没有，则设置为开发环境
         var environment = configuration["App:Environment"]; // Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-        if (string.IsNullOrEmpty(environment) || 
+        if (string.IsNullOrEmpty(environment) ||
             (environment != Environments.Development && environment != Environments.Staging && environment != Environments.Production))
         {
             // 这里可以根据需要设置不同的环境
@@ -139,41 +125,71 @@ public class XStudioHttpApiHostModule : AbpModule
         builder.AddEnvironmentVariables();
     }
 
+    public override void ConfigureServices(ServiceConfigurationContext context)
+    {
+        var configuration = context.Services.GetConfiguration();
+        var hostingEnvironment = context.Services.GetHostingEnvironment();
+        ConfigureBundles();
+        ConfigureUrls(configuration);
+        ConfigureConventionalControllers();
+        ConfigureVirtualFileSystem(context);
+        ConfigureCors(context, configuration);
+        ConfigureSwaggerServices(context, configuration);
+        ConfigureAbpApiVersioning(context);
+        ConfigureNewtonsoftJson(context);
+        ConfigureNacos(context, configuration);
+        ConfigureRateLimit(context, configuration);
+        //ConfigureJwtBearer(context, configuration);
+        ConfigureAuthentication(context);
+    }
+
+    private void ConfigureJwtBearer(ServiceConfigurationContext context, IConfiguration configuration)
+    {
+        if (configuration["Jwt:Key"] is string jwtKey && !string.IsNullOrWhiteSpace(jwtKey))
+        {
+            var key = Encoding.ASCII.GetBytes(jwtKey);
+            context.Services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = true;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
+        }
+    }
+
+    private void ConfigureRateLimit(ServiceConfigurationContext context, IConfiguration configuration)
+    {
+        // 限制配置
+        context.Services.AddOptions();
+        context.Services.AddMemoryCache();
+        context.Services.Configure<IpRateLimitOptions>(configuration.GetSection("IpRateLimiting"));
+        context.Services.Configure<IpRateLimitPolicies>(configuration.GetSection("IpRateLimitPolicies"));
+        context.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+        context.Services.AddInMemoryRateLimiting();
+
+        context.Services.Configure<IdentityOptions>(options =>
+        {
+            // 锁定配置
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
+            options.Lockout.MaxFailedAccessAttempts = 3;
+            options.Lockout.AllowedForNewUsers = true;
+        });
+    }
+
     private void ConfigureNacos(ServiceConfigurationContext context, IConfiguration Configuration)
     {
         context.Services.AddNacosAspNet(Configuration, "Nacos");
-
-        //context.Services.AddNacosAspNet(a =>
-        //{
-        //    a.Ephemeral = config.Ephemeral;
-        //    a.Ip = config.Ip;
-        //    a.Port = config.Port;
-        //    a.Secure = config.Secure;
-        //    a.ClusterName = config.ClusterName;
-        //    a.GroupName = config.GroupName;
-        //    a.Weight = config.Weight;
-        //    a.ServiceName = config.ServiceName;
-        //    a.Namespace = config.Namespace;
-        //    a.Password = config.Password;
-        //    a.UserName = config.UserName;
-        //    a.AccessKey = config.AccessKey;
-        //    a.ContextPath = config.ContextPath;
-        //    a.EndPoint = config.EndPoint;
-        //    a.ListenInterval = config.ListenInterval;
-        //    a.SecretKey = config.SecretKey;
-        //    a.ServerAddresses = config.ServerAddresses;
-        //    a.ConfigFilterAssemblies = config.ConfigFilterAssemblies;
-        //    a.ConfigUseRpc = config.ConfigUseRpc;
-        //    a.DefaultTimeOut = config.DefaultTimeOut;
-        //    a.NamingUseRpc = config.NamingUseRpc;
-        //    a.RamRoleName = config.RamRoleName;
-        //    a.Metadata = config.Metadata;
-        //    a.ConfigFilterExtInfo = config.ConfigFilterExtInfo;
-        //    a.NamingCacheRegistryDir = config.NamingCacheRegistryDir;
-        //    a.NamingLoadCacheAtStart = config.NamingLoadCacheAtStart;
-        //    a.NamingLoadCacheAtStart = config.NamingLoadCacheAtStart;
-        //});
-
         GlobalConfig.Default.NacosConfig = Configuration.Get<GlobalNacosConfig>();
         if (GlobalConfig.Default.NacosConfig != null)
         {
@@ -225,31 +241,21 @@ public class XStudioHttpApiHostModule : AbpModule
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
     {
-        //context.Services.AddAuthorization(options =>
-        //{
-        //    options.AddPolicy("XStudioPolicy", policy =>
-        //    {
-        //        policy.RequireAuthenticatedUser();
-        //        policy.Requirements.Add(new AbpRequirement());
-        //    });
-        //});
-        //context.Services.AddSingleton<IAuthorizationHandler, AbpAuthorizationHandler>();
-
         context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
         context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
         {
             options.IsDynamicClaimsEnabled = true;
         });
-        //context.Services.AddControllersWithViews(Options =>
-        //{
-        //    Options.Filters.Add<AbpAuthorizeFilter>();
-        //});
+        context.Services.AddControllersWithViews(Options =>
+        {
+            Options.Filters.Add<AbpAuthorizeFilter>();
+        });
 
         //配置自定义ITokenExtensionGrant
-        context.Services.Configure<AbpOpenIddictExtensionGrantsOptions>(options =>
-        {
-            options.Grants.Add(MyTokenExtensionGrantConsts.GrantType, new MyTokenExtensionGrant());
-        });
+        //context.Services.Configure<AbpOpenIddictExtensionGrantsOptions>(options =>
+        //{
+        //    options.Grants.Add(MyTokenExtensionGrantConsts.GrantType, new MyTokenExtensionGrant());
+        //});
     }
 
     private void ConfigureBundles()
@@ -281,7 +287,6 @@ public class XStudioHttpApiHostModule : AbpModule
     private void ConfigureVirtualFileSystem(ServiceConfigurationContext context)
     {
         var hostingEnvironment = context.Services.GetHostingEnvironment();
-
         if (hostingEnvironment.IsDevelopment())
         {
             Configure<AbpVirtualFileSystemOptions>(options =>
@@ -323,14 +328,7 @@ public class XStudioHttpApiHostModule : AbpModule
             configuration["AuthServer:Authority"]!,
             new Dictionary<string, string>
             {
-                    {"XStudio", "XStudio API"}
-            },
-            options =>
-            {
-                //options.SwaggerDoc("v1", new OpenApiInfo { Title = "XStudio V1 API", Version = "v1" });
-                //options.SwaggerDoc("v2", new OpenApiInfo { Title = "XStudio V2 API", Version = "v2" });
-                //options.DocInclusionPredicate((docName, description) => true);
-                //options.CustomSchemaIds(type => type.FullName);
+                {"XStudio", "XStudio API"}
             });
     }
 
@@ -385,7 +383,7 @@ public class XStudioHttpApiHostModule : AbpModule
         {
             app.UseErrorPage();
         }
-
+        app.UseIpRateLimiting(); // 启用访问限制
         app.UseCorrelationId();
         app.UseStaticFiles();
         app.UseRouting();
