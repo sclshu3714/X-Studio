@@ -20,9 +20,9 @@ namespace XStudio.App.ViewModel.Main
 
         private void OpenView(string? viewName)
         {
-            //Messenger.Default.Send<object>(null, MessageToken.ClearLeftSelected);
-            //Messenger.Default.Send(true, MessageToken.FullSwitch);
-            //Messenger.Default.Send(AssemblyHelper.CreateInternalInstance($"UserControl.{viewName}"), MessageToken.LoadShowContent);
+            MessengerInstance?.Send<object, string>("", MessageToken.ClearLeftSelected);
+            MessengerInstance?.Send<object, string>(true, MessageToken.FullSwitch);
+            MessengerInstance?.Send<object, string>(AssemblyHelper.CreateInternalInstance($"UserControl.{viewName}"), MessageToken.LoadShowContent);
         }
 
         private string _versionInfo = string.Empty;

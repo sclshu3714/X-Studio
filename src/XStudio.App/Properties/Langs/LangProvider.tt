@@ -13,8 +13,8 @@
     {
         langDic[item] = 
         @$"/// <summary>
-    ///   {string.Format(Lang.LangComment, Lang.ResourceManager.GetString(item, Lang.Culture))}
-    /// </summary>";
+           ///   {string.Format(Lang.LangComment, Lang.ResourceManager.GetString(item, Lang.Culture))}
+           /// </summary>";
     }
 #>
 using System.ComponentModel;
@@ -27,7 +27,7 @@ namespace XStudio.App.Properties.Langs
 {
     public class LangProvider : INotifyPropertyChanged
     {
-        internal static LangProvider Instance { get; } = ResourceHelper.GetResource<LangProvider>("DemoLangs");
+        public static LangProvider Instance { get; } = ResourceHelper.GetResource<LangProvider>("DemoLangs");
 
         private static string CultureInfoStr;
 

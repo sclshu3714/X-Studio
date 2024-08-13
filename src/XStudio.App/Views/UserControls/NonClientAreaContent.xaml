@@ -13,15 +13,14 @@
     d:DesignHeight="30"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <!--<Grid DataContext="{Binding NoUser, Source={StaticResource Locator}}">
+    <Grid DataContext="{Binding NoUser, Source={StaticResource Locator}}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <StackPanel VerticalAlignment="Stretch" Orientation="Horizontal">
             <Menu Margin="10,0,0,0" Background="Transparent">
-                <MenuItem Height="29" 
-                          Header="{ex:Lang Key={x:Static langs:LangKeys.Repository}}">
+                <!--<MenuItem Height="29" Header="{ex:Lang Key={x:Static langs:LangKeys.Repository}}">
                     <MenuItem
                         Command="hc:ControlCommands.OpenLink"
                         CommandParameter="https://github.com/NaBian/HandyControl"
@@ -206,7 +205,7 @@
                                 Stretch="Uniform" />
                         </MenuItem.Icon>
                     </MenuItem>
-                </MenuItem>
+                </MenuItem>-->
             </Menu>
             <Border
                 Margin="10,0,0,0"
@@ -331,5 +330,5 @@
                 </StackPanel>
             </Border>
         </Popup>
-    </Grid>-->
+    </Grid>
 </UserControl>

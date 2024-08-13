@@ -48,6 +48,7 @@
 
     <ItemGroup>
       <None Remove="appsettings.json" />
+      <None Remove="Properties\Langs\LangProvider.tt" />
       <None Remove="Resources\Img\1.jpg" />
       <None Remove="Resources\Img\2.jpg" />
       <None Remove="Resources\Img\3.jpg" />
@@ -117,6 +118,10 @@
       <None Remove="Views\xlogo.ico" />
       <Content Include="appsettings.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="Properties\Langs\LangProvider.tt">
+        <Generator>TextTemplatingFilePreprocessor</Generator>
+        <LastGenOutput>LangProvider.cs</LastGenOutput>
       </Content>
       <EmbeddedResource Include="Resources\Img\xlogo.ico" />
       <EmbeddedResource Include="xlogo.ico" />
@@ -345,13 +350,6 @@
 
     <ItemGroup>
       <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Update="Properties\Langs\LangProvider.tt">
-        <Generator>TextTemplatingFilePreprocessor</Generator>
-        <LastGenOutput>LangProvider.cs</LastGenOutput>
-      </None>
     </ItemGroup>
 
 </Project>
