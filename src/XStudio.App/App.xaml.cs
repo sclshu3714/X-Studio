@@ -53,6 +53,7 @@ public partial class App : PrismApplication
     {
         IConfigurationRoot? configuration = ConfigurationInitialized();
         AppSettings.OnInitialized();
+        ApplyConfiguration();
         if (configuration != null)
         {
             Log.Logger = new LoggerConfiguration()
