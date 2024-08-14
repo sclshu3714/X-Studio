@@ -47,6 +47,7 @@ public class Program
         {
             if (ex is HostAbortedException)
             {
+                Log.Fatal(ex, "Host terminated unexpectedly!");
                 throw;
             }
 
