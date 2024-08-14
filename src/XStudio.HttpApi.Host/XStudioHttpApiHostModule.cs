@@ -58,8 +58,22 @@ using static Org.BouncyCastle.Math.EC.ECCurve;
 using Nacos.V2;
 using Microsoft.AspNetCore.Identity;
 using AspNetCoreRateLimit;
+using Volo.Abp.AspNetCore.Mvc.UI.MultiTenancy;
 
 namespace XStudio;
+
+
+//[DependsOn(
+//    typeof(BookStoreHttpApiModule),
+//    typeof(AbpAutofacModule),
+//    typeof(AbpCachingStackExchangeRedisModule),
+//    typeof(AbpDistributedLockingModule),
+//    typeof(AbpAspNetCoreMvcUiMultiTenancyModule),
+//    typeof(BookStoreApplicationModule),
+//    typeof(BookStoreEntityFrameworkCoreModule),
+//    typeof(AbpAspNetCoreSerilogModule),
+//    typeof(AbpSwashbuckleModule)
+//)]
 
 [DependsOn(
     typeof(XStudioHttpApiModule),
@@ -69,6 +83,8 @@ namespace XStudio;
     typeof(XStudioEntityFrameworkCoreModule),
     typeof(AbpAspNetCoreMvcUiLeptonXLiteThemeModule),
     typeof(AbpAccountWebOpenIddictModule),
+    typeof(AbpAccountApplicationModule),
+    typeof(AbpAccountHttpApiModule),
     typeof(AbpAspNetCoreAuthenticationOAuthModule),
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpSwashbuckleModule)
@@ -90,7 +106,7 @@ public class XStudioHttpApiHostModule : AbpModule
         });
         PreConfigure<OpenIddictServerBuilder>(builder =>
         {
-            //添加自定义ITokenExtensionGrant
+            //添加自定义MyTokenExtensionGrantConsts
             builder.Configure(openIddictServerOptions =>
             {
                 openIddictServerOptions.GrantTypes.Add(MyTokenExtensionGrantConsts.GrantType);
@@ -106,21 +122,28 @@ public class XStudioHttpApiHostModule : AbpModule
             (environment != Environments.Development && environment != Environments.Staging && environment != Environments.Production))
         {
             // 这里可以根据需要设置不同的环境
-            environment = "Development";
-            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", environment);
+            Log.Warning($"当前运行环境：{environment}, 不是常规环境，环境变量将切换到Development环境，但是配置文件依然读取 appsettings.{environment}.json");
+            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
         }
         else
         {
+            Log.Warning($"当前运行环境：{environment}");
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", environment);
         }
-
+        
         // 根据环境加载不同的配置文件
         var builder = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile($"appsettings.json", optional: false, reloadOnChange: true);
+
+        // 加载补充配置文件
         if (File.Exists($"appsettings.{environment}.json"))
         {
             builder.AddJsonFile($"appsettings.{environment}.json", optional: true, true);
+        }
+        else
+        {
+            Log.Warning($"没有检查到配置文件:appsettings.{environment}.json; 告知：全部配置默认在appsettings.json中");
         }
         builder.AddEnvironmentVariables();
     }
@@ -139,33 +162,7 @@ public class XStudioHttpApiHostModule : AbpModule
         ConfigureNewtonsoftJson(context);
         ConfigureNacos(context, configuration);
         ConfigureRateLimit(context, configuration);
-        //ConfigureJwtBearer(context, configuration);
-        ConfigureAuthentication(context);
-    }
-
-    private void ConfigureJwtBearer(ServiceConfigurationContext context, IConfiguration configuration)
-    {
-        if (configuration["Jwt:Key"] is string jwtKey && !string.IsNullOrWhiteSpace(jwtKey))
-        {
-            var key = Encoding.ASCII.GetBytes(jwtKey);
-            context.Services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = true;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
-        }
+        ConfigureAuthentication(context, configuration);
     }
 
     private void ConfigureRateLimit(ServiceConfigurationContext context, IConfiguration configuration)
@@ -239,23 +236,46 @@ public class XStudioHttpApiHostModule : AbpModule
         });
     }
 
-    private void ConfigureAuthentication(ServiceConfigurationContext context)
+    private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)
     {
+        //if (configuration["Jwt:Key"] is string jwtKey && !string.IsNullOrWhiteSpace(jwtKey))
+        //{
+        //    var key = Encoding.ASCII.GetBytes(jwtKey);
+        //    context.Services.AddAuthentication(x =>
+        //    {
+        //        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        //        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        //    })
+        //    .AddJwtBearer(x =>
+        //    {
+        //        x.RequireHttpsMetadata = true;
+        //        x.SaveToken = true;
+        //        x.TokenValidationParameters = new TokenValidationParameters
+        //        {
+        //            ValidateLifetime = true,
+        //            ValidateIssuerSigningKey = true,
+        //            IssuerSigningKey = new SymmetricSecurityKey(key),
+        //            ValidateIssuer = false,
+        //            ValidateAudience = false
+        //            //or
+        //            //ValidateIssuer = true,
+        //            //ValidateAudience = true,
+        //            //ValidIssuer = Configuration["Jwt:Issuer"],
+        //            //ValidAudience = Configuration["Jwt:Audience"],
+        //        };
+        //    });
+        //}
+
         context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
         context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
         {
             options.IsDynamicClaimsEnabled = true;
         });
+
         context.Services.AddControllersWithViews(Options =>
         {
             Options.Filters.Add<AbpAuthorizeFilter>();
         });
-
-        //配置自定义ITokenExtensionGrant
-        //context.Services.Configure<AbpOpenIddictExtensionGrantsOptions>(options =>
-        //{
-        //    options.Grants.Add(MyTokenExtensionGrantConsts.GrantType, new MyTokenExtensionGrant());
-        //});
     }
 
     private void ConfigureBundles()
@@ -397,6 +417,7 @@ public class XStudioHttpApiHostModule : AbpModule
         {
             app.UseMultiTenancy();
         }
+
         app.UseUnitOfWork();
         app.UseDynamicClaims();
         app.UseAuthorization();
@@ -428,10 +449,5 @@ public class XStudioHttpApiHostModule : AbpModule
         app.UseAuditing();
         app.UseAbpSerilogEnrichers();
         app.UseConfiguredEndpoints();
-
-        //app.UseEndpoints(endpoints =>
-        //{
-        //    endpoints.MapControllers().RequireAuthorization("XStudioPolicy");
-        //});
     }
 }

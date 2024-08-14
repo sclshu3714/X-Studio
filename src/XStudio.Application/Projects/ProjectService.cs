@@ -35,6 +35,7 @@ namespace XStudio.Projects
     [ApiController]
     [RemoteService(true)]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = XStudioPermissions.Projects.Default)]
+    //[AllowAnonymous]
     public class ProjectService :
     CrudAppService<
         Project, //The Book entity
@@ -116,14 +117,13 @@ namespace XStudio.Projects
                     var project = await Repository.GetAsync(id);
                     ObjectMapper.Map(input, project); // Update project with input data
                     await Repository.UpdateAsync(project);
-
                     await uow.CompleteAsync(); // Commit the transaction if everything is successful
-
                     return ObjectMapper.Map<Project, ProjectDto>(project);
                 }
                 catch (Exception ex)
                 {
-                    uow.Dispose();//.DisposeAsync(); // Rollback the transaction if an exception occurs
+                    //await uow.RollbackAsync();//手动回滚
+                    uow.Dispose();// // 这里不需要显式回滚，因为ABP会在捕获到异常时自动回滚  // Rollback the transaction if an exception occurs
                     throw new DbUpdateException("更新失败，已经回滚",ex);
                 }
             }

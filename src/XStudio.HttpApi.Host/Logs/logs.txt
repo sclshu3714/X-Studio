@@ -21,3 +21,15 @@
 2024-08-12 17:49:58.904 +08:00 [INF] Starting XStudio.HttpApi.Host.
 2024-08-12 17:53:48.353 +08:00 [INF] Starting XStudio.HttpApi.Host.
 2024-08-14 10:09:54.845 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-14 11:12:31.058 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-14 14:50:15.238 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-14 14:56:27.407 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-14 14:57:51.387 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-14 14:59:25.000 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-14 15:03:18.212 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-14 15:04:31.102 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-14 15:06:06.339 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-14 15:07:16.861 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-14 15:16:23.463 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-14 15:24:54.066 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-14 15:55:53.081 +08:00 [INF] Starting XStudio.HttpApi.Host.
