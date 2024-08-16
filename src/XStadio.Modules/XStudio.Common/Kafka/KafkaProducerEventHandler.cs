@@ -8,6 +8,9 @@ using Volo.Abp.EventBus.Distributed;
 
 namespace XStudio.Common.Kafka
 {
+    /// <summary>
+    /// 生产者
+    /// </summary>
     public class KafkaProducerEventHandler : IDistributedEventHandler<KafkaMessagePackage>, ITransientDependency
     {
         private readonly IDistributedEventBus _distributedEventBus;

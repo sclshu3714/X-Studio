@@ -8,6 +8,9 @@ using Volo.Abp.EventBus.Distributed;
 
 namespace XStudio.Common.Kafka
 {
+    /// <summary>
+    /// 消费者
+    /// </summary>
     public class KafkaConsumerEventHandler : IDistributedEventHandler<KafkaMessagePackage>, ITransientDependency
     {
         public Task HandleEventAsync(KafkaMessagePackage eventData)
