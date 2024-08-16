@@ -33,3 +33,13 @@
 2024-08-14 15:16:23.463 +08:00 [INF] Starting XStudio.HttpApi.Host.
 2024-08-14 15:24:54.066 +08:00 [INF] Starting XStudio.HttpApi.Host.
 2024-08-14 15:55:53.081 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-15 08:32:30.501 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-15 08:32:32.880 +08:00 [WRN] 当前运行环境：Development
+2024-08-16 09:58:16.143 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-16 09:58:18.840 +08:00 [WRN] 当前运行环境：Development
+2024-08-16 10:10:17.981 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-16 10:10:19.685 +08:00 [WRN] 当前运行环境：Development
+2024-08-16 10:13:44.864 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-16 10:13:46.500 +08:00 [WRN] 当前运行环境：Development
+2024-08-16 10:26:04.076 +08:00 [INF] Starting XStudio.HttpApi.Host.
+2024-08-16 10:26:06.293 +08:00 [WRN] 当前运行环境：Development

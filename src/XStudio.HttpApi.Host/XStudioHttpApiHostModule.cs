@@ -62,19 +62,6 @@ using Volo.Abp.AspNetCore.Mvc.UI.MultiTenancy;
 
 namespace XStudio;
 
-
-//[DependsOn(
-//    typeof(BookStoreHttpApiModule),
-//    typeof(AbpAutofacModule),
-//    typeof(AbpCachingStackExchangeRedisModule),
-//    typeof(AbpDistributedLockingModule),
-//    typeof(AbpAspNetCoreMvcUiMultiTenancyModule),
-//    typeof(BookStoreApplicationModule),
-//    typeof(BookStoreEntityFrameworkCoreModule),
-//    typeof(AbpAspNetCoreSerilogModule),
-//    typeof(AbpSwashbuckleModule)
-//)]
-
 [DependsOn(
     typeof(XStudioHttpApiModule),
     typeof(AbpAutofacModule),
@@ -152,6 +139,8 @@ public class XStudioHttpApiHostModule : AbpModule
     {
         var configuration = context.Services.GetConfiguration();
         var hostingEnvironment = context.Services.GetHostingEnvironment();
+
+        ConfigureAuthentication(context, configuration);
         ConfigureBundles();
         ConfigureUrls(configuration);
         ConfigureConventionalControllers();
@@ -162,7 +151,64 @@ public class XStudioHttpApiHostModule : AbpModule
         ConfigureNewtonsoftJson(context);
         ConfigureNacos(context, configuration);
         ConfigureRateLimit(context, configuration);
-        ConfigureAuthentication(context, configuration);
+    }
+
+    private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)
+    {
+        //if (configuration["Jwt:Key"] is string jwtKey && !string.IsNullOrWhiteSpace(jwtKey))
+        //{
+        //    var key = Encoding.ASCII.GetBytes(jwtKey);
+        //    context.Services.AddAuthentication(x =>
+        //    {
+        //        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        //        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        //    })
+        //    .AddJwtBearer(x =>
+        //    {
+        //        x.RequireHttpsMetadata = true;
+        //        x.SaveToken = true;
+        //        x.TokenValidationParameters = new TokenValidationParameters
+        //        {
+        //            ValidateLifetime = true,
+        //            ValidateIssuerSigningKey = true,
+        //            IssuerSigningKey = new SymmetricSecurityKey(key),
+        //            ValidateIssuer = false,
+        //            ValidateAudience = false
+        //            //or
+        //            //ValidateIssuer = true,
+        //            //ValidateAudience = true,
+        //            //ValidIssuer = Configuration["Jwt:Issuer"],
+        //            //ValidAudience = Configuration["Jwt:Audience"],
+        //        };
+        //    });
+        //}
+
+
+        //context.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        //    .AddJwtBearer(options =>
+        //    {
+        //        options.Authority = configuration["AuthServer:Authority"];
+        //        options.RequireHttpsMetadata = configuration.GetValue<bool>("AuthServer:RequireHttpsMetadata");
+        //        options.Audience = "XStudio";
+        //    });
+
+        context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
+        context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
+        {
+            options.IsDynamicClaimsEnabled = true;
+        });
+
+        context.Services.AddControllersWithViews(Options =>
+        {
+            Options.Filters.Add<AbpAuthorizeFilter>();
+        });
+
+        //Ä¬ÈÏµÄ
+        //context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
+        //context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
+        //{
+        //    options.IsDynamicClaimsEnabled = true;
+        //});
     }
 
     private void ConfigureRateLimit(ServiceConfigurationContext context, IConfiguration configuration)
@@ -236,58 +282,7 @@ public class XStudioHttpApiHostModule : AbpModule
         });
     }
 
-    private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)
-    {
-        //if (configuration["Jwt:Key"] is string jwtKey && !string.IsNullOrWhiteSpace(jwtKey))
-        //{
-        //    var key = Encoding.ASCII.GetBytes(jwtKey);
-        //    context.Services.AddAuthentication(x =>
-        //    {
-        //        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        //        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        //    })
-        //    .AddJwtBearer(x =>
-        //    {
-        //        x.RequireHttpsMetadata = true;
-        //        x.SaveToken = true;
-        //        x.TokenValidationParameters = new TokenValidationParameters
-        //        {
-        //            ValidateLifetime = true,
-        //            ValidateIssuerSigningKey = true,
-        //            IssuerSigningKey = new SymmetricSecurityKey(key),
-        //            ValidateIssuer = false,
-        //            ValidateAudience = false
-        //            //or
-        //            //ValidateIssuer = true,
-        //            //ValidateAudience = true,
-        //            //ValidIssuer = Configuration["Jwt:Issuer"],
-        //            //ValidAudience = Configuration["Jwt:Audience"],
-        //        };
-        //    });
-        //}
-
-
-        context.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                options.Authority = configuration["AuthServer:Authority"];
-                options.RequireHttpsMetadata = configuration.GetValue<bool>("AuthServer:RequireHttpsMetadata");
-                options.Audience = "XStudio";
-            });
-
-        //context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
-        
-        
-        context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
-        {
-            options.IsDynamicClaimsEnabled = true;
-        });
-
-        context.Services.AddControllersWithViews(Options =>
-        {
-            Options.Filters.Add<AbpAuthorizeFilter>();
-        });
-    }
+    
 
     private void ConfigureBundles()
     {

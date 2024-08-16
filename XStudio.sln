@@ -39,6 +39,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XStudio.App", "src\XStudio.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XStadio.Modules", "XStadio.Modules", "{3CCBE074-32DA-4788-860E-4F3125731082}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "XStudio.Common.Shared", "src\XStadio.Modules\XStudio.Common.Shared\XStudio.Common.Shared.shproj", "{17F0B252-DD7C-46C6-A75A-53AEA5AFBD81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XStudio.Common", "src\XStadio.Modules\XStudio.Common\XStudio.Common.csproj", "{70F42E93-1A0A-4E12-8D76-D6B72D2E4246}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XStudio.DivideintoClasses", "test\XStudio.DivideintoClasses\XStudio.DivideintoClasses.csproj", "{6E2DF752-69B6-4D55-A17F-CD7C70EA5091}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,6 +111,14 @@ Global
 		{C5799475-48FD-4685-A836-AA8581FCED11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5799475-48FD-4685-A836-AA8581FCED11}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5799475-48FD-4685-A836-AA8581FCED11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70F42E93-1A0A-4E12-8D76-D6B72D2E4246}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70F42E93-1A0A-4E12-8D76-D6B72D2E4246}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70F42E93-1A0A-4E12-8D76-D6B72D2E4246}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70F42E93-1A0A-4E12-8D76-D6B72D2E4246}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E2DF752-69B6-4D55-A17F-CD7C70EA5091}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E2DF752-69B6-4D55-A17F-CD7C70EA5091}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E2DF752-69B6-4D55-A17F-CD7C70EA5091}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E2DF752-69B6-4D55-A17F-CD7C70EA5091}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -126,8 +140,14 @@ Global
 		{748584B1-BA69-4F6A-81AA-F4BDE6BCE29D} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 		{C5799475-48FD-4685-A836-AA8581FCED11} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 		{3CCBE074-32DA-4788-860E-4F3125731082} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
+		{17F0B252-DD7C-46C6-A75A-53AEA5AFBD81} = {3CCBE074-32DA-4788-860E-4F3125731082}
+		{70F42E93-1A0A-4E12-8D76-D6B72D2E4246} = {3CCBE074-32DA-4788-860E-4F3125731082}
+		{6E2DF752-69B6-4D55-A17F-CD7C70EA5091} = {04DBDB01-70F4-4E06-B468-8F87850B22BE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28315BFD-90E7-4E14-A2EA-F3D23AF4126F}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\XStadio.Modules\XStudio.Common.Shared\XStudio.Common.Shared.projitems*{17f0b252-dd7c-46c6-a75a-53aea5afbd81}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

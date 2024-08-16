@@ -34,7 +34,7 @@ namespace XStudio.Projects
     [ApiVersion(1.0)]
     [ApiController]
     [RemoteService(true)]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = XStudioPermissions.Projects.Default)]
+    [Authorize(Policy = XStudioPermissions.Projects.Default)]
     //[AllowAnonymous]
     public class ProjectService :
     CrudAppService<
