@@ -76,7 +76,9 @@ namespace MyConsoleApp.DivideintoClasses
         //    {
         //        ExamsType exams = item.Key;
         //        List<Student> students = item.ToList();
-
+        //        //计算应该分配多少个班级
+        //        int minClassCount = Math.Max(1, students.Count / TotalStudents.Count * classNum);
+        //        int maxClassCount = Math.Max(1, students.Count / TotalStudents.Count * classNum);
         //    }
         //}
     }
