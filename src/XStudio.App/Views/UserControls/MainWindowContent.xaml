@@ -17,7 +17,7 @@
                               MinWidth="240"
                               MaxWidth="400" 
                               x:Name="ColumnDefinitionLeft"/>
-            <ColumnDefinition MinWidth="200" />
+            <ColumnDefinition MinWidth="300" Width="*"/>
         </Grid.ColumnDefinitions>
         <Button x:Name="ButtonShiftOut" 
                 Click="OnLeftMainContentShiftOut" 
@@ -26,8 +26,8 @@
                 VerticalAlignment="Top" 
                 Margin="0 26 -16 0" 
                 Style="{StaticResource ButtonIconCircular}" />
-        <local:MainContent Grid.Column="1"  x:Name="mainContent"/>
-        <local:LeftMainContent Grid.Column="0"  x:Name="leftMainContent">
+        <local:MainTabContent Grid.Column="1"  x:Name="mainContent" Margin="0 0 0 0"/>
+        <local:LeftMainContent Grid.Column="0"  x:Name="leftMainContent" Margin="0 0 0 0">
             <UIElement.RenderTransform>
                 <TranslateTransform />
             </UIElement.RenderTransform>
