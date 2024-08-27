@@ -171,62 +171,6 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
                 redirectUri: $"{swaggerRootUrl}/swagger/oauth2-redirect.html"
             );
         }
-
-        ////Web Client
-        //var webClientId = configurationSection["XStudio_Web:ClientId"];
-        //if (!webClientId.IsNullOrWhiteSpace())
-        //{
-        //    var webClientRootUrl = configurationSection["XStudio_Web:RootUrl"]?.EnsureEndsWith('/');
-        //    var redirectUri = $"{webClientRootUrl}swagger/oauth2-redirect.html";
-        //    /* XStudio_Web client is only needed if you created a tiered
-        //     * solution. Otherwise, you can delete this client. */
-        //    await CreateApplicationAsync(
-        //        name: webClientId,
-        //        type: OpenIddictConstants.ClientTypes.Public,
-        //        consentType: OpenIddictConstants.ConsentTypes.Implicit,
-        //        displayName: "Web Application",
-        //        secret: null, // configurationSection["XStudio_Web:ClientSecret"] ?? "1q2w3E*",
-        //        grantTypes: new List<string> //Hybrid flow
-        //        {
-        //            OpenIddictConstants.GrantTypes.AuthorizationCode,
-        //            OpenIddictConstants.GrantTypes.Implicit,
-        //            OpenIddictConstants.GrantTypes.Password,
-        //            OpenIddictConstants.GrantTypes.ClientCredentials,
-        //            OpenIddictConstants.GrantTypes.RefreshToken,
-        //            MyTokenExtensionGrantConsts.GrantType
-        //        },
-        //        scopes: commonScopes,
-        //        redirectUri: redirectUri,
-        //        clientUri: webClientRootUrl
-        //        //postLogoutRedirectUri: $"{webClientRootUrl}signout-callback-oidc"
-        //    );
-        //}
-        //// Swagger Client
-        //var swaggerClientId = configurationSection["XStudio_Swagger:ClientId"];
-        //if (!swaggerClientId.IsNullOrWhiteSpace())
-        //{
-        //    var swaggerRootUrl = configurationSection["XStudio_Swagger:RootUrl"]?.TrimEnd('/');
-
-        //    await CreateApplicationAsync(
-        //        name: swaggerClientId!,
-        //        type: OpenIddictConstants.ClientTypes.Public,
-        //        consentType: OpenIddictConstants.ConsentTypes.Implicit,
-        //        displayName: "Swagger Application",
-        //        secret: null,
-        //        grantTypes: new List<string> 
-        //        { 
-        //            OpenIddictConstants.GrantTypes.AuthorizationCode,
-        //            OpenIddictConstants.GrantTypes.Implicit,
-        //            OpenIddictConstants.GrantTypes.Password,
-        //            OpenIddictConstants.GrantTypes.ClientCredentials,
-        //            OpenIddictConstants.GrantTypes.RefreshToken,
-        //            MyTokenExtensionGrantConsts.GrantType
-        //        },
-        //        scopes: commonScopes,
-        //        redirectUri: $"{swaggerRootUrl}/swagger/oauth2-redirect.html",
-        //        clientUri: swaggerRootUrl
-        //    );
-        //}
     }
 
     private async Task CreateApplicationAsync(

@@ -91,46 +91,50 @@ public class XStudioHttpApiHostModule : AbpModule
                 options.UseAspNetCore();
             });
         });
+
         PreConfigure<OpenIddictServerBuilder>(builder =>
         {
-            //Ìí¼Ó×Ô¶¨ÒåMyTokenExtensionGrantConsts
+            //æ·»åŠ è‡ªå®šä¹‰MyTokenExtensionGrantConsts
             builder.Configure(openIddictServerOptions =>
             {
                 openIddictServerOptions.GrantTypes.Add(MyTokenExtensionGrantConsts.GrantType);
             });
+
+            // è®¾ç½® token è¿‡æœŸæ—¶é—´ä¸º 24 å°æ—¶
+            builder.SetAccessTokenLifetime(TimeSpan.FromHours(24));
         });
     }
 
     private void PreConfigureEnvironment(IConfiguration configuration)
     {
-        // ¼ì²é»·¾³±äÁ¿ÊÇ·ñÒÑÉèÖÃ£¬Èç¹ûÃ»ÓĞ£¬ÔòÉèÖÃÎª¿ª·¢»·¾³
+        // æ£€æŸ¥ç¯å¢ƒå˜é‡æ˜¯å¦å·²è®¾ç½®ï¼Œå¦‚æœæ²¡æœ‰ï¼Œåˆ™è®¾ç½®ä¸ºå¼€å‘ç¯å¢ƒ
         var environment = configuration["App:Environment"]; // Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
         if (string.IsNullOrEmpty(environment) ||
             (environment != Environments.Development && environment != Environments.Staging && environment != Environments.Production))
         {
-            // ÕâÀï¿ÉÒÔ¸ù¾İĞèÒªÉèÖÃ²»Í¬µÄ»·¾³
-            Log.Warning($"µ±Ç°ÔËĞĞ»·¾³£º{environment}, ²»ÊÇ³£¹æ»·¾³£¬»·¾³±äÁ¿½«ÇĞ»»µ½Development»·¾³£¬µ«ÊÇÅäÖÃÎÄ¼şÒÀÈ»¶ÁÈ¡ appsettings.{environment}.json");
+            // è¿™é‡Œå¯ä»¥æ ¹æ®éœ€è¦è®¾ç½®ä¸åŒçš„ç¯å¢ƒ
+            Log.Warning($"å½“å‰è¿è¡Œç¯å¢ƒï¼š{environment}, ä¸æ˜¯å¸¸è§„ç¯å¢ƒï¼Œç¯å¢ƒå˜é‡å°†åˆ‡æ¢åˆ°Developmentç¯å¢ƒï¼Œä½†æ˜¯é…ç½®æ–‡ä»¶ä¾ç„¶è¯»å– appsettings.{environment}.json");
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
         }
         else
         {
-            Log.Warning($"µ±Ç°ÔËĞĞ»·¾³£º{environment}");
+            Log.Warning($"å½“å‰è¿è¡Œç¯å¢ƒï¼š{environment}");
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", environment);
         }
-        
-        // ¸ù¾İ»·¾³¼ÓÔØ²»Í¬µÄÅäÖÃÎÄ¼ş
+
+        // æ ¹æ®ç¯å¢ƒåŠ è½½ä¸åŒçš„é…ç½®æ–‡ä»¶
         var builder = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile($"appsettings.json", optional: false, reloadOnChange: true);
 
-        // ¼ÓÔØ²¹³äÅäÖÃÎÄ¼ş
+        // åŠ è½½è¡¥å……é…ç½®æ–‡ä»¶
         if (File.Exists($"appsettings.{environment}.json"))
         {
             builder.AddJsonFile($"appsettings.{environment}.json", optional: true, true);
         }
         else
         {
-            Log.Warning($"Ã»ÓĞ¼ì²éµ½ÅäÖÃÎÄ¼ş:appsettings.{environment}.json; ¸æÖª£ºÈ«²¿ÅäÖÃÄ¬ÈÏÔÚappsettings.jsonÖĞ");
+            Log.Warning($"æ²¡æœ‰æ£€æŸ¥åˆ°é…ç½®æ–‡ä»¶:appsettings.{environment}.json; å‘ŠçŸ¥ï¼šå…¨éƒ¨é…ç½®é»˜è®¤åœ¨appsettings.jsonä¸­");
         }
         builder.AddEnvironmentVariables();
     }
@@ -155,42 +159,41 @@ public class XStudioHttpApiHostModule : AbpModule
 
     private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)
     {
-        //if (configuration["Jwt:Key"] is string jwtKey && !string.IsNullOrWhiteSpace(jwtKey))
-        //{
-        //    var key = Encoding.ASCII.GetBytes(jwtKey);
-        //    context.Services.AddAuthentication(x =>
-        //    {
-        //        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        //        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        //    })
-        //    .AddJwtBearer(x =>
-        //    {
-        //        x.RequireHttpsMetadata = true;
-        //        x.SaveToken = true;
-        //        x.TokenValidationParameters = new TokenValidationParameters
-        //        {
-        //            ValidateLifetime = true,
-        //            ValidateIssuerSigningKey = true,
-        //            IssuerSigningKey = new SymmetricSecurityKey(key),
-        //            ValidateIssuer = false,
-        //            ValidateAudience = false
-        //            //or
-        //            //ValidateIssuer = true,
-        //            //ValidateAudience = true,
-        //            //ValidIssuer = Configuration["Jwt:Issuer"],
-        //            //ValidAudience = Configuration["Jwt:Audience"],
-        //        };
-        //    });
-        //}
+        context.Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            options.Authority = configuration["AuthServer:Authority"];
+            options.RequireHttpsMetadata = configuration.GetValue<bool>("AuthServer:RequireHttpsMetadata");
+            options.Audience = "XStudio";
+        });
 
+        context.Services.AddOpenIddict()
+            .AddServer(options =>
+            {
+                options.SetAccessTokenLifetime(TimeSpan.FromHours(24)); // è®¾ç½® token è¿‡æœŸæ—¶é—´ä¸º 24 å°æ—¶
+                options.AllowAuthorizationCodeFlow()
+                       .RequireProofKeyForCodeExchange()
+                       .AllowRefreshTokenFlow();
 
-        //context.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        //    .AddJwtBearer(options =>
-        //    {
-        //        options.Authority = configuration["AuthServer:Authority"];
-        //        options.RequireHttpsMetadata = configuration.GetValue<bool>("AuthServer:RequireHttpsMetadata");
-        //        options.Audience = "XStudio";
-        //    });
+                options.SetTokenEndpointUris("/connect/token")
+                       .SetAuthorizationEndpointUris("/connect/authorize");
+
+                options.AddDevelopmentEncryptionCertificate()
+                       .AddDevelopmentSigningCertificate();
+
+                options.UseAspNetCore()
+                       .EnableTokenEndpointPassthrough()
+                       .EnableAuthorizationEndpointPassthrough();
+            })
+            .AddValidation(options =>
+            {
+                options.UseLocalServer();
+                options.UseAspNetCore();
+            });
 
         context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
         context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
@@ -203,7 +206,7 @@ public class XStudioHttpApiHostModule : AbpModule
             Options.Filters.Add<AbpAuthorizeFilter>();
         });
 
-        //Ä¬ÈÏµÄ
+        //é»˜è®¤çš„
         //context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
         //context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
         //{
@@ -213,7 +216,7 @@ public class XStudioHttpApiHostModule : AbpModule
 
     private void ConfigureRateLimit(ServiceConfigurationContext context, IConfiguration configuration)
     {
-        // ÏŞÖÆÅäÖÃ
+        // é™åˆ¶é…ç½®
         context.Services.AddOptions();
         context.Services.AddMemoryCache();
         context.Services.Configure<IpRateLimitOptions>(configuration.GetSection("IpRateLimiting"));
@@ -223,7 +226,7 @@ public class XStudioHttpApiHostModule : AbpModule
 
         context.Services.Configure<IdentityOptions>(options =>
         {
-            // Ëø¶¨ÅäÖÃ
+            // é”å®šé…ç½®
             options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
             options.Lockout.MaxFailedAccessAttempts = 3;
             options.Lockout.AllowedForNewUsers = true;
@@ -245,12 +248,12 @@ public class XStudioHttpApiHostModule : AbpModule
     {
         context.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
         {
-            //ĞŞ¸ÄÊôĞÔÃû³ÆµÄĞòÁĞ»¯·½Ê½£¬Ê××ÖÄ¸Ğ¡Ğ´
+            //ä¿®æ”¹å±æ€§åç§°çš„åºåˆ—åŒ–æ–¹å¼ï¼Œé¦–å­—æ¯å°å†™
             options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             options.SerializerSettings.MissingMemberHandling = MissingMemberHandling.Ignore;
             options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            //ĞŞ¸ÄÊ±¼äµÄĞòÁĞ»¯·½Ê½
+            //ä¿®æ”¹æ—¶é—´çš„åºåˆ—åŒ–æ–¹å¼
             options.SerializerSettings.Converters.Add(new IsoDateTimeConverter() { DateTimeFormat = "yyyy-MM-dd HH:mm:ss" });
             options.SerializerSettings.Converters.Add(new IpAddressConverter());
             options.SerializerSettings.Converters.Add(new IpEndPointConverter());
@@ -282,7 +285,7 @@ public class XStudioHttpApiHostModule : AbpModule
         });
     }
 
-    
+
 
     private void ConfigureBundles()
     {
@@ -333,16 +336,16 @@ public class XStudioHttpApiHostModule : AbpModule
         }
     }
 
-    // ×Ô¶¯Éú³É¿ØÖÆÆ÷
+    // è‡ªåŠ¨ç”Ÿæˆæ§åˆ¶å™¨
     private void ConfigureConventionalControllers()
     {
         Configure<AbpAspNetCoreMvcOptions>(options =>
         {
             options.ConventionalControllers.Create(typeof(XStudioApplicationModule).Assembly, opts =>
             {
-                // Ö¸¶¨ºó:https://localhost:44345/api/xstudio/project; Ä¬ÈÏ:https://localhost:44345/api/app/project
+                // æŒ‡å®šå:https://localhost:44345/api/xstudio/project; é»˜è®¤:https://localhost:44345/api/app/project
                 opts.RootPath = "xstudio";
-                // opts.TypePredicate = type => { return true; }; //ÊÇ·ñ¹«¿ª
+                // opts.TypePredicate = type => { return true; }; //æ˜¯å¦å…¬å¼€
             });
         });
     }
@@ -388,12 +391,12 @@ public class XStudioHttpApiHostModule : AbpModule
             app.UseDeveloperExceptionPage();
         }
 
-        //nacos ¼àÌı
+        //nacos ç›‘å¬
         IConfiguration configuration = context.ServiceProvider.GetRequiredService<IConfiguration>();
         IHostApplicationLifetime appLifetime = app.ApplicationServices.GetRequiredService<IHostApplicationLifetime>();
         INacosConfigService ncsvc = app.ApplicationServices.GetRequiredService<INacosConfigService>();
         NacosConfigListener _configListen = new NacosConfigListener(appLifetime);
-        // ±éÀú Nacos:Listeners ÄÚµÄÖµ
+        // éå† Nacos:Listeners å†…çš„å€¼
         var listeners = configuration.GetSection("Nacos:Listeners").Get<List<NacosListener>>();
         if (listeners != null)
         {
@@ -409,13 +412,13 @@ public class XStudioHttpApiHostModule : AbpModule
         {
             app.UseErrorPage();
         }
-        app.UseIpRateLimiting(); // ÆôÓÃ·ÃÎÊÏŞÖÆ
+        app.UseIpRateLimiting(); // å¯ç”¨è®¿é—®é™åˆ¶
         app.UseCorrelationId();
         app.UseStaticFiles();
         app.UseRouting();
         app.UseCors();
-        app.UseMiddleware<AbpExceptionMiddleware>(); //ExceptionMiddleware ¼ÓÈë¹ÜµÀ
-        //app.UseMiddleware<AbpTokenValidationMiddleware>(); // tokenÑéÖ¤
+        app.UseMiddleware<AbpExceptionMiddleware>(); //ExceptionMiddleware åŠ å…¥ç®¡é“
+        //app.UseMiddleware<AbpTokenValidationMiddleware>(); // tokenéªŒè¯
         app.UseAuthentication();
         app.UseAbpOpenIddictValidation();
 
@@ -436,7 +439,8 @@ public class XStudioHttpApiHostModule : AbpModule
             try
             {
                 provider = app.ApplicationServices.GetRequiredService<IApiVersionDescriptionProvider>();
-                provider.If(provider.ApiVersionDescriptions != null, (provider) => {
+                provider.If(provider.ApiVersionDescriptions != null, (provider) =>
+                {
                     // build a swagger endpoint for each discovered API version
                     foreach (var description in provider.ApiVersionDescriptions)
                     {
@@ -448,8 +452,8 @@ public class XStudioHttpApiHostModule : AbpModule
             }
             catch (Exception ex)
             {
-                Log.Error($"¹¹½¨swaggerÎÄµµÊ§°Ü,{ex.StackTrace}");
-            }          
+                Log.Error($"æ„å»ºswaggeræ–‡æ¡£å¤±è´¥,{ex.StackTrace}");
+            }
         });
 
         app.UseAuditing();

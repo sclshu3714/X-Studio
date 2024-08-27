@@ -82,7 +82,14 @@ namespace MyConsoleApp.DivideintoClasses
         /// </summary>
         public string PostalCode { get; set; } = string.Empty;
 
+        /// <summary>
+        /// 学生属于哪个行政班
+        /// </summary>
+        public string AdministrativeClassId {  get; set; } = string.Empty;
 
-        public ExamsType Exams { get; set; } = ExamsType.PCB;
+        /// <summary>
+        /// 选考组合
+        /// </summary>
+        public ExaminationType Exams { get; set; } = ExaminationType.PCB;
     }
 }

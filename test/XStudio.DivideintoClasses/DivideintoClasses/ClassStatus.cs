@@ -9,7 +9,7 @@ namespace MyConsoleApp.DivideintoClasses
     public enum ClassStatus
     {
         /// <summary>
-        /// 空班，没有安排人员
+        /// 空班,未开班，没有安排人员
         /// </summary>
         EmptyClass,
         /// <summary>

@@ -14,7 +14,7 @@ namespace MyConsoleApp.DivideintoClasses
     /// 政治 Politics     O
     /// 地理 Geography    G
     /// </summary>
-    public enum ExamsType
+    public enum ExaminationType
     {
         /// <summary>
         /// 物理+化学+生物
