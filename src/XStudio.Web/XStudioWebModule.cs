@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using XStudio.EntityFrameworkCore;
 using XStudio.Localization;
 using XStudio.MultiTenancy;
 using XStudio.Web.Menus;
@@ -39,13 +38,24 @@ using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.UI;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.VirtualFileSystem;
+using Volo.Abp.AspNetCore.Authentication.OpenIdConnect;
+using Volo.Abp.AspNetCore.Mvc.Client;
+using Volo.Abp.Http.Client.Web;
+using Volo.Abp.Caching.StackExchangeRedis;
+using Volo.Abp.DistributedLocking;
+using Volo.Abp.Http.Client.IdentityModel.Web;
+using Volo.Abp.Caching;
+using Volo.Abp.MultiTenancy;
+using Medallion.Threading;
+using Microsoft.AspNetCore.DataProtection;
+using StackExchange.Redis;
 
 namespace XStudio.Web;
 
 [DependsOn(
+    typeof(XStudioHttpApiClientModule),
     typeof(XStudioHttpApiModule),
     typeof(XStudioApplicationModule),
-    typeof(XStudioEntityFrameworkCoreModule),
     typeof(AbpAutofacModule),
     typeof(AbpIdentityWebModule),
     typeof(AbpSettingManagementWebModule),
@@ -53,6 +63,12 @@ namespace XStudio.Web;
     typeof(AbpAspNetCoreMvcUiLeptonXLiteThemeModule),
     typeof(AbpTenantManagementWebModule),
     typeof(AbpAspNetCoreSerilogModule),
+    typeof(AbpAspNetCoreAuthenticationOpenIdConnectModule),
+    typeof(AbpAspNetCoreMvcClientModule),
+    typeof(AbpHttpClientWebModule),
+    typeof(AbpCachingStackExchangeRedisModule),
+    typeof(AbpDistributedLockingModule),
+    typeof(AbpHttpClientIdentityModelWebModule),
     typeof(AbpSwashbuckleModule)
     )]
 public class XStudioWebModule : AbpModule
@@ -103,13 +119,17 @@ public class XStudioWebModule : AbpModule
         var hostingEnvironment = context.Services.GetHostingEnvironment();
         var configuration = context.Services.GetConfiguration();
 
-        ConfigureAuthentication(context);
-        ConfigureUrls(configuration);
         ConfigureBundles();
+        ConfigureCache();
+        //ConfigureDataProtection(context, configuration, hostingEnvironment);
+        //ConfigureDistributedLocking(context, configuration);
+        ConfigureUrls(configuration); 
+        ConfigureAuthentication(context);
         ConfigureAutoMapper();
         ConfigureVirtualFileSystem(hostingEnvironment);
         ConfigureNavigationServices();
         ConfigureAutoApiControllers();
+        ConfigureMultiTenancy();
         ConfigureSwaggerServices(context.Services);
     }
 
@@ -130,6 +150,14 @@ public class XStudioWebModule : AbpModule
         });
     }
 
+    private void ConfigureMultiTenancy()
+    {
+        Configure<AbpMultiTenancyOptions>(options =>
+        {
+            options.IsEnabled = MultiTenancyConsts.IsEnabled;
+        });
+    }
+
     private void ConfigureBundles()
     {
         Configure<AbpBundlingOptions>(options =>
@@ -143,6 +171,38 @@ public class XStudioWebModule : AbpModule
             );
         });
     }
+
+    private void ConfigureCache()
+    {
+        Configure<AbpDistributedCacheOptions>(options =>
+        {
+            options.KeyPrefix = "XStudio:";
+        });
+    }
+
+    //private void ConfigureDataProtection(
+    //    ServiceConfigurationContext context,
+    //    IConfiguration configuration,
+    //    IWebHostEnvironment hostingEnvironment)
+    //{
+    //    var dataProtectionBuilder = context.Services.AddDataProtection().SetApplicationName("XBookStore");
+    //    if (!hostingEnvironment.IsDevelopment())
+    //    {
+    //        var redis = ConnectionMultiplexer.Connect(configuration["Redis:Configuration"]!);
+    //        dataProtectionBuilder.PersistKeysToStackExchangeRedis(redis, "XBookStore-Protection-Keys");
+    //    }
+    //}
+
+    //private void ConfigureDistributedLocking(
+    //    ServiceConfigurationContext context,
+    //    IConfiguration configuration)
+    //{
+    //    context.Services.AddSingleton<IDistributedLockProvider>(sp =>
+    //    {
+    //        var connection = ConnectionMultiplexer.Connect(configuration["Redis:Configuration"]!);
+    //        return new RedisDistributedSynchronizationProvider(connection.GetDatabase());
+    //    });
+    //}
 
     private void ConfigureAutoMapper()
     {
