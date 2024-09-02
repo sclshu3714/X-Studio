@@ -39,7 +39,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XStudio.App", "src\XStudio.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XStadio.Modules", "XStadio.Modules", "{3CCBE074-32DA-4788-860E-4F3125731082}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "XStudio.Common.Shared", "src\XStadio.Modules\XStudio.Common.Shared\XStudio.Common.Shared.shproj", "{17F0B252-DD7C-46C6-A75A-53AEA5AFBD81}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "XStudio.School.Shared", "src\XStadio.Modules\XStudio.Common.Shared\XStudio.School.Shared.shproj", "{17F0B252-DD7C-46C6-A75A-53AEA5AFBD81}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XStudio.Common", "src\XStadio.Modules\XStudio.Common\XStudio.Common.csproj", "{70F42E93-1A0A-4E12-8D76-D6B72D2E4246}"
 EndProject

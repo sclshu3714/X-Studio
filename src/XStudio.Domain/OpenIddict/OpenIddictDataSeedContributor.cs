@@ -114,8 +114,8 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
                 name: consoleAndAngularClientId!,
                 type: OpenIddictConstants.ClientTypes.Public,
                 consentType: OpenIddictConstants.ConsentTypes.Implicit,
-                displayName: "Console Test / Angular Application",
-                secret: null,
+                displayName: "Console App / Angular Application",
+                secret: configurationSection["XStudio_App:ClientSecret"] ?? "1q2w3E*",
                 grantTypes: new List<string>
                 {
                     OpenIddictConstants.GrantTypes.AuthorizationCode,

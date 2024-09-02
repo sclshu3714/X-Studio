@@ -19,6 +19,9 @@ using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using XStudio.Common;
 using XStudio.Projects;
+using XStudio.Schools.Places;
+using System.Drawing;
+using System.Reflection.Emit;
 
 namespace XStudio.EntityFrameworkCore;
 
@@ -63,6 +66,15 @@ public class XStudioDbContext :
     #region Self DB
     public DbSet<Project> Projects { get; set; }
     #endregion
+
+
+    #region 学校场所
+    public DbSet<School> Schools { get; set; }
+    public DbSet<SchoolCampus> SchoolCampuses { get; set; }
+    public DbSet<SchoolBuilding> SchoolBuildings { get; set; }
+    public DbSet<BuildingFloor> BuildingFloors { get; set; }
+    public DbSet<Classroom> Classrooms { get; set; }
+    #endregion
     public XStudioDbContext(DbContextOptions<XStudioDbContext> options)
         : base(options)
     {
@@ -101,6 +113,77 @@ public class XStudioDbContext :
             //自动添加注释
             AddCommentsToProperties(b);
         });
+
+        builder.Entity<School>(b =>
+        {
+            b.ToTable(XStudioConsts.DbTablePrefix + "Schools", XStudioConsts.DbSchema);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.Property(x => x.Code).IsRequired().HasMaxLength(128);
+            b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+            b.HasKey(x => x.Code);
+            //自动添加注释
+            AddCommentsToProperties(b);
+        });
+
+        builder.Entity<SchoolCampus>(b =>
+        {
+            b.ToTable(XStudioConsts.DbTablePrefix + "SchoolCampuses", XStudioConsts.DbSchema);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.Property(x => x.Code).IsRequired().HasMaxLength(128);
+            b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+            b.HasKey(x => x.Code);
+            b.HasOne(c => c.School)
+             .WithMany(s => s.Campuses)
+             .HasForeignKey(c => c.SchoolCode);
+            //自动添加注释
+            AddCommentsToProperties(b);
+        });
+
+
+        builder.Entity<SchoolBuilding>(b =>
+        {
+            b.ToTable(XStudioConsts.DbTablePrefix + "SchoolBuildings", XStudioConsts.DbSchema);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.Property(x => x.Code).IsRequired().HasMaxLength(128);
+            b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+            b.HasKey(x => x.Code);
+            b.HasOne(b => b.Campus)
+             .WithMany(c => c.Buildings)
+             .HasForeignKey(b => b.SchoolCampusCode);
+            //自动添加注释
+            AddCommentsToProperties(b);
+        });
+
+
+        builder.Entity<BuildingFloor>(b =>
+        {
+            b.ToTable(XStudioConsts.DbTablePrefix + "BuildingFloors", XStudioConsts.DbSchema);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.Property(x => x.Code).IsRequired().HasMaxLength(128);
+            b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+            b.HasKey(x => x.Code);
+            b.HasOne(f => f.Building)
+             .WithMany(b => b.Floors)
+             .HasForeignKey(f => f.BuildingCode);
+            //自动添加注释
+            AddCommentsToProperties(b);
+        });
+
+
+        builder.Entity<Classroom>(b =>
+        {
+            b.ToTable(XStudioConsts.DbTablePrefix + "Classrooms", XStudioConsts.DbSchema);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.Property(x => x.Code).IsRequired().HasMaxLength(128);
+            b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+            b.HasKey(x => x.Code);
+            b.HasOne(c => c.Floor)
+             .WithMany(f => f.Classrooms)
+             .HasForeignKey(c => c.FloorCode);
+            //自动添加注释
+            AddCommentsToProperties(b);
+        });
+            
     }
 
     // 扩展方法：为属性添加注释
