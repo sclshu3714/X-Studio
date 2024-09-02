@@ -352,6 +352,7 @@ public class XStudioHttpApiHostModule : AbpModule
 
     private static void ConfigureSwaggerServices(ServiceConfigurationContext context, IConfiguration configuration)
     {
+        context.Services.AddSignalR();
         context.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
         context.Services.AddAbpSwaggerGenWithOAuth(
             configuration["AuthServer:Authority"]!,

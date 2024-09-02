@@ -11,7 +11,7 @@ namespace MyConsoleApp.DivideintoClasses
         /// <summary>
         /// 编号
         /// </summary>
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public int Id { get; set; }
         /// <summary>
         /// 姓名
         /// </summary>
@@ -91,5 +91,24 @@ namespace MyConsoleApp.DivideintoClasses
         /// 选考组合
         /// </summary>
         public ExaminationType Exams { get; set; } = ExaminationType.PCB;
+
+        /// <summary>
+        /// 判断是否相等
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object? obj)
+        {
+            if (obj is Student student)
+            {
+                return Id == student.Id; // 根据 Id 去重
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode() + Name.GetHashCode(); // 使用 Id 的哈希码
+        }
     }
 }

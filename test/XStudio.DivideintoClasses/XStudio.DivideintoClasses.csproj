@@ -12,4 +12,6 @@
     <PackageReference Include="System.Runtime.Caching" Version="8.0.0" />
   </ItemGroup>
 
+  <Import Project="..\..\src\XStadio.Modules\XStudio.Common.Shared\XStudio.Common.Shared.projitems" Label="Shared" />
+
 </Project>

@@ -13,30 +13,33 @@ public class Program
 {
     public async static Task<int> Main(string[] args)
     {
-        Log.Logger = new LoggerConfiguration()
-#if DEBUG
-            .MinimumLevel.Debug()
-#else
-            .MinimumLevel.Information()
-#endif
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-            .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
-            .Enrich.FromLogContext()
-            .WriteTo.Async(c => c.File("Logs/logs.txt"))
-            .WriteTo.Async(c => c.Console())
-            .CreateLogger();
+//        Log.Logger = new LoggerConfiguration()
+//#if DEBUG
+//            .MinimumLevel.Debug()
+//#else
+//            .MinimumLevel.Information()
+//#endif
+//            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+//            .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
+//            .Enrich.FromLogContext()
+//            .WriteTo.Async(c => c.File("Logs/logs.txt"))
+//            .WriteTo.Async(c => c.Console())
+//            .CreateLogger();
 
         try
         {
-            Log.Information("Starting XStudio.HttpApi.Host.");
             var builder = WebApplication.CreateBuilder(args);
-            builder.Host
-                .AddAppSettingsSecretsJson()
+
+            Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(builder.Configuration) // 从配置中读取
+            .Enrich.FromLogContext()
+            .CreateLogger();
+
+            builder.Host.AddAppSettingsSecretsJson()
                 .UseAutofac()
-                .UseSerilog((context, logger) => { 
-                    logger.ReadFrom.Configuration(context.Configuration).Enrich.FromLogContext();
-                })
-                .UseNacosConfig("Nacos");
+                .UseNacosConfig("Nacos")
+                .UseSerilog();
+            Log.Information("Starting XStudio.HttpApi.Host.");
             await builder.AddApplicationAsync<XStudioHttpApiHostModule>();
             var app = builder.Build();
             await app.InitializeApplicationAsync();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MathNet.Numerics.Distributions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -17,14 +18,40 @@ namespace MyConsoleApp.DivideintoClasses
         //mobile student          移动上课学生
         // itinerant student      流动学生
         private static Random _random = new Random();
-        public static List<Student> TotalStudents = new List<Student>(); //所有学生
-        public static List<AdministrativeClass> AClasses = new List<AdministrativeClass>(); // 行政班
-        public static List<InstructionalClass> IClasses = new List<InstructionalClass>(); // 教学班
-        public static List<AdministrativeClass> AssignedClasses = new List<AdministrativeClass>(); // 已完成分配的行政班
-        public static List<AdministrativeClass> ShortageStaffClasses = new List<AdministrativeClass>(); //没有安排满学生的班级，没有达到开课标准的班级
-        public static Dictionary<ExaminationType, List<Student>> UnallocatedStudents = new Dictionary<ExaminationType, List<Student>>(); //还没有安排的学生
+
+        /// <summary>
+        /// 所有学生
+        /// </summary>
+        public static List<Student> TotalStudents = new List<Student>();
+        /// <summary>
+        /// 行政班
+        /// </summary>
+        public static List<AdministrativeClass> AClasses = new List<AdministrativeClass>();
+
+        /// <summary>
+        /// 教学班
+        /// </summary>
+        public static List<InstructionalClass> IClasses = new List<InstructionalClass>();
+        /// <summary>
+        /// 已完成分配的行政班
+        /// </summary>
+        public static List<AdministrativeClass> AssignedClasses = new List<AdministrativeClass>();
+
+        /// <summary>
+        /// 没有安排满学生的班级，没有达到开课标准的班级
+        /// </summary>
+        public static List<AdministrativeClass> ShortageStaffClasses = new List<AdministrativeClass>();
+
+        /// <summary>
+        /// 还没有安排的学生
+        /// </summary>
+        public static Dictionary<ExaminationType, List<Student>> UnallocatedStudents = new Dictionary<ExaminationType, List<Student>>();
+
+        /// <summary>
+        /// 缓存数据
+        /// </summary>
         public static ObjectCache Cache = MemoryCache.Default;
-        private static IEnumerable<Student> SimulateStudentGeneration(int studentNum)
+        public static IEnumerable<Student> SimulateStudentGeneration(int studentNum)
         {
             for (int i = 0; i < studentNum; i++)
             {
@@ -190,7 +217,7 @@ namespace MyConsoleApp.DivideintoClasses
             Console.WriteLine($"源数据=>班级数量：{classNum}, 学生总数：{TotalStudents.Count}, 男生数量：{boyStudents}, 女生数量：{grilStudents}");
             //Console.WriteLine($"计算后=>班级数量：{ClassStudens.Count}, 学生总数：{ClassStudens.Sum(a => a.Item1)}, 男生数量：{ClassStudens.Sum(a => a.Item2)}, 女生数量：{ClassStudens.Sum(a => a.Item3)}");
             Console.WriteLine($"=======================================================================================");
-            
+
             for (int i = 1; i <= classNum; i++)
             {
                 AdministrativeClass administrativeClass = new AdministrativeClass()
@@ -203,15 +230,110 @@ namespace MyConsoleApp.DivideintoClasses
                 };
                 AClasses.Add(administrativeClass);
             }
-            // 分配学生到班级
-            AssignStudentsToClasses(classNum, minClassSize, maxClassSize);
+            // 分配学生到班级(定3)
+            AssignStudentsToClasses1(classNum, minClassSize, maxClassSize);
+
+            // 分配学生到班级(定2)
+            while (AssignStudentsToClasses2(classNum, minClassSize, maxClassSize))
+            {
+                
+            }
+        }
+
+        private static bool AssignStudentsToClasses2(int classNum, int minClassSize, int maxClassSize)
+        {
+            //1、先排出定3分配后剩余的学生，如果其它学生能够排满，那么定3剩余的学生补充到定3班级，减少学生走班
+            IEnumerable<KeyValuePair<ExaminationType, List<Student>>> NowUnallocatedStudents = UnallocatedStudents.Where(us => !AssignedClasses.Any(ac => ac.ExamsList.Contains(us.Key)));
+            //2、
+            Dictionary<string, IEnumerable<Student>> results = new Dictionary<string, IEnumerable<Student>>();
+            var keys = NowUnallocatedStudents.ToList();
+            Dictionary<string, List<ExaminationType>> ExaminationTypes = new Dictionary<string, List<ExaminationType>>();
+            for (int i = 0; i < keys.Count; i++)
+            {
+                string? newKey = null;
+                ExaminationType key1 = keys[i].Key;
+                List<Student> values1 = keys[i].Value;
+                for (int j = i + 1; j < keys.Count; j++)
+                {
+                    ExaminationType key2 = keys[j].Key;
+                    List<Student> values2 = keys[j].Value;
+                    IEnumerable<char> Intersects;
+                    //if (newKey == null)
+                    {
+                        Intersects = $"{key1}".Intersect($"{key2}");
+                        newKey = string.Join("", Intersects);
+                    }
+                    //else
+                    //{
+                    //    Intersects = $"{newKey}".Intersect($"{key2}");
+                    //}
+                    if (Intersects.Count() == 2 && newKey != null)
+                    {
+                        if (!results.ContainsKey(newKey))
+                        {
+                            results.Add(newKey, values1.Union(values2));
+                            ExaminationTypes.Add(newKey, new List<ExaminationType>() { key1, key2 });
+                        }
+                        else
+                        {
+                            results[newKey] = results[newKey].Union(values1.Union(values2));
+                            ExaminationTypes[newKey].Add(key2);
+                            ExaminationTypes[newKey] = ExaminationTypes[newKey].Distinct().ToList();
+                        }
+                    }
+                }
+            }
+
+
+            Console.WriteLine($"============================================ 定 2 ===========================================");
+            var item = results.OrderByDescending(s => s.Value.Count()).First();
+            //foreach (var item in resultDir)
+            {
+                List<Student> students = item.Value.ToList();
+                if (!AClasses.Any() || students.Count < minClassSize)
+                {
+                    return false;
+                }
+
+                // 计算组内需要多少个班级，多少个标准班可以
+                int minRatedClassSize = AClasses.Min(a => a.RatedClassSize);
+                int maxRatedClassSize = AClasses.Max(a => a.RatedClassSize);
+                int theClassCount = students.Count / minRatedClassSize;
+                int AStudents = theClassCount * minRatedClassSize;
+                if (theClassCount == 0)
+                {
+                    //当前组的学生不够达到标准班
+                    return false;
+                }
+
+                // 学生在这个组内的分配情况
+                var AStudentList = students.Take(AStudents); // TODO 均布男女后取人数，保证取到的那女生分布均匀
+                int boyStudents = AStudentList.Count(stu => stu.Sex == 0);                        // 组内男学生数量
+                int grilStudents = AStudentList.Count(stu => stu.Sex == 1);                       // 组内女学生数量
+                Console.WriteLine($"需要分配的类型：{item.Key}, 学生总数：{item.Value.Count()}, 男生数量：{boyStudents}, 女生数量：{grilStudents}, 包含组：{string.Join(",", ExaminationTypes[item.Key])}");
+                List<Tuple<int, int, int>> ClassStudens = OnDistributeStudents(AStudents, boyStudents, grilStudents, theClassCount, minClassSize, maxClassSize);//班级分配人数
+                for (int i = 0; i < theClassCount; i++)
+                {
+                    AssignStudentsToClasses(ref students, ClassStudens[i].Item1, ClassStudens[i].Item2, ClassStudens[i].Item3, ExaminationTypes[item.Key]);
+                }
+
+                if (students.Count >= minClassSize)
+                {
+                    boyStudents = students.Count(stu => stu.Sex == 0);                        // 组内男学生数量
+                    grilStudents = students.Count(stu => stu.Sex == 1);                       // 组内女学生数量
+                    AssignStudentsToClasses(ref students, minRatedClassSize, boyStudents, grilStudents, ExaminationTypes[item.Key]);
+                }
+            }
+
+            Console.WriteLine($"=======================================================================================");
+            return true;
         }
 
 
         /// <summary>
         /// 分配学生到班级
         /// </summary>
-        private static void AssignStudentsToClasses(int classNum, int minClassSize, int maxClassSize)
+        private static void AssignStudentsToClasses1(int classNum, int minClassSize, int maxClassSize)
         {
             IEnumerable<IGrouping<ExaminationType, Student>> gStudents = TotalStudents.GroupBy(stu => stu.Exams)
                                                                                       .OrderByDescending(g => g.Count());
@@ -249,24 +371,41 @@ namespace MyConsoleApp.DivideintoClasses
                 List<Tuple<int, int, int>> ClassStudens = OnDistributeStudents(AStudents, boyStudents, grilStudents, theClassCount, minClassSize, maxClassSize);//班级分配人数
                 for (int i = 0; i < theClassCount; i++)
                 {
-                    AdministrativeClass administrativeClass = AClasses[0];
-                    administrativeClass.RatedClassSize = ClassStudens[i].Item1;
-                    administrativeClass.BoyNumber = ClassStudens[i].Item2;
-                    administrativeClass.GrilNummber = ClassStudens[i].Item3;
-                    administrativeClass.ExamsList = new List<ExaminationType>() { exams };
-                    doArrangeStudents(ref students, administrativeClass);
-                    Console.WriteLine($"安排班级：{administrativeClass.Name}，选考组合：{exams}, 班级人数:{administrativeClass.RatedClassSize}, 学生人数: {AStudents}, 男生人数：{boyStudents}, 女生人数：{grilStudents}");
-                    //检查班级是否安排完成
-                    if (administrativeClass.Status == ClassStatus.ShortageStaff)
-                    { //当前行政班没有填充满学生
-                        ShortageStaffClasses.Add(administrativeClass);
-                    }
-                    else
-                    {
-                        AssignedClasses.Add(administrativeClass);
-                    }
-                    AClasses.Remove(administrativeClass);
+                    AssignStudentsToClasses(ref students, ClassStudens[i].Item1, ClassStudens[i].Item2, ClassStudens[i].Item3, new List<ExaminationType>() { exams });
                 }
+
+                if (students.Count >= minClassSize)
+                {
+                    boyStudents = students.Count(stu => stu.Sex == 0);                        // 组内男学生数量
+                    grilStudents = students.Count(stu => stu.Sex == 1);                       // 组内女学生数量
+                    AssignStudentsToClasses(ref students, minRatedClassSize, boyStudents, grilStudents, new List<ExaminationType>() { exams });
+                }
+                else if (students.Count >= minClassSize / 2)
+                {//剩余的人生超过半个开班需求
+                    boyStudents = students.Count(stu => stu.Sex == 0);                        // 组内男学生数量
+                    grilStudents = students.Count(stu => stu.Sex == 1);                       // 组内女学生数量
+                    AssignStudentsToClasses(ref students, minRatedClassSize, boyStudents, grilStudents, new List<ExaminationType>() { exams });
+                }
+                else
+                { //剩余的人生小于半个开班需求，考虑将人数分配到已经开好的班级中
+                    while (students.Any())
+                    {
+                        foreach (AdministrativeClass aClass in AssignedClasses)
+                        {
+                            if (!students.Any())
+                                break;
+                            Student student = students.First();
+                            aClass.Students.Add(student);
+                            if (student.Sex == 0)
+                                aClass.BoyNumber += 1;
+                            else
+                                aClass.GrilNummber += 1;
+                            students.Remove(student);
+                        }
+                    }
+
+                }
+
 
                 if (students.Any())
                 {
@@ -274,6 +413,28 @@ namespace MyConsoleApp.DivideintoClasses
                 }
             }
         }
+
+        public static void AssignStudentsToClasses(ref List<Student> students, int RatedClassSize, int BoyNumber, int GrilNummber, List<ExaminationType> ExamsList)
+        {
+            AdministrativeClass administrativeClass = AClasses[0];
+            administrativeClass.RatedClassSize = RatedClassSize;
+            administrativeClass.BoyNumber = BoyNumber;
+            administrativeClass.GrilNummber = GrilNummber;
+            administrativeClass.ExamsList = ExamsList;
+            doArrangeStudents(ref students, administrativeClass);
+            Console.WriteLine($"安排班级：{administrativeClass.Name}，选考组合：{string.Join(",", ExamsList)}, 班级人数:{administrativeClass.RatedClassSize},  男生人数：{BoyNumber}, 女生人数：{GrilNummber}  ---> 剩余学生人数: {students.Count}");
+            //检查班级是否安排完成
+            if (administrativeClass.Status == ClassStatus.ShortageStaff)
+            { //当前行政班没有填充满学生
+                ShortageStaffClasses.Add(administrativeClass);
+            }
+            else
+            {
+                AssignedClasses.Add(administrativeClass);
+            }
+            AClasses.Remove(administrativeClass);
+        }
+
 
         private static int CalculateClassCount(int studentCount, int minClassSize)
         {
@@ -371,13 +532,13 @@ namespace MyConsoleApp.DivideintoClasses
             IEnumerable<Student> girlStudents = students.Where(stu => stu.Sex == 1).Take(administrativeClass.GrilNummber);      // 女学生
             administrativeClass.Students.AddRange(boyStudents);
             administrativeClass.Students.AddRange(girlStudents);
-            if (administrativeClass.Status == ClassStatus.ShortageStaff)
-            {
-
-            }
             foreach (Student student in administrativeClass.Students)
             {
                 students.Remove(student);
+                if (UnallocatedStudents.ContainsKey(student.Exams))
+                {
+                    UnallocatedStudents[student.Exams].Remove(student);
+                }
             };
         }
     }
