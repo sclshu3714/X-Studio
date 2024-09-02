@@ -39,6 +39,7 @@ using XStudio.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Volo.Abp.AspNetCore.Authentication.OAuth;
+using Volo.Abp.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using XStudio.Common;
@@ -59,6 +60,7 @@ using Nacos.V2;
 using Microsoft.AspNetCore.Identity;
 using AspNetCoreRateLimit;
 using Volo.Abp.AspNetCore.Mvc.UI.MultiTenancy;
+using Volo.Abp.AspNetCore.SignalR;
 
 namespace XStudio;
 
@@ -74,7 +76,8 @@ namespace XStudio;
     typeof(AbpAccountHttpApiModule),
     typeof(AbpAspNetCoreAuthenticationOAuthModule),
     typeof(AbpAspNetCoreSerilogModule),
-    typeof(AbpSwashbuckleModule)
+    typeof(AbpSwashbuckleModule),
+    typeof(AbpAspNetCoreSignalRModule)
 )]
 public class XStudioHttpApiHostModule : AbpModule
 {
@@ -159,41 +162,49 @@ public class XStudioHttpApiHostModule : AbpModule
 
     private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)
     {
-        context.Services.AddAuthentication(options =>
-        {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-        .AddJwtBearer(options =>
-        {
-            options.Authority = configuration["AuthServer:Authority"];
-            options.RequireHttpsMetadata = configuration.GetValue<bool>("AuthServer:RequireHttpsMetadata");
-            options.Audience = "XStudio";
-        });
+        //context.Services.AddAuthentication(options =>
+        //{
+        //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        //});
+        //.AddFacebook(facebook =>
+        //{
+        //    facebook.AppId = "...";
+        //    facebook.AppSecret = "...";
+        //    facebook.Scope.Add("email");
+        //    facebook.Scope.Add("public_profile");
+        //    facebook.Scope.Add("XStudio");
+        //})
+        //.AddJwtBearer(options =>
+        //{
+        //    options.Authority = configuration["AuthServer:Authority"];
+        //    options.RequireHttpsMetadata = configuration.GetValue<bool>("AuthServer:RequireHttpsMetadata");
+        //    options.Audience = "XStudio";
+        //});
 
-        context.Services.AddOpenIddict()
-            .AddServer(options =>
-            {
-                options.SetAccessTokenLifetime(TimeSpan.FromHours(24)); // 设置 token 过期时间为 24 小时
-                options.AllowAuthorizationCodeFlow()
-                       .RequireProofKeyForCodeExchange()
-                       .AllowRefreshTokenFlow();
+        //context.Services.AddOpenIddict()
+        //    .AddServer(options =>
+        //    {
+        //        options.SetAccessTokenLifetime(TimeSpan.FromHours(24)); // 设置 token 过期时间为 24 小时
+        //        options.AllowAuthorizationCodeFlow()
+        //               .RequireProofKeyForCodeExchange()
+        //               .AllowRefreshTokenFlow();
 
-                options.SetTokenEndpointUris("/connect/token")
-                       .SetAuthorizationEndpointUris("/connect/authorize");
+        //        options.SetTokenEndpointUris("/connect/token")
+        //               .SetAuthorizationEndpointUris("/connect/authorize");
 
-                options.AddDevelopmentEncryptionCertificate()
-                       .AddDevelopmentSigningCertificate();
+        //        options.AddDevelopmentEncryptionCertificate()
+        //               .AddDevelopmentSigningCertificate();
 
-                options.UseAspNetCore()
-                       .EnableTokenEndpointPassthrough()
-                       .EnableAuthorizationEndpointPassthrough();
-            })
-            .AddValidation(options =>
-            {
-                options.UseLocalServer();
-                options.UseAspNetCore();
-            });
+        //        options.UseAspNetCore()
+        //               .EnableTokenEndpointPassthrough()
+        //               .EnableAuthorizationEndpointPassthrough();
+        //    })
+        //    .AddValidation(options =>
+        //    {
+        //        options.UseLocalServer();
+        //        options.UseAspNetCore();
+        //    });
 
         context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
         context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
@@ -420,8 +431,9 @@ public class XStudioHttpApiHostModule : AbpModule
         app.UseCors();
         app.UseMiddleware<AbpExceptionMiddleware>(); //ExceptionMiddleware 加入管道
         //app.UseMiddleware<AbpTokenValidationMiddleware>(); // token验证
+        //app.UseJwtTokenMiddleware();
         app.UseAuthentication();
-        app.UseAbpOpenIddictValidation();
+        //app.UseAbpOpenIddictValidation();
 
         if (MultiTenancyConsts.IsEnabled)
         {

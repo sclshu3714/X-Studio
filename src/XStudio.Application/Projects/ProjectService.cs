@@ -26,7 +26,6 @@ using System.Transactions;
 using Serilog;
 using Volo.Abp.Uow;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace XStudio.Projects
 {

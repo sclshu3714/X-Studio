@@ -5,17 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EventBus.Distributed;
+using XStudio.Common.Helper;
 
 namespace XStudio.Common.Kafka
 {
     /// <summary>
     /// 消费者
     /// </summary>
-    public class KafkaConsumerEventHandler : IDistributedEventHandler<KafkaMessagePackage>, ITransientDependency
+    public class KafkaConsumerEventHandler<T> : IDistributedEventHandler<MessagePackage<T>>, ITransientDependency where T : class
     {
-        public Task HandleEventAsync(KafkaMessagePackage eventData)
+        /// <summary>
+        /// 监听到生产者发送的消息
+        /// </summary>
+        /// <param name="eventData"></param>
+        /// <returns></returns>
+        public Task HandleEventAsync(MessagePackage<T> eventData)
         {
-            Console.WriteLine("--------> App1 has received the message: " + eventData.Message.TruncateWithPostfix(32));
+            Console.WriteLine("--------> App1 has received the message: " + eventData.Value?.ToJson().TruncateWithPostfix(32));
             Console.WriteLine();
 
             return Task.CompletedTask;
