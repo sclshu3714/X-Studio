@@ -1420,6 +1420,15 @@ namespace XStudio.App.Properties.Langs {
         }
         
         /// <summary>
+        ///   查找类似 开始实例 的本地化字符串。
+        /// </summary>
+        internal static string Practical_Start {
+            get {
+                return ResourceManager.GetString("Practical Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 实用例子 的本地化字符串。
         /// </summary>
         internal static string PracticalDemos {

@@ -8,14 +8,15 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.Mvvm.Messaging;
 using System.Linq.Expressions;
+using System.Collections.ObjectModel;
 
 namespace XStudio.App.ViewModel
 {
     public class ViewModelDataBase<T> : ObservableObject
     {
-        private IList<T> _dataList = [];
+        private ObservableCollection<T> _dataList = [];
 
-        public IList<T> DataList
+        public ObservableCollection<T> DataList
         {
             get => _dataList;
             set => SetProperty(ref _dataList, value);

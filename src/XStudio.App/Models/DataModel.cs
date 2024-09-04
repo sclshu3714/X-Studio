@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -21,7 +22,7 @@ namespace XStudio.App.Models
 
         public string ImgPath { get; set; } = string.Empty;
 
-        public List<DataModel> DataList { get; set; } = [];
+        public ObservableCollection<DataModel> DataItems { get; set; } = [];
     }
 
 }

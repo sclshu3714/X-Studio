@@ -232,7 +232,7 @@ public partial class App : PrismApplication
         skins1.MergedDictionaries.Clear();
         skins1.MergedDictionaries.Add(new ResourceDictionary
         {
-            Source = new Uri("pack://application:,,,/XStudio.App;component/Themes/Theme.xaml")
+            Source = new Uri("pack://application:,,,/XStudio.App;component/Resources/Themes/Theme.xaml")
         });
         skins1.MergedDictionaries.Add(new ResourceDictionary
         {
