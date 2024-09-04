@@ -430,6 +430,7 @@ public class XStudioHttpApiHostModule : AbpModule
         app.UseRouting();
         app.UseCors();
         app.UseMiddleware<AbpExceptionMiddleware>(); //ExceptionMiddleware 加入管道
+        app.UseMiddleware<IpRateLimitMiddleware>();
         //app.UseMiddleware<AbpTokenValidationMiddleware>(); // token验证
         //app.UseJwtTokenMiddleware();
         app.UseAuthentication();

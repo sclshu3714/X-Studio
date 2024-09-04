@@ -41,9 +41,14 @@ namespace XStudio.Schools.Places
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
+        /// 属于学校
+        /// </summary>
+        public virtual School? School { get; set; }
+
+        /// <summary>
         /// 属于校区
         /// </summary>
-        public virtual SchoolCampus Campus { get; set; }
+        public virtual SchoolCampus? Campus { get; set; }
 
         /// <summary>
         /// 包含楼层

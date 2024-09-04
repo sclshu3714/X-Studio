@@ -13,8 +13,8 @@ using XStudio.EntityFrameworkCore;
 namespace XStudio.Migrations
 {
     [DbContext(typeof(XStudioDbContext))]
-    [Migration("20240902071932_School")]
-    partial class School
+    [Migration("20240903064606_SchoolUpdate")]
+    partial class SchoolUpdate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1928,15 +1928,19 @@ namespace XStudio.Migrations
 
                     b.Property<string>("SchoolCampusCode")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(128)");
 
                     b.Property<string>("SchoolCode")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(128)");
 
                     b.HasKey("Code");
 
                     b.HasIndex("BuildingCode");
+
+                    b.HasIndex("SchoolCampusCode");
+
+                    b.HasIndex("SchoolCode");
 
                     b.ToTable("AppXBuildingFloors", (string)null);
                 });
@@ -1949,7 +1953,7 @@ namespace XStudio.Migrations
 
                     b.Property<string>("BuildingCode")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(128)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -1997,15 +2001,21 @@ namespace XStudio.Migrations
 
                     b.Property<string>("SchoolCampusCode")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(128)");
 
                     b.Property<string>("SchoolCode")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(128)");
 
                     b.HasKey("Code");
 
+                    b.HasIndex("BuildingCode");
+
                     b.HasIndex("FloorCode");
+
+                    b.HasIndex("SchoolCampusCode");
+
+                    b.HasIndex("SchoolCode");
 
                     b.ToTable("AppXClassrooms", (string)null);
                 });
@@ -2095,11 +2105,13 @@ namespace XStudio.Migrations
 
                     b.Property<string>("SchoolCode")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(128)");
 
                     b.HasKey("Code");
 
                     b.HasIndex("SchoolCampusCode");
+
+                    b.HasIndex("SchoolCode");
 
                     b.ToTable("AppXSchoolBuildings", (string)null);
                 });
@@ -2315,18 +2327,58 @@ namespace XStudio.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("XStudio.Schools.Places.SchoolCampus", "Campus")
+                        .WithMany()
+                        .HasForeignKey("SchoolCampusCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("XStudio.Schools.Places.School", "School")
+                        .WithMany()
+                        .HasForeignKey("SchoolCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Building");
+
+                    b.Navigation("Campus");
+
+                    b.Navigation("School");
                 });
 
             modelBuilder.Entity("XStudio.Schools.Places.Classroom", b =>
                 {
+                    b.HasOne("XStudio.Schools.Places.SchoolBuilding", "Building")
+                        .WithMany()
+                        .HasForeignKey("BuildingCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("XStudio.Schools.Places.BuildingFloor", "Floor")
                         .WithMany("Classrooms")
                         .HasForeignKey("FloorCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("XStudio.Schools.Places.SchoolCampus", "Campus")
+                        .WithMany()
+                        .HasForeignKey("SchoolCampusCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("XStudio.Schools.Places.School", "School")
+                        .WithMany()
+                        .HasForeignKey("SchoolCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Building");
+
+                    b.Navigation("Campus");
+
                     b.Navigation("Floor");
+
+                    b.Navigation("School");
                 });
 
             modelBuilder.Entity("XStudio.Schools.Places.SchoolBuilding", b =>
@@ -2337,7 +2389,15 @@ namespace XStudio.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("XStudio.Schools.Places.School", "School")
+                        .WithMany()
+                        .HasForeignKey("SchoolCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Campus");
+
+                    b.Navigation("School");
                 });
 
             modelBuilder.Entity("XStudio.Schools.Places.SchoolCampus", b =>

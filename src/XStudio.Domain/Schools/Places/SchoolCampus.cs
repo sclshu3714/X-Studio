@@ -46,7 +46,7 @@ namespace XStudio.Schools.Places
         /// <summary>
         /// 属于学校
         /// </summary>
-        public virtual School School { get; set; }
+        public virtual School? School { get; set; }
 
         /// <summary>
         /// 包含楼栋

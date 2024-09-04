@@ -31,9 +31,9 @@ public class Program
             var builder = WebApplication.CreateBuilder(args);
 
             Log.Logger = new LoggerConfiguration()
-            .ReadFrom.Configuration(builder.Configuration) // 从配置中读取
-            .Enrich.FromLogContext()
-            .CreateLogger();
+                .ReadFrom.Configuration(builder.Configuration) // 从配置中读取
+                .Enrich.FromLogContext()
+                .CreateLogger();
 
             builder.Host.AddAppSettingsSecretsJson()
                 .UseAutofac()
