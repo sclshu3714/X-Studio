@@ -27,7 +27,7 @@ namespace XStudio.Schools.Places
         /// 序号
         /// </summary>
         [DbDescription("序号")]
-        public long Index { get; set; } = 0;
+        public long Order { get; set; } = 0;
 
         /// <summary>
         /// 学校编号
@@ -60,5 +60,12 @@ namespace XStudio.Schools.Places
         /// 属于楼层
         /// </summary>
         public virtual BuildingFloor? Floor { get; set; }
+
+        /// <summary>
+        /// "数据有效标识：A 正常 | E 异常 | S 停用 | D 删除
+        /// </summary>
+
+        [DbDescription("数据有效标识")]
+        public ValidStateType ValidState { get; set; } = ValidStateType.A;
     }
 }

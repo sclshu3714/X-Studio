@@ -53,5 +53,12 @@ namespace XStudio.Schools.Places
         /// 包含校区
         /// </summary>
         public virtual ICollection<SchoolCampus> Campuses { get; set; } = new List<SchoolCampus>();
+
+        /// <summary>
+        /// "数据有效标识：A 正常 | E 异常 | S 停用 | D 删除
+        /// </summary>
+
+        [DbDescription("数据有效标识")]
+        public ValidStateType ValidState { get; set; } = ValidStateType.A;
     }
 }

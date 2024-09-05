@@ -22,6 +22,7 @@ using XStudio.Projects;
 using XStudio.Schools.Places;
 using System.Drawing;
 using System.Reflection.Emit;
+using XStudio.Schools.Timetable;
 
 namespace XStudio.EntityFrameworkCore;
 
@@ -75,6 +76,13 @@ public class XStudioDbContext :
     public DbSet<BuildingFloor> BuildingFloors { get; set; }
     public DbSet<Classroom> Classrooms { get; set; }
     #endregion
+
+    #region 课表
+    public DbSet<TimePeriod> TimePeriods { get; set; }
+    public DbSet<Section> Sections { get; set; }
+    public DbSet<Course> Courses { get; set; }
+    public DbSet<Schedule> Schedules { get; set; }
+    #endregion
     public XStudioDbContext(DbContextOptions<XStudioDbContext> options)
         : base(options)
     {
@@ -114,6 +122,7 @@ public class XStudioDbContext :
             AddCommentsToProperties(b);
         });
 
+        #region 场所
         builder.Entity<School>(b =>
         {
             b.ToTable(XStudioConsts.DbTablePrefix + "Schools", XStudioConsts.DbSchema);
@@ -183,14 +192,60 @@ public class XStudioDbContext :
             //自动添加注释
             AddCommentsToProperties(b);
         });
-            
+
+        #endregion
+
+        #region 课表
+        builder.Entity<TimePeriod>(b =>
+        {
+            b.ToTable(XStudioConsts.DbTablePrefix + "TimePeriods", XStudioConsts.DbSchema);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.Property(x => x.Code).IsRequired().HasMaxLength(128);
+            b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+            b.HasKey(x => x.Code);
+            //自动添加注释
+            AddCommentsToProperties(b);
+        });
+        builder.Entity<Section>(b =>
+        {
+            b.ToTable(XStudioConsts.DbTablePrefix + "Sections", XStudioConsts.DbSchema);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.Property(x => x.Code).IsRequired().HasMaxLength(128);
+            b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+            b.HasKey(x => x.Code);
+            b.HasOne(b => b.Schedule)
+             .WithMany(c => c.Sections)
+             .HasForeignKey(b => b.ScheduleCode);
+            //自动添加注释
+            AddCommentsToProperties(b);
+        });
+        builder.Entity<Course>(b =>
+        {
+            b.ToTable(XStudioConsts.DbTablePrefix + "Courses", XStudioConsts.DbSchema);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.Property(x => x.Code).IsRequired().HasMaxLength(128);
+            b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+            b.HasKey(x => x.Code);
+            //自动添加注释
+            AddCommentsToProperties(b);
+        });
+        builder.Entity<Schedule>(b =>
+        {
+            b.ToTable(XStudioConsts.DbTablePrefix + "Schedules", XStudioConsts.DbSchema);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.Property(x => x.Code).IsRequired().HasMaxLength(128);
+            b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+            b.HasKey(x => x.Code);
+            //自动添加注释
+            AddCommentsToProperties(b);
+        });
+        #endregion
     }
 
     // 扩展方法：为属性添加注释
     private void AddCommentsToProperties<TEntity>(EntityTypeBuilder<TEntity> builder) where TEntity : class
     {
-        var properties = typeof(Project).GetProperties();
-
+        var properties = typeof(TEntity).GetProperties();
         foreach (var property in properties)
         {
             // 获取属性上的CommentAttribute
