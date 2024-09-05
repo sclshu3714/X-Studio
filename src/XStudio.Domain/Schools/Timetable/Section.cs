@@ -39,15 +39,6 @@ namespace XStudio.Schools.Timetable
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
-        /// 时段
-        /// </summary>
-        /// <example>
-        /// Morning
-        /// </example>
-        [DbDescription("时段")]
-        public TimePeriod? Period { get; set; }
-
-        /// <summary>
         /// 是否是授课|非授课,默认为true,当设置为false时指非授课
         /// </summary>
         [DbDescription("是否是授课")]
@@ -89,13 +80,28 @@ namespace XStudio.Schools.Timetable
         public ValidStateType ValidState { get; set; } = ValidStateType.A;
 
         /// <summary>
-        /// 学校编码
+        /// 时段编码
         /// </summary>
+        [DbDescription("时段编码")]
+        public string PeriodCode { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 节次编码
+        /// </summary>
+        [DbDescription("节次编码")]
         public string ScheduleCode { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 时段
+        /// </summary>
+        /// <example>
+        /// Morning
+        /// </example>
+        public virtual TimePeriod? Period { get; set; }
 
         /// <summary>
         /// 节次方案
         /// </summary>
-        public virtual Schedule? Schedule { get; set; }
+        public virtual Schedule? @Schedule { get; set; }
     }
 }

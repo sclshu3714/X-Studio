@@ -78,10 +78,10 @@ public class XStudioDbContext :
     #endregion
 
     #region 课表
+    public DbSet<Schedule> Schedules { get; set; }
     public DbSet<TimePeriod> TimePeriods { get; set; }
     public DbSet<Section> Sections { get; set; }
     public DbSet<Course> Courses { get; set; }
-    public DbSet<Schedule> Schedules { get; set; }
     #endregion
     public XStudioDbContext(DbContextOptions<XStudioDbContext> options)
         : base(options)
@@ -206,6 +206,18 @@ public class XStudioDbContext :
             //自动添加注释
             AddCommentsToProperties(b);
         });
+
+        builder.Entity<Schedule>(b =>
+        {
+            b.ToTable(XStudioConsts.DbTablePrefix + "Schedules", XStudioConsts.DbSchema);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.Property(x => x.Code).IsRequired().HasMaxLength(128);
+            b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+            b.HasKey(x => x.Code);
+            //自动添加注释
+            AddCommentsToProperties(b);
+        });
+
         builder.Entity<Section>(b =>
         {
             b.ToTable(XStudioConsts.DbTablePrefix + "Sections", XStudioConsts.DbSchema);
@@ -219,6 +231,7 @@ public class XStudioDbContext :
             //自动添加注释
             AddCommentsToProperties(b);
         });
+
         builder.Entity<Course>(b =>
         {
             b.ToTable(XStudioConsts.DbTablePrefix + "Courses", XStudioConsts.DbSchema);
@@ -229,16 +242,7 @@ public class XStudioDbContext :
             //自动添加注释
             AddCommentsToProperties(b);
         });
-        builder.Entity<Schedule>(b =>
-        {
-            b.ToTable(XStudioConsts.DbTablePrefix + "Schedules", XStudioConsts.DbSchema);
-            b.ConfigureByConvention(); //auto configure for the base class props
-            b.Property(x => x.Code).IsRequired().HasMaxLength(128);
-            b.Property(x => x.Name).IsRequired().HasMaxLength(128);
-            b.HasKey(x => x.Code);
-            //自动添加注释
-            AddCommentsToProperties(b);
-        });
+        
         #endregion
     }
 

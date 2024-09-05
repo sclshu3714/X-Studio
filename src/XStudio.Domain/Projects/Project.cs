@@ -39,5 +39,12 @@ namespace XStudio.Projects
         /// 描述
         /// </summary>
         public string Description { get; set; } = string.Empty;
+    
+               /// <summary>
+        /// "数据有效标识：A 正常 | E 异常 | S 停用 | D 删除
+        /// </summary>
+
+        [DbDescription("数据有效标识")]
+        public ValidStateType ValidState { get; set; } = ValidStateType.A;
     }
 }

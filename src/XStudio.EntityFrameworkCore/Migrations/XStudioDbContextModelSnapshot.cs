@@ -1868,20 +1868,26 @@ namespace XStudio.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
+                    b.Property<int>("ValidState")
+                        .HasColumnType("int")
+                        .HasComment("数据有效标识");
+
                     b.HasKey("Id");
 
-                    b.ToTable("AppXProjects", (string)null);
+                    b.ToTable("AppX_Projects", (string)null);
                 });
 
             modelBuilder.Entity("XStudio.Schools.Places.BuildingFloor", b =>
                 {
                     b.Property<string>("Code")
                         .HasMaxLength(128)
-                        .HasColumnType("varchar(128)");
+                        .HasColumnType("varchar(128)")
+                        .HasComment("编码");
 
                     b.Property<string>("BuildingCode")
                         .IsRequired()
-                        .HasColumnType("varchar(128)");
+                        .HasColumnType("varchar(128)")
+                        .HasComment("楼栋编码");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -1906,9 +1912,6 @@ namespace XStudio.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("char(36)");
 
-                    b.Property<long>("Index")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("LastModificationTime");
@@ -1921,15 +1924,25 @@ namespace XStudio.Migrations
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("varchar(128)")
-                        .HasComment("项目名称");
+                        .HasComment("名称");
+
+                    b.Property<long>("Order")
+                        .HasColumnType("bigint")
+                        .HasComment("序号");
 
                     b.Property<string>("SchoolCampusCode")
                         .IsRequired()
-                        .HasColumnType("varchar(128)");
+                        .HasColumnType("varchar(128)")
+                        .HasComment("校区编码");
 
                     b.Property<string>("SchoolCode")
                         .IsRequired()
-                        .HasColumnType("varchar(128)");
+                        .HasColumnType("varchar(128)")
+                        .HasComment("学校编码");
+
+                    b.Property<int>("ValidState")
+                        .HasColumnType("int")
+                        .HasComment("数据有效标识");
 
                     b.HasKey("Code");
 
@@ -1939,18 +1952,20 @@ namespace XStudio.Migrations
 
                     b.HasIndex("SchoolCode");
 
-                    b.ToTable("AppXBuildingFloors", (string)null);
+                    b.ToTable("AppX_BuildingFloors", (string)null);
                 });
 
             modelBuilder.Entity("XStudio.Schools.Places.Classroom", b =>
                 {
                     b.Property<string>("Code")
                         .HasMaxLength(128)
-                        .HasColumnType("varchar(128)");
+                        .HasColumnType("varchar(128)")
+                        .HasComment("编码");
 
                     b.Property<string>("BuildingCode")
                         .IsRequired()
-                        .HasColumnType("varchar(128)");
+                        .HasColumnType("varchar(128)")
+                        .HasComment("楼栋编码");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -1974,13 +1989,11 @@ namespace XStudio.Migrations
 
                     b.Property<string>("FloorCode")
                         .IsRequired()
-                        .HasColumnType("varchar(128)");
+                        .HasColumnType("varchar(128)")
+                        .HasComment("楼层编码");
 
                     b.Property<Guid>("Id")
                         .HasColumnType("char(36)");
-
-                    b.Property<long>("Index")
-                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime(6)")
@@ -1994,15 +2007,25 @@ namespace XStudio.Migrations
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("varchar(128)")
-                        .HasComment("项目名称");
+                        .HasComment("名称");
+
+                    b.Property<long>("Order")
+                        .HasColumnType("bigint")
+                        .HasComment("序号");
 
                     b.Property<string>("SchoolCampusCode")
                         .IsRequired()
-                        .HasColumnType("varchar(128)");
+                        .HasColumnType("varchar(128)")
+                        .HasComment("校区编码");
 
                     b.Property<string>("SchoolCode")
                         .IsRequired()
-                        .HasColumnType("varchar(128)");
+                        .HasColumnType("varchar(128)")
+                        .HasComment("学校编码");
+
+                    b.Property<int>("ValidState")
+                        .HasColumnType("int")
+                        .HasComment("数据有效标识");
 
                     b.HasKey("Code");
 
@@ -2014,22 +2037,25 @@ namespace XStudio.Migrations
 
                     b.HasIndex("SchoolCode");
 
-                    b.ToTable("AppXClassrooms", (string)null);
+                    b.ToTable("AppX_Classrooms", (string)null);
                 });
 
             modelBuilder.Entity("XStudio.Schools.Places.School", b =>
                 {
                     b.Property<string>("Code")
                         .HasMaxLength(128)
-                        .HasColumnType("varchar(128)");
+                        .HasColumnType("varchar(128)")
+                        .HasComment("编码");
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("longtext")
+                        .HasComment("校址");
 
                     b.Property<string>("Badge")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("longtext")
+                        .HasComment("校徽");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -2048,7 +2074,8 @@ namespace XStudio.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("longtext")
+                        .HasComment("简介");
 
                     b.Property<string>("ExtraProperties")
                         .IsRequired()
@@ -2070,31 +2097,38 @@ namespace XStudio.Migrations
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("varchar(128)")
-                        .HasComment("项目名称");
+                        .HasComment("名称");
 
                     b.Property<string>("PromotionSlogan")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("longtext")
+                        .HasComment("宣传语");
+
+                    b.Property<int>("ValidState")
+                        .HasColumnType("int")
+                        .HasComment("数据有效标识");
 
                     b.HasKey("Code");
 
-                    b.ToTable("AppXSchools", (string)null);
+                    b.ToTable("AppX_Schools", (string)null);
                 });
 
             modelBuilder.Entity("XStudio.Schools.Places.SchoolBuilding", b =>
                 {
                     b.Property<string>("Code")
                         .HasMaxLength(128)
-                        .HasColumnType("varchar(128)");
-
-                    b.Property<long>("Index")
-                        .HasColumnType("bigint");
+                        .HasColumnType("varchar(128)")
+                        .HasComment("编码");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("varchar(128)")
-                        .HasComment("项目名称");
+                        .HasComment("名称");
+
+                    b.Property<long>("Order")
+                        .HasColumnType("bigint")
+                        .HasComment("序号");
 
                     b.Property<string>("SchoolCampusCode")
                         .IsRequired()
@@ -2104,24 +2138,30 @@ namespace XStudio.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(128)");
 
+                    b.Property<int>("ValidState")
+                        .HasColumnType("int")
+                        .HasComment("数据有效标识");
+
                     b.HasKey("Code");
 
                     b.HasIndex("SchoolCampusCode");
 
                     b.HasIndex("SchoolCode");
 
-                    b.ToTable("AppXSchoolBuildings", (string)null);
+                    b.ToTable("AppX_SchoolBuildings", (string)null);
                 });
 
             modelBuilder.Entity("XStudio.Schools.Places.SchoolCampus", b =>
                 {
                     b.Property<string>("Code")
                         .HasMaxLength(128)
-                        .HasColumnType("varchar(128)");
+                        .HasColumnType("varchar(128)")
+                        .HasComment("编码");
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("longtext")
+                        .HasComment("校址");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -2146,8 +2186,68 @@ namespace XStudio.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("char(36)");
 
-                    b.Property<long>("Index")
-                        .HasColumnType("bigint");
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)")
+                        .HasComment("名称");
+
+                    b.Property<long>("Order")
+                        .HasColumnType("bigint")
+                        .HasComment("序号");
+
+                    b.Property<string>("SchoolCode")
+                        .IsRequired()
+                        .HasColumnType("varchar(128)");
+
+                    b.Property<int>("ValidState")
+                        .HasColumnType("int")
+                        .HasComment("数据有效标识");
+
+                    b.HasKey("Code");
+
+                    b.HasIndex("SchoolCode");
+
+                    b.ToTable("AppX_SchoolCampuses", (string)null);
+                });
+
+            modelBuilder.Entity("XStudio.Schools.Timetable.Course", b =>
+                {
+                    b.Property<string>("Code")
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)")
+                        .HasComment("编号");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("varchar(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime(6)")
@@ -2161,17 +2261,229 @@ namespace XStudio.Migrations
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("varchar(128)")
-                        .HasComment("项目名称");
+                        .HasComment("课程名称");
 
-                    b.Property<string>("SchoolCode")
-                        .IsRequired()
-                        .HasColumnType("varchar(128)");
+                    b.Property<int>("Order")
+                        .HasColumnType("int")
+                        .HasComment("序号");
+
+                    b.Property<int>("ValidState")
+                        .HasColumnType("int")
+                        .HasComment("数据有效标识");
 
                     b.HasKey("Code");
 
-                    b.HasIndex("SchoolCode");
+                    b.ToTable("AppX_Courses", (string)null);
+                });
 
-                    b.ToTable("AppXSchoolCampuses", (string)null);
+            modelBuilder.Entity("XStudio.Schools.Timetable.Schedule", b =>
+                {
+                    b.Property<string>("Code")
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)")
+                        .HasComment("编号");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("varchar(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<string>("LayoutOfWeek")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasComment("布局节次表");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)")
+                        .HasComment("节次方案名称");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int")
+                        .HasComment("序号");
+
+                    b.Property<int>("ValidState")
+                        .HasColumnType("int")
+                        .HasComment("数据有效标识");
+
+                    b.HasKey("Code");
+
+                    b.ToTable("AppX_Schedules", (string)null);
+                });
+
+            modelBuilder.Entity("XStudio.Schools.Timetable.Section", b =>
+                {
+                    b.Property<string>("Code")
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)")
+                        .HasComment("编码");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("varchar(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<TimeSpan?>("EndTime")
+                        .HasColumnType("time(6)")
+                        .HasComment("节次结束时间");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("IsBanner")
+                        .HasColumnType("tinyint(1)")
+                        .HasComment("是否是通栏");
+
+                    b.Property<bool>("IsSelfStudy")
+                        .HasColumnType("tinyint(1)")
+                        .HasComment("是否是自习");
+
+                    b.Property<bool>("IsTeaching")
+                        .HasColumnType("tinyint(1)")
+                        .HasComment("是否是授课");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)")
+                        .HasComment("名称");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int")
+                        .HasComment("序号");
+
+                    b.Property<string>("PeriodCode")
+                        .IsRequired()
+                        .HasColumnType("varchar(128)")
+                        .HasComment("时段编码");
+
+                    b.Property<string>("ScheduleCode")
+                        .IsRequired()
+                        .HasColumnType("varchar(128)")
+                        .HasComment("节次编码");
+
+                    b.Property<TimeSpan?>("StartTime")
+                        .HasColumnType("time(6)")
+                        .HasComment("节次开始时间");
+
+                    b.Property<int>("ValidState")
+                        .HasColumnType("int")
+                        .HasComment("数据有效标识");
+
+                    b.HasKey("Code");
+
+                    b.HasIndex("PeriodCode");
+
+                    b.HasIndex("ScheduleCode");
+
+                    b.ToTable("AppX_Sections", (string)null);
+                });
+
+            modelBuilder.Entity("XStudio.Schools.Timetable.TimePeriod", b =>
+                {
+                    b.Property<string>("Code")
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)")
+                        .HasComment("编码");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("varchar(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)")
+                        .HasComment("名称");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int")
+                        .HasComment("序号");
+
+                    b.Property<int>("ValidState")
+                        .HasColumnType("int")
+                        .HasComment("数据有效标识");
+
+                    b.HasKey("Code");
+
+                    b.ToTable("AppX_TimePeriods", (string)null);
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLogAction", b =>
@@ -2408,6 +2720,25 @@ namespace XStudio.Migrations
                     b.Navigation("School");
                 });
 
+            modelBuilder.Entity("XStudio.Schools.Timetable.Section", b =>
+                {
+                    b.HasOne("XStudio.Schools.Timetable.TimePeriod", "Period")
+                        .WithMany()
+                        .HasForeignKey("PeriodCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("XStudio.Schools.Timetable.Schedule", "Schedule")
+                        .WithMany("Sections")
+                        .HasForeignKey("ScheduleCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Period");
+
+                    b.Navigation("Schedule");
+                });
+
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>
                 {
                     b.Navigation("Actions");
@@ -2466,6 +2797,11 @@ namespace XStudio.Migrations
             modelBuilder.Entity("XStudio.Schools.Places.SchoolCampus", b =>
                 {
                     b.Navigation("Buildings");
+                });
+
+            modelBuilder.Entity("XStudio.Schools.Timetable.Schedule", b =>
+                {
+                    b.Navigation("Sections");
                 });
 #pragma warning restore 612, 618
         }

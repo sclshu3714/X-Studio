@@ -13,7 +13,7 @@ namespace XStudio.Schools.Timetable
     public class Course : AuditedAggregateRoot<Guid>
     {
         [DbDescription("序号")]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Order { get; set; } = 0;
         /// <summary>
         /// 课程编号，主要用于快速识别和查询

@@ -71,7 +71,7 @@ namespace XStudio.App.Views.UserControls
 
         private void FilterItems()
         {
-            if (string.IsNullOrEmpty(_searchKey))
+            if (string.IsNullOrEmpty(_searchKey) && ViewModelLocator.Instance.Main.WorkspaceInfoCurrent != null)
             {
                 foreach (var item in ViewModelLocator.Instance.Main.WorkspaceInfoCurrent.DataList)
                 {
@@ -79,7 +79,7 @@ namespace XStudio.App.Views.UserControls
                     //item.QueriesText = string.Empty;
                 }
             }
-            else
+            else if(ViewModelLocator.Instance.Main.WorkspaceInfoCurrent != null)
             {
                 var key = _searchKey.ToLower();
                 foreach (var item in ViewModelLocator.Instance.Main.WorkspaceInfoCurrent.DataList)

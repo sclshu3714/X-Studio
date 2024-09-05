@@ -13,7 +13,7 @@ namespace XStudio.Schools.Timetable
     public class Schedule : AuditedAggregateRoot<Guid>
     {
         [DbDescription("序号")]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Order { get; set; } = 0;
         /// <summary>
         /// 节次表编号，主要用于快速识别和查询
@@ -26,12 +26,6 @@ namespace XStudio.Schools.Timetable
         /// </summary>
         [DbDescription("节次方案名称")]
         public string Name { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 包含的节信息
-        /// </summary>
-        [DbDescription("节次表中包含的节次")]
-        public virtual List<Section> Sections { get; set; } = new List<Section>();
 
         /// <summary>
         /// 默认周一 - 周日,当然也可以控制周日 - 周六,周六 - 周五等
@@ -48,5 +42,11 @@ namespace XStudio.Schools.Timetable
 
         [DbDescription("数据有效标识")]
         public ValidStateType ValidState { get; set; } = ValidStateType.A;
+
+
+        /// <summary>
+        /// 包含的节信息
+        /// </summary>
+        public virtual ICollection<Section> Sections { get; set; } = new List<Section>();
     }
 }

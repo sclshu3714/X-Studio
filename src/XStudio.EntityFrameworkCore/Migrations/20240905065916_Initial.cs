@@ -538,17 +538,16 @@ namespace XStudio.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "AppXProjects",
+                name: "AppX_Courses",
                 columns: table => new
                 {
+                    Code = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "编号")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Order = table.Column<int>(type: "int", nullable: false, comment: "序号"),
+                    Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "课程名称")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ValidState = table.Column<int>(type: "int", nullable: false, comment: "数据有效标识"),
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "项目名称")
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    PublishDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    AuthorId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Description = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
                     ExtraProperties = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
@@ -560,7 +559,122 @@ namespace XStudio.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AppXProjects", x => x.Id);
+                    table.PrimaryKey("PK_AppX_Courses", x => x.Code);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "AppX_Projects",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "项目名称")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    PublishDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    AuthorId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Description = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ValidState = table.Column<int>(type: "int", nullable: false, comment: "数据有效标识"),
+                    ExtraProperties = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppX_Projects", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "AppX_Schedules",
+                columns: table => new
+                {
+                    Code = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "编号")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Order = table.Column<int>(type: "int", nullable: false, comment: "序号"),
+                    Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "节次方案名称")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    LayoutOfWeek = table.Column<string>(type: "longtext", nullable: false, comment: "布局节次表")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ValidState = table.Column<int>(type: "int", nullable: false, comment: "数据有效标识"),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    ExtraProperties = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppX_Schedules", x => x.Code);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "AppX_Schools",
+                columns: table => new
+                {
+                    Code = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "编码")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "名称")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    PromotionSlogan = table.Column<string>(type: "longtext", nullable: false, comment: "宣传语")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Description = table.Column<string>(type: "longtext", nullable: false, comment: "简介")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Badge = table.Column<string>(type: "longtext", nullable: false, comment: "校徽")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Address = table.Column<string>(type: "longtext", nullable: false, comment: "校址")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ValidState = table.Column<int>(type: "int", nullable: false, comment: "数据有效标识"),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    ExtraProperties = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppX_Schools", x => x.Code);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "AppX_TimePeriods",
+                columns: table => new
+                {
+                    Code = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "编码")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Order = table.Column<int>(type: "int", nullable: false, comment: "序号"),
+                    Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "名称")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ValidState = table.Column<int>(type: "int", nullable: false, comment: "数据有效标识"),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    ExtraProperties = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppX_TimePeriods", x => x.Code);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -918,6 +1032,89 @@ namespace XStudio.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "AppX_SchoolCampuses",
+                columns: table => new
+                {
+                    Code = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "编码")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SchoolCode = table.Column<string>(type: "varchar(128)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Order = table.Column<long>(type: "bigint", nullable: false, comment: "序号"),
+                    Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "名称")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Address = table.Column<string>(type: "longtext", nullable: false, comment: "校址")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ValidState = table.Column<int>(type: "int", nullable: false, comment: "数据有效标识"),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    ExtraProperties = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppX_SchoolCampuses", x => x.Code);
+                    table.ForeignKey(
+                        name: "FK_AppX_SchoolCampuses_AppX_Schools_SchoolCode",
+                        column: x => x.SchoolCode,
+                        principalTable: "AppX_Schools",
+                        principalColumn: "Code",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "AppX_Sections",
+                columns: table => new
+                {
+                    Code = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "编码")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Order = table.Column<int>(type: "int", nullable: false, comment: "序号"),
+                    Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "名称")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    IsTeaching = table.Column<bool>(type: "tinyint(1)", nullable: false, comment: "是否是授课"),
+                    IsSelfStudy = table.Column<bool>(type: "tinyint(1)", nullable: false, comment: "是否是自习"),
+                    IsBanner = table.Column<bool>(type: "tinyint(1)", nullable: false, comment: "是否是通栏"),
+                    StartTime = table.Column<TimeSpan>(type: "time(6)", nullable: true, comment: "节次开始时间"),
+                    EndTime = table.Column<TimeSpan>(type: "time(6)", nullable: true, comment: "节次结束时间"),
+                    ValidState = table.Column<int>(type: "int", nullable: false, comment: "数据有效标识"),
+                    PeriodCode = table.Column<string>(type: "varchar(128)", nullable: false, comment: "时段编码")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ScheduleCode = table.Column<string>(type: "varchar(128)", nullable: false, comment: "节次编码")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    ExtraProperties = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppX_Sections", x => x.Code);
+                    table.ForeignKey(
+                        name: "FK_AppX_Sections_AppX_Schedules_ScheduleCode",
+                        column: x => x.ScheduleCode,
+                        principalTable: "AppX_Schedules",
+                        principalColumn: "Code",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AppX_Sections_AppX_TimePeriods_PeriodCode",
+                        column: x => x.PeriodCode,
+                        principalTable: "AppX_TimePeriods",
+                        principalColumn: "Code",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "OpenIddictAuthorizations",
                 columns: table => new
                 {
@@ -986,6 +1183,39 @@ namespace XStudio.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "AppX_SchoolBuildings",
+                columns: table => new
+                {
+                    Code = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "编码")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SchoolCode = table.Column<string>(type: "varchar(128)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SchoolCampusCode = table.Column<string>(type: "varchar(128)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Order = table.Column<long>(type: "bigint", nullable: false, comment: "序号"),
+                    Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "名称")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ValidState = table.Column<int>(type: "int", nullable: false, comment: "数据有效标识")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppX_SchoolBuildings", x => x.Code);
+                    table.ForeignKey(
+                        name: "FK_AppX_SchoolBuildings_AppX_SchoolCampuses_SchoolCampusCode",
+                        column: x => x.SchoolCampusCode,
+                        principalTable: "AppX_SchoolCampuses",
+                        principalColumn: "Code",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AppX_SchoolBuildings_AppX_Schools_SchoolCode",
+                        column: x => x.SchoolCode,
+                        principalTable: "AppX_Schools",
+                        principalColumn: "Code",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "OpenIddictTokens",
                 columns: table => new
                 {
@@ -1032,6 +1262,114 @@ namespace XStudio.Migrations
                         column: x => x.AuthorizationId,
                         principalTable: "OpenIddictAuthorizations",
                         principalColumn: "Id");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "AppX_BuildingFloors",
+                columns: table => new
+                {
+                    Code = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "编码")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SchoolCode = table.Column<string>(type: "varchar(128)", nullable: false, comment: "学校编码")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SchoolCampusCode = table.Column<string>(type: "varchar(128)", nullable: false, comment: "校区编码")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    BuildingCode = table.Column<string>(type: "varchar(128)", nullable: false, comment: "楼栋编码")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Order = table.Column<long>(type: "bigint", nullable: false, comment: "序号"),
+                    Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "名称")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ValidState = table.Column<int>(type: "int", nullable: false, comment: "数据有效标识"),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    ExtraProperties = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppX_BuildingFloors", x => x.Code);
+                    table.ForeignKey(
+                        name: "FK_AppX_BuildingFloors_AppX_SchoolBuildings_BuildingCode",
+                        column: x => x.BuildingCode,
+                        principalTable: "AppX_SchoolBuildings",
+                        principalColumn: "Code",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AppX_BuildingFloors_AppX_SchoolCampuses_SchoolCampusCode",
+                        column: x => x.SchoolCampusCode,
+                        principalTable: "AppX_SchoolCampuses",
+                        principalColumn: "Code",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AppX_BuildingFloors_AppX_Schools_SchoolCode",
+                        column: x => x.SchoolCode,
+                        principalTable: "AppX_Schools",
+                        principalColumn: "Code",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "AppX_Classrooms",
+                columns: table => new
+                {
+                    Code = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "编码")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SchoolCode = table.Column<string>(type: "varchar(128)", nullable: false, comment: "学校编码")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SchoolCampusCode = table.Column<string>(type: "varchar(128)", nullable: false, comment: "校区编码")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    BuildingCode = table.Column<string>(type: "varchar(128)", nullable: false, comment: "楼栋编码")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    FloorCode = table.Column<string>(type: "varchar(128)", nullable: false, comment: "楼层编码")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Order = table.Column<long>(type: "bigint", nullable: false, comment: "序号"),
+                    Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "名称")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ValidState = table.Column<int>(type: "int", nullable: false, comment: "数据有效标识"),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    ExtraProperties = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppX_Classrooms", x => x.Code);
+                    table.ForeignKey(
+                        name: "FK_AppX_Classrooms_AppX_BuildingFloors_FloorCode",
+                        column: x => x.FloorCode,
+                        principalTable: "AppX_BuildingFloors",
+                        principalColumn: "Code",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AppX_Classrooms_AppX_SchoolBuildings_BuildingCode",
+                        column: x => x.BuildingCode,
+                        principalTable: "AppX_SchoolBuildings",
+                        principalColumn: "Code",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AppX_Classrooms_AppX_SchoolCampuses_SchoolCampusCode",
+                        column: x => x.SchoolCampusCode,
+                        principalTable: "AppX_SchoolCampuses",
+                        principalColumn: "Code",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AppX_Classrooms_AppX_Schools_SchoolCode",
+                        column: x => x.SchoolCode,
+                        principalTable: "AppX_Schools",
+                        principalColumn: "Code",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -1250,6 +1588,66 @@ namespace XStudio.Migrations
                 column: "UserName");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AppX_BuildingFloors_BuildingCode",
+                table: "AppX_BuildingFloors",
+                column: "BuildingCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppX_BuildingFloors_SchoolCampusCode",
+                table: "AppX_BuildingFloors",
+                column: "SchoolCampusCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppX_BuildingFloors_SchoolCode",
+                table: "AppX_BuildingFloors",
+                column: "SchoolCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppX_Classrooms_BuildingCode",
+                table: "AppX_Classrooms",
+                column: "BuildingCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppX_Classrooms_FloorCode",
+                table: "AppX_Classrooms",
+                column: "FloorCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppX_Classrooms_SchoolCampusCode",
+                table: "AppX_Classrooms",
+                column: "SchoolCampusCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppX_Classrooms_SchoolCode",
+                table: "AppX_Classrooms",
+                column: "SchoolCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppX_SchoolBuildings_SchoolCampusCode",
+                table: "AppX_SchoolBuildings",
+                column: "SchoolCampusCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppX_SchoolBuildings_SchoolCode",
+                table: "AppX_SchoolBuildings",
+                column: "SchoolCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppX_SchoolCampuses_SchoolCode",
+                table: "AppX_SchoolCampuses",
+                column: "SchoolCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppX_Sections_PeriodCode",
+                table: "AppX_Sections",
+                column: "PeriodCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppX_Sections_ScheduleCode",
+                table: "AppX_Sections",
+                column: "ScheduleCode");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictApplications_ClientId",
                 table: "OpenIddictApplications",
                 column: "ClientId");
@@ -1356,7 +1754,16 @@ namespace XStudio.Migrations
                 name: "AbpUserTokens");
 
             migrationBuilder.DropTable(
-                name: "AppXProjects");
+                name: "AppX_Classrooms");
+
+            migrationBuilder.DropTable(
+                name: "AppX_Courses");
+
+            migrationBuilder.DropTable(
+                name: "AppX_Projects");
+
+            migrationBuilder.DropTable(
+                name: "AppX_Sections");
 
             migrationBuilder.DropTable(
                 name: "OpenIddictScopes");
@@ -1380,13 +1787,31 @@ namespace XStudio.Migrations
                 name: "AbpUsers");
 
             migrationBuilder.DropTable(
+                name: "AppX_BuildingFloors");
+
+            migrationBuilder.DropTable(
+                name: "AppX_Schedules");
+
+            migrationBuilder.DropTable(
+                name: "AppX_TimePeriods");
+
+            migrationBuilder.DropTable(
                 name: "OpenIddictAuthorizations");
 
             migrationBuilder.DropTable(
                 name: "AbpAuditLogs");
 
             migrationBuilder.DropTable(
+                name: "AppX_SchoolBuildings");
+
+            migrationBuilder.DropTable(
                 name: "OpenIddictApplications");
+
+            migrationBuilder.DropTable(
+                name: "AppX_SchoolCampuses");
+
+            migrationBuilder.DropTable(
+                name: "AppX_Schools");
         }
     }
 }
