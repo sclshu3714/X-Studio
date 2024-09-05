@@ -19,6 +19,15 @@ public class XStudioPermissionDefinitionProvider : PermissionDefinitionProvider
             XStudioPermissions.Projects.Edit, L("Permission:Projects.Edit"));
         projectsPermission.AddChild(
             XStudioPermissions.Projects.Delete, L("Permission:Projects.Delete"));
+        //school
+        var schoolsPermission = myGroup.AddPermission(
+            XStudioPermissions.Schools.Default, L("Permission:Schools"));
+        schoolsPermission.AddChild(
+            XStudioPermissions.Schools.Create, L("Permission:Schools.Create"));
+        schoolsPermission.AddChild(
+            XStudioPermissions.Schools.Edit, L("Permission:Schools.Edit"));
+        schoolsPermission.AddChild(
+            XStudioPermissions.Schools.Delete, L("Permission:Schools.Delete"));
     }
 
     private static LocalizableString L(string name)

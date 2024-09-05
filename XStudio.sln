@@ -163,6 +163,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\XStadio.Modules\XStudio.Common.Shared\XStudio.Common.Shared.projitems*{17f0b252-dd7c-46c6-a75a-53aea5afbd81}*SharedItemsImports = 13
-		src\XStadio.Modules\XStudio.Common.Shared\XStudio.Common.Shared.projitems*{6e2df752-69b6-4d55-a17f-cd7c70ea5091}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

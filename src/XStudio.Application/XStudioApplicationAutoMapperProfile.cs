@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using XStudio.Projects;
+using XStudio.Schools.Places;
 
 namespace XStudio;
 
@@ -12,5 +13,17 @@ public class XStudioApplicationAutoMapperProfile : Profile
          * into multiple profile classes for a better organization. */
         CreateMap<Project, ProjectDto>();
         CreateMap<CreateUpdateProjectDto, Project>();
+        // 学校场所
+        CreateMap<School, SchoolDto>();
+        CreateMap<SchoolCampus, SchoolCampusDto>();
+        CreateMap<SchoolBuilding, SchoolBuildingDto>();
+        CreateMap<BuildingFloor, BuildingFloorDto>();
+        CreateMap<Classroom, ClassroomDto>();
+
+        CreateMap<UpdateSchoolDto, School>();
+        CreateMap<UpdateSchoolCampusDto, SchoolCampus>();
+        CreateMap<UpdateSchoolBuildingDto, SchoolBuilding>();
+        CreateMap<UpdateBuildingFloorDto, BuildingFloor>();
+        CreateMap<UpdateClassroomDto, Classroom>();
     }
 }

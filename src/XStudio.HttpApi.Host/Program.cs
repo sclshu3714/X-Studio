@@ -33,6 +33,7 @@ public class Program
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(builder.Configuration) // 从配置中读取
                 .Enrich.FromLogContext()
+                .WriteTo.Async(c => c.Console())
                 .CreateLogger();
 
             builder.Host.AddAppSettingsSecretsJson()
