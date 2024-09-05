@@ -807,10 +807,16 @@
   <data name="Window" xml:space="preserve">
     <value>Window</value>
   </data>
-  <data name="Practical Start" xml:space="preserve">
+  <data name="PracticalStart" xml:space="preserve">
     <value>Practical Start</value>
   </data>
   <data name="Practical Demos" xml:space="preserve">
     <value>Practical demos</value>
+  </data>
+  <data name="SchoolTimetable" xml:space="preserve">
+    <value>Timetable</value>
+  </data>
+  <data name="School" xml:space="preserve">
+    <value>School</value>
   </data>
 </root>
