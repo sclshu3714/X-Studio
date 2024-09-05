@@ -21,8 +21,8 @@ namespace XStudio.App.ViewModel.Main
 {
     public class MainViewModel : ViewModelDataBase<DataModel>
     {
-        private object _contentTitle;
-        private object _subContent;
+        private object? _contentTitle;
+        private object? _subContent;
         private bool _isCodeOpened;
 
         private readonly DataService _dataService;
@@ -30,22 +30,23 @@ namespace XStudio.App.ViewModel.Main
         public MainViewModel(DataService dataService)
         {
             _dataService = dataService;
+            WorkspaceInfoCollection = new ObservableCollection<WorkspaceInfoModel>();
 
             UpdateMainContent();
             UpdateLeftContent();
         }
 
-        public WorkspaceItemModel WorkspaceItemCurrent { get; private set; }
+        public WorkspaceItemModel? WorkspaceItemCurrent { get; private set; }
 
-        public WorkspaceInfoModel WorkspaceInfoCurrent { get; set; }
+        public WorkspaceInfoModel? WorkspaceInfoCurrent { get; set; }
 
-        public object SubContent
+        public object? SubContent
         {
             get => _subContent;
             set => SetProperty(ref _subContent, value);
         }
 
-        public object ContentTitle
+        public object? ContentTitle
         {
             get => _contentTitle;
             set => SetProperty(ref _contentTitle, value);
@@ -121,18 +122,18 @@ namespace XStudio.App.ViewModel.Main
             WorkspaceInfoCollection = new ObservableCollection<WorkspaceInfoModel>();
             Task.Run(() =>
             {
-                //DataList = _dataService.GetWorkspaceDataList();
-                //foreach (var item in _dataService.GetWorkspaceInfo())
-                //{
-                //    Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                //    {
-                //        WorkspaceInfoCollection.Add(item);
-                //    }), DispatcherPriority.ApplicationIdle);
-                //}
+                DataList = _dataService.GetWorkspaceDataList();
+                foreach (var item in _dataService.GetWorkspaceInfo())
+                {
+                    Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        WorkspaceInfoCollection.Add(item);
+                    }), DispatcherPriority.ApplicationIdle);
+                }
             });
         }
 
-        private void SwitchWorkspace(SelectionChangedEventArgs e)
+        private void SwitchWorkspace(SelectionChangedEventArgs? e)
         {
             if (e.AddedItems.Count == 0) return;
             if (e.AddedItems[0] is WorkspaceItemModel item)

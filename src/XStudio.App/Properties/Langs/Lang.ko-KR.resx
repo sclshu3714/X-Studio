@@ -132,6 +132,9 @@
   <data name="Ask" xml:space="preserve">
     <value>Ask</value>
   </data>
+  <data name="AutoCompleteTextBox" xml:space="preserve">
+    <value>AutoCompleteTextBox</value>
+  </data>
   <data name="Badge" xml:space="preserve">
     <value>Badge</value>
   </data>
@@ -186,6 +189,9 @@
   <data name="CheckBox" xml:space="preserve">
     <value>CheckBox</value>
   </data>
+  <data name="CheckComboBox" xml:space="preserve">
+    <value>CheckComboBox</value>
+  </data>
   <data name="CirclePanel" xml:space="preserve">
     <value>CirclePanel</value>
   </data>
@@ -197,6 +203,9 @@
   </data>
   <data name="Clock" xml:space="preserve">
     <value>Clock</value>
+  </data>
+  <data name="CloseMainWindowDialog" xml:space="preserve">
+    <value>Close main window dialog</value>
   </data>
   <data name="ColorPicker" xml:space="preserve">
     <value>ColorPicker</value>
@@ -243,6 +252,12 @@
   <data name="Danger" xml:space="preserve">
     <value>Danger</value>
   </data>
+  <data name="DataDisplay" xml:space="preserve">
+    <value>Data Display</value>
+  </data>
+  <data name="DataEntry" xml:space="preserve">
+    <value>Data Entry</value>
+  </data>
   <data name="DataGrid" xml:space="preserve">
     <value>DataGrid</value>
   </data>
@@ -285,8 +300,14 @@
   <data name="Effects" xml:space="preserve">
     <value>Effects</value>
   </data>
+  <data name="ElementGroup" xml:space="preserve">
+    <value>ElementGroup</value>
+  </data>
   <data name="Email" xml:space="preserve">
     <value>Email</value>
+  </data>
+  <data name="Empty" xml:space="preserve">
+    <value>Empty</value>
   </data>
   <data name="Error" xml:space="preserve">
     <value>Error</value>
@@ -300,11 +321,35 @@
   <data name="Fatal" xml:space="preserve">
     <value>Fatal</value>
   </data>
+  <data name="Feedback" xml:space="preserve">
+    <value>Feedback</value>
+  </data>
+  <data name="FlexPanel" xml:space="preserve">
+    <value>FlexPanel</value>
+  </data>
   <data name="FlipClock" xml:space="preserve">
     <value>FlipClock</value>
   </data>
   <data name="FloatingBlock" xml:space="preserve">
     <value>FloatingBlock</value>
+  </data>
+  <data name="FlowDocument" xml:space="preserve">
+    <value>FlowDocument</value>
+  </data>
+  <data name="FlowDocumentPageViewer" xml:space="preserve">
+    <value>FlowDocumentPageViewer</value>
+  </data>
+  <data name="FlowDocumentReader" xml:space="preserve">
+    <value>FlowDocumentReader</value>
+  </data>
+  <data name="FlowDocumentScrollViewer" xml:space="preserve">
+    <value>FlowDocumentScrollViewer</value>
+  </data>
+  <data name="Frame" xml:space="preserve">
+    <value>Frame</value>
+  </data>
+  <data name="Geometry" xml:space="preserve">
+    <value>Geometry</value>
   </data>
   <data name="GifImage" xml:space="preserve">
     <value>GifImage</value>
@@ -366,11 +411,17 @@
   <data name="ImageBrowser" xml:space="preserve">
     <value>ImageBrowser</value>
   </data>
+  <data name="ImageSelector" xml:space="preserve">
+    <value>ImageSelector</value>
+  </data>
   <data name="Index" xml:space="preserve">
     <value>Index</value>
   </data>
   <data name="Info" xml:space="preserve">
     <value>Info</value>
+  </data>
+  <data name="Interacting" xml:space="preserve">
+    <value>Interacting</value>
   </data>
   <data name="InteractiveDialog" xml:space="preserve">
     <value>Interactive Dialog</value>
@@ -380,6 +431,12 @@
   </data>
   <data name="Label" xml:space="preserve">
     <value>Label</value>
+  </data>
+  <data name="LangComment" xml:space="preserve">
+    <value>Looks up a localized string similar to "{0}".</value>
+  </data>
+  <data name="Layout" xml:space="preserve">
+    <value>Layout</value>
   </data>
   <data name="ListBox" xml:space="preserve">
     <value>ListBox</value>
@@ -399,11 +456,17 @@
   <data name="MessageBox" xml:space="preserve">
     <value>MessageBox</value>
   </data>
+  <data name="Misc" xml:space="preserve">
+    <value>Misc</value>
+  </data>
   <data name="Morphing Animation" xml:space="preserve">
     <value>Morphing Animation</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
+  </data>
+  <data name="Navigation" xml:space="preserve">
+    <value>Navigation</value>
   </data>
   <data name="NewWindow" xml:space="preserve">
     <value>New window</value>
@@ -444,6 +507,9 @@
   <data name="OpenCustomNonClientAreaWindow" xml:space="preserve">
     <value>open custom Non-client Area window</value>
   </data>
+  <data name="OpenGlowWindow" xml:space="preserve">
+    <value>Open glowWindow</value>
+  </data>
   <data name="OpenImageBrowser" xml:space="preserve">
     <value>Click to open image browser</value>
   </data>
@@ -452,6 +518,12 @@
   </data>
   <data name="OpenMouseFollowWindow" xml:space="preserve">
     <value>open mouse follow window</value>
+  </data>
+  <data name="OpenNativeCommonWindow" xml:space="preserve">
+    <value>Open native common window</value>
+  </data>
+  <data name="OpenNavigationWindow" xml:space="preserve">
+    <value>Open navigation window</value>
   </data>
   <data name="OpenNoNonClientAreaDragableWindow" xml:space="preserve">
     <value>open no Non-client Area dragable window</value>
@@ -462,6 +534,9 @@
   <data name="OpenSprite" xml:space="preserve">
     <value>Open sprite</value>
   </data>
+  <data name="OpenTouchDragMoveWindow" xml:space="preserve">
+    <value>open touch drag move window</value>
+  </data>
   <data name="OutlineText" xml:space="preserve">
     <value>OutlineText</value>
   </data>
@@ -470,6 +545,9 @@
   </data>
   <data name="PasswordBox" xml:space="preserve">
     <value>PasswordBox</value>
+  </data>
+  <data name="PinBox" xml:space="preserve">
+    <value>PinBox</value>
   </data>
   <data name="PleaseInput" xml:space="preserve">
     <value>Please input...</value>
@@ -492,6 +570,9 @@
   <data name="PoptipPositionStr" xml:space="preserve">
     <value>top-start;top;top-end;right-start;right;right-end;bottom-end;bottom;bottom-start;left-end;left;left-start</value>
   </data>
+  <data name="PracticalDemos" xml:space="preserve">
+    <value>Practical demos</value>
+  </data>
   <data name="Prev" xml:space="preserve">
     <value>Prev</value>
   </data>
@@ -509,6 +590,9 @@
   </data>
   <data name="Project" xml:space="preserve">
     <value>Project</value>
+  </data>
+  <data name="PropertyGrid" xml:space="preserve">
+    <value>PropertyGrid</value>
   </data>
   <data name="PushToTalk" xml:space="preserve">
     <value>Push to talk</value>
@@ -561,6 +645,9 @@
   <data name="RunningBlock" xml:space="preserve">
     <value>RunningBlock</value>
   </data>
+  <data name="Screenshot" xml:space="preserve">
+    <value>Screenshot</value>
+  </data>
   <data name="ScrollViewer" xml:space="preserve">
     <value>ScrollViewer</value>
   </data>
@@ -600,6 +687,9 @@
   <data name="Sprite" xml:space="preserve">
     <value>Sprite</value>
   </data>
+  <data name="StartScreenshot" xml:space="preserve">
+    <value>Start screenshot</value>
+  </data>
   <data name="StaysOpen" xml:space="preserve">
     <value>Stays open</value>
   </data>
@@ -635,6 +725,9 @@
   </data>
   <data name="TextDialog" xml:space="preserve">
     <value>TextDialog</value>
+  </data>
+  <data name="TextDialogInControl" xml:space="preserve">
+    <value>TextDialog(In control)</value>
   </data>
   <data name="TextDialogWithTimer" xml:space="preserve">
     <value>TextDialog with timer</value>
@@ -684,6 +777,9 @@
   <data name="Type" xml:space="preserve">
     <value>Type</value>
   </data>
+  <data name="UniformSpacingPanel" xml:space="preserve">
+    <value>UniformSpacingPanel</value>
+  </data>
   <data name="UploadFile" xml:space="preserve">
     <value>Upload file</value>
   </data>
@@ -702,109 +798,19 @@
   <data name="WaterfallPanel" xml:space="preserve">
     <value>WaterfallPanel</value>
   </data>
+  <data name="Watermark" xml:space="preserve">
+    <value>Watermark</value>
+  </data>
   <data name="Website" xml:space="preserve">
     <value>Website</value>
   </data>
   <data name="Window" xml:space="preserve">
     <value>Window</value>
   </data>
-  <data name="PinBox" xml:space="preserve">
-    <value>PinBox</value>
+  <data name="Practical Start" xml:space="preserve">
+    <value>Practical Start</value>
   </data>
-  <data name="FlowDocumentScrollViewer" xml:space="preserve">
-    <value>FlowDocumentScrollViewer</value>
-  </data>
-  <data name="OpenGlowWindow" xml:space="preserve">
-    <value>Open glowWindow</value>
-  </data>
-  <data name="FlowDocument" xml:space="preserve">
-    <value>FlowDocument</value>
-  </data>
-  <data name="FlowDocumentPageViewer" xml:space="preserve">
-    <value>FlowDocumentPageViewer</value>
-  </data>
-  <data name="FlowDocumentReader" xml:space="preserve">
-    <value>FlowDocumentReader</value>
-  </data>
-  <data name="OpenNativeCommonWindow" xml:space="preserve">
-    <value>Open native common window</value>
-  </data>
-  <data name="OpenNavigationWindow" xml:space="preserve">
-    <value>Open navigation window</value>
-  </data>
-  <data name="Frame" xml:space="preserve">
-    <value>Frame</value>
-  </data>
-  <data name="PracticalDemos" xml:space="preserve">
+  <data name="Practical Demos" xml:space="preserve">
     <value>Practical demos</value>
-  </data>
-  <data name="StartScreenshot" xml:space="preserve">
-    <value>Start screenshot</value>
-  </data>
-  <data name="Screenshot" xml:space="preserve">
-    <value>Screenshot</value>
-  </data>
-  <data name="TextDialogInControl" xml:space="preserve">
-    <value>TextDialog(In control)</value>
-  </data>
-  <data name="LangComment" xml:space="preserve">
-    <value>Looks up a localized string similar to "{0}".</value>
-  </data>
-  <data name="PropertyGrid" xml:space="preserve">
-    <value>PropertyGrid</value>
-  </data>
-  <data name="ImageSelector" xml:space="preserve">
-    <value>ImageSelector</value>
-  </data>
-  <data name="Geometry" xml:space="preserve">
-    <value>Geometry</value>
-  </data>
-  <data name="CheckComboBox" xml:space="preserve">
-    <value>CheckComboBox</value>
-  </data>
-  <data name="FlexPanel" xml:space="preserve">
-    <value>FlexPanel</value>
-  </data>
-  <data name="OpenTouchDragMoveWindow" xml:space="preserve">
-    <value>open touch drag move window</value>
-  </data>
-  <data name="UniformSpacingPanel" xml:space="preserve">
-    <value>UniformSpacingPanel</value>
-  </data>
-  <data name="Misc" xml:space="preserve">
-    <value>Misc</value>
-  </data>
-  <data name="Interacting" xml:space="preserve">
-    <value>Interacting</value>
-  </data>
-  <data name="DataEntry" xml:space="preserve">
-    <value>Data Entry</value>
-  </data>
-  <data name="DataDisplay" xml:space="preserve">
-    <value>Data Display</value>
-  </data>
-  <data name="Navigation" xml:space="preserve">
-    <value>Navigation</value>
-  </data>
-  <data name="Layout" xml:space="preserve">
-    <value>Layout</value>
-  </data>
-  <data name="Feedback" xml:space="preserve">
-    <value>Feedback</value>
-  </data>
-  <data name="Empty" xml:space="preserve">
-    <value>Empty</value>
-  </data>
-  <data name="ElementGroup" xml:space="preserve">
-    <value>ElementGroup</value>
-  </data>
-  <data name="AutoCompleteTextBox" xml:space="preserve">
-    <value>AutoCompleteTextBox</value>
-  </data>
-  <data name="Watermark" xml:space="preserve">
-    <value>Watermark</value>
-  </data>
-  <data name="CloseMainWindowDialog" xml:space="preserve">
-    <value>Close main window dialog</value>
   </data>
 </root>

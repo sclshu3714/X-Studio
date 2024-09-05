@@ -807,4 +807,7 @@
   <data name="Window" xml:space="preserve">
     <value>窗口</value>
   </data>
+  <data name="Practical Start" xml:space="preserve">
+    <value>开始实例</value>
+  </data>
 </root>

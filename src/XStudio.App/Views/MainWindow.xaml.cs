@@ -45,7 +45,7 @@ public partial class MainWindow : HandyControl.Controls.Window
         Dialog.SetToken(this, MessageToken.MainWindow);
         WindowAttach.SetIgnoreAltF4(this, true);
 
-       // Messenger.Default.Send(true, MessageToken.FullSwitch);
+        //Messenger.Default.Send(true, MessageToken.FullSwitch);
         //Messenger.Default.Send(AssemblyHelper.CreateInternalInstance($"UserControl.{MessageToken.PracticalDemo}"), MessageToken.LoadShowContent);
     }
 
