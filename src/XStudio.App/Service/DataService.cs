@@ -24,32 +24,25 @@ public class DataService : ITransientDependency
         return "Hello world!";
     }
 
-    public ObservableCollection<DataModel> GetWorkspaceDataList()
+    public ObservableCollection<WorkspaceInfoModel> GetWorkspaceDataList()
     {
-        ObservableCollection<DataModel> models = new ObservableCollection<DataModel>();
-        models.Add(new DataModel()
+        ObservableCollection<WorkspaceInfoModel> models = new ObservableCollection<WorkspaceInfoModel>();
+        models.Add(new WorkspaceInfoModel()
         {
             Index = 0,
-            Name = "项目",
-            IsSelected = true,
-            Remark = "工作区支持的项目",
-            Type = System.ComponentModel.DataAnnotations.DataType.Custom,
-            DataItems = new ObservableCollection<DataModel>()
+            Title = "项目",
+            SelectedIndex = 0,
+            IsGroupEnabled = true,
+            DataList = new ObservableCollection<WorkspaceItemModel>()
                         {
-                            new DataModel() {
+                            new WorkspaceItemModel() {
                                 Index = 0,
                                 Name = "排课",
-                                IsSelected = true,
-                                Remark = "学校排课项目",
-                                Type = System.ComponentModel.DataAnnotations.DataType.Custom
+                                GroupName = "教育项目",
+                                IsVisible = true,
                             }
                         }
         });
         return models;
-    }
-
-    internal IEnumerable<WorkspaceInfoModel> GetWorkspaceInfo()
-    {
-        return new ObservableCollection<WorkspaceInfoModel>();
     }
 }

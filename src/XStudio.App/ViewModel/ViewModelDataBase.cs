@@ -12,7 +12,7 @@ using System.Collections.ObjectModel;
 
 namespace XStudio.App.ViewModel
 {
-    public class ViewModelDataBase<T> : ObservableObject
+    public class ViewModelDataBase<T> : ViewModelBase
     {
         private ObservableCollection<T> _dataList = [];
 
@@ -141,7 +141,7 @@ namespace XStudio.App.ViewModel
         // 言论：
         //     If the propertyName parameter does not correspond to an existing property on
         //     the current class, an exception is thrown in DEBUG configuration only.
-        public virtual void RaisePropertyChanged<T>([CallerMemberName] string propertyName = null, T oldValue = default(T), T newValue = default(T), bool broadcast = false)
+        public virtual void RaisePropertyChanged<T>([CallerMemberName] string? propertyName = null, T? oldValue = default(T), T? newValue = default(T), bool broadcast = false)
         {
             if (string.IsNullOrEmpty(propertyName))
             {
@@ -253,7 +253,7 @@ namespace XStudio.App.ViewModel
         //
         // 返回结果:
         //     True if the PropertyChanged event was raised, false otherwise.
-        protected bool Set<T>(string propertyName, ref T field, T newValue = default(T), bool broadcast = false)
+        protected bool Set<T>(string propertyName, ref T field, T newValue, bool broadcast = false)
         {
             if (EqualityComparer<T>.Default.Equals(field, newValue))
             {
@@ -292,7 +292,7 @@ namespace XStudio.App.ViewModel
         //
         // 返回结果:
         //     True if the PropertyChanged event was raised, false otherwise.
-        protected bool Set<T>(ref T field, T newValue = default(T), bool broadcast = false, [CallerMemberName] string propertyName = null)
+        protected bool Set<T>(ref T field, T newValue, bool broadcast = false, [CallerMemberName] string? propertyName = null)
         {
             if (EqualityComparer<T>.Default.Equals(field, newValue))
             {

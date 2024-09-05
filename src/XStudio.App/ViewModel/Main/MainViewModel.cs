@@ -19,7 +19,7 @@ using XStudio.App.Service;
 
 namespace XStudio.App.ViewModel.Main
 {
-    public class MainViewModel : ViewModelDataBase<DataModel>
+    public class MainViewModel : ViewModelBase
     {
         private object? _contentTitle;
         private object? _subContent;
@@ -119,18 +119,17 @@ namespace XStudio.App.ViewModel.Main
             //});
 
             //load items
-            WorkspaceInfoCollection = new ObservableCollection<WorkspaceInfoModel>();
-            Task.Run(() =>
-            {
-                DataList = _dataService.GetWorkspaceDataList();
-                foreach (var item in _dataService.GetWorkspaceInfo())
-                {
-                    Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                    {
-                        WorkspaceInfoCollection.Add(item);
-                    }), DispatcherPriority.ApplicationIdle);
-                }
-            });
+            WorkspaceInfoCollection = _dataService.GetWorkspaceDataList();
+            //Task.Run(() =>
+            //{
+            //    foreach (var item in _dataService.GetWorkspaceInfo())
+            //    {
+            //        Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            //        {
+            //            WorkspaceInfoCollection.Add(item);
+            //        }), DispatcherPriority.ApplicationIdle);
+            //    }
+            //});
         }
 
         private void SwitchWorkspace(SelectionChangedEventArgs? e)
