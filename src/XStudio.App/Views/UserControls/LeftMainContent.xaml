@@ -26,6 +26,7 @@
                 Content="{ex:Lang Key={x:Static langs:LangKeys.PracticalStart}}"
                 DockPanel.Dock="Top" />
             <TabControl
+                x:Name="tabWorkspace"
                 Background="Transparent"
                 BorderThickness="0,1,0,0"
                 ItemsSource="{Binding WorkspaceInfoCollection}"

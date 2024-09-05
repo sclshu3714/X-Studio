@@ -54,6 +54,12 @@ public class DataService : ITransientDependency
                             }
                         }
         });
+        models.Add(new WorkspaceInfoModel() { 
+            Index = 1,
+            Key = "Test",
+            Title = "Test",
+            IsGroupEnabled= true,
+        });
         return models;
     }
 }

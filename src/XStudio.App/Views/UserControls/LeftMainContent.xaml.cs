@@ -19,6 +19,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using XStudio.App.ViewModel.Main;
 using XStudio.App.ViewModel;
+using System.Reflection;
 
 namespace XStudio.App.Views.UserControls
 {
@@ -75,8 +76,8 @@ namespace XStudio.App.Views.UserControls
             {
                 foreach (var item in ViewModelLocator.Instance.Main.WorkspaceInfoCurrent.DataList)
                 {
-                    //item.IsVisible = true;
-                    //item.QueriesText = string.Empty;
+                    item.IsVisible = true;
+                    item.QueriesText = string.Empty;
                 }
             }
             else if(ViewModelLocator.Instance.Main.WorkspaceInfoCurrent != null)
@@ -86,28 +87,28 @@ namespace XStudio.App.Views.UserControls
                 {
                     if (item.Name.ToLower().Contains(key))
                     {
-                        //item.IsVisible = true;
-                        //item.QueriesText = _searchKey;
+                        item.IsVisible = true;
+                        item.QueriesText = _searchKey;
                     }
-                    //else if (item.TargetCtlName.Replace("DemoCtl", "").ToLower().Contains(key))
-                    //{
-                    //    item.IsVisible = true;
-                    //    item.QueriesText = _searchKey;
-                    //}
-                    //else
-                    //{
-                    //    var name = Properties.Langs.LangProvider.GetLang(item.Name);
-                    //    if (!string.IsNullOrEmpty(name) && name.ToLower().Contains(key))
-                    //    {
-                    //        item.IsVisible = true;
-                    //        item.QueriesText = _searchKey;
-                    //    }
-                    //    else
-                    //    {
-                    //        item.IsVisible = false;
-                    //        item.QueriesText = string.Empty;
-                    //    }
-                    //}
+                    else if (item.TargetCtlName.Replace("Ctl", "").ToLower().Contains(key))
+                    {
+                        item.IsVisible = true;
+                        item.QueriesText = _searchKey;
+                    }
+                    else
+                    {
+                        var name = Properties.Langs.LangProvider.GetLang(item.Name);
+                        if (!string.IsNullOrEmpty(name) && name.ToLower().Contains(key))
+                        {
+                            item.IsVisible = true;
+                            item.QueriesText = _searchKey;
+                        }
+                        else
+                        {
+                            item.IsVisible = false;
+                            item.QueriesText = string.Empty;
+                        }
+                    }
                 }
             }
         }
