@@ -30,36 +30,24 @@ public class DataService : ITransientDependency
         models.Add(new WorkspaceInfoModel()
         {
             Index = 0,
-            Key = "Project",
-            Title = "Project",
+            Title = "项目",
             SelectedIndex = 0,
             IsGroupEnabled = true,
             DataList = new ObservableCollection<WorkspaceItemModel>()
                         {
                             new WorkspaceItemModel() {
                                 Index = 0,
-                                Name = "SchoolTimetable",
-                                TargetCtlName = "SchoolTimetableCtl",
-                                GroupName = "School",
-                                IsNew = true,
-                                IsVisible = true,
-                            },
-                             new WorkspaceItemModel() {
-                                Index = 1,
-                                Name = "CAM3D",
-                                GroupName = "CAD",
-                                TargetCtlName = "CADCtl",
-                                IsNew =true,
+                                Name = "排课",
+                                GroupName = "教育项目",
                                 IsVisible = true,
                             }
                         }
         });
-        models.Add(new WorkspaceInfoModel() { 
-            Index = 1,
-            Key = "Test",
-            Title = "Test",
-            IsGroupEnabled= true,
-        });
         return models;
+    }
+
+    internal object GetWorkspaceUrl(WorkspaceInfoModel? workspaceInfoCurrent, WorkspaceItemModel workspaceItemCurrent)
+    {
+        throw new NotImplementedException();
     }
 }

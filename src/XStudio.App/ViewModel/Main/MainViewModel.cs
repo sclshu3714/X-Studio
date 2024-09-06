@@ -75,7 +75,7 @@ namespace XStudio.App.ViewModel.Main
                 return;
             }
 
-            // ControlCommands.OpenLink.Execute(_dataService.GetWorkspaceUrl(WorkspaceInfoCurrent, WorkspaceItemCurrent));
+            ControlCommands.OpenLink.Execute(_dataService.GetWorkspaceUrl(WorkspaceInfoCurrent, WorkspaceItemCurrent));
         });
 
         public RelayCommand OpenCodeCmd => new(() =>
@@ -90,7 +90,17 @@ namespace XStudio.App.ViewModel.Main
 
         private void UpdateMainContent()
         {
-            //Messenger.Default.Register<object>(this, MessageToken.LoadShowContent, obj =>
+            //// 注册接收 ThemeChangedMessage
+            //StrongReferenceMessenger.Default.Register()
+            WeakReferenceMessenger.Default.Register<MainViewModel,string>(this, MessageToken.LoadShowContent, (obj, msg) =>
+            {
+                if (SubContent is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+                SubContent = obj;
+            });
+            //ViewModelLocator.Instance.Main.MessengerInstance?.Register<MainViewModel, OnUpdateMainContentMessage>(this, MessageToken.LoadShowContent, obj =>
             //{
             //    if (SubContent is IDisposable disposable)
             //    {
@@ -102,21 +112,21 @@ namespace XStudio.App.ViewModel.Main
 
         private void UpdateLeftContent()
         {
-            ////clear status
-            //Messenger.Default.Register<object>(this, MessageToken.ClearLeftSelected, obj =>
-            //{
-            //    WorkspaceItemCurrent = null;
-            //    foreach (var item in WorkspaceInfoCollection)
-            //    {
-            //        item.SelectedIndex = -1;
-            //    }
-            //});
+            //clear status
+            WeakReferenceMessenger.Default.Register<MainViewModel, string>(this, MessageToken.ClearLeftSelected, (obj, msg) =>
+            {
+                WorkspaceItemCurrent = null;
+                foreach (var item in WorkspaceInfoCollection)
+                {
+                    item.SelectedIndex = -1;
+                }
+            });
 
-            //Messenger.Default.Register<object>(this, MessageToken.LangUpdated, obj =>
-            //{
-            //    if (WorkspaceItemCurrent == null) return;
-            //    ContentTitle = LangProvider.GetLang(WorkspaceItemCurrent.Name);
-            //});
+            WeakReferenceMessenger.Default.Register<MainViewModel, string>(this, MessageToken.LangUpdated, (obj, msg) =>
+            {
+                if (WorkspaceItemCurrent == null) return;
+                ContentTitle = LangProvider.GetLang(WorkspaceItemCurrent.Name);
+            });
 
             //load items
             WorkspaceInfoCollection = _dataService.GetWorkspaceDataList();
@@ -147,16 +157,16 @@ namespace XStudio.App.ViewModel.Main
             WorkspaceItemCurrent = item;
             ContentTitle = LangProvider.GetLang(item.Name);
             var obj = AssemblyHelper.ResolveByKey(item.TargetCtlName);
-            var ctl = obj ?? AssemblyHelper.CreateInternalInstance($"UserControl.{item.TargetCtlName}");
-            //Messenger.Default.Send(ctl is IFull, MessageToken.FullSwitch);
-            //Messenger.Default.Send(ctl, MessageToken.LoadShowContent);
+            //var ctl = obj ?? AssemblyHelper.CreateInternalInstance($"UserControl.{item.TargetCtlName}");
+            //WeakReferenceMessenger.Default.Send(ctl, MessageToken.FullSwitch);
+            //WeakReferenceMessenger.Default.Send(ctl, MessageToken.LoadShowContent);
         }
 
         private void OpenPracticalDemo()
         {
-            //Messenger.Default.Send<object>(null, MessageToken.ClearLeftSelected);
-            //Messenger.Default.Send(AssemblyHelper.CreateInternalInstance($"UserControl.{MessageToken.PracticalDemo}"), MessageToken.LoadShowContent);
-            //Messenger.Default.Send(true, MessageToken.FullSwitch);
+            //WeakReferenceMessenger.Default.Send<object>(null, MessageToken.ClearLeftSelected);
+            //WeakReferenceMessenger.Default.Send(AssemblyHelper.CreateInternalInstance($"UserControl.{MessageToken.PracticalDemo}"), MessageToken.LoadShowContent);
+            //WeakReferenceMessenger.Default.Send(true, MessageToken.FullSwitch);
         }
     }
 }
