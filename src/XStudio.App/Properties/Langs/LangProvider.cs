@@ -1048,6 +1048,11 @@ namespace XStudio.App.Properties.Langs
         public string PracticalDemos => Lang.PracticalDemos;
 
         /// <summary>
+        ///   查找类似 实用例子 的本地化字符串。
+        /// </summary>
+        public string PracticalStart => Lang.PracticalStart;
+
+        /// <summary>
         ///   查找类似 上一步 的本地化字符串。
         /// </summary>
         public string Prev => Lang.Prev;
@@ -1437,6 +1442,15 @@ namespace XStudio.App.Properties.Langs
         /// </summary>
         public string Window => Lang.Window;
 
+        /// <summary>
+        ///   查找类似 窗口 的本地化字符串。
+        /// </summary>
+        public string School => Lang.School;
+
+        /// <summary>
+        ///   查找类似 窗口 的本地化字符串。
+        /// </summary>
+        public string SchoolTimetable => Lang.SchoolTimetable;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -2207,6 +2221,11 @@ namespace XStudio.App.Properties.Langs
         public static string PracticalDemos = nameof(PracticalDemos);
 
         /// <summary>
+        ///   查找类似 实用例子 的本地化字符串。
+        /// </summary>
+        public static string PracticalStart = nameof(PracticalStart);
+
+        /// <summary>
         ///   查找类似 上一步 的本地化字符串。
         /// </summary>
         public static string Prev = nameof(Prev);
@@ -2595,6 +2614,16 @@ namespace XStudio.App.Properties.Langs
         ///   查找类似 窗口 的本地化字符串。
         /// </summary>
         public static string Window = nameof(Window);
+
+        /// <summary>
+        ///   查找类似 窗口 的本地化字符串。
+        /// </summary>
+        public static string School = nameof(School);
+
+        /// <summary>
+        ///   查找类似 窗口 的本地化字符串。
+        /// </summary>
+        public static string SchoolTimetable = nameof(SchoolTimetable);
 
     }
 }

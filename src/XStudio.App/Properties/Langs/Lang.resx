@@ -807,7 +807,18 @@
   <data name="Window" xml:space="preserve">
     <value>窗口</value>
   </data>
-  <data name="Practical Start" xml:space="preserve">
-    <value>开始实例</value>
+  <data name="PracticalStart" xml:space="preserve">
+    <value>实用例子</value>
+  </data>
+  <data name="Practical Demos" xml:space="preserve">
+    <value>实用例子</value>
+  </data>
+  <data name="SchoolTimetable" xml:space="preserve">
+    <value>课程表</value>
+    <comment>课程表</comment>
+  </data>
+  <data name="School" xml:space="preserve">
+    <value>学校</value>
+    <comment>学校</comment>
   </data>
 </root>

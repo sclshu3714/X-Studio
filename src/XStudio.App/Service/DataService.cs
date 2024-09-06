@@ -30,18 +30,35 @@ public class DataService : ITransientDependency
         models.Add(new WorkspaceInfoModel()
         {
             Index = 0,
-            Title = "项目",
+            Key = "Project",
+            Title = "Project",
             SelectedIndex = 0,
             IsGroupEnabled = true,
             DataList = new ObservableCollection<WorkspaceItemModel>()
                         {
                             new WorkspaceItemModel() {
                                 Index = 0,
-                                Name = "排课",
-                                GroupName = "教育项目",
+                                Name = "SchoolTimetable",
+                                TargetCtlName = "SchoolTimetableCtl",
+                                GroupName = "School",
+                                IsNew = true,
+                                IsVisible = true,
+                            },
+                             new WorkspaceItemModel() {
+                                Index = 1,
+                                Name = "CAM3D",
+                                GroupName = "CAD",
+                                TargetCtlName = "CADCtl",
+                                IsNew =true,
                                 IsVisible = true,
                             }
                         }
+        });
+        models.Add(new WorkspaceInfoModel() { 
+            Index = 1,
+            Key = "Test",
+            Title = "Test",
+            IsGroupEnabled= true,
         });
         return models;
     }

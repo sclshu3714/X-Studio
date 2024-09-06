@@ -1420,11 +1420,11 @@ namespace XStudio.App.Properties.Langs {
         }
         
         /// <summary>
-        ///   查找类似 开始实例 的本地化字符串。
+        ///   查找类似 实用例子 的本地化字符串。
         /// </summary>
-        internal static string Practical_Start {
+        internal static string Practical_Demos {
             get {
-                return ResourceManager.GetString("Practical Start", resourceCulture);
+                return ResourceManager.GetString("Practical Demos", resourceCulture);
             }
         }
         
@@ -1434,6 +1434,15 @@ namespace XStudio.App.Properties.Langs {
         internal static string PracticalDemos {
             get {
                 return ResourceManager.GetString("PracticalDemos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 实用例子 的本地化字符串。
+        /// </summary>
+        internal static string PracticalStart {
+            get {
+                return ResourceManager.GetString("PracticalStart", resourceCulture);
             }
         }
         
@@ -1650,6 +1659,24 @@ namespace XStudio.App.Properties.Langs {
         internal static string RunningBlock {
             get {
                 return ResourceManager.GetString("RunningBlock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 学校 的本地化字符串。
+        /// </summary>
+        internal static string School {
+            get {
+                return ResourceManager.GetString("School", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 课程表 的本地化字符串。
+        /// </summary>
+        internal static string SchoolTimetable {
+            get {
+                return ResourceManager.GetString("SchoolTimetable", resourceCulture);
             }
         }
         
