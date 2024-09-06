@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>XStudio.Application</name>
+    </assembly>
+    <members>
+        <member name="M:XStudio.Projects.ProjectService.GetAsync(System.Guid)">
+            <summary>
+            通过项目Id查询项目
+            </summary>
+            <param name="id">项目Id</param>
+            <returns>项目信息</returns>
+            <exception cref="T:Volo.Abp.Domain.Entities.EntityNotFoundException">没有查询到项目信息</exception>
+        </member>
+    </members>
+</doc>

@@ -4,6 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.IO;
+using System;
+using System.Linq;
 
 namespace XStudio.Swagger
 {
@@ -35,6 +38,11 @@ namespace XStudio.Swagger
                 }
                 return true;
                 //return true;
+            });
+
+            Directory.GetFiles(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Docs"), "*.xml").ToList().ForEach(file =>
+            {
+                options.IncludeXmlComments(file, true);
             });
         }
 

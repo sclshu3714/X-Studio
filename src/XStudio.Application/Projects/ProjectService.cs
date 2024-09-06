@@ -26,6 +26,7 @@ using System.Transactions;
 using Serilog;
 using Volo.Abp.Uow;
 using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace XStudio.Projects
 {
@@ -64,7 +65,14 @@ namespace XStudio.Projects
             _userManager = userManager;
         }
 
+        /// <summary>
+        /// 通过项目Id查询项目
+        /// </summary>
+        /// <param name="id">项目Id</param>
+        /// <returns>项目信息</returns>
+        /// <exception cref="EntityNotFoundException">没有查询到项目信息</exception>
         [HttpGet("{id}")]
+        [SwaggerOperation(Summary = "查询项目", Description = "返回指定Id的项目。", Tags = new[] { "项目" })]
         public override async Task<ProjectDto> GetAsync(Guid id)
         {
             var queryable = await Repository.GetQueryableAsync();
