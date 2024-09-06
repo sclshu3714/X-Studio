@@ -112,7 +112,7 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
             var consoleAndAngularClientRootUrl = configurationSection["XStudio_App:RootUrl"]?.TrimEnd('/');
             await CreateApplicationAsync(
                 name: consoleAndAngularClientId!,
-                type: OpenIddictConstants.ClientTypes.Public,
+                type: OpenIddictConstants.ClientTypes.Confidential,
                 consentType: OpenIddictConstants.ConsentTypes.Implicit,
                 displayName: "Console App / Angular Application",
                 secret: configurationSection["XStudio_App:ClientSecret"] ?? "1q2w3E*",
