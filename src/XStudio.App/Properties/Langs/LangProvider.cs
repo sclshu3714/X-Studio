@@ -22,7 +22,7 @@ namespace XStudio.App.Properties.Langs
 
     public class LangProvider : INotifyPropertyChanged
     {
-        public static LangProvider Instance { get; } = ResourceHelper.GetResource<LangProvider>("DemoLangs");
+        public static LangProvider Instance { get; } = ResourceHelper.GetResource<LangProvider>("XStudioLangs");
 
         private static string CultureInfoStr;
 

@@ -82,7 +82,7 @@ namespace XStudio.App.Views.UserControls
                     item.QueriesText = string.Empty;
                 }
             }
-            else if(ViewModelLocator.Instance.Main.WorkspaceInfoCurrent != null)
+            else if (ViewModelLocator.Instance.Main.WorkspaceInfoCurrent != null)
             {
                 var key = _searchKey.ToLower();
                 foreach (var item in ViewModelLocator.Instance.Main.WorkspaceInfoCurrent.DataList)
@@ -117,18 +117,18 @@ namespace XStudio.App.Views.UserControls
 
         private void GroupItems(System.Windows.Controls.TabControl? tabControl, WorkspaceInfoModel demoInfo)
         {
-            if(tabControl == null) return;
-            var listBox = VisualHelper.GetChild<ListBox>(tabControl);
-            if (listBox == null) return;
-            listBox.Items.GroupDescriptions?.Clear();
-
-            if (demoInfo.IsGroupEnabled)
+            if (tabControl == null) return;
+            Dispatcher.BeginInvoke(new Action(() =>
             {
-                Dispatcher.BeginInvoke(new Action(() =>
+                var listBox = VisualHelper.GetChild<ListBox>(tabControl);
+                if (listBox == null) return;
+                listBox.Items.GroupDescriptions?.Clear();
+
+                if (demoInfo.IsGroupEnabled)
                 {
                     listBox.Items.GroupDescriptions?.Add(new PropertyGroupDescription("GroupName"));
-                }), DispatcherPriority.Background);
-            }
+                }
+            }), DispatcherPriority.Background);
         }
     }
 }

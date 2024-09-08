@@ -122,7 +122,7 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <Content Include="Properties\Langs\LangProvider.tt">
-        <Generator>TextTemplatingFilePreprocessor</Generator>
+        <Generator>TextTemplatingFileGenerator</Generator>
         <LastGenOutput>LangProvider.cs</LastGenOutput>
       </Content>
       <EmbeddedResource Include="Resources\Img\xlogo.ico" />
@@ -326,6 +326,11 @@
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>Lang.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Properties\Langs\LangProvider.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>LangProvider.tt</DependentUpon>
       </Compile>
       <Compile Update="Properties\Resources.Designer.cs">
         <DesignTime>True</DesignTime>

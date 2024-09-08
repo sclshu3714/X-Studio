@@ -17,7 +17,7 @@
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml" />
                 <ResourceDictionary Source="Resources/Themes/Theme.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <langs:LangProvider x:Key="DemoLangs" />
+            <langs:LangProvider x:Key="XStudioLangs" />
             <viewModel:ViewModelLocator x:Key="Locator" />
         </ResourceDictionary>
     </Application.Resources>

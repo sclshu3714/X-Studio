@@ -157,7 +157,7 @@ namespace XStudio.App.ViewModel.Main
 
         private void SwitchWorkspace(SelectionChangedEventArgs? e)
         {
-            if (e.AddedItems.Count == 0) return;
+            if (e == null || e.AddedItems.Count == 0) return;
             if (e.AddedItems[0] is WorkspaceItemModel item)
             {
                 if (Equals(WorkspaceItemCurrent, item)) return;
@@ -169,7 +169,7 @@ namespace XStudio.App.ViewModel.Main
         {
             WorkspaceItemCurrent = item;
             ContentTitle = LangProvider.GetLang(item.Name);
-            var obj = AssemblyHelper.ResolveByKey(item.TargetCtlName);
+            //var obj = AssemblyHelper.ResolveByKey(item.TargetCtlName);
             //var ctl = obj ?? AssemblyHelper.CreateInternalInstance($"UserControl.{item.TargetCtlName}");
             //WeakReferenceMessenger.Default.Send(ctl, MessageToken.FullSwitch);
             //WeakReferenceMessenger.Default.Send(ctl, MessageToken.LoadShowContent);
