@@ -205,6 +205,15 @@ namespace XStudio.App.Properties.Langs {
         }
         
         /// <summary>
+        ///   查找类似 CAD 的本地化字符串。
+        /// </summary>
+        internal static string CAD {
+            get {
+                return ResourceManager.GetString("CAD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 日历 的本地化字符串。
         /// </summary>
         internal static string Calendar {
@@ -219,6 +228,15 @@ namespace XStudio.App.Properties.Langs {
         internal static string CalendarWithClock {
             get {
                 return ResourceManager.GetString("CalendarWithClock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 CAM 的本地化字符串。
+        /// </summary>
+        internal static string CAM {
+            get {
+                return ResourceManager.GetString("CAM", resourceCulture);
             }
         }
         
@@ -601,6 +619,15 @@ namespace XStudio.App.Properties.Langs {
         }
         
         /// <summary>
+        ///   查找类似 教育 的本地化字符串。
+        /// </summary>
+        internal static string Education {
+            get {
+                return ResourceManager.GetString("Education", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 效果 的本地化字符串。
         /// </summary>
         internal static string Effects {
@@ -957,6 +984,15 @@ namespace XStudio.App.Properties.Langs {
         internal static string Index {
             get {
                 return ResourceManager.GetString("Index", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 工业 的本地化字符串。
+        /// </summary>
+        internal static string Industry {
+            get {
+                return ResourceManager.GetString("Industry", resourceCulture);
             }
         }
         

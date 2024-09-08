@@ -819,4 +819,16 @@
   <data name="School" xml:space="preserve">
     <value>School</value>
   </data>
+  <data name="Education" xml:space="preserve">
+    <value>Education</value>
+  </data>
+  <data name="Industry" xml:space="preserve">
+    <value>Industry</value>
+  </data>
+  <data name="CAD" xml:space="preserve">
+    <value>CAD</value>
+  </data>
+  <data name="CAM" xml:space="preserve">
+    <value>CAM</value>
+  </data>
 </root>

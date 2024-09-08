@@ -18,6 +18,7 @@ namespace XStudio.App.Properties.Langs
     using System.Globalization;
     using System.Windows.Data;
     using System.Windows;
+    using HandyControl.Controls;
 
     public class LangProvider : INotifyPropertyChanged
     {
@@ -285,6 +286,13 @@ namespace XStudio.App.Properties.Langs
             OnPropertyChanged(nameof(Watermark));
             OnPropertyChanged(nameof(Website));
             OnPropertyChanged(nameof(Window));
+            OnPropertyChanged(nameof(School));
+            OnPropertyChanged(nameof(SchoolTimetable));
+            OnPropertyChanged(nameof(Project));
+            OnPropertyChanged(nameof(CAD));
+            OnPropertyChanged(nameof(CAM));
+            OnPropertyChanged(nameof(Education));
+            OnPropertyChanged(nameof(Industry));
         }
 
         /// <summary>
@@ -1451,6 +1459,13 @@ namespace XStudio.App.Properties.Langs
         ///   查找类似 窗口 的本地化字符串。
         /// </summary>
         public string SchoolTimetable => Lang.SchoolTimetable;
+
+
+        public string CAD => Lang.CAD;
+        public string CAM => Lang.CAM;
+        public string Education => Lang.Education;
+        public string Industry => Lang.Industry;
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -2624,6 +2639,11 @@ namespace XStudio.App.Properties.Langs
         ///   查找类似 窗口 的本地化字符串。
         /// </summary>
         public static string SchoolTimetable = nameof(SchoolTimetable);
+
+        public static string CAD = nameof(CAD);
+        public static string CAM = nameof(CAM);
+        public static string Education = nameof(Education);
+        public static string Industry = nameof(Industry);
 
     }
 }

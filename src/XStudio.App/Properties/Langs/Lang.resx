@@ -821,4 +821,20 @@
     <value>学校</value>
     <comment>学校</comment>
   </data>
+  <data name="Education" xml:space="preserve">
+    <value>教育</value>
+    <comment>教育领域项目模板</comment>
+  </data>
+  <data name="Industry" xml:space="preserve">
+    <value>工业</value>
+    <comment>工业领域项目模板</comment>
+  </data>
+  <data name="CAD" xml:space="preserve">
+    <value>CAD</value>
+    <comment>CAD</comment>
+  </data>
+  <data name="CAM" xml:space="preserve">
+    <value>CAM</value>
+    <comment>CAM</comment>
+  </data>
 </root>
