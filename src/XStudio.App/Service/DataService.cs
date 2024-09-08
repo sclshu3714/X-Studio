@@ -54,9 +54,6 @@ public class DataService : ITransientDependency
                             }
                         }
         });
-        models.Add(new WorkspaceInfoModel() { 
-             Index= 1, IsGroupEnabled = true, SelectedIndex = -1, Key = "Test", Title = "Test"
-        });
         return models;
     }
 
@@ -64,5 +61,63 @@ public class DataService : ITransientDependency
     {
         //throw new NotImplementedException();
         return null;
+    }
+
+    /// <summary>
+    /// 加载模板
+    /// </summary>
+    /// <param name="item"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    internal WorkspaceInfoModel? LoadProjectTemplate(WorkspaceItemModel item)
+    {
+        switch (item.Name)
+        {
+            case "SchoolTimetable":
+                return new WorkspaceInfoModel()
+                {
+                    Index = 1,
+                    IsGroupEnabled = true,
+                    SelectedIndex = -1,
+                    Key = "SchoolTimetable",
+                    Title = "SchoolTimetable",
+                    DataList = new ObservableCollection<WorkspaceItemModel>() {
+                        new WorkspaceItemModel() {
+                                Index = 0,
+                                Name = "SchoolTimetable",
+                                GroupName = "Education",
+                                IsNew = true,
+                                TargetCtlName = "SchoolTimetableCtl",
+                                IsVisible = true,
+                            },
+                            new WorkspaceItemModel() {
+                                Index = 1,
+                                Name = "CAD",
+                                GroupName = "Industry",
+                                IsNew = true,
+                                TargetCtlName = "IndustryCADCtl",
+                                IsVisible = true,
+                            }
+                    }
+                };
+            case "CAD":
+                return new WorkspaceInfoModel()
+                {
+                    Index = 1,
+                    IsGroupEnabled = true,
+                    SelectedIndex = -1,
+                    Key = "CAD",
+                    Title = "CAD"
+                };
+            default:
+                return new WorkspaceInfoModel()
+                {
+                    Index = 1,
+                    IsGroupEnabled = true,
+                    SelectedIndex = -1,
+                    Key = "Test",
+                    Title = "Test"
+                };
+        }
     }
 }

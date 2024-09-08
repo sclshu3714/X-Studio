@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using HandyControl.Controls;
 using HandyControl.Interactivity;
 using HandyControl.Properties.Langs;
 using System;
@@ -167,8 +168,35 @@ namespace XStudio.App.ViewModel.Main
 
         private void SwitchWorkspace(WorkspaceItemModel item)
         {
-            WorkspaceItemCurrent = item;
-            ContentTitle = LangProvider.GetLang(item.Name);
+            if (WorkspaceInfoCollection.Count > 1)
+            {
+                Growl.Ask("已经加载了模板，是否切换？", isConfirmed =>
+                {
+                    if (isConfirmed)
+                    {
+                        WorkspaceInfoModel? workspace = _dataService.LoadProjectTemplate(item);
+                        if (workspace != null)
+                        {
+                            WorkspaceInfoCollection.RemoveAt(1);
+                            WorkspaceItemCurrent = item;
+                            ContentTitle = XStudio.App.Properties.Langs.LangProvider.GetLang(item.Name);
+                            WorkspaceInfoCollection.Add(workspace);
+                        }
+                    }
+                    return true;
+                }, "");
+            }
+            else
+            {
+                WorkspaceInfoModel? workspace = _dataService.LoadProjectTemplate(item);
+                if (workspace != null)
+                {
+                    WorkspaceItemCurrent = item;
+                    ContentTitle = XStudio.App.Properties.Langs.LangProvider.GetLang(item.Name);
+                    WorkspaceInfoCollection.Add(workspace);
+                }
+            }
+
             //var obj = AssemblyHelper.ResolveByKey(item.TargetCtlName);
             //var ctl = obj ?? AssemblyHelper.CreateInternalInstance($"UserControl.{item.TargetCtlName}");
             //WeakReferenceMessenger.Default.Send(ctl, MessageToken.FullSwitch);
