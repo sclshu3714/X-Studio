@@ -11,8 +11,7 @@ namespace XStudio.App.ViewModel
 {
     public class ViewModelLocator
     {
-        private static readonly Lazy<ViewModelLocator> InstanceInternal =
-        new(() => new ViewModelLocator(), isThreadSafe: true);
+        private static readonly Lazy<ViewModelLocator> InstanceInternal = new(() => new ViewModelLocator(), isThreadSafe: true);
 
         public static ViewModelLocator Instance => InstanceInternal.Value;
 
@@ -22,9 +21,9 @@ namespace XStudio.App.ViewModel
         {
             var services = new ServiceCollection();
 
-            services.AddSingleton<DataService>();
-            services.AddTransient<MainViewModel>();
-            services.AddTransient<NonClientAreaViewModel>();
+            services.AddSingleton<DataService>(); // 单例
+            services.AddSingleton<MainViewModel>(); // 单例
+            services.AddTransient<NonClientAreaViewModel>(); //瞬时
 
             _serviceProvider = services.BuildServiceProvider();
         }

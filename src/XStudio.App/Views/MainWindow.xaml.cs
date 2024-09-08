@@ -30,9 +30,8 @@ public partial class MainWindow : HandyControl.Controls.Window
     protected override void OnContentRendered(EventArgs e)
     {
         base.OnContentRendered(e);
-
-        DataContext = ViewModelLocator.Instance.Main;
         NonClientAreaContent = new NonClientAreaContent();
+        DataContext = ViewModelLocator.Instance.Main;
         ControlMain.Content = new MainWindowContent();
 
         GlobalShortcut.Init(new List<KeyBinding>

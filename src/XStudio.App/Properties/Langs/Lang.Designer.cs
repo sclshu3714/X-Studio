@@ -1924,6 +1924,15 @@ namespace XStudio.App.Properties.Langs {
         }
         
         /// <summary>
+        ///   查找类似 测试 的本地化字符串。
+        /// </summary>
+        internal static string Test {
+            get {
+                return ResourceManager.GetString("Test", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 正文 的本地化字符串。
         /// </summary>
         internal static string Text {

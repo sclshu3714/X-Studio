@@ -837,4 +837,8 @@
     <value>CAM</value>
     <comment>CAM</comment>
   </data>
+  <data name="Test" xml:space="preserve">
+    <value>测试</value>
+    <comment>测试标签</comment>
+  </data>
 </root>

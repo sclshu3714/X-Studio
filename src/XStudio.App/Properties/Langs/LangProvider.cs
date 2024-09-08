@@ -293,6 +293,7 @@ namespace XStudio.App.Properties.Langs
             OnPropertyChanged(nameof(CAM));
             OnPropertyChanged(nameof(Education));
             OnPropertyChanged(nameof(Industry));
+            OnPropertyChanged(nameof(Test));
         }
 
         /// <summary>
@@ -1465,6 +1466,8 @@ namespace XStudio.App.Properties.Langs
         public string CAM => Lang.CAM;
         public string Education => Lang.Education;
         public string Industry => Lang.Industry;
+
+        public string Test => Lang.Test;
 
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -2644,6 +2647,7 @@ namespace XStudio.App.Properties.Langs
         public static string CAM = nameof(CAM);
         public static string Education = nameof(Education);
         public static string Industry = nameof(Industry);
+        public static string Test = nameof(Test);
 
     }
 }

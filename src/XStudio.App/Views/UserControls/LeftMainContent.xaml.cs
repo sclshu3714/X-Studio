@@ -19,7 +19,9 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using XStudio.App.ViewModel.Main;
 using XStudio.App.ViewModel;
+using XStudio.App.Helper;
 using System.Reflection;
+using HandyControl.Controls;
 
 namespace XStudio.App.Views.UserControls
 {
@@ -37,15 +39,15 @@ namespace XStudio.App.Views.UserControls
         private void TabControl_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count == 0) return;
-            if (e.AddedItems[0] is WorkspaceInfoModel demoInfo)
+            if (e.AddedItems[0] is WorkspaceInfoModel workspaceInfo)
             {
-                ViewModelLocator.Instance.Main.WorkspaceInfoCurrent = demoInfo;
-                var selectedIndex = demoInfo.SelectedIndex;
-                demoInfo.SelectedIndex = -1;
-                demoInfo.SelectedIndex = selectedIndex;
+                ViewModelLocator.Instance.Main.WorkspaceInfoCurrent = workspaceInfo;
+                var selectedIndex = workspaceInfo.SelectedIndex;
+                workspaceInfo.SelectedIndex = -1;
+                workspaceInfo.SelectedIndex = selectedIndex;
 
                 FilterItems();
-                GroupItems(sender as TabControl, demoInfo);
+                GroupItems(sender as System.Windows.Controls.TabControl, workspaceInfo);
             }
         }
 
@@ -113,8 +115,9 @@ namespace XStudio.App.Views.UserControls
             }
         }
 
-        private void GroupItems(TabControl? tabControl, WorkspaceInfoModel demoInfo)
+        private void GroupItems(System.Windows.Controls.TabControl? tabControl, WorkspaceInfoModel demoInfo)
         {
+            if(tabControl == null) return;
             var listBox = VisualHelper.GetChild<ListBox>(tabControl);
             if (listBox == null) return;
             listBox.Items.GroupDescriptions?.Clear();

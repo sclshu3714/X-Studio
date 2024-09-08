@@ -831,4 +831,7 @@
   <data name="CAM" xml:space="preserve">
     <value>CAM</value>
   </data>
+  <data name="Test" xml:space="preserve">
+    <value>Test</value>
+  </data>
 </root>

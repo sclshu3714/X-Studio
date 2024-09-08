@@ -54,11 +54,15 @@ public class DataService : ITransientDependency
                             }
                         }
         });
+        models.Add(new WorkspaceInfoModel() { 
+             Index= 1, IsGroupEnabled = true, SelectedIndex = -1, Key = "Test", Title = "Test"
+        });
         return models;
     }
 
-    internal object GetWorkspaceUrl(WorkspaceInfoModel? workspaceInfoCurrent, WorkspaceItemModel workspaceItemCurrent)
+    public object? GetWorkspaceUrl(WorkspaceInfoModel? workspaceInfoCurrent, WorkspaceItemModel workspaceItemCurrent)
     {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
+        return null;
     }
 }

@@ -24,7 +24,8 @@ namespace XStudio.App.ViewModel.Main
         private object? _contentTitle;
         private object? _subContent;
         private bool _isCodeOpened;
-
+        private WorkspaceInfoModel? _workspaceInfoCurrent;
+        private WorkspaceItemModel? _workspaceItemModel;
         private readonly DataService _dataService;
 
         public MainViewModel(DataService dataService)
@@ -36,9 +37,17 @@ namespace XStudio.App.ViewModel.Main
             UpdateLeftContent();
         }
 
-        public WorkspaceItemModel? WorkspaceItemCurrent { get; private set; }
+        public WorkspaceItemModel? WorkspaceItemCurrent
+        {
+            get => _workspaceItemModel;
+            set => SetProperty(ref _workspaceItemModel, value);
+        }
 
-        public WorkspaceInfoModel? WorkspaceInfoCurrent { get; set; }
+        public WorkspaceInfoModel? WorkspaceInfoCurrent
+        {
+            get => _workspaceInfoCurrent;
+            set => SetProperty(ref _workspaceInfoCurrent, value);
+        }
 
         public object? SubContent
         {
@@ -74,8 +83,12 @@ namespace XStudio.App.ViewModel.Main
             {
                 return;
             }
-
-            ControlCommands.OpenLink.Execute(_dataService.GetWorkspaceUrl(WorkspaceInfoCurrent, WorkspaceItemCurrent));
+            object? parameter = _dataService.GetWorkspaceUrl(WorkspaceInfoCurrent, WorkspaceItemCurrent);
+            if (parameter == null)
+            {
+                return;
+            }
+            ControlCommands.OpenLink.Execute(parameter);
         });
 
         public RelayCommand OpenCodeCmd => new(() =>
