@@ -158,11 +158,28 @@ namespace XStudio.App.ViewModel.Main
 
         private void SwitchWorkspace(SelectionChangedEventArgs? e)
         {
-            if (e == null || e.AddedItems.Count == 0) return;
+            if (e == null || e.AddedItems.Count == 0)
+            {
+                return;
+            }
             if (e.AddedItems[0] is WorkspaceItemModel item)
             {
-                if (Equals(WorkspaceItemCurrent, item)) return;
-                SwitchWorkspace(item);
+                System.Windows.Controls.TabControl? tabControl = e.Source as System.Windows.Controls.TabControl;
+                switch (tabControl?.SelectedIndex)
+                {
+                    case 0:
+                        if (Equals(WorkspaceItemCurrent, item))
+                        {
+                            return;
+                        }
+                        SwitchWorkspace(item);
+                        break;
+                    case 1:
+                        break;
+                    default:
+                        return;
+                }
+                
             }
         }
 

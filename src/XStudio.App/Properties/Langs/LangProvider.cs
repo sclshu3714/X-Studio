@@ -19,6 +19,7 @@ namespace XStudio.App.Properties.Langs
     using System.Windows.Data;
     using System.Windows;
     using HandyControl.Controls;
+    using System.Windows.Input;
 
     public class LangProvider : INotifyPropertyChanged
     {
@@ -294,6 +295,11 @@ namespace XStudio.App.Properties.Langs
             OnPropertyChanged(nameof(Education));
             OnPropertyChanged(nameof(Industry));
             OnPropertyChanged(nameof(Test));
+            //OnPropertyChanged(nameof(TimePeriod));
+            //OnPropertyChanged(nameof(Schedule));
+            //OnPropertyChanged(nameof(Section));
+            //OnPropertyChanged(nameof(Course));
+            //OnPropertyChanged(nameof(Place));
         }
 
         /// <summary>
@@ -1461,13 +1467,16 @@ namespace XStudio.App.Properties.Langs
         /// </summary>
         public string SchoolTimetable => Lang.SchoolTimetable;
 
-
         public string CAD => Lang.CAD;
         public string CAM => Lang.CAM;
         public string Education => Lang.Education;
         public string Industry => Lang.Industry;
-
         public string Test => Lang.Test;
+        //public string TimePeriod => Lang.TimePeriod;
+        //public string Schedule => Lang.Schedule;
+        //public string Section => Lang.Section;
+        //public string Course => Lang.Course;
+        //public string Place => Lang.Place;
 
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -2648,6 +2657,10 @@ namespace XStudio.App.Properties.Langs
         public static string Education = nameof(Education);
         public static string Industry = nameof(Industry);
         public static string Test = nameof(Test);
-
+        public static string TimePeriod = nameof(TimePeriod);
+        public static string Schedule = nameof(Schedule);
+        public static string Section = nameof(Section);
+        public static string Course = nameof(Course);
+        public static string Place = nameof(Place);
     }
 }

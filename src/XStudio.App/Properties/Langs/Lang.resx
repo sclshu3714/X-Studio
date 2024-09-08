@@ -841,4 +841,24 @@
     <value>测试</value>
     <comment>测试标签</comment>
   </data>
+  <data name="Schedule" xml:space="preserve">
+    <value>课程安排</value>
+    <comment>课程安排</comment>
+  </data>
+  <data name="TimePeriod" xml:space="preserve">
+    <value>时段</value>
+    <comment>时段(早晨 上午 中午 下午 晚上 等)</comment>
+  </data>
+  <data name="Section" xml:space="preserve">
+    <value>节次</value>
+    <comment>节次方案</comment>
+  </data>
+  <data name="Course" xml:space="preserve">
+    <value>课程</value>
+    <comment>课程</comment>
+  </data>
+  <data name="Place" xml:space="preserve">
+    <value>场所</value>
+    <comment>场所管理</comment>
+  </data>
 </root>

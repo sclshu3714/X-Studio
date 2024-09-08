@@ -82,22 +82,51 @@ public class DataService : ITransientDependency
                     Key = "SchoolTimetable",
                     Title = "SchoolTimetable",
                     DataList = new ObservableCollection<WorkspaceItemModel>() {
+                        // 时段
                         new WorkspaceItemModel() {
-                                Index = 0,
-                                Name = "SchoolTimetable",
-                                GroupName = "Education",
-                                IsNew = true,
-                                TargetCtlName = "SchoolTimetableCtl",
-                                IsVisible = true,
-                            },
-                            new WorkspaceItemModel() {
-                                Index = 1,
-                                Name = "CAD",
-                                GroupName = "Industry",
-                                IsNew = true,
-                                TargetCtlName = "IndustryCADCtl",
-                                IsVisible = true,
-                            }
+                            Index = 0,
+                            Name = "TimePeriod",
+                            GroupName = "Schedule",
+                            IsNew = true,
+                            TargetCtlName = "TimePeriodCtl",
+                            IsVisible = true,
+                        },
+                        // 节次方案
+                        new WorkspaceItemModel() {
+                            Index = 1,
+                            Name = "Section",
+                            GroupName = "Schedule",
+                            IsNew = true,
+                            TargetCtlName = "SectionCtl",
+                            IsVisible = true,
+                        },
+                        // 课程
+                        new WorkspaceItemModel() {
+                            Index = 1,
+                            Name = "Course",
+                            GroupName = "Schedule",
+                            IsNew = true,
+                            TargetCtlName = "CourseCtl",
+                            IsVisible = true,
+                        },
+                        // 场所
+                        new WorkspaceItemModel() {
+                            Index = 1,
+                            Name = "Place",
+                            GroupName = "Schedule",
+                            IsNew = true,
+                            TargetCtlName = "PlaceCtl",
+                            IsVisible = true,
+                        },
+                        // 课程表
+                        new WorkspaceItemModel() {
+                            Index = 1,
+                            Name = "SchoolTimetable",
+                            GroupName = "Schedule",
+                            IsNew = true,
+                            TargetCtlName = "SchoolTimetableCtl",
+                            IsVisible = true,
+                        }
                     }
                 };
             case "CAD":
