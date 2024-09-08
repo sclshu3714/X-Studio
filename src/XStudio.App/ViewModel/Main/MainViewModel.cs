@@ -183,7 +183,7 @@ namespace XStudio.App.ViewModel.Main
             }
         }
 
-        private void SwitchWorkspace(WorkspaceItemModel item)
+        public void SwitchWorkspace(WorkspaceItemModel item)
         {
             if (WorkspaceInfoCollection.Count > 1)
             {

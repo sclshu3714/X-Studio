@@ -295,11 +295,11 @@ namespace XStudio.App.Properties.Langs
             OnPropertyChanged(nameof(Education));
             OnPropertyChanged(nameof(Industry));
             OnPropertyChanged(nameof(Test));
-            //OnPropertyChanged(nameof(TimePeriod));
-            //OnPropertyChanged(nameof(Schedule));
-            //OnPropertyChanged(nameof(Section));
-            //OnPropertyChanged(nameof(Course));
-            //OnPropertyChanged(nameof(Place));
+            OnPropertyChanged(nameof(TimePeriod));
+            OnPropertyChanged(nameof(Schedule));
+            OnPropertyChanged(nameof(Section));
+            OnPropertyChanged(nameof(Course));
+            OnPropertyChanged(nameof(Place));
         }
 
         /// <summary>
@@ -1472,11 +1472,11 @@ namespace XStudio.App.Properties.Langs
         public string Education => Lang.Education;
         public string Industry => Lang.Industry;
         public string Test => Lang.Test;
-        //public string TimePeriod => Lang.TimePeriod;
-        //public string Schedule => Lang.Schedule;
-        //public string Section => Lang.Section;
-        //public string Course => Lang.Course;
-        //public string Place => Lang.Place;
+        public string TimePeriod => Lang.TimePeriod;
+        public string Schedule => Lang.Schedule;
+        public string Section => Lang.Section;
+        public string Course => Lang.Course;
+        public string Place => Lang.Place;
 
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -22,6 +22,7 @@ using XStudio.App.ViewModel;
 using XStudio.App.Helper;
 using System.Reflection;
 using HandyControl.Controls;
+using XStudio.App.Service;
 
 namespace XStudio.App.Views.UserControls
 {
@@ -48,6 +49,14 @@ namespace XStudio.App.Views.UserControls
 
                 FilterItems();
                 GroupItems(sender as System.Windows.Controls.TabControl, workspaceInfo);
+            }
+            else if (e.AddedItems[0] is WorkspaceItemModel workspaceItem)
+            {
+                if (ViewModelLocator.Instance.Main.WorkspaceInfoCollection.Count != 1)
+                {
+                    return;
+                }
+                ViewModelLocator.Instance.Main.SwitchWorkspace(workspaceItem);
             }
         }
 

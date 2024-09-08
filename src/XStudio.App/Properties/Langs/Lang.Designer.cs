@@ -457,6 +457,15 @@ namespace XStudio.App.Properties.Langs {
         }
         
         /// <summary>
+        ///   查找类似 课程 的本地化字符串。
+        /// </summary>
+        internal static string Course {
+            get {
+                return ResourceManager.GetString("Course", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 封面流 的本地化字符串。
         /// </summary>
         internal static string CoverFlow {
@@ -1393,6 +1402,15 @@ namespace XStudio.App.Properties.Langs {
         }
         
         /// <summary>
+        ///   查找类似 场所 的本地化字符串。
+        /// </summary>
+        internal static string Place {
+            get {
+                return ResourceManager.GetString("Place", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 请输入... 的本地化字符串。
         /// </summary>
         internal static string PleaseInput {
@@ -1699,6 +1717,15 @@ namespace XStudio.App.Properties.Langs {
         }
         
         /// <summary>
+        ///   查找类似 课程安排 的本地化字符串。
+        /// </summary>
+        internal static string Schedule {
+            get {
+                return ResourceManager.GetString("Schedule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 学校 的本地化字符串。
         /// </summary>
         internal static string School {
@@ -1749,6 +1776,15 @@ namespace XStudio.App.Properties.Langs {
         internal static string Second {
             get {
                 return ResourceManager.GetString("Second", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 节次 的本地化字符串。
+        /// </summary>
+        internal static string Section {
+            get {
+                return ResourceManager.GetString("Section", resourceCulture);
             }
         }
         
@@ -1992,6 +2028,15 @@ namespace XStudio.App.Properties.Langs {
         internal static string TimeBar {
             get {
                 return ResourceManager.GetString("TimeBar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 时段 的本地化字符串。
+        /// </summary>
+        internal static string TimePeriod {
+            get {
+                return ResourceManager.GetString("TimePeriod", resourceCulture);
             }
         }
         
