@@ -5,16 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using XStudio.App.Models;
+using XStudio.App.Models.Data;
 
 namespace XStudio.App.ViewModel.Main
 {
-    public class WorkspaceInfoModel : ViewModelDataBase<WorkspaceItemModel>
+    public class WorkspaceInfoViewModel : ViewModelDataBase<WorkspaceItemModel>
     {
         public string Key { get; set; } = string.Empty;
         private string _title = string.Empty;
         private int _selectedIndex = -1;
         private int _index = 0;
-        public WorkspaceInfoModel()
+        public WorkspaceInfoViewModel()
         {
 
         }

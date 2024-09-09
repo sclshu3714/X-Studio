@@ -25,14 +25,14 @@ namespace XStudio.App.ViewModel.Main
         private object? _contentTitle;
         private object? _subContent;
         private bool _isCodeOpened;
-        private WorkspaceInfoModel? _workspaceInfoCurrent;
+        private WorkspaceInfoViewModel? _workspaceInfoCurrent;
         private WorkspaceItemModel? _workspaceItemModel;
         private readonly DataService _dataService;
 
         public MainViewModel(DataService dataService)
         {
             _dataService = dataService;
-            WorkspaceInfoCollection = new ObservableCollection<WorkspaceInfoModel>();
+            WorkspaceInfoCollection = new ObservableCollection<WorkspaceInfoViewModel>();
 
             UpdateMainContent();
             UpdateLeftContent();
@@ -44,7 +44,7 @@ namespace XStudio.App.ViewModel.Main
             set => SetProperty(ref _workspaceItemModel, value);
         }
 
-        public WorkspaceInfoModel? WorkspaceInfoCurrent
+        public WorkspaceInfoViewModel? WorkspaceInfoCurrent
         {
             get => _workspaceInfoCurrent;
             set => SetProperty(ref _workspaceInfoCurrent, value);
@@ -68,7 +68,9 @@ namespace XStudio.App.ViewModel.Main
             set => SetProperty(ref _isCodeOpened, value);
         }
 
-        public ObservableCollection<WorkspaceInfoModel> WorkspaceInfoCollection { get; set; }
+        public ObservableCollection<WorkspaceInfoViewModel> WorkspaceInfoCollection { get; set; }
+
+        public ObservableCollection<DisplayAreaInfoViewModel> DisplayAreaInfoCollection { get; set; }
 
         public RelayCommand<SelectionChangedEventArgs> SwitchWorkspaceCmd => new(SwitchWorkspace);
 
@@ -114,14 +116,8 @@ namespace XStudio.App.ViewModel.Main
                 }
                 SubContent = obj;
             });
-            //ViewModelLocator.Instance.Main.MessengerInstance?.Register<MainViewModel, OnUpdateMainContentMessage>(this, MessageToken.LoadShowContent, obj =>
-            //{
-            //    if (SubContent is IDisposable disposable)
-            //    {
-            //        disposable.Dispose();
-            //    }
-            //    SubContent = obj;
-            //}, true);
+
+            DisplayAreaInfoCollection = _dataService.GeDisplayAreaDataList();
         }
 
         private void UpdateLeftContent()
@@ -144,16 +140,6 @@ namespace XStudio.App.ViewModel.Main
 
             //load items
             WorkspaceInfoCollection = _dataService.GetWorkspaceDataList();
-            //Task.Run(() =>
-            //{
-            //    foreach (var item in _dataService.GetWorkspaceInfo())
-            //    {
-            //        Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-            //        {
-            //            WorkspaceInfoCollection.Add(item);
-            //        }), DispatcherPriority.ApplicationIdle);
-            //    }
-            //});
         }
 
         private void SwitchWorkspace(SelectionChangedEventArgs? e)
@@ -191,7 +177,7 @@ namespace XStudio.App.ViewModel.Main
                 {
                     if (isConfirmed)
                     {
-                        WorkspaceInfoModel? workspace = _dataService.LoadProjectTemplate(item);
+                        WorkspaceInfoViewModel? workspace = _dataService.LoadProjectTemplate(item);
                         if (workspace != null)
                         {
                             WorkspaceInfoCollection.RemoveAt(1);
@@ -205,7 +191,7 @@ namespace XStudio.App.ViewModel.Main
             }
             else
             {
-                WorkspaceInfoModel? workspace = _dataService.LoadProjectTemplate(item);
+                WorkspaceInfoViewModel? workspace = _dataService.LoadProjectTemplate(item);
                 if (workspace != null)
                 {
                     WorkspaceItemCurrent = item;

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using HandyControl.Data;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Documents;
 using Volo.Abp.DependencyInjection;
 using XStudio.App.Models;
+using XStudio.App.Models.Data;
 using XStudio.App.ViewModel.Main;
 
 namespace XStudio.App.Service;
@@ -24,10 +26,10 @@ public class DataService : ITransientDependency
         return "Hello world!";
     }
 
-    public ObservableCollection<WorkspaceInfoModel> GetWorkspaceDataList()
+    public ObservableCollection<WorkspaceInfoViewModel> GetWorkspaceDataList()
     {
-        ObservableCollection<WorkspaceInfoModel> models = new ObservableCollection<WorkspaceInfoModel>();
-        models.Add(new WorkspaceInfoModel()
+        ObservableCollection<WorkspaceInfoViewModel> models = new ObservableCollection<WorkspaceInfoViewModel>();
+        models.Add(new WorkspaceInfoViewModel()
         {
             Index = 0,
             Title = "Project",
@@ -57,7 +59,7 @@ public class DataService : ITransientDependency
         return models;
     }
 
-    public object? GetWorkspaceUrl(WorkspaceInfoModel? workspaceInfoCurrent, WorkspaceItemModel workspaceItemCurrent)
+    public object? GetWorkspaceUrl(WorkspaceInfoViewModel? workspaceInfoCurrent, WorkspaceItemModel workspaceItemCurrent)
     {
         //throw new NotImplementedException();
         return null;
@@ -69,12 +71,12 @@ public class DataService : ITransientDependency
     /// <param name="item"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    internal WorkspaceInfoModel? LoadProjectTemplate(WorkspaceItemModel item)
+    internal WorkspaceInfoViewModel? LoadProjectTemplate(WorkspaceItemModel item)
     {
         switch (item.Name)
         {
             case "SchoolTimetable":
-                return new WorkspaceInfoModel()
+                return new WorkspaceInfoViewModel()
                 {
                     Index = 1,
                     IsGroupEnabled = true,
@@ -130,7 +132,7 @@ public class DataService : ITransientDependency
                     }
                 };
             case "CAD":
-                return new WorkspaceInfoModel()
+                return new WorkspaceInfoViewModel()
                 {
                     Index = 1,
                     IsGroupEnabled = true,
@@ -139,7 +141,7 @@ public class DataService : ITransientDependency
                     Title = "CAD"
                 };
             default:
-                return new WorkspaceInfoModel()
+                return new WorkspaceInfoViewModel()
                 {
                     Index = 1,
                     IsGroupEnabled = true,
@@ -148,5 +150,16 @@ public class DataService : ITransientDependency
                     Title = "Test"
                 };
         }
+    }
+
+    public ObservableCollection<DisplayAreaInfoViewModel> GeDisplayAreaDataList()
+    {
+        return new ObservableCollection<DisplayAreaInfoViewModel>()
+        {
+            new DisplayAreaInfoViewModel(this){
+                Header = "首页",
+                BackgroundToken = ResourceToken.AccentBrush
+            }
+        };
     }
 }

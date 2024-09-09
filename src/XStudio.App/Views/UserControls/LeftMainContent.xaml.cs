@@ -23,6 +23,7 @@ using XStudio.App.Helper;
 using System.Reflection;
 using HandyControl.Controls;
 using XStudio.App.Service;
+using XStudio.App.Models.Data;
 
 namespace XStudio.App.Views.UserControls
 {
@@ -40,7 +41,7 @@ namespace XStudio.App.Views.UserControls
         private void TabControl_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count == 0) return;
-            if (e.AddedItems[0] is WorkspaceInfoModel workspaceInfo)
+            if (e.AddedItems[0] is WorkspaceInfoViewModel workspaceInfo)
             {
                 ViewModelLocator.Instance.Main.WorkspaceInfoCurrent = workspaceInfo;
                 var selectedIndex = workspaceInfo.SelectedIndex;
@@ -124,7 +125,7 @@ namespace XStudio.App.Views.UserControls
             }
         }
 
-        private void GroupItems(System.Windows.Controls.TabControl? tabControl, WorkspaceInfoModel demoInfo)
+        private void GroupItems(System.Windows.Controls.TabControl? tabControl, WorkspaceInfoViewModel demoInfo)
         {
             if (tabControl == null) return;
             Dispatcher.BeginInvoke(new Action(() =>

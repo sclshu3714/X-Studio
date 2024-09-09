@@ -165,7 +165,7 @@
         </DoubleAnimation>
     </Storyboard>
 
-    <!--<Style x:Key="TextEditorCustom" TargetType="avalonedit:TextEditor">
+    <Style x:Key="TextEditorCustom" TargetType="avalonedit:TextEditor">
         <Setter Property="IsReadOnly" Value="True" />
         <Setter Property="FontFamily" Value="Consolas" />
         <Setter Property="Margin" Value="4" />
@@ -221,7 +221,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>-->
+    </Style>
 
     <Style x:Key="Path4GeometryItem" TargetType="Path">
         <Setter Property="Margin" Value="10" />

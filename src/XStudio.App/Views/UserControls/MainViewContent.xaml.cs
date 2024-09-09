@@ -24,16 +24,16 @@ namespace XStudio.App.Views.UserControls
     /// <summary>
     /// MainTabContent.xaml 的交互逻辑
     /// </summary>
-    public partial class MainTabContent : UserControl
+    public partial class MainViewContent : UserControl
     {
         private bool _isFull;
 
-        private string _currentDemoKey;
+        private string? _currentDemoKey;
 
         private bool _drawerCodeUsed;
 
         //private Dictionary<string, TextEditor> _textEditor;
-        public MainTabContent()
+        public MainViewContent()
         {
             InitializeComponent();
 

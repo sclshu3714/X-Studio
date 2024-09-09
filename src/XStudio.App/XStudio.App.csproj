@@ -29,6 +29,7 @@
     <ItemGroup>
         <PackageReference Include="Abp" Version="9.3.0" />
         <PackageReference Include="AutoMapper" Version="13.0.1" />
+        <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
         <PackageReference Include="DryIoc.Microsoft.DependencyInjection" Version="6.2.0" />
         <PackageReference Include="HandyControl" Version="3.5.1" />
@@ -337,7 +338,7 @@
         <AutoGen>True</AutoGen>
         <DependentUpon>Resources.resx</DependentUpon>
       </Compile>
-      <Compile Update="Views\UserControls\MainTabContent.xaml.cs">
+      <Compile Update="Views\UserControls\MainViewContent.xaml.cs">
         <SubType>Code</SubType>
       </Compile>
     </ItemGroup>

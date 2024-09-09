@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using XStudio.App.Models;
+using XStudio.App.ViewModel;
 
-namespace XStudio.App.ViewModel.Main
+namespace XStudio.App.Models.Data
 {
     public class WorkspaceItemModel : ViewModelDataBase<DataModel>
     {
