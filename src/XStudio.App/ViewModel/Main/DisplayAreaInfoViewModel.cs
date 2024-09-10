@@ -1,12 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using HandyControl.Controls;
 using HandyControl.Data;
+using Microsoft.VisualBasic.ApplicationServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using XStudio.App.Models;
 using XStudio.App.Models.Data;
 using XStudio.App.Service;
@@ -15,15 +17,35 @@ namespace XStudio.App.ViewModel.Main
 {
     public class DisplayAreaInfoViewModel : ViewModelDataBase<DisplayItemModel>
     {
-        /// <summary>
-        /// 头显示
-        /// </summary>
-        public string Header { get; set; } = string.Empty;
-
+        private string _header = string.Empty;
+        private string _BackgroundToken = string.Empty;
+        private UserControl? _Content = null;
         /// <summary>
         /// 背景
         /// </summary>
-        public string BackgroundToken { get; set; } = string.Empty;
+        public string BackgroundToken
+        {
+            get { return _BackgroundToken; }
+            set { SetProperty(ref _BackgroundToken, value); }
+        }
+
+        /// <summary>
+        /// 头显示
+        /// </summary>
+        public string Header
+        {
+            get { return _header; }
+            set { SetProperty(ref _header, value); }
+        }
+
+        /// <summary>
+        /// 展示控件
+        /// </summary>
+        public UserControl? Content
+        {
+            get { return _Content; }
+            set { SetProperty(ref _Content, value); }
+        }
 
         public DisplayAreaInfoViewModel(DataService dataService) { }
 
@@ -35,7 +57,7 @@ namespace XStudio.App.ViewModel.Main
             {
                 return;
             }
-            Growl.Info($"{(args.OriginalSource as TabItem)?.Header} Closing");
+            Growl.Info($"{(args.OriginalSource as System.Windows.Controls.TabItem)?.Header} Closing");
         }
 
         public RelayCommand<RoutedEventArgs> ClosedCmd => new(Closed);
@@ -46,7 +68,7 @@ namespace XStudio.App.ViewModel.Main
             {
                 return;
             }
-            Growl.Info($"{(args.OriginalSource as TabItem)?.Header} Closed");
+            Growl.Info($"{(args.OriginalSource as System.Windows.Controls.TabItem)?.Header} Closed");
         }
     }
 }
