@@ -36,23 +36,29 @@
                     Effect="{StaticResource EffectShadow5}" />
                 <hc:TabControl
                     Grid.Row="2"
-                    Margin="0,0,0,0"
+                    Margin="3"
                     IsAnimationEnabled="True"
                     IsDraggable="True"
                     ItemsSource="{Binding DisplayAreaInfoCollection}"
                     OverflowMenuDisplayMemberPath="Header"
-                    ShowCloseButton="True">
+                    ShowCloseButton="False"
+                    BorderThickness="0"  
+                    Background="Transparent"
+                    BorderBrush="Transparent">
                     <TabControl.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Header}" />
+                            <TextBlock Text="{Binding Header}" 
+                                       TextAlignment="Center" 
+                                       VerticalAlignment="Center" />
                         </DataTemplate>
                     </TabControl.ItemTemplate>
                     <TabControl.ContentTemplate>
                         <DataTemplate>
-                            <hc:SimplePanel
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch"
-                                Background="{Binding BackgroundToken, Converter={StaticResource String2BrushConverter}}" />
+                            <hc:SimplePanel HorizontalAlignment="Stretch" 
+                                            VerticalAlignment="Stretch" 
+                                            Background="{Binding BackgroundToken,Converter={StaticResource String2BrushConverter}}">
+                                <ContentControl Content="{Binding Content}" />
+                            </hc:SimplePanel>
                         </DataTemplate>
                     </TabControl.ContentTemplate>
                 </hc:TabControl>

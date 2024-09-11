@@ -48,5 +48,13 @@
                 VerticalAlignment="Top" 
                 Margin="-12 26 0 0" 
                 Style="{StaticResource ButtonIconCircular}" />
+
+        <ScrollViewer Grid.Column="1" 
+                      VerticalScrollBarVisibility="Hidden" 
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Bottom"
+                      Margin="0 0 0 16">
+            <StackPanel hc:Growl.GrowlParent="True" VerticalAlignment="Bottom" Margin="0 0 0 16"/>
+        </ScrollViewer>
     </Grid>
 </UserControl>

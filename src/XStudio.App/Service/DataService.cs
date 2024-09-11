@@ -9,6 +9,7 @@ using Volo.Abp.DependencyInjection;
 using XStudio.App.Models;
 using XStudio.App.Models.Data;
 using XStudio.App.ViewModel.Main;
+using XStudio.App.Views.UserControls;
 
 namespace XStudio.App.Service;
 
@@ -158,7 +159,38 @@ public class DataService : ITransientDependency
         {
             new DisplayAreaInfoViewModel(this){
                 Header = "首页",
-                BackgroundToken = ResourceToken.AccentBrush
+                BackgroundToken = ResourceToken.SuccessBrush,
+                Content = new HomePageControl()
+            },
+            new DisplayAreaInfoViewModel(this){
+                Header = "显示",
+                BackgroundToken = ResourceToken.SuccessBrush,
+                Content = new HomePageControl()
+            },
+            new DisplayAreaInfoViewModel(this)
+            {
+                Header = "Success",
+                BackgroundToken = ResourceToken.SuccessBrush
+            },
+            new DisplayAreaInfoViewModel(this)
+            {
+                Header = "Primary",
+                BackgroundToken = ResourceToken.PrimaryBrush
+            },
+            new DisplayAreaInfoViewModel(this)
+            {
+                Header = "Warning",
+                BackgroundToken = ResourceToken.WarningBrush
+            },
+            new DisplayAreaInfoViewModel(this)
+            {
+                Header = "Danger",
+                BackgroundToken = ResourceToken.DangerBrush
+            },
+            new DisplayAreaInfoViewModel(this)
+            {
+                Header = "Info",
+                BackgroundToken = ResourceToken.InfoBrush
             }
         };
     }
