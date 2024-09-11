@@ -9,6 +9,18 @@
             异常情况处理的中间件
             </summary>
         </member>
+        <member name="M:XStudio.Common.AutoPartitionBackgroundJobService.DoWork(System.Object)">
+            <summary>
+            每月执行一次，当数据大于50000时，分区
+            </summary>
+            <param name="state"></param>
+        </member>
+        <member name="M:XStudio.Common.AutoPartitionBackgroundJobService.GetAllTablesAsync">
+            <summary>
+            查询所有表格名称
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:XStudio.Common.AutoPartitionBackgroundJobService.AddMonthlyPartitionAsync(System.String)">
             <summary>
             分区

@@ -17,15 +17,20 @@ namespace XStudio.Controllers.V2
     [Route("api/xstudio/v{version:apiVersion}/[controller]")]
     [ApiVersion(2.0)]
     [ApiController]
-    public class ProjectAggController : AbpController
+    public class ProjectController : AbpController
     {
         private readonly IProjectService _projectService;
-        public ProjectAggController(IProjectService projectService)
+        public ProjectController(IProjectService projectService)
         {
             _projectService = projectService;
         }
 
-        [HttpPost]
+        /// <summary>
+        /// 分页查询数据
+        /// </summary>
+        /// <param name="paged"></param>
+        /// <returns></returns>
+        [HttpPost("pageList")]
         public async Task<PagedResultDto<ProjectDto>> GetListAsync(PagedAndSortedResultRequestDto paged)
         {
             return  await _projectService.GetListAsync(paged);

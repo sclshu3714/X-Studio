@@ -112,16 +112,17 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
             var consoleAndAngularClientRootUrl = configurationSection["XStudio_App:RootUrl"]?.TrimEnd('/');
             await CreateApplicationAsync(
                 name: consoleAndAngularClientId!,
-                type: OpenIddictConstants.ClientTypes.Confidential,
-                consentType: OpenIddictConstants.ConsentTypes.Implicit,
-                displayName: "Console App / Angular Application",
-                secret: configurationSection["XStudio_App:ClientSecret"] ?? "1q2w3E*",
+                type: OpenIddictConstants.ClientTypes.Public,
+                consentType: OpenIddictConstants.ConsentTypes.Systematic,
+                displayName: "Console App / App Application",
+                secret: null, // configurationSection["XStudio_App:ClientSecret"] ?? "1q2w3E*",
                 grantTypes: new List<string>
                 {
                     OpenIddictConstants.GrantTypes.AuthorizationCode,
                     OpenIddictConstants.GrantTypes.Password,
                     OpenIddictConstants.GrantTypes.ClientCredentials,
-                    OpenIddictConstants.GrantTypes.RefreshToken
+                    OpenIddictConstants.GrantTypes.RefreshToken,
+                    OpenIddictConstants.GrantTypes.Implicit
                 },
                 scopes: commonScopes,
                 redirectUri: consoleAndAngularClientRootUrl,

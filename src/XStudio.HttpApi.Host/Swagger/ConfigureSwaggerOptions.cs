@@ -40,10 +40,24 @@ namespace XStudio.Swagger
                 //return true;
             });
 
-            Directory.GetFiles(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Docs"), "*.xml").ToList().ForEach(file =>
+            //加载说明文档
+            string? docxml = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Docs");
+            while (!string.IsNullOrWhiteSpace(docxml) && !Directory.Exists(docxml))
             {
-                options.IncludeXmlComments(file, true);
-            });
+                docxml = Directory.GetParent(docxml)?.Parent?.FullName;
+                if (docxml == null)
+                {
+                    break;
+                }
+                docxml = Path.Combine(docxml, "Docs");
+            }
+            if (!string.IsNullOrWhiteSpace(docxml) && Directory.Exists(docxml))
+            {
+                Directory.GetFiles(docxml, "*.xml").ToList().ForEach(file =>
+                {
+                    options.IncludeXmlComments(file, true);
+                });
+            }
         }
 
         static OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
