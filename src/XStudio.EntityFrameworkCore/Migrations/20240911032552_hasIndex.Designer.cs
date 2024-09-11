@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Volo.Abp.EntityFrameworkCore;
 using XStudio.EntityFrameworkCore;
@@ -12,9 +13,11 @@ using XStudio.EntityFrameworkCore;
 namespace XStudio.Migrations
 {
     [DbContext(typeof(XStudioDbContext))]
-    partial class XStudioDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240911032552_hasIndex")]
+    partial class hasIndex
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

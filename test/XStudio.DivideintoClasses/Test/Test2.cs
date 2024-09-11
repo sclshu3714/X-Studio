@@ -12,16 +12,16 @@ namespace XStudio.DivideintoClasses.Test
         {
             List<Course> courses = new List<Course>
         {
-            new Course { Name = "Math", Duration = 2, Teachers = new List<string> { "Alice", "Bob" } },
-            new Course { Name = "Science", Duration = 2, Teachers = new List<string> { "Alice", "Charlie" } },
-            new Course { Name = "History", Duration = 1, Teachers = new List<string> { "Bob", "Charlie" } }
+            new Course { Name = "语文", Duration = 2, Teachers = new List<string> { "赵一", "钱二" } },
+            new Course { Name = "数学", Duration = 2, Teachers = new List<string> { "孙三", "李四" } },
+            new Course { Name = "外语", Duration = 1, Teachers = new List<string> { "周五", "吴六" } }
         };
 
             List<Teacher> teachers = new List<Teacher>
         {
-            new Teacher { Name = "Alice", AvailableSlots = Enumerable.Range(0, 10).ToList() },
-            new Teacher { Name = "Bob", AvailableSlots = Enumerable.Range(0, 10).ToList() },
-            new Teacher { Name = "Charlie", AvailableSlots = Enumerable.Range(0, 10).ToList() }
+            new Teacher { Name = "赵一", AvailableSlots = Enumerable.Range(0, 10).ToList() },
+            new Teacher { Name = "孙三", AvailableSlots = Enumerable.Range(0, 10).ToList() },
+            new Teacher { Name = "周五", AvailableSlots = Enumerable.Range(0, 10).ToList() }
         };
 
             int totalSlots = 10;
@@ -30,7 +30,7 @@ namespace XStudio.DivideintoClasses.Test
 
             foreach (var entry in bestSchedule.TimeTable)
             {
-                Console.WriteLine($"Slot {entry.Key}: {entry.Value.Item1.Name} by {entry.Value.Item2}");
+                Console.WriteLine($"名单: {entry.Key}: {entry.Value.Item1.Name} by {entry.Value.Item2}");
             }
         }
     }
@@ -70,7 +70,7 @@ namespace XStudio.DivideintoClasses.Test
 
         public Schedule Run(int populationSize, int generations, double mutationRate)
         {
-            List<Schedule> population = InitializePopulation(populationSize);
+            List<Schedule> population = InitializePopulation(populationSize); // 种群
             for (int i = 0; i < generations; i++)
             {
                 population = EvolvePopulation(population, mutationRate);
@@ -78,6 +78,7 @@ namespace XStudio.DivideintoClasses.Test
             return population.OrderBy(s => Fitness(s)).First();
         }
 
+        // 初始化种群
         private List<Schedule> InitializePopulation(int populationSize)
         {
             List<Schedule> population = new List<Schedule>();
@@ -100,6 +101,7 @@ namespace XStudio.DivideintoClasses.Test
             return schedule;
         }
 
+        // 评估种群适应度
         private List<Schedule> EvolvePopulation(List<Schedule> population, double mutationRate)
         {
             List<Schedule> newPopulation = new List<Schedule>();
@@ -117,11 +119,13 @@ namespace XStudio.DivideintoClasses.Test
             return newPopulation;
         }
 
+        // 选择操作
         private Schedule SelectParent(List<Schedule> population)
         {
             return population[random.Next(population.Count)];
         }
 
+        // 交叉操作
         private Schedule Crossover(Schedule parent1, Schedule parent2)
         {
             Schedule child = new Schedule { TimeTable = new Dictionary<int, (Course, string)>() };
@@ -143,6 +147,7 @@ namespace XStudio.DivideintoClasses.Test
             return child;
         }
 
+        // 变异操作
         private void Mutate(Schedule schedule)
         {
             int slot = random.Next(totalSlots);
@@ -151,6 +156,7 @@ namespace XStudio.DivideintoClasses.Test
             schedule.TimeTable[slot] = (course, teacher);
         }
 
+        // 评估种群适应度
         private int Fitness(Schedule schedule)
         {
             // Implement fitness function based on constraints and optimization goals
