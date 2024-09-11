@@ -9,6 +9,12 @@
             异常情况处理的中间件
             </summary>
         </member>
+        <member name="M:XStudio.Common.AutoPartitionBackgroundJobService.AddMonthlyPartitionAsync(System.String)">
+            <summary>
+            分区
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:XStudio.ExtensionGrant.AbstractTokenExtensionGrant.ServerValidate">
             <summary>
             服务器验证

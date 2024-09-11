@@ -158,6 +158,14 @@ public class XStudioHttpApiHostModule : AbpModule
         ConfigureNewtonsoftJson(context);
         ConfigureNacos(context, configuration);
         ConfigureRateLimit(context, configuration);
+        AddAbpBackgroundJobs(context);
+       
+    }
+
+    private void AddAbpBackgroundJobs(ServiceConfigurationContext context)
+    {
+        context.Services.AddTransient<AutoPartitionBackgroundJobService>(); // 注册后台任务服务
+        context.Services.AddHostedService<AutoPartitionBackgroundJobService>(); // 注册后台任务服务
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)
