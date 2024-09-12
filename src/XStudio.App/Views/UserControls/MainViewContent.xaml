@@ -33,7 +33,7 @@
                     Grid.RowSpan="2"
                     Background="{DynamicResource RegionBrush}"
                     CornerRadius="10"
-                    Effect="{StaticResource EffectShadow5}" />
+                    Effect="{StaticResource EffectShadow4}" />
                 <hc:TabControl
                     Margin="3"
                     Grid.Row="2"
@@ -49,16 +49,18 @@
                         <DataTemplate>
                             <TextBlock Text="{Binding Header}" 
                                        TextAlignment="Center" 
-                                       VerticalAlignment="Center" />
+                                       VerticalAlignment="Center"
+                                       Background="Transparent"/>
                         </DataTemplate>
                     </TabControl.ItemTemplate>
                     <TabControl.ContentTemplate>
                         <DataTemplate>
-                            <hc:SimplePanel HorizontalAlignment="Stretch" 
+                            <Border HorizontalAlignment="Stretch" 
                                             VerticalAlignment="Stretch" 
-                                            Background="Transparent">
+                                            Background="Transparent"
+                                            BorderThickness="0">
                                 <ContentControl Content="{Binding Content}" />
-                            </hc:SimplePanel>
+                            </Border>
                         </DataTemplate>
                     </TabControl.ContentTemplate>
                 </hc:TabControl>
