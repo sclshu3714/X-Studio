@@ -35,8 +35,8 @@
                     CornerRadius="10"
                     Effect="{StaticResource EffectShadow5}" />
                 <hc:TabControl
-                    Grid.Row="2"
                     Margin="3"
+                    Grid.Row="2"
                     IsAnimationEnabled="True"
                     IsDraggable="True"
                     ItemsSource="{Binding DisplayAreaInfoCollection}"
@@ -56,7 +56,7 @@
                         <DataTemplate>
                             <hc:SimplePanel HorizontalAlignment="Stretch" 
                                             VerticalAlignment="Stretch" 
-                                            Background="{Binding BackgroundToken,Converter={StaticResource String2BrushConverter}}">
+                                            Background="Transparent">
                                 <ContentControl Content="{Binding Content}" />
                             </hc:SimplePanel>
                         </DataTemplate>

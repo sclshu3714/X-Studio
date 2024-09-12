@@ -17,6 +17,7 @@ using XStudio.App.Helper;
 using XStudio.App.Models;
 using XStudio.App.Models.Data;
 using XStudio.App.Service;
+using XStudio.App.ViewModel.Home;
 
 namespace XStudio.App.ViewModel.Main
 {
@@ -27,13 +28,14 @@ namespace XStudio.App.ViewModel.Main
         private bool _isCodeOpened;
         private WorkspaceInfoViewModel? _workspaceInfoCurrent;
         private WorkspaceItemModel? _workspaceItemModel;
+        private HomePageViewModel? _homePage;
         private readonly DataService _dataService;
 
         public MainViewModel(DataService dataService)
         {
             _dataService = dataService;
             WorkspaceInfoCollection = new ObservableCollection<WorkspaceInfoViewModel>();
-
+            DisplayAreaInfoCollection = new ObservableCollection<DisplayAreaInfoViewModel>();
             UpdateMainContent();
             UpdateLeftContent();
         }
@@ -48,6 +50,12 @@ namespace XStudio.App.ViewModel.Main
         {
             get => _workspaceInfoCurrent;
             set => SetProperty(ref _workspaceInfoCurrent, value);
+        }
+
+        public HomePageViewModel? HomePage
+        {
+            get => _homePage;
+            set => SetProperty(ref _homePage, value);
         }
 
         public object? SubContent
@@ -117,7 +125,8 @@ namespace XStudio.App.ViewModel.Main
                 SubContent = obj;
             });
 
-            DisplayAreaInfoCollection = _dataService.GeDisplayAreaDataList();
+            _homePage = new HomePageViewModel(_dataService);
+            DisplayAreaInfoCollection = _dataService.GeDisplayAreaDataList(_homePage);
         }
 
         private void UpdateLeftContent()

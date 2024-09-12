@@ -1,13 +1,16 @@
 ﻿using HandyControl.Data;
+using HandyControl.Tools;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using Volo.Abp.DependencyInjection;
 using XStudio.App.Models;
 using XStudio.App.Models.Data;
+using XStudio.App.ViewModel.Home;
 using XStudio.App.ViewModel.Main;
 using XStudio.App.Views.UserControls;
 
@@ -45,6 +48,7 @@ public class DataService : ITransientDependency
                                 GroupName = "Education",
                                 IsNew = true,
                                 TargetCtlName = "SchoolTimetableCtl",
+                                ImageBrush = ResourceHelper.GetResource<object>("Brush.Effects"),
                                 IsVisible = true,
                             },
                             new WorkspaceItemModel() {
@@ -53,6 +57,7 @@ public class DataService : ITransientDependency
                                 GroupName = "Industry",
                                 IsNew = true,
                                 TargetCtlName = "IndustryCADCtl",
+                                ImageBrush = ResourceHelper.GetResource<object>("Brush.Effects"),
                                 IsVisible = true,
                             }
                         }
@@ -92,6 +97,7 @@ public class DataService : ITransientDependency
                             GroupName = "Schedule",
                             IsNew = true,
                             TargetCtlName = "TimePeriodCtl",
+                            ImageBrush = ResourceHelper.GetResource<object>("Brush.Effects"),
                             IsVisible = true,
                         },
                         // 节次方案
@@ -101,6 +107,7 @@ public class DataService : ITransientDependency
                             GroupName = "Schedule",
                             IsNew = true,
                             TargetCtlName = "SectionCtl",
+                            ImageBrush = ResourceHelper.GetResource<object>("Brush.Effects"),
                             IsVisible = true,
                         },
                         // 课程
@@ -110,6 +117,7 @@ public class DataService : ITransientDependency
                             GroupName = "Schedule",
                             IsNew = true,
                             TargetCtlName = "CourseCtl",
+                            ImageBrush = ResourceHelper.GetResource<object>("Brush.Effects"),
                             IsVisible = true,
                         },
                         // 场所
@@ -119,6 +127,7 @@ public class DataService : ITransientDependency
                             GroupName = "Schedule",
                             IsNew = true,
                             TargetCtlName = "PlaceCtl",
+                            ImageBrush = ResourceHelper.GetResource<object>("Brush.Effects"),
                             IsVisible = true,
                         },
                         // 课程表
@@ -128,6 +137,7 @@ public class DataService : ITransientDependency
                             GroupName = "Schedule",
                             IsNew = true,
                             TargetCtlName = "SchoolTimetableCtl",
+                            ImageBrush = ResourceHelper.GetResource<object>("Brush.Effects"),
                             IsVisible = true,
                         }
                     }
@@ -153,19 +163,17 @@ public class DataService : ITransientDependency
         }
     }
 
-    public ObservableCollection<DisplayAreaInfoViewModel> GeDisplayAreaDataList()
+    public ObservableCollection<DisplayAreaInfoViewModel> GeDisplayAreaDataList(HomePageViewModel _homePage)
     {
         return new ObservableCollection<DisplayAreaInfoViewModel>()
         {
             new DisplayAreaInfoViewModel(this){
                 Header = "首页",
-                BackgroundToken = ResourceToken.SuccessBrush,
-                Content = new HomePageControl()
+                Content = new HomePageControl(_homePage)
             },
             new DisplayAreaInfoViewModel(this){
                 Header = "显示",
-                BackgroundToken = ResourceToken.SuccessBrush,
-                Content = new HomePageControl()
+                BackgroundToken = ResourceToken.SuccessBrush
             },
             new DisplayAreaInfoViewModel(this)
             {
@@ -193,5 +201,22 @@ public class DataService : ITransientDependency
                 BackgroundToken = ResourceToken.InfoBrush
             }
         };
+    }
+
+    /// <summary>
+    /// 获取首页的导航页
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public ObservableCollection<Page> HomePages()
+    {
+        ObservableCollection<Page> pages = new ObservableCollection<Page>();
+        pages.Add(new MainHomePage());
+        return pages;
+    }
+
+    internal void SetHomePageViewModel(HomePageViewModel homePage)
+    {
+        throw new NotImplementedException();
     }
 }
