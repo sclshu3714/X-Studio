@@ -31,6 +31,13 @@ namespace XStudio.SchoolSchedule
         /// <summary>
         /// 第几节(从1开始计数)
         /// </summary>
+        /// <example>
+        /// 规则：一周最多7天，但是一天的课程可能超过10节但是不会超过99节
+        /// 101 => 周1第1节
+        /// 102 => 周1第2节
+        /// 201 => 周2第1节
+        /// 510 => 周5第10节
+        /// </example>
         public int Index { get; set; } = 1;
 
         /// <summary>
@@ -48,7 +55,7 @@ namespace XStudio.SchoolSchedule
     /// <summary>
     /// 节次内容
     /// </summary>
-    public class SectionContent
+    public class SectionContent : IContent<IRule>
     { 
         /// <summary>
         /// 序列号，控制显示顺序
@@ -56,52 +63,7 @@ namespace XStudio.SchoolSchedule
         public int Index { get; set; }
 
         /// <summary>
-        /// 课程Id
-        /// </summary>
-        public string CourseId { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 课程名称
-        /// </summary>
-        public string CourseName { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 教室Id
-        /// </summary>
-        public string ClassroomId { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 教室名称
-        /// </summary>
-        public string ClassroomName { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 班级Id
-        /// </summary>
-        public string ClassId { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 班级名称
-        /// </summary>
-        public string ClassName { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 教师Id
-        /// </summary>
-        public string TeacherId { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 教师名称
-        /// </summary>
-        public string TeacherName { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 其他教师(副老师)
-        /// </summary>
-        public Dictionary<string, string> OtherTeachers { get; set; } = new Dictionary<string, string>();
-
-        /// <summary>
-        /// 每周间隔
+        /// 周间隔
         /// </summary>
         /// <example>
         /// 常规课：每周都需要上         => 0

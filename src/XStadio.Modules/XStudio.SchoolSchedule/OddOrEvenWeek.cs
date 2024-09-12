@@ -6,16 +6,19 @@ using System.Threading.Tasks;
 
 namespace XStudio.SchoolSchedule
 {
-    public class Course
+    /// <summary>
+    /// 单双周
+    /// </summary>
+    public class OddOrEvenWeek : IRule
     {
         /// <summary>
-        /// 课程编号，主要用于快速识别和查询
+        /// 单周课程
         /// </summary>
-        public string Id { get; set; } = string.Empty;
+        public ClassCourse OddWeek { get; set; }
 
         /// <summary>
-        /// 课程名称
+        /// 双周课程
         /// </summary>
-        public string Name { get; set; } = string.Empty;
+        public ClassCourse EvenWeek { get; set; }
     }
 }

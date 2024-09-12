@@ -16,14 +16,14 @@ namespace XStudio.Controllers.V3
     [Route("api/xstudio/v{version:apiVersion}/[controller]")]
     [ApiVersion(3.0)]
     [ApiController]
-    public class ProjectAggController : AbpController
+    public class ProjectController : AbpController
     {
         private readonly IProjectService _projectService;
-        public ProjectAggController(IProjectService projectService)
+        public ProjectController(IProjectService projectService)
         {
             _projectService = projectService;
         }
-        [HttpGet]
+        [HttpGet("test/{id}")]
         public async Task<ProjectDto> GetAsync(Guid id)
         {
             return await _projectService.GetAsync(id);

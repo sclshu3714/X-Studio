@@ -61,6 +61,8 @@ using Microsoft.AspNetCore.Identity;
 using AspNetCoreRateLimit;
 using Volo.Abp.AspNetCore.Mvc.UI.MultiTenancy;
 using Volo.Abp.AspNetCore.SignalR;
+using Volo.Abp.BackgroundJobs;
+using Volo.Abp.AspNetCore.Mvc.AntiForgery;
 
 namespace XStudio;
 
@@ -164,6 +166,15 @@ public class XStudioHttpApiHostModule : AbpModule
 
     private void AddAbpBackgroundJobs(ServiceConfigurationContext context)
     {
+        Configure<AbpAntiForgeryOptions>(options =>
+        {
+            // TODO wxz
+            options.AutoValidate = false; // 禁用自动验证
+        });
+        Configure<AbpBackgroundJobOptions>(options =>
+        {
+            options.IsJobExecutionEnabled = false;
+        });
         context.Services.AddTransient<AutoPartitionBackgroundJobService>(); // 注册后台任务服务
         context.Services.AddHostedService<AutoPartitionBackgroundJobService>(); // 注册后台任务服务
     }

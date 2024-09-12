@@ -17,6 +17,8 @@ using XStudio.Helpers;
 using XStudio.Encrypter;
 using Nacos.V2;
 using System.Net.Http;
+using Nacos.V2.Utils;
+using System.Text;
 
 namespace XStudio.Controllers
 {
@@ -112,7 +114,11 @@ namespace XStudio.Controllers
         [HttpGet("TestAsync")]
         public async Task<ActionResult<string>> TestAsync()
         {
-            var instance = await _nnsvc.SelectOneHealthyInstance("akstream", "wxz");
+            var instance = await _nnsvc.SelectOneHealthyInstance("XStudio", "wxz");
+            if (instance == null)
+            {
+                return $"没有在Nacos中发现服务 XStudio";
+            }
             var isHttps = HttpContext.Request.IsHttps; // 检查是否是通过 HTTPS 访问
             var host = $"{instance.Ip}:{(isHttps ? instance.Metadata["HttpsPort"] : instance.Port)}";
             var baseUrl = isHttps ? $"https://{host}" : $"http://{host}";
@@ -121,15 +127,34 @@ namespace XStudio.Controllers
             {
                 return "empty";
             }
-
-            var url = $"{baseUrl}/WeatherForecast";
+            string path = $"api/xstudio/v1/project/list";
+            var url = $"{baseUrl.TrimEnd('/')}/{path}";
             using (var handler = new HttpClientHandler())
             {
                 handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
                 using (HttpClient client = new HttpClient(handler))
                 {
-                    var result = await client.GetAsync(url);
-                    return await result.Content.ReadAsStringAsync();
+                    var page = new {
+                        maxResultCount = 1,
+                        skipCount = 0,
+                        sorting = "id"
+                    };
+                    using HttpContent httpContent = new StringContent(page.ToJsonString(), Encoding.UTF8);
+                    string contentType = "application/json";
+                    if (contentType != null)
+                    {
+                        httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(contentType);
+                    }
+                    try
+                    {
+                        var result = await client.PostAsync(url, new StringContent(page.ToJsonString()));
+                        return await result.Content.ReadAsStringAsync();
+                    }
+                    catch (Exception ex)
+                    {
+
+                        return $"{ex.Message}: \r\n {ex.StackTrace}";
+                    }
                 }
             }
         }
