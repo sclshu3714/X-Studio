@@ -92,7 +92,7 @@ namespace XStudio.Projects
             return coursewareDto;
         }
 
-        [HttpPost] 
+        [HttpPost("add")] 
         public override async Task<ProjectDto> CreateAsync(CreateUpdateProjectDto input)
         {
             return await base.CreateAsync(input);
@@ -113,7 +113,7 @@ namespace XStudio.Projects
             }
         }
 
-        [HttpPut]
+        [HttpPut("update")]
         public override async Task<ProjectDto> UpdateAsync(Guid id, CreateUpdateProjectDto input)
         {
             AbpUnitOfWorkOptions options = new AbpUnitOfWorkOptions();

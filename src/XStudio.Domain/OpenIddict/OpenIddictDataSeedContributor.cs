@@ -113,7 +113,7 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
             await CreateApplicationAsync(
                 name: consoleAndAngularClientId!,
                 type: OpenIddictConstants.ClientTypes.Public,
-                consentType: OpenIddictConstants.ConsentTypes.Systematic,
+                consentType: OpenIddictConstants.ConsentTypes.Implicit,
                 displayName: "Console App / App Application",
                 secret: null, // configurationSection["XStudio_App:ClientSecret"] ?? "1q2w3E*",
                 grantTypes: new List<string>

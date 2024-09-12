@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\XStudio.Domain\XStudio.Domain.csproj" />
+    <PackageReference Include="DM.Microsoft.EntityFrameworkCore" Version="7.0.0.20986" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
     <PackageReference Include="ShardingCore" Version="7.8.1.21" />
     <PackageReference Include="Volo.Abp.EntityFrameworkCore.MySQL" Version="8.2.1" />
