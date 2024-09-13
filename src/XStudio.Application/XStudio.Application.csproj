@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\XStadio.Modules\XStudio.Common\XStudio.Common.csproj" />
     <ProjectReference Include="..\XStudio.Domain\XStudio.Domain.csproj" />
     <ProjectReference Include="..\XStudio.Application.Contracts\XStudio.Application.Contracts.csproj" />
   </ItemGroup>

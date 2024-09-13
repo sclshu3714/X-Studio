@@ -2,6 +2,7 @@
 using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 
 namespace XStudio.EntityFrameworkCore;
@@ -16,10 +17,30 @@ public class XStudioDbContextFactory : IDesignTimeDbContextFactory<XStudioDbCont
 
         var configuration = BuildConfiguration();
 
-        var builder = new DbContextOptionsBuilder<XStudioDbContext>()
-            .UseMySql(configuration.GetConnectionString("Default"), MySqlServerVersion.LatestSupportedServerVersion);
+        var DBMode = configuration["App:DBMode"]; // 数据库模式：MYSQL;DM;
+        switch (DBMode)
+        {
+            case "DM":
+                string? myDmdbms = configuration.GetConnectionString("Dmdbms");
+                if (!string.IsNullOrWhiteSpace(myDmdbms))
+                {
+                    var builder = new DbContextOptionsBuilder<XStudioDbContext>()
+                        .UseDm(myDmdbms, (DmDbContextOptionsBuilder opt) => { });
 
-        return new XStudioDbContext(builder.Options);
+                    return new XStudioDbContext(builder.Options);
+                }
+                break;
+            default:
+                string? mySql = configuration.GetConnectionString("Default");
+                if (!string.IsNullOrWhiteSpace(mySql))
+                {
+                    var builder = new DbContextOptionsBuilder<XStudioDbContext>()
+                        .UseMySql(mySql, MySqlServerVersion.LatestSupportedServerVersion);
+                    return new XStudioDbContext(builder.Options);
+                }
+                break;
+        }
+        throw new InvalidOperationException($"数据库连接失败，{DBMode} 模式下，没有检测到连接地址");
     }
 
     private static IConfigurationRoot BuildConfiguration()

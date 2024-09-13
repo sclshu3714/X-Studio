@@ -44,6 +44,71 @@
             全局Nacos配置，和远程Nacos映射
             </summary>
         </member>
+        <member name="P:XStudio.Nacos.AppInfo.Environment">
+            <summary>
+            Development 开发; Staging 预发布; Production 生产;
+            </summary>
+        </member>
+        <member name="P:XStudio.Nacos.AppInfo.DBMode">
+            <summary>
+            数据库模式：MYSQL 或者 DM (mysql 或者 达梦)
+            </summary>
+        </member>
+        <member name="P:XStudio.Nacos.AppInfo.SelfUrl">
+            <summary>
+            应用程序自身的 URL，用于生成重定向或链接。
+            </summary>
+        </member>
+        <member name="P:XStudio.Nacos.AppInfo.ClientUrl">
+            <summary>
+            客户端应用程序的 URL，通常用于跨域请求。
+            </summary>
+        </member>
+        <member name="P:XStudio.Nacos.AppInfo.CorsOrigins">
+            <summary>
+            定义允许跨域请求的源（Origin）
+            </summary>
+        </member>
+        <member name="P:XStudio.Nacos.AppInfo.RedirectAllowedUrls">
+            <summary>
+            定义允许重定向的 URL 列表。
+            </summary>
+        </member>
+        <member name="P:XStudio.Nacos.DBSqlInfo.DbMode">
+            <summary>
+            数据库模式
+            </summary>
+        </member>
+        <member name="P:XStudio.Nacos.DBSqlInfo.Host">
+            <summary>
+            Ip或者域名
+            </summary>
+        </member>
+        <member name="P:XStudio.Nacos.DBSqlInfo.Port">
+            <summary>
+            可选参数，端口
+            </summary>
+        </member>
+        <member name="P:XStudio.Nacos.DBSqlInfo.DbName">
+            <summary>
+            数据库名称
+            </summary>
+        </member>
+        <member name="P:XStudio.Nacos.DBSqlInfo.UserId">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:XStudio.Nacos.DBSqlInfo.Password">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="P:XStudio.Nacos.DBSqlInfo.Metadata">
+            <summary>
+            启动参数配置
+            </summary>
+        </member>
         <member name="M:XStudio.Swagger.ConfigureSwaggerOptions.#ctor(Asp.Versioning.ApiExplorer.IApiVersionDescriptionProvider)">
             <summary>
             Initializes a new instance of the <see cref="T:XStudio.Swagger.ConfigureSwaggerOptions"/> class.
