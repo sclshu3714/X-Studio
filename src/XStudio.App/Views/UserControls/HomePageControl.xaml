@@ -6,13 +6,16 @@
              xmlns:local="clr-namespace:XStudio.App.Views.UserControls"
              xmlns:hc="https://handyorg.github.io/handycontrol"
              mc:Ignorable="d" 
+             Background="Transparent"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <ControlTemplate x:Key="RoundedFrameTemplate" TargetType="{x:Type Frame}">
             <Border Background="{TemplateBinding Background}"
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="{TemplateBinding BorderThickness}"
-                    CornerRadius="0 0 10 10">
+                    CornerRadius="0 0 10 10"
+                    ClipToBounds="True"
+                    Margin="0">
                 <ContentPresenter Content="{TemplateBinding Content}" />
             </Border>
         </ControlTemplate>
@@ -22,6 +25,6 @@
                Template="{StaticResource RoundedFrameTemplate}"
                NavigationUIVisibility="Visible"
                BorderThickness="0"
-               Background="Red"/>
+               Background="Transparent"/>
     </hc:TransitioningContentControl>
 </UserControl>

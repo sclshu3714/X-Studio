@@ -25,7 +25,7 @@
             Style="{StaticResource BorderClip}">
             <Grid
                 Name="GridMain"
-                Margin="26,16,16,16"
+                Margin="16,16,16,16"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch">
                 <Border
@@ -35,7 +35,8 @@
                     CornerRadius="10"
                     Effect="{StaticResource EffectShadow4}" />
                 <hc:TabControl
-                    Margin="3"
+                    Style="{StaticResource TabControlPlusBaseStyle}"
+                    Margin="3 3 3 3"
                     Grid.Row="2"
                     IsAnimationEnabled="True"
                     IsDraggable="True"
