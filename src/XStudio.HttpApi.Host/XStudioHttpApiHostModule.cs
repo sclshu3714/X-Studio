@@ -266,6 +266,8 @@ public class XStudioHttpApiHostModule : AbpModule
     private void ConfigureNacos(ServiceConfigurationContext context, IConfiguration Configuration)
     {
         context.Services.AddNacosAspNet(Configuration, "Nacos");
+        //监听nacos 应用配置
+        //context.Services.AddNacosApplicationpCongfig(configuration.GetSection("Nacos:ServiceName").Value + ".yml");
         GlobalConfig.Default.NacosConfig = Configuration.Get<GlobalNacosConfig>();
         if (GlobalConfig.Default.NacosConfig != null)
         {
