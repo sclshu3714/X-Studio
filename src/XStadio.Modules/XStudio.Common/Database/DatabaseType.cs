@@ -9,7 +9,7 @@ namespace XStudio.Common
     /// <summary>
     /// 数据库模式
     /// </summary>
-    public enum DBMode
+    public enum DatabaseType
     {
         /// <summary>
         /// mysql数据库

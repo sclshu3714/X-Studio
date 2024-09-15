@@ -40,9 +40,9 @@ namespace XStudio.Common.Nacos
             return yamlObject;
         }
 
-        public async Task<T> GetYamlConfigAsync<T>(string dataId, string group)
+        public async Task<T> GetYamlConfigAsync<T>(string dataId, string group, long timeoutMs)
         {
-            var yamlContent = await _nacosConfigService.GetConfig(dataId, group, 3000);
+            var yamlContent = await _nacosConfigService.GetConfig(dataId, group, timeoutMs);
             if (string.IsNullOrEmpty(yamlContent))
             {
                 throw new Exception("Failed to retrieve YAML content from Nacos.");
@@ -52,6 +52,24 @@ namespace XStudio.Common.Nacos
             return yamlObject;
         }
 
+        /// <summary>
+        /// 解析内容
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="yamlContent"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public async Task<T> GetYamlConfigAsync<T>(string yamlContent)
+        {
+            if (string.IsNullOrEmpty(yamlContent))
+            {
+                throw new Exception("Failed to retrieve YAML content from Nacos.");
+            }
+
+            var yamlObject = _deserializer.Deserialize<T>(yamlContent);
+            await Task.CompletedTask;
+            return yamlObject;
+        }
 
 
         public async Task<bool> PublishYamlConfigAsync(string dataId, string group, Dictionary<string, object> yamlObject)

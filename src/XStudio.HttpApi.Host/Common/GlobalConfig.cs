@@ -1,4 +1,4 @@
-﻿using XStudio.Nacos;
+﻿using XStudio.Common.Nacos;
 
 namespace XStudio.Common
 {
