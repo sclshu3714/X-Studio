@@ -65,6 +65,9 @@ using Volo.Abp.AspNetCore.Mvc.AntiForgery;
 using XStudio.Common.Nacos;
 using Nacos.V2.Config;
 using Nacos.V2.Utils;
+using Microsoft.AspNetCore.Hosting;
+using Volo.Abp.EventBus.Kafka;
+using Volo.Abp.Kafka;
 
 namespace XStudio;
 
@@ -152,6 +155,7 @@ public class XStudioHttpApiHostModule : AbpModule
         var hostingEnvironment = context.Services.GetHostingEnvironment();
 
         ConfigureNacos(context, configuration);
+        ConfigureKafka(context, configuration);
         ConfigureAuthentication(context, configuration);
         ConfigureBundles();
         ConfigureUrls(configuration);
@@ -164,6 +168,67 @@ public class XStudioHttpApiHostModule : AbpModule
         ConfigureRateLimit(context, configuration);
         AddAbpBackgroundJobs(context);
 
+    }
+
+
+    private async void ConfigureNacos(ServiceConfigurationContext context, IConfiguration configuration)
+    {
+        context.Services.AddNacosAspNet(configuration, "Nacos");
+        context.Services.AddNacosV2Config(configuration);
+
+        string? dataId = configuration.GetSection("Nacos:DataId").Value;//: "xstudio.json",
+        string? group = configuration.GetSection("Nacos:GroupName").Value;//: "DEFAULT_GROUP",
+        long timeoutMs = 3000;
+        //监听nacos 应用配置
+        if (dataId != null && group != null)
+        {
+            string? format = Path.GetExtension(dataId);// configuration.GetSection("Nacos:Format").Value;//: "JSON",
+            var serviceProvider = context.Services.BuildServiceProvider();
+            INacosConfigService nacosConfigService = serviceProvider.GetRequiredService<INacosConfigService>();
+            string currentConfig = await nacosConfigService.GetConfig(dataId, group, timeoutMs);
+            if (string.IsNullOrEmpty(currentConfig))
+            {
+                Log.Warning($"Nacos 配置文件 {dataId} 在组 {group} 中未找到或为空。");
+            }
+            else if (format.ToUpper() == ".JSON")
+            {
+                GlobalConfig.Default.NacosConfig = currentConfig.ToObj<GlobalNacosConfig>();
+            }
+            else if (format.ToUpper() == ".YAML" || format.ToUpper() == ".YML")
+            {
+                NacosYamlHelper helper = new NacosYamlHelper(nacosConfigService);
+                GlobalConfig.Default.NacosConfig = await helper.GetYamlConfigAsync<GlobalNacosConfig>(currentConfig);
+            }
+        }
+        //GlobalConfig.Default.NacosConfig = configuration.Get<GlobalNacosConfig>();
+        //configuration.Bind(GlobalConfig.Default.NacosConfig);
+        if (GlobalConfig.Default.NacosConfig != null)
+        {
+            context.Services.AddSingleton(GlobalConfig.Default.NacosConfig);
+        }
+    }
+
+
+    private void ConfigureKafka(ServiceConfigurationContext context, IConfiguration configuration)
+    {
+        var kafkaOptions = new AbpKafkaOptions();
+        configuration.GetSection("Kafka:Connections").Bind(kafkaOptions.Connections);
+        context.Services.Configure<AbpKafkaOptions>(options =>
+        {
+            foreach (var connection in options.Connections)
+            {
+                options.Connections.TryAdd(connection.Key, connection.Value);
+            }
+        });
+
+        var kafkaEventBusOptions = new AbpKafkaEventBusOptions();
+        configuration.GetSection("Kafka:EventBus").Bind(kafkaEventBusOptions);
+        context.Services.Configure<AbpKafkaEventBusOptions>(options =>
+        {
+            options.GroupId = kafkaEventBusOptions.GroupId;
+            options.TopicName = kafkaEventBusOptions.TopicName;
+            options.ConnectionName = kafkaEventBusOptions.ConnectionName;
+        });
     }
 
     private void AddAbpBackgroundJobs(ServiceConfigurationContext context)
@@ -263,43 +328,6 @@ public class XStudioHttpApiHostModule : AbpModule
             options.Lockout.MaxFailedAccessAttempts = 3;
             options.Lockout.AllowedForNewUsers = true;
         });
-    }
-
-    private async void ConfigureNacos(ServiceConfigurationContext context, IConfiguration configuration)
-    {
-        context.Services.AddNacosAspNet(configuration, "Nacos");
-        context.Services.AddNacosV2Config(configuration);
-
-        string? dataId = configuration.GetSection("Nacos:DataId").Value;//: "xstudio.json",
-        string? group = configuration.GetSection("Nacos:GroupName").Value;//: "DEFAULT_GROUP",
-        long timeoutMs = 3000;
-        //监听nacos 应用配置
-        if (dataId != null && group != null)
-        {
-            string? format = Path.GetExtension(dataId);// configuration.GetSection("Nacos:Format").Value;//: "JSON",
-            var serviceProvider = context.Services.BuildServiceProvider();
-            INacosConfigService nacosConfigService = serviceProvider.GetRequiredService<INacosConfigService>();
-            string currentConfig = await nacosConfigService.GetConfig(dataId, group, timeoutMs);
-            if (string.IsNullOrEmpty(currentConfig))
-            {
-                Log.Warning($"Nacos 配置文件 {dataId} 在组 {group} 中未找到或为空。");
-            }
-            else if(format.ToUpper() == ".JSON")
-            {
-                GlobalConfig.Default.NacosConfig = currentConfig.ToObj<GlobalNacosConfig>();
-            }
-            else if (format.ToUpper() == ".YAML" || format.ToUpper() == ".YML")
-            {
-                NacosYamlHelper helper = new NacosYamlHelper(nacosConfigService);
-                GlobalConfig.Default.NacosConfig = await helper.GetYamlConfigAsync<GlobalNacosConfig>(currentConfig);
-            }
-        }
-        //GlobalConfig.Default.NacosConfig = configuration.Get<GlobalNacosConfig>();
-        //configuration.Bind(GlobalConfig.Default.NacosConfig);
-        if (GlobalConfig.Default.NacosConfig != null)
-        {
-            context.Services.AddSingleton(GlobalConfig.Default.NacosConfig);
-        }
     }
 
     private void ConfigureNewtonsoftJson(ServiceConfigurationContext context)
