@@ -68,6 +68,8 @@ using Nacos.V2.Utils;
 using Microsoft.AspNetCore.Hosting;
 using Volo.Abp.EventBus.Kafka;
 using Volo.Abp.Kafka;
+using Microsoft.AspNetCore.DataProtection;
+using StackExchange.Redis;
 
 namespace XStudio;
 
@@ -156,6 +158,7 @@ public class XStudioHttpApiHostModule : AbpModule
 
         ConfigureNacos(context, configuration);
         ConfigureKafka(context, configuration);
+        ConfigureRedis(context, configuration);
         ConfigureAuthentication(context, configuration);
         ConfigureBundles();
         ConfigureUrls(configuration);
@@ -168,6 +171,22 @@ public class XStudioHttpApiHostModule : AbpModule
         ConfigureRateLimit(context, configuration);
         AddAbpBackgroundJobs(context);
 
+    }
+
+    /// <summary>
+    /// 配置Redis
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="configuration"></param>
+    /// <exception cref="NotImplementedException"></exception>
+    private void ConfigureRedis(ServiceConfigurationContext context, IConfiguration configuration)
+    {
+        // 配置Redis
+        context.Services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = configuration["Redis:Configuration"];
+            //options.InstanceName = configuration["Redis:InstanceName"];
+        });
     }
 
 

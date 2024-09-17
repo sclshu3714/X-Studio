@@ -62,5 +62,13 @@
             <param name="operation">The operation to apply the filter to.</param>
             <param name="context">The current operation filter context.</param>
         </member>
+        <member name="M:XStudio.XStudioHttpApiHostModule.ConfigureRedis(Volo.Abp.Modularity.ServiceConfigurationContext,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            配置Redis
+            </summary>
+            <param name="context"></param>
+            <param name="configuration"></param>
+            <exception cref="T:System.NotImplementedException"></exception>
+        </member>
     </members>
 </doc>
