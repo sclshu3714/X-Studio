@@ -70,6 +70,10 @@ using Volo.Abp.EventBus.Kafka;
 using Volo.Abp.Kafka;
 using Microsoft.AspNetCore.DataProtection;
 using StackExchange.Redis;
+using Volo.Abp.Caching;
+using Volo.Abp.Caching.StackExchangeRedis;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
+using Confluent.Kafka;
 
 namespace XStudio;
 
@@ -84,9 +88,11 @@ namespace XStudio;
     typeof(AbpAccountApplicationModule),
     typeof(AbpAccountHttpApiModule),
     typeof(AbpAspNetCoreAuthenticationOAuthModule),
-    typeof(AbpAspNetCoreSerilogModule),
+    typeof(AbpAspNetCoreSerilogModule),                 // Serilog
     typeof(AbpSwashbuckleModule),
-    typeof(AbpAspNetCoreSignalRModule)
+    typeof(AbpAspNetCoreSignalRModule),                 // SignalR
+    typeof(AbpCachingStackExchangeRedisModule),         // Redis
+    typeof(AbpEventBusKafkaModule)                      // Kafka
 )]
 public class XStudioHttpApiHostModule : AbpModule
 {
@@ -173,22 +179,6 @@ public class XStudioHttpApiHostModule : AbpModule
 
     }
 
-    /// <summary>
-    /// 配置Redis
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="configuration"></param>
-    /// <exception cref="NotImplementedException"></exception>
-    private void ConfigureRedis(ServiceConfigurationContext context, IConfiguration configuration)
-    {
-        // 配置Redis
-        context.Services.AddStackExchangeRedisCache(options =>
-        {
-            options.Configuration = configuration["Redis:Configuration"];
-            //options.InstanceName = configuration["Redis:InstanceName"];
-        });
-    }
-
 
     private async void ConfigureNacos(ServiceConfigurationContext context, IConfiguration configuration)
     {
@@ -230,14 +220,29 @@ public class XStudioHttpApiHostModule : AbpModule
 
     private void ConfigureKafka(ServiceConfigurationContext context, IConfiguration configuration)
     {
+        //配置连接
         var kafkaOptions = new AbpKafkaOptions();
         configuration.GetSection("Kafka:Connections").Bind(kafkaOptions.Connections);
         context.Services.Configure<AbpKafkaOptions>(options =>
         {
-            foreach (var connection in options.Connections)
+            foreach (var connection in kafkaOptions.Connections)
             {
                 options.Connections.TryAdd(connection.Key, connection.Value);
+                options.Connections[connection.Key].SaslUsername = connection.Value.SaslUsername;
+                options.Connections[connection.Key].SaslPassword = connection.Value.SaslPassword;
             }
+
+            options.ConfigureConsumer = config =>
+            {
+                config.GroupId = "MyGroupId";
+                config.EnableAutoCommit = false;
+            };
+
+            options.ConfigureProducer = config =>
+            {
+                config.MessageTimeoutMs = 6000;
+                config.Acks = Acks.All;
+            };
         });
 
         var kafkaEventBusOptions = new AbpKafkaEventBusOptions();
@@ -248,8 +253,54 @@ public class XStudioHttpApiHostModule : AbpModule
             options.TopicName = kafkaEventBusOptions.TopicName;
             options.ConnectionName = kafkaEventBusOptions.ConnectionName;
         });
+
+        context.Services.Configure<AbpKafkaOptions>(options =>
+        {
+            // 配置 consumer config
+            options.ConfigureConsumer = config =>
+            {
+                config.GroupId = kafkaEventBusOptions.GroupId;
+                config.EnableAutoCommit = false;
+            };
+
+            // 配置 producer config
+            options.ConfigureProducer = config =>
+            {
+                config.MessageTimeoutMs = 6000;
+                config.Acks = Acks.All;
+            };
+
+            // 配置 topic specification
+            options.ConfigureTopic = specification =>
+            {
+                specification.ReplicationFactor = 3;
+                specification.NumPartitions = 3;
+            };
+        });
     }
 
+
+    /// <summary>
+    /// 配置Redis
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="configuration"></param>
+    /// <exception cref="NotImplementedException"></exception>
+    private void ConfigureRedis(ServiceConfigurationContext context, IConfiguration configuration)
+    {
+        // 配置Redis
+        context.Services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = configuration["Redis:Configuration"];
+            //options.InstanceName = configuration["Redis:InstanceName"];
+        });
+        // 配置Redis缓存
+        //Configure<RedisCacheOptions>(options =>
+        //{
+        //    options.Configuration = context.Services.GetConfiguration()["Redis:Configuration"];
+        //    //options.InstanceName = "MyCustomRedisInstance"; // 如果需要，可以设置Redis实例名称
+        //});
+    }
     private void AddAbpBackgroundJobs(ServiceConfigurationContext context)
     {
         Configure<AbpAntiForgeryOptions>(options =>

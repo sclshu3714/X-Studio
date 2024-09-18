@@ -63,8 +63,7 @@ namespace XStudio.Helpers
         /// <param name="formatting"></param>
         /// <param name="p"></param>
         /// <returns></returns>
-        public static string? ToJson(this object? obj, Formatting formatting = Formatting.None,
-            MissingMemberHandling p = MissingMemberHandling.Error)
+        public static string? ToJson(this object obj, Formatting formatting = Formatting.None, MissingMemberHandling p = MissingMemberHandling.Error)
         {
             if (obj == null)
             {

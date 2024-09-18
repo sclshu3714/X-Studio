@@ -30,7 +30,7 @@ namespace XStudio.Controllers.V2
         /// </summary>
         /// <param name="paged"></param>
         /// <returns></returns>
-        [HttpPost("pageList")]
+        [HttpPost("redis/add")]
         public async Task<PagedResultDto<ProjectDto>> GetListAsync(PagedAndSortedResultRequestDto paged)
         {
             return  await _projectService.GetListAsync(paged);
