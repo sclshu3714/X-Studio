@@ -23,6 +23,7 @@ using Volo.Abp.Caching;
 using Microsoft.Extensions.Caching.Distributed;
 using Volo.Abp.EventBus.Distributed;
 using XStudio.Common.Kafka;
+using Volo.Abp.Uow;
 
 namespace XStudio.Controllers
 {
@@ -37,12 +38,14 @@ namespace XStudio.Controllers
         private readonly INacosConfigService _ncsvc;
         private readonly IDistributedCache<object> _distributedCache;
         private readonly IDistributedEventBus _eventBus;
-        public MyTestController(IOpenIddictApplicationManager applicationManager, 
-                                IOpenIddictScopeManager scopeManager, 
-                                INacosNamingService nnsvc, 
-                                INacosConfigService ncsvc, 
+        private KafkaConsumerEventHandler<object> _kafkaConsumerEventHandler;
+        public MyTestController(IOpenIddictApplicationManager applicationManager,
+                                IOpenIddictScopeManager scopeManager,
+                                INacosNamingService nnsvc,
+                                INacosConfigService ncsvc,
                                 IDistributedCache<object> distributedCache,
-                                IDistributedEventBus eventBus)
+                                IDistributedEventBus eventBus,
+                                IUnitOfWorkManager unitOfWorkManager)
         {
             _applicationManager = applicationManager;
             _scopeManager = scopeManager;
@@ -50,7 +53,15 @@ namespace XStudio.Controllers
             _ncsvc = ncsvc;
             _distributedCache = distributedCache;
             _eventBus = eventBus;
+            _kafkaConsumerEventHandler = new KafkaConsumerEventHandler<object>(unitOfWorkManager);
+            _kafkaConsumerEventHandler.OnHandleEventAction = async (MessagePackage<object> data) =>
+            {
+                Console.WriteLine(data?.ToJson());
+                await Task.Delay(1000);
+            };
+            _eventBus.Subscribe(_kafkaConsumerEventHandler);
         }
+
 
         [HttpPost("encrypt")]
         public IActionResult Encrypt(EncryptDto plain)
@@ -68,7 +79,7 @@ namespace XStudio.Controllers
         [HttpGet("TestAsync")]
         public async Task<ActionResult<string>> TestAsync()
         {
-            var instance = await _nnsvc.SelectOneHealthyInstance("XStudio", "wxz");
+            var instance = await _nnsvc.SelectOneHealthyInstance("XStudio", "DEFAULT_GROUP");
             if (instance == null)
             {
                 return $"没有在Nacos中发现服务 XStudio";
@@ -88,7 +99,8 @@ namespace XStudio.Controllers
                 handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
                 using (HttpClient client = new HttpClient(handler))
                 {
-                    var page = new {
+                    var page = new
+                    {
                         maxResultCount = 1,
                         skipCount = 0,
                         sorting = "id"
@@ -146,11 +158,8 @@ namespace XStudio.Controllers
         [HttpGet("getKafka")]
         public async Task<ActionResult> GetKafkaAsync(string Topic)
         {
-            KafkaConsumerEventHandler<object> handler = new Common.Kafka.KafkaConsumerEventHandler<object>();
-            handler.OnHandleEventAction = (MessagePackage<object> data) => {
-                Console.WriteLine(data?.ToJson());
-            };
-           _eventBus.Subscribe(handler);
+
+
             await Task.CompletedTask;
             return Ok("成功");
         }

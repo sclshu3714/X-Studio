@@ -74,6 +74,7 @@ using Volo.Abp.Caching;
 using Volo.Abp.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Confluent.Kafka;
+using XStudio.Helpers;
 
 namespace XStudio;
 
@@ -318,6 +319,7 @@ public class XStudioHttpApiHostModule : AbpModule
 
     private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)
     {
+        EncrypterHelper.EncryptionKey = configuration.GetSection("StringEncryption:DefaultPassPhrase").Value ?? "xstudio_encryptionkey";
         //context.Services.AddAuthentication(options =>
         //{
         //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
