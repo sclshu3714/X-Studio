@@ -9,6 +9,13 @@
             异常情况处理的中间件
             </summary>
         </member>
+        <member name="T:XStudio.Common.AutoPartitionBackgroundJobService">
+            <summary>
+            数据库分区后台任务
+            说明:
+                当前执行MySql方式,达梦数据库还没有测试
+            </summary>
+        </member>
         <member name="M:XStudio.Common.AutoPartitionBackgroundJobService.DoWork(System.Object)">
             <summary>
             每月执行一次，当数据大于50000时，分区

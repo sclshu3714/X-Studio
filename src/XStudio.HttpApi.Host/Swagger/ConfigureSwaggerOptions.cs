@@ -31,7 +31,7 @@ namespace XStudio.Swagger
             }
             options.DocInclusionPredicate((docName, description) =>
             {
-                if (description.Properties.ContainsKey(typeof(ApiVersion)))
+                if (description.Properties.ContainsKey(typeof(ApiVersion)) || docName != "v1")
                 {
                     //ApiVersion apiVersion = (ApiVersion)description.Properties[typeof(ApiVersion)];
                     return docName.Equals(description.GroupName);

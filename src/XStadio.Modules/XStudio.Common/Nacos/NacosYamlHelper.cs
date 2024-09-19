@@ -21,10 +21,11 @@ namespace XStudio.Common.Nacos
         {
             _nacosConfigService = nacosConfigService;
             _deserializer = new DeserializerBuilder()
-                .WithNamingConvention(CamelCaseNamingConvention.Instance)
+                //.WithNamingConvention(CamelCaseNamingConvention.Instance) // 启用首字母小写的方式
+                .IgnoreUnmatchedProperties() // 忽略类中不存在的属性
                 .Build();
             _serializer = new SerializerBuilder()
-                .WithNamingConvention(CamelCaseNamingConvention.Instance)
+                //.WithNamingConvention(CamelCaseNamingConvention.Instance) // 启用首字母小写的方式
                 .Build();
         }
 

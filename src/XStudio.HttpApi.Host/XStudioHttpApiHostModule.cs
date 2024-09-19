@@ -75,6 +75,7 @@ using Volo.Abp.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Confluent.Kafka;
 using XStudio.Helpers;
+using Microsoft.Extensions.Logging;
 
 namespace XStudio;
 
@@ -164,6 +165,7 @@ public class XStudioHttpApiHostModule : AbpModule
         var hostingEnvironment = context.Services.GetHostingEnvironment();
 
         ConfigureNacos(context, configuration);
+        ConfigureSerilog(context, configuration);
         ConfigureKafka(context, configuration);
         ConfigureRedis(context, configuration);
         ConfigureAuthentication(context, configuration);
@@ -179,7 +181,6 @@ public class XStudioHttpApiHostModule : AbpModule
         AddAbpBackgroundJobs(context);
 
     }
-
 
     private async void ConfigureNacos(ServiceConfigurationContext context, IConfiguration configuration)
     {
@@ -218,7 +219,17 @@ public class XStudioHttpApiHostModule : AbpModule
         }
     }
 
-
+    private void ConfigureSerilog(ServiceConfigurationContext context, IConfiguration configuration)
+    {
+        // 将 Serilog 注册到 DI 容器
+        context.Services.AddLogging(loggingBuilder =>
+        {
+            loggingBuilder.ClearProviders(); // 清除默认的日志提供程序
+            loggingBuilder.AddSerilog()
+                          .AddConfiguration(configuration)
+                          .AddConsole(); // 添加 Serilog
+        });
+    }
     private void ConfigureKafka(ServiceConfigurationContext context, IConfiguration configuration)
     {
         //配置连接
@@ -235,7 +246,7 @@ public class XStudioHttpApiHostModule : AbpModule
 
             options.ConfigureConsumer = config =>
             {
-                config.GroupId = "MyGroupId";
+                config.GroupId = "xstudio";
                 config.EnableAutoCommit = false;
             };
 
@@ -313,8 +324,8 @@ public class XStudioHttpApiHostModule : AbpModule
         {
             options.IsJobExecutionEnabled = false;
         });
-        context.Services.AddTransient<AutoPartitionBackgroundJobService>(); // 注册后台任务服务
-        context.Services.AddHostedService<AutoPartitionBackgroundJobService>(); // 注册后台任务服务
+        context.Services.AddTransient<AutoPartitionBackgroundJobService>(); // 注册后台任务服务-数据库分区任务
+        context.Services.AddHostedService<AutoPartitionBackgroundJobService>(); // 注册后台任务服务-数据库分区任务
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)
@@ -339,7 +350,6 @@ public class XStudioHttpApiHostModule : AbpModule
         //    options.RequireHttpsMetadata = configuration.GetValue<bool>("AuthServer:RequireHttpsMetadata");
         //    options.Audience = "XStudio";
         //});
-
         //context.Services.AddOpenIddict()
         //    .AddServer(options =>
         //    {
@@ -550,8 +560,8 @@ public class XStudioHttpApiHostModule : AbpModule
             app.UseDeveloperExceptionPage();
         }
 
-        //nacos 监听
         IConfiguration configuration = context.ServiceProvider.GetRequiredService<IConfiguration>();
+        //nacos 监听
         IHostApplicationLifetime appLifetime = app.ApplicationServices.GetRequiredService<IHostApplicationLifetime>();
         INacosConfigService ncsvc = app.ApplicationServices.GetRequiredService<INacosConfigService>();
         NacosConfigListener _configListen = new NacosConfigListener(appLifetime);

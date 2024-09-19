@@ -13,6 +13,11 @@ using XStudio.EntityFrameworkCore;
 
 namespace XStudio.Common
 {
+    /// <summary>
+    /// 数据库分区后台任务
+    /// 说明:
+    ///     当前执行MySql方式,达梦数据库还没有测试
+    /// </summary>
     public class AutoPartitionBackgroundJobService : IHostedService, ITransientDependency
     {
         private readonly ILogger<AutoPartitionBackgroundJobService> _logger;
