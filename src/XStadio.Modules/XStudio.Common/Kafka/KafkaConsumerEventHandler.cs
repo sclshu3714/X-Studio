@@ -15,6 +15,10 @@ namespace XStudio.Common.Kafka
     public class KafkaConsumerEventHandler<T> : IDistributedEventHandler<MessagePackage<T>>, ITransientDependency where T : class
     {
         /// <summary>
+        /// 消费到kafka消息后的回调处理事件
+        /// </summary>
+        public Action<MessagePackage<T>>? OnHandleEventAction { get; set; }
+        /// <summary>
         /// 监听到生产者发送的消息
         /// </summary>
         /// <param name="eventData"></param>
@@ -23,7 +27,7 @@ namespace XStudio.Common.Kafka
         {
             Console.WriteLine("--------> App1 has received the message: " + eventData.Value?.ToJson().TruncateWithPostfix(32));
             Console.WriteLine();
-
+            OnHandleEventAction?.Invoke(eventData);
             return Task.CompletedTask;
         }
     }

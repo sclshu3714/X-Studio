@@ -147,6 +147,9 @@ namespace XStudio.Controllers
         public async Task<ActionResult> GetKafkaAsync(string Topic)
         {
             KafkaConsumerEventHandler<object> handler = new Common.Kafka.KafkaConsumerEventHandler<object>();
+            handler.OnHandleEventAction = (MessagePackage<object> data) => {
+                Console.WriteLine(data?.ToJson());
+            };
            _eventBus.Subscribe(handler);
             await Task.CompletedTask;
             return Ok("成功");
