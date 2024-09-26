@@ -46,6 +46,17 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:XStudio.Filters.CustomExceptionFilter">
+            <summary>
+            全局异常过滤器
+            </summary>
+        </member>
+        <member name="M:XStudio.Filters.CustomExceptionFilter.OnException(Microsoft.AspNetCore.Mvc.Filters.ExceptionContext)">
+            <summary>
+            2021 -02-02 -yt
+            </summary>
+            <param name="context"></param>
+        </member>
         <member name="M:XStudio.Swagger.ConfigureSwaggerOptions.#ctor(Asp.Versioning.ApiExplorer.IApiVersionDescriptionProvider)">
             <summary>
             Initializes a new instance of the <see cref="T:XStudio.Swagger.ConfigureSwaggerOptions"/> class.

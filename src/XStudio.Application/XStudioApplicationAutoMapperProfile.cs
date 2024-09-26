@@ -20,7 +20,7 @@ public class XStudioApplicationAutoMapperProfile : Profile
         CreateMap<BuildingFloor, BuildingFloorDto>();
         CreateMap<Classroom, ClassroomDto>();
 
-        CreateMap<UpdateSchoolDto, School>();
+        CreateMap<CreateOrUpdateSchoolDto, School>();
         CreateMap<UpdateSchoolCampusDto, SchoolCampus>();
         CreateMap<UpdateSchoolBuildingDto, SchoolBuilding>();
         CreateMap<UpdateBuildingFloorDto, BuildingFloor>();

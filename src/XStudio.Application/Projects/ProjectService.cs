@@ -35,7 +35,6 @@ namespace XStudio.Projects
     [ApiController]
     [RemoteService(true)]
     [Authorize(Policy = XStudioPermissions.Projects.Default)]
-    //[AllowAnonymous]
     public class ProjectService :
     CrudAppService<
         Project, //The Book entity

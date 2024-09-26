@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using XStudio.SchoolSchedule.Rules;
 
 namespace XStudio.SchoolSchedule
 {
@@ -17,11 +18,12 @@ namespace XStudio.SchoolSchedule
         /// <summary>
         /// 教学周(从第1周开始计数)
         /// </summary>
-        public int TeachingWeek { get; set; } = 1;
+        // public int TeachingWeek { get; set; } = 1;
+
         /// <summary>
         /// 星期
         /// </summary>
-        public DayOfWeek Week { get; set; } = DayOfWeek.Monday;
+        public DayOfWeek Day { get; set; } = DayOfWeek.Monday;
 
         /// <summary>
         /// 时段
@@ -44,6 +46,11 @@ namespace XStudio.SchoolSchedule
         /// 节次名称
         /// </summary>
         public string Name { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 节次类型(早自习 正课授课 课间活动 午自习 午休 晚自习)
+        /// </summary>
+        public SectionType @Type { get; set; }
 
         /// <summary>
         /// 内容
@@ -71,5 +78,18 @@ namespace XStudio.SchoolSchedule
         /// 轮巡周：每间隔多少周轮巡1次  => 轮巡次数 n， n <= 学期周 最少一个学期上1次， 如设置为3，那么每3周上一次课，该节次内容可以排3个课程，轮巡上课
         /// </example>
         public int WeeklyInterval { get; set; } = 0;
+    }
+
+    /// <summary>
+    /// 节次类型
+    /// </summary>
+    public enum SectionType
+    {
+        MorningStudy = 0, // 早间自习  
+        RegularClass,     // 正课授课
+        BreakExercise,    // 课间活动
+        AfternoonStudy,   // 午间自习
+        NoonBreak,        // 午休时段
+        EveningStudy,     // 晚间自习
     }
 }

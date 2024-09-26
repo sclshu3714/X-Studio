@@ -27,10 +27,10 @@ namespace XStudio.Projects
             get
             {
                 var typeDictionary = new Dictionary<int, string>();
-                foreach (ProjectType type in Enum.GetValues(typeof(ProjectType)))
-                {
-                    typeDictionary.Add((int)type, type.ToString());
-                }
+                //foreach (ProjectType type in Enum.GetValues(typeof(ProjectType)))
+                //{
+                //    typeDictionary.Add((int)type, type.ToString());
+                //}
                 return typeDictionary;
             }
         }

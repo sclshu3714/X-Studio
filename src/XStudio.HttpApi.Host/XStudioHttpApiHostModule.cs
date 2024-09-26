@@ -91,7 +91,7 @@ namespace XStudio;
     typeof(AbpAccountHttpApiModule),
     typeof(AbpAspNetCoreAuthenticationOAuthModule),
     typeof(AbpAspNetCoreSerilogModule),                 // Serilog
-    typeof(AbpSwashbuckleModule),
+    typeof(AbpSwashbuckleModule),                       // Swashbuckle
     typeof(AbpAspNetCoreSignalRModule),                 // SignalR
     typeof(AbpCachingStackExchangeRedisModule),         // Redis
     typeof(AbpEventBusKafkaModule)                      // Kafka
@@ -123,6 +123,9 @@ public class XStudioHttpApiHostModule : AbpModule
             // 设置 token 过期时间为 24 小时
             builder.SetAccessTokenLifetime(TimeSpan.FromHours(24));
         });
+
+        //Configuration.Auditing.IsEnabledForAnonymousUsers = true;
+        //Configuration.Auditing.DeleteIsSoftDelete = true; // 启用软删除
     }
 
     private void PreConfigureEnvironment(IConfiguration configuration)
@@ -165,7 +168,6 @@ public class XStudioHttpApiHostModule : AbpModule
         var hostingEnvironment = context.Services.GetHostingEnvironment();
 
         ConfigureNacos(context, configuration);
-        ConfigureSerilog(context, configuration);
         ConfigureKafka(context, configuration);
         ConfigureRedis(context, configuration);
         ConfigureAuthentication(context, configuration);
@@ -179,7 +181,6 @@ public class XStudioHttpApiHostModule : AbpModule
         ConfigureNewtonsoftJson(context);
         ConfigureRateLimit(context, configuration);
         AddAbpBackgroundJobs(context);
-
     }
 
     private async void ConfigureNacos(ServiceConfigurationContext context, IConfiguration configuration)
@@ -187,13 +188,13 @@ public class XStudioHttpApiHostModule : AbpModule
         context.Services.AddNacosAspNet(configuration, "Nacos");
         context.Services.AddNacosV2Config(configuration);
 
-        string? dataId = configuration.GetSection("Nacos:DataId").Value;//: "xstudio.json",
+        string? dataId = configuration.GetSection("Nacos:DataId").Value;//: "xstudio.json", "xstudio.yaml",
         string? group = configuration.GetSection("Nacos:GroupName").Value;//: "DEFAULT_GROUP",
         long timeoutMs = 3000;
         //监听nacos 应用配置
         if (dataId != null && group != null)
         {
-            string? format = Path.GetExtension(dataId);// configuration.GetSection("Nacos:Format").Value;//: "JSON",
+            string? format = Path.GetExtension(dataId);// configuration.GetSection("Nacos:Format").Value;//: "JSON","YAML", "YML"
             var serviceProvider = context.Services.BuildServiceProvider();
             INacosConfigService nacosConfigService = serviceProvider.GetRequiredService<INacosConfigService>();
             string currentConfig = await nacosConfigService.GetConfig(dataId, group, timeoutMs);
@@ -306,7 +307,7 @@ public class XStudioHttpApiHostModule : AbpModule
             options.Configuration = configuration["Redis:Configuration"];
             //options.InstanceName = configuration["Redis:InstanceName"];
         });
-        // 配置Redis缓存
+        //// 配置Redis缓存
         //Configure<RedisCacheOptions>(options =>
         //{
         //    options.Configuration = context.Services.GetConfiguration()["Redis:Configuration"];
@@ -379,12 +380,18 @@ public class XStudioHttpApiHostModule : AbpModule
         {
             options.IsDynamicClaimsEnabled = true;
         });
-
+        //注册自定义权限过滤器
         context.Services.AddControllersWithViews(Options =>
         {
             Options.Filters.Add<AbpAuthorizeFilter>();
+            Options.Filters.Add<CustomExceptionFilter>(); // 注册自定义异常过滤器
         });
 
+        ////注册自定义异常过滤器
+        //context.Services.AddControllers(options =>
+        //{
+        //    options.Filters.Add<CustomExceptionFilter>(); // 注册自定义异常过滤器
+        //});
         //默认的
         //context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
         //context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
@@ -586,7 +593,7 @@ public class XStudioHttpApiHostModule : AbpModule
         app.UseStaticFiles();
         app.UseRouting();
         app.UseCors();
-        app.UseMiddleware<AbpExceptionMiddleware>(); //ExceptionMiddleware 加入管道
+        app.UseMiddleware<AbpExceptionMiddleware>(); //ExceptionMiddleware 加入管道 异常情况处理的中间件
         app.UseMiddleware<IpRateLimitMiddleware>();
         //app.UseMiddleware<AbpTokenValidationMiddleware>(); // token验证
         //app.UseJwtTokenMiddleware();

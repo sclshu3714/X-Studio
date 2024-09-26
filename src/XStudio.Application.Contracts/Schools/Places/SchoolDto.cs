@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using XStudio.Common;
 
@@ -11,7 +12,7 @@ namespace XStudio.Schools.Places
     /// <summary>
     /// 学校
     /// </summary>
-    public class SchoolDto : AuditedEntityDto<Guid>
+    public class SchoolDto : AuditedEntityDto<Guid>, ISoftDelete
     {
         public SchoolDto() { }
 
@@ -51,8 +52,14 @@ namespace XStudio.Schools.Places
         public virtual ICollection<SchoolCampusDto> Campuses { get; set; } = new List<SchoolCampusDto>();
 
         /// <summary>
+        /// 有效状态类型
         /// "数据有效标识：A 正常 | E 异常 | S 停用 | D 删除
         /// </summary>
         public ValidStateType ValidState { get; set; } = ValidStateType.A;
+
+        /// <summary>
+        /// 软删除
+        /// </summary>
+        public bool IsDeleted => ValidState == ValidStateType.D;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,7 @@ namespace XStudio.Schools
         SchoolDto, //Used to show books
         Guid, //Primary key of the book entity
         PagedAndSortedResultRequestDto, //Used for paging/sorting
-        UpdateSchoolDto>, //Used to create/update a book
+        CreateOrUpdateSchoolDto>, //Used to create/update a book
         ISchoolService //implement the IBookAppService
     {
         public SchoolService(IRepository<School, Guid> repository) 
@@ -35,15 +36,33 @@ namespace XStudio.Schools
         }
 
         [HttpPost("Add")]
-        public override Task<SchoolDto> CreateAsync(UpdateSchoolDto input)
+        public override Task<SchoolDto> CreateAsync(CreateOrUpdateSchoolDto input)
         {
             return base.CreateAsync(input);
         }
 
-        [HttpDelete("delete")]
+        [HttpPost("Adds")]
+        public async Task<List<SchoolDto>> InsertManyAsync(List<CreateOrUpdateSchoolDto> inputs)
+        {
+            var entities = ObjectMapper.Map<List<CreateOrUpdateSchoolDto> ,List<School>>(inputs);
+            await Repository.InsertManyAsync(entities);
+            return ObjectMapper.Map<List<School>, List<SchoolDto>>(entities);
+        }
+
+        [HttpDelete("delete/{id}")]
         public override Task DeleteAsync(Guid id)
         {
             return base.DeleteAsync(id);
+        }
+
+        [HttpDelete("deletes")]
+        public async Task DeleteManyAsync(List<Guid> ids)
+        {
+           List<School> schools = await (await Repository.GetQueryableAsync())
+                                        .Where(x => ids.Contains(x.Id))
+                                        .ToListAsync();
+            schools.ForEach(s => { s.ValidState = Common.ValidStateType.D; });
+            await Repository.DeleteManyAsync(schools);
         }
 
         [HttpGet("{id}")]
@@ -59,7 +78,7 @@ namespace XStudio.Schools
         }
 
         [HttpPut("update")]
-        public override Task<SchoolDto> UpdateAsync(Guid id, UpdateSchoolDto input)
+        public override Task<SchoolDto> UpdateAsync(Guid id, CreateOrUpdateSchoolDto input)
         {
             return base.UpdateAsync(id, input);
         }

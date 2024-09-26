@@ -5,16 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
-using XStudio.Projects;
 
 namespace XStudio.Schools.Places
 {
-    public interface ISchoolService : ICrudAppService< //Defines CRUD methods
-        SchoolDto, //Used to show books
+    public interface ISchoolCampusService : ICrudAppService< //Defines CRUD methods
+        SchoolCampusDto, //Used to show books
         Guid, //Primary key of the book entity
         PagedAndSortedResultRequestDto, //Used for paging/sorting
-        CreateOrUpdateSchoolDto> //Used to create/update a book
+        UpdateSchoolCampusDto> //Used to create/update a book
     {
-        
+
     }
 }

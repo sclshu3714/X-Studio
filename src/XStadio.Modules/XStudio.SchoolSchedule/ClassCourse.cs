@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using XStudio.SchoolSchedule.Rules;
 
 namespace XStudio.SchoolSchedule
 {
     /// <summary>
     /// 课程
     /// </summary>
-    public class ClassCourse
+    public class ClassCourse : IRule
     {
         /// <summary>
         /// 课程编号，主要用于快速识别和查询
@@ -56,5 +57,7 @@ namespace XStudio.SchoolSchedule
         /// 其他教师(副老师)
         /// </summary>
         public Dictionary<string, string> OtherTeachers { get; set; } = new Dictionary<string, string>();
+        public int Priority { get; set; } = 0;
+        public RuleMode @Mode { get; set; } = RuleMode.Course;
     }
 }

@@ -9,11 +9,11 @@ using XStudio.Common;
 namespace XStudio.Schools.Places
 {
     /// <summary>
-    /// 学校
+    /// 更新学校
     /// </summary>
-    public class UpdateSchoolDto
+    public class CreateOrUpdateSchoolDto
     {
-        public UpdateSchoolDto() { }
+        public CreateOrUpdateSchoolDto() { }
 
         /// <summary>
         /// 学校编号

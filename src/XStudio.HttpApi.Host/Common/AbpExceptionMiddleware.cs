@@ -41,7 +41,7 @@ namespace XStudio.Common
         {
             context.Response.StatusCode = 400;
             context.Response.ContentType = "text/json;charset=utf-8;";
-            string? error = JsonHelper.ToJson(e.StackTrace);
+            string? error = e.StackTrace?.ToJson();
             string info = $@"StatusCode:{context.Response.StatusCode}";
             string? remoteIpAddr = context.Connection.RemoteIpAddress?.ToString();
             info = $@"{info}->Body: {error}";

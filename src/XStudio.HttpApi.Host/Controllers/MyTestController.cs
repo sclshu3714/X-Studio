@@ -38,7 +38,7 @@ namespace XStudio.Controllers
         private readonly INacosConfigService _ncsvc;
         private readonly IDistributedCache<object> _distributedCache;
         private readonly IDistributedEventBus _eventBus;
-        private KafkaConsumerEventHandler<object> _kafkaConsumerEventHandler;
+        private KafkaConsumerEventHandler<object, object> _kafkaConsumerEventHandler;
         public MyTestController(IOpenIddictApplicationManager applicationManager,
                                 IOpenIddictScopeManager scopeManager,
                                 INacosNamingService nnsvc,
@@ -53,11 +53,12 @@ namespace XStudio.Controllers
             _ncsvc = ncsvc;
             _distributedCache = distributedCache;
             _eventBus = eventBus;
-            _kafkaConsumerEventHandler = new KafkaConsumerEventHandler<object>(unitOfWorkManager);
+            _kafkaConsumerEventHandler = new KafkaConsumerEventHandler<object, object>(unitOfWorkManager);
             _kafkaConsumerEventHandler.OnHandleEventAction = async (MessagePackage<object> data) =>
             {
                 Console.WriteLine(data?.ToJson());
                 await Task.Delay(1000);
+                return "消息处理完成";
             };
             _eventBus.Subscribe(_kafkaConsumerEventHandler);
         }
