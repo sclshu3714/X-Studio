@@ -253,3 +253,4 @@ paket-files/
 
 # App
 src/XStudio.App.ConsoleApp/Logs/logs.txt
+/src/XStudio.HttpApi.Host/Logs
