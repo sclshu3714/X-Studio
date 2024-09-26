@@ -1,0 +1,94 @@
+App:
+  Environment: Development
+  SelfUrl: 'https://localhost:44345'
+  ClientUrl: 'http://localhost:44345'
+  CorsOrigins: 'https://*.XStudio.com,https://localhost:44345,http://localhost:4200,https://localhost:44355'
+  RedirectAllowedUrls: 'https://localhost:44345,https://localhost:4200'
+Databases:
+  - ConnectionName: Default
+    DbMode: MySql
+    Host: 172.30.103.227
+    Port: 3306
+    DatabaseName: XStudio
+    UserId: root
+    Password: wxz@123456
+    Metadata:
+      OldGuids: true
+      SslMode: none
+      Allow User Variables: true
+      Charset: utf8
+  - ConnectionName: Dmdbms
+    DbMode: Dmdbms
+    Host: 172.30.103.227
+    Port: 5236
+    DatabaseName: XStudio
+    UserId: SYSDBA
+    Password: wxz@SYSDBA001
+    Metadata:
+      OldGuids: true
+      SslMode: none
+      Allow User Variables: true
+      Charset: utf8
+# Serilog:
+#   Using:
+#     - Serilog.Sinks.File
+#       Serilog.Expressions
+#   WriteTo:
+#     - Name: File
+#       Args:
+#         path: 'Logs//{Date}.txt'
+#         # 限制在最低级别 多文件输出日志信息时更方便使用
+#         # RestrictedToMinimumLevel: Warning
+#         outputTemplate: '[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz}] [{Level}] {Message}{NewLine}'
+#         rollingInterval: Day
+#         # 保留文件计数限制，默认保留5个文件
+#         retainedFileCountLimit: 5 
+#         # 文件大小限制字节数，每个文件大小10MB
+#         fileSizeLimitBytes: 10485760
+#     - Name: Console
+#   MinimumLevel:
+#     Default: Debug
+#     Override:
+#       Microsoft: Information
+#       System: Information
+Kafka:
+  Connections:
+    Default:
+      BootstrapServers: '172.30.103.227:9092'
+      SaslUsername: null
+      SaslPassword: null
+    SecondConnection:
+      BootstrapServers: '172.30.103.227:9092'
+  EventBus:
+    GroupId: xstudio
+    TopicName: IMSG_XSTUDIO_TEST
+    ConnectionName: Default
+Redis:
+  IsEnabled: 'true'
+  InstanceName: 'xstudio:'
+  Configuration: '172.30.103.227:6379,password=wxz@123456'
+IpRateLimiting:
+  EnableEndpointRateLimiting: true
+  StackBlockedRequests: false
+  RealIpHeader: X-Real-IP
+  ClientIdHeader: X-ClientId
+  HttpStatusCode: 429
+  GeneralRules:
+    - Endpoint: '*'
+      Period: 1s
+      Limit: 3
+  ClientWhitelist: []
+  EndpointWhitelist: []
+  IpWhitelist:
+    - 127.0.0.1
+    - 10.10.0.60
+    - 10.10.1.15
+    - 192.168.137.1
+IpRateLimitPolicies:
+  PolicyEntries:
+    - Endpoint: api/endpoint1
+      Period: 1s
+      Limit: 5
+    - Endpoint: api/endpoint2
+      Period: 1h
+      Limit: 100

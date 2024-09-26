@@ -111,21 +111,6 @@ public class XStudioHttpApiHostModule : AbpModule
                 options.UseAspNetCore();
             });
         });
-
-        PreConfigure<OpenIddictServerBuilder>(builder =>
-        {
-            //添加自定义MyTokenExtensionGrantConsts
-            builder.Configure(openIddictServerOptions =>
-            {
-                openIddictServerOptions.GrantTypes.Add(MyTokenExtensionGrantConsts.GrantType);
-            });
-
-            // 设置 token 过期时间为 24 小时
-            builder.SetAccessTokenLifetime(TimeSpan.FromHours(24));
-        });
-
-        //Configuration.Auditing.IsEnabledForAnonymousUsers = true;
-        //Configuration.Auditing.DeleteIsSoftDelete = true; // 启用软删除
     }
 
     private void PreConfigureEnvironment(IConfiguration configuration)
@@ -168,8 +153,8 @@ public class XStudioHttpApiHostModule : AbpModule
         var hostingEnvironment = context.Services.GetHostingEnvironment();
 
         ConfigureNacos(context, configuration);
-        ConfigureKafka(context, configuration);
-        ConfigureRedis(context, configuration);
+        //ConfigureKafka(context, configuration);
+        //ConfigureRedis(context, configuration);
         ConfigureAuthentication(context, configuration);
         ConfigureBundles();
         ConfigureUrls(configuration);
@@ -183,6 +168,7 @@ public class XStudioHttpApiHostModule : AbpModule
         AddAbpBackgroundJobs(context);
     }
 
+    #region 配置设置
     private async void ConfigureNacos(ServiceConfigurationContext context, IConfiguration configuration)
     {
         context.Services.AddNacosAspNet(configuration, "Nacos");
@@ -195,28 +181,29 @@ public class XStudioHttpApiHostModule : AbpModule
         if (dataId != null && group != null)
         {
             string? format = Path.GetExtension(dataId);// configuration.GetSection("Nacos:Format").Value;//: "JSON","YAML", "YML"
-            var serviceProvider = context.Services.BuildServiceProvider();
-            INacosConfigService nacosConfigService = serviceProvider.GetRequiredService<INacosConfigService>();
-            string currentConfig = await nacosConfigService.GetConfig(dataId, group, timeoutMs);
-            if (string.IsNullOrEmpty(currentConfig))
+            using (var serviceProvider = context.Services.BuildServiceProvider())
             {
-                Log.Warning($"Nacos 配置文件 {dataId} 在组 {group} 中未找到或为空。");
+                INacosConfigService nacosConfigService = serviceProvider.GetRequiredService<INacosConfigService>();
+                string currentConfig = await nacosConfigService.GetConfig(dataId, group, timeoutMs);
+                if (string.IsNullOrEmpty(currentConfig))
+                {
+                    Log.Warning($"Nacos 配置文件 {dataId} 在组 {group} 中未找到或为空。");
+                }
+                else if (format.ToUpper() == ".JSON")
+                {
+                    GlobalConfig.Default.NacosConfig = currentConfig.ToObj<GlobalNacosConfig>();
+                }
+                else if (format.ToUpper() == ".YAML" || format.ToUpper() == ".YML")
+                {
+                    NacosYamlHelper helper = new NacosYamlHelper(nacosConfigService);
+                    GlobalConfig.Default.NacosConfig = await helper.GetYamlConfigAsync<GlobalNacosConfig>(currentConfig);
+                }
+
+                if (GlobalConfig.Default.NacosConfig != null)
+                {
+                    context.Services.AddSingleton(GlobalConfig.Default.NacosConfig);
+                }
             }
-            else if (format.ToUpper() == ".JSON")
-            {
-                GlobalConfig.Default.NacosConfig = currentConfig.ToObj<GlobalNacosConfig>();
-            }
-            else if (format.ToUpper() == ".YAML" || format.ToUpper() == ".YML")
-            {
-                NacosYamlHelper helper = new NacosYamlHelper(nacosConfigService);
-                GlobalConfig.Default.NacosConfig = await helper.GetYamlConfigAsync<GlobalNacosConfig>(currentConfig);
-            }
-        }
-        //GlobalConfig.Default.NacosConfig = configuration.Get<GlobalNacosConfig>();
-        //configuration.Bind(GlobalConfig.Default.NacosConfig);
-        if (GlobalConfig.Default.NacosConfig != null)
-        {
-            context.Services.AddSingleton(GlobalConfig.Default.NacosConfig);
         }
     }
 
@@ -236,6 +223,8 @@ public class XStudioHttpApiHostModule : AbpModule
         //配置连接
         var kafkaOptions = new AbpKafkaOptions();
         configuration.GetSection("Kafka:Connections").Bind(kafkaOptions.Connections);
+        var kafkaEventBusOptions = new AbpKafkaEventBusOptions();
+        configuration.GetSection("Kafka:EventBus").Bind(kafkaEventBusOptions);
         context.Services.Configure<AbpKafkaOptions>(options =>
         {
             foreach (var connection in kafkaOptions.Connections)
@@ -245,30 +234,6 @@ public class XStudioHttpApiHostModule : AbpModule
                 options.Connections[connection.Key].SaslPassword = connection.Value.SaslPassword;
             }
 
-            options.ConfigureConsumer = config =>
-            {
-                config.GroupId = "xstudio";
-                config.EnableAutoCommit = false;
-            };
-
-            options.ConfigureProducer = config =>
-            {
-                config.MessageTimeoutMs = 6000;
-                config.Acks = Acks.All;
-            };
-        });
-
-        var kafkaEventBusOptions = new AbpKafkaEventBusOptions();
-        configuration.GetSection("Kafka:EventBus").Bind(kafkaEventBusOptions);
-        context.Services.Configure<AbpKafkaEventBusOptions>(options =>
-        {
-            options.GroupId = kafkaEventBusOptions.GroupId;
-            options.TopicName = kafkaEventBusOptions.TopicName;
-            options.ConnectionName = kafkaEventBusOptions.ConnectionName;
-        });
-
-        context.Services.Configure<AbpKafkaOptions>(options =>
-        {
             // 配置 consumer config
             options.ConfigureConsumer = config =>
             {
@@ -290,8 +255,14 @@ public class XStudioHttpApiHostModule : AbpModule
                 specification.NumPartitions = 3;
             };
         });
-    }
 
+        context.Services.Configure<AbpKafkaEventBusOptions>(options =>
+        {
+            options.GroupId = kafkaEventBusOptions.GroupId;
+            options.TopicName = kafkaEventBusOptions.TopicName;
+            options.ConnectionName = kafkaEventBusOptions.ConnectionName;
+        });
+    }
 
     /// <summary>
     /// 配置Redis
@@ -307,20 +278,9 @@ public class XStudioHttpApiHostModule : AbpModule
             options.Configuration = configuration["Redis:Configuration"];
             //options.InstanceName = configuration["Redis:InstanceName"];
         });
-        //// 配置Redis缓存
-        //Configure<RedisCacheOptions>(options =>
-        //{
-        //    options.Configuration = context.Services.GetConfiguration()["Redis:Configuration"];
-        //    //options.InstanceName = "MyCustomRedisInstance"; // 如果需要，可以设置Redis实例名称
-        //});
     }
     private void AddAbpBackgroundJobs(ServiceConfigurationContext context)
     {
-        Configure<AbpAntiForgeryOptions>(options =>
-        {
-            // TODO wxz
-            options.AutoValidate = false; // 禁用自动验证
-        });
         Configure<AbpBackgroundJobOptions>(options =>
         {
             options.IsJobExecutionEnabled = false;
@@ -332,49 +292,6 @@ public class XStudioHttpApiHostModule : AbpModule
     private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)
     {
         EncrypterHelper.EncryptionKey = configuration.GetSection("StringEncryption:DefaultPassPhrase").Value ?? "xstudio_encryptionkey";
-        //context.Services.AddAuthentication(options =>
-        //{
-        //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        //});
-        //.AddFacebook(facebook =>
-        //{
-        //    facebook.AppId = "...";
-        //    facebook.AppSecret = "...";
-        //    facebook.Scope.Add("email");
-        //    facebook.Scope.Add("public_profile");
-        //    facebook.Scope.Add("XStudio");
-        //})
-        //.AddJwtBearer(options =>
-        //{
-        //    options.Authority = configuration["AuthServer:Authority"];
-        //    options.RequireHttpsMetadata = configuration.GetValue<bool>("AuthServer:RequireHttpsMetadata");
-        //    options.Audience = "XStudio";
-        //});
-        //context.Services.AddOpenIddict()
-        //    .AddServer(options =>
-        //    {
-        //        options.SetAccessTokenLifetime(TimeSpan.FromHours(24)); // 设置 token 过期时间为 24 小时
-        //        options.AllowAuthorizationCodeFlow()
-        //               .RequireProofKeyForCodeExchange()
-        //               .AllowRefreshTokenFlow();
-
-        //        options.SetTokenEndpointUris("/connect/token")
-        //               .SetAuthorizationEndpointUris("/connect/authorize");
-
-        //        options.AddDevelopmentEncryptionCertificate()
-        //               .AddDevelopmentSigningCertificate();
-
-        //        options.UseAspNetCore()
-        //               .EnableTokenEndpointPassthrough()
-        //               .EnableAuthorizationEndpointPassthrough();
-        //    })
-        //    .AddValidation(options =>
-        //    {
-        //        options.UseLocalServer();
-        //        options.UseAspNetCore();
-        //    });
-
         context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
         context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
         {
@@ -387,11 +304,13 @@ public class XStudioHttpApiHostModule : AbpModule
             Options.Filters.Add<CustomExceptionFilter>(); // 注册自定义异常过滤器
         });
 
-        ////注册自定义异常过滤器
-        //context.Services.AddControllers(options =>
-        //{
-        //    options.Filters.Add<CustomExceptionFilter>(); // 注册自定义异常过滤器
-        //});
+        // 禁用自动验证
+        Configure<AbpAntiForgeryOptions>(options =>
+        {
+            // TODO wxz
+            options.AutoValidate = false; // 禁用自动验证
+        });
+
         //默认的
         //context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
         //context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
@@ -459,8 +378,6 @@ public class XStudioHttpApiHostModule : AbpModule
             options.ChangeControllerModelApiExplorerGroupName = false;
         });
     }
-
-
 
     private void ConfigureBundles()
     {
@@ -543,11 +460,10 @@ public class XStudioHttpApiHostModule : AbpModule
         {
             options.AddDefaultPolicy(builder =>
             {
-                builder
-                    .WithOrigins(configuration["App:CorsOrigins"]?
-                        .Split(",", StringSplitOptions.RemoveEmptyEntries)
-                        .Select(o => o.RemovePostFix("/"))
-                        .ToArray() ?? Array.Empty<string>())
+                builder.WithOrigins(configuration["App:CorsOrigins"]?
+                       .Split(",", StringSplitOptions.RemoveEmptyEntries)
+                       .Select(o => o.RemovePostFix("/"))
+                       .ToArray() ?? Array.Empty<string>())
                     .WithAbpExposedHeaders()
                     .SetIsOriginAllowedToAllowWildcardSubdomains()
                     .AllowAnyHeader()
@@ -556,6 +472,8 @@ public class XStudioHttpApiHostModule : AbpModule
             });
         });
     }
+
+    #endregion
 
     public override void OnApplicationInitialization(ApplicationInitializationContext context)
     {

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Polly;
 using Serilog;
 using Serilog.Events;
 
@@ -37,18 +38,35 @@ public class Program
 
         try
         {
+            //var builder = WebApplication.CreateBuilder(args);
+
+            //Log.Logger = new LoggerConfiguration()
+            //    .ReadFrom.Configuration(builder.Configuration) // 从配置中读取
+            //    .Enrich.FromLogContext()
+            //    .CreateLogger();
+
+            //builder.Host.AddAppSettingsSecretsJson()
+            //    .UseAutofac()
+            //    .UseNacosConfig("Nacos", Nacos.YamlParser.YamlConfigurationStringParser.Instance) // 不使用Nacos.YamlParser.YamlConfigurationStringParser.Instance，默认将解析json格式
+            //    .UseSerilog();
+            //Log.Information("Starting XStudio.HttpApi.Host.");
+            //await builder.AddApplicationAsync<XStudioHttpApiHostModule>();
+            //var app = builder.Build();
+            //await app.InitializeApplicationAsync();
+            //await app.RunAsync();
+
+
+
             var builder = WebApplication.CreateBuilder(args);
-
-            Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(builder.Configuration) // 从配置中读取
-                .Enrich.FromLogContext()
-                .CreateLogger();
-
             builder.Host.AddAppSettingsSecretsJson()
                 .UseAutofac()
                 .UseNacosConfig("Nacos", Nacos.YamlParser.YamlConfigurationStringParser.Instance) // 不使用Nacos.YamlParser.YamlConfigurationStringParser.Instance，默认将解析json格式
-                .UseSerilog();
-            Log.Information("Starting XStudio.HttpApi.Host.");
+                .UseSerilog((context, logger) => {
+                    logger.ReadFrom.Configuration(context.Configuration)
+                                   .Enrich
+                                   .FromLogContext();
+                    Log.Information("Starting XStudio Serilog.");
+                });
             await builder.AddApplicationAsync<XStudioHttpApiHostModule>();
             var app = builder.Build();
             await app.InitializeApplicationAsync();

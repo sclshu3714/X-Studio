@@ -7,8 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Prism.DryIoc;
 using Prism.Ioc;
-using Prism.Regions;
-using Prism.Services.Dialogs;
 using Serilog;
 using Serilog.Events;
 using Serilog.Settings.Configuration;
@@ -29,6 +27,9 @@ using System.Runtime;
 using System.Threading;
 using XStudio.App.Models.Data;
 using XStudio.App.Helper;
+using Prism.Dialogs;
+using Prism.Navigation.Regions;
+using Prism.Container.DryIoc;
 
 namespace XStudio.App;
 
@@ -160,7 +161,7 @@ public partial class App : PrismApplication
     protected override void ConfigureRegionAdapterMappings(RegionAdapterMappings regionAdapterMappings)
     {
         base.ConfigureRegionAdapterMappings(regionAdapterMappings);
-        regionAdapterMappings.ConfigurationAdapters(Container);
+        //regionAdapterMappings..ConfigurationAdapters(Container);
     }
 
     private static bool SplashScreenInitialized()
