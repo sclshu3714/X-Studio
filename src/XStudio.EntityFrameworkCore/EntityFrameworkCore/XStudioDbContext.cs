@@ -68,7 +68,6 @@ public class XStudioDbContext :
     public DbSet<Project> Projects { get; set; }
     #endregion
 
-
     #region 学校场所
     public DbSet<School> Schools { get; set; }
     public DbSet<SchoolCampus> SchoolCampuses { get; set; }
@@ -86,7 +85,7 @@ public class XStudioDbContext :
     public XStudioDbContext(DbContextOptions<XStudioDbContext> options)
         : base(options)
     {
-
+       
     }
 
     protected override void OnModelCreating(ModelBuilder builder)

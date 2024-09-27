@@ -29,4 +29,8 @@
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.8" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\XStadio.Modules\XStudio.Common\XStudio.Common.csproj" />
+  </ItemGroup>
+
 </Project>

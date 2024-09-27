@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.Users;
+using XStudio.Common.Nacos;
+using XStudio.Common;
 
 namespace XStudio.EntityFrameworkCore
 {
@@ -32,30 +34,37 @@ namespace XStudio.EntityFrameworkCore
 
             var configuration = BuildConfiguration();
 
-            var DBMode = configuration["App:DBMode"]; // 数据库模式：MYSQL;DM;
-            switch (DBMode)
+            if (GlobalConfig.Default.NacosConfig == null || GlobalConfig.Default.NacosConfig.Databases == null ||
+                !GlobalConfig.Default.NacosConfig.Databases.Any())
             {
-                case "DM":
-                    string? myDmdbms = configuration.GetConnectionString("Dmdbms");
-                    if (!string.IsNullOrWhiteSpace(myDmdbms))
+                configuration.Bind(GlobalConfig.Default.NacosConfig);
+            }
+            DatabaseInfo? info = GlobalConfig.Default.NacosConfig?.Databases?.Find(db => db.ConnectionName == "Default");
+            if (info == null)
+            {
+                throw new InvalidOperationException($"数据库连接失败，没有检测到连接地址");
+            }
+            switch (info.DbMode)
+            {
+                case DatabaseType.Dmdbms:
+                    if (!string.IsNullOrWhiteSpace(info.ConnectionString))
                     {
                         var builder = new DbContextOptionsBuilder<XStudioDbContext>()
-                            .UseDm(myDmdbms, (DmDbContextOptionsBuilder opt) => { });
+                            .UseDm(info.ConnectionString, (DmDbContextOptionsBuilder opt) => { });
 
                         return new XStudioDbContext(builder.Options);
                     }
                     break;
                 default:
-                    string? mySql = configuration.GetConnectionString("Default");
-                    if (!string.IsNullOrWhiteSpace(mySql))
+                    if (!string.IsNullOrWhiteSpace(info.ConnectionString))
                     {
                         var builder = new DbContextOptionsBuilder<XStudioDbContext>()
-                            .UseMySql(mySql, MySqlServerVersion.LatestSupportedServerVersion);
+                            .UseMySql(info.ConnectionString, MySqlServerVersion.LatestSupportedServerVersion);
                         return new XStudioDbContext(builder.Options);
                     }
                     break;
             }
-            throw new InvalidOperationException($"数据库连接失败，{DBMode} 模式下，没有检测到连接地址");
+            throw new InvalidOperationException($"数据库连接失败，{info.DbMode} 模式下，没有检测到连接地址");
         }
 
         public async Task<XStudioDbContext> GetDbContextAsync()
@@ -64,30 +73,38 @@ namespace XStudio.EntityFrameworkCore
 
             var configuration = BuildConfiguration();
 
-            var DBMode = configuration["App:DBMode"]; // 数据库模式：MYSQL;DM;
-            switch (DBMode)
+            if (GlobalConfig.Default.NacosConfig == null || GlobalConfig.Default.NacosConfig.Databases == null ||
+                !GlobalConfig.Default.NacosConfig.Databases.Any())
             {
-                case "DM":
-                    string? myDmdbms = configuration.GetConnectionString("Dmdbms");
-                    if (!string.IsNullOrWhiteSpace(myDmdbms))
+                configuration.Bind(GlobalConfig.Default.NacosConfig);
+            }
+            DatabaseInfo? info = GlobalConfig.Default.NacosConfig?.Databases?.Find(db => db.ConnectionName == "Default");
+            if (info == null)
+            {
+                throw new InvalidOperationException($"数据库连接失败，没有检测到连接地址");
+            }
+            switch (info.DbMode)
+            {
+                case DatabaseType.Dmdbms:
+                    if (!string.IsNullOrWhiteSpace(info.ConnectionString))
                     {
                         var builder = new DbContextOptionsBuilder<XStudioDbContext>()
-                            .UseDm(myDmdbms, (DmDbContextOptionsBuilder opt) => { });
+                            .UseDm(info.ConnectionString, (DmDbContextOptionsBuilder opt) => { });
 
                         return new XStudioDbContext(builder.Options);
                     }
                     break;
                 default:
-                    string? mySql = configuration.GetConnectionString("Default");
-                    if (!string.IsNullOrWhiteSpace(mySql))
+                    if (!string.IsNullOrWhiteSpace(info.ConnectionString))
                     {
                         var builder = new DbContextOptionsBuilder<XStudioDbContext>()
-                            .UseMySql(mySql, MySqlServerVersion.LatestSupportedServerVersion);
+                            .UseMySql(info.ConnectionString, MySqlServerVersion.LatestSupportedServerVersion);
                         return new XStudioDbContext(builder.Options);
                     }
                     break;
             }
-            throw new InvalidOperationException($"数据库连接失败，{DBMode} 模式下，没有检测到连接地址");
+            await Task.CompletedTask;
+            throw new InvalidOperationException($"数据库连接失败，{info.DbMode} 模式下，没有检测到连接地址");
         }
 
         private static IConfigurationRoot BuildConfiguration()

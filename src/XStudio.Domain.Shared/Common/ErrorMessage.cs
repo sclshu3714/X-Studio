@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using static OpenIddict.Abstractions.OpenIddictExceptions;
 using System.Xml.Schema;
+using Volo.Abp.Authorization;
 
 namespace XStudio.Common
 {
@@ -45,7 +46,6 @@ namespace XStudio.Common
                 { typeof(InvalidEnumArgumentException), "枚举值无效" },
                 //{ typeof(InvalidOperationAttemptedException), "操作尝试无效" },
                 //{ typeof(InvalidProtocolException), "协议无效" },
-                { typeof(InvalidTimeZoneException), "时区无效" },
                 { typeof(MemberAccessException), "成员访问异常" },
                 { typeof(MethodAccessException), "方法访问异常" },
                 { typeof(MissingFieldException), "缺少字段" },
@@ -60,13 +60,13 @@ namespace XStudio.Common
                 { typeof(ThreadAbortException), "线程中止" },
                 { typeof(ThreadInterruptedException), "线程中断" },
                 { typeof(ThreadStateException), "线程状态异常" },
-                { typeof(UnauthorizedAccessException), "未授权访问" },
                 //{ typeof(UnauthorizedProgramException), "程序未授权" },
                 { typeof(ValidationException), "验证失败" },
                 //{ typeof(VariantTypeException), "变体类型异常" },
                 //{ typeof(VersionParseException), "版本解析错误" },
                 //{ typeof(WeakReferenceException), "弱引用异常" },
                 { typeof(XmlSchemaException), "XML架构错误" },
+                { typeof(AbpAuthorizationException), "授权验证失败"}
             };
         }
 

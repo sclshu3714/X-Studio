@@ -23,9 +23,9 @@ namespace XStudio.Identity
             IIdentityRoleRepository roleRepository, 
             IIdentityUserRepository userRepository, 
             IOptions<IdentityOptions> optionsAccessor, 
-            IPasswordHasher<IdentityUser> passwordHasher, 
-            IEnumerable<IUserValidator<IdentityUser>> userValidators, 
-            IEnumerable<IPasswordValidator<IdentityUser>> passwordValidators, 
+            IPasswordHasher<Volo.Abp.Identity.IdentityUser> passwordHasher, 
+            IEnumerable<IUserValidator<Volo.Abp.Identity.IdentityUser>> userValidators, 
+            IEnumerable<IPasswordValidator<Volo.Abp.Identity.IdentityUser>> passwordValidators, 
             ILookupNormalizer keyNormalizer, 
             IdentityErrorDescriber errors, 
             IServiceProvider services, 
@@ -41,10 +41,10 @@ namespace XStudio.Identity
             _userRepository = userRepository;
         }
 
-        public override IQueryable<IdentityUser> Users
+        public override IQueryable<Volo.Abp.Identity.IdentityUser> Users
         {
             get {
-                var queryableStore = Store as IQueryableUserStore<IdentityUser>;
+                var queryableStore = Store as IQueryableUserStore<Volo.Abp.Identity.IdentityUser>;
                 if (queryableStore == null)
                 {
                     throw new NotSupportedException("StoreNotIQueryableUserStore)");

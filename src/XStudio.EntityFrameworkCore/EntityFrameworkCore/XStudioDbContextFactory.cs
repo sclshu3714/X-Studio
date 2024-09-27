@@ -1,9 +1,12 @@
 ﻿using System;
 using System.IO;
+using DeviceDetectorNET;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
+using XStudio.Common;
+using XStudio.Common.Nacos;
 
 namespace XStudio.EntityFrameworkCore;
 
@@ -16,11 +19,19 @@ public class XStudioDbContextFactory : IDesignTimeDbContextFactory<XStudioDbCont
         XStudioEfCoreEntityExtensionMappings.Configure();
 
         var configuration = BuildConfiguration();
-
-        var DBMode = configuration["App:DBMode"]; // 数据库模式：MYSQL;DM;
-        switch (DBMode)
+        if (GlobalConfig.Default.NacosConfig == null || GlobalConfig.Default.NacosConfig.Databases == null ||
+           !GlobalConfig.Default.NacosConfig.Databases.Any())
         {
-            case "DM":
+            configuration.Bind(GlobalConfig.Default.NacosConfig);
+        }
+        DatabaseInfo? info = GlobalConfig.Default.NacosConfig?.Databases?.Find(db => db.ConnectionName == "Default");
+        if (info == null)
+        {
+            throw new InvalidOperationException($"数据库连接失败，没有检测到连接地址");
+        }
+        switch (info.DbMode)
+        {
+            case DatabaseType.Dmdbms:
                 string? myDmdbms = configuration.GetConnectionString("Dmdbms");
                 if (!string.IsNullOrWhiteSpace(myDmdbms))
                 {
@@ -40,7 +51,7 @@ public class XStudioDbContextFactory : IDesignTimeDbContextFactory<XStudioDbCont
                 }
                 break;
         }
-        throw new InvalidOperationException($"数据库连接失败，{DBMode} 模式下，没有检测到连接地址");
+        throw new InvalidOperationException($"数据库连接失败，{info.DbMode} 模式下，没有检测到连接地址");
     }
 
     private static IConfigurationRoot BuildConfiguration()

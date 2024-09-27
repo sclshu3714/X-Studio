@@ -23,7 +23,7 @@ namespace XStudio.Common.Nacos
         /// <summary>
         /// 数据库连接信息
         /// </summary>
-        public List<DBSqlInfo>? Databases { get; set; }
+        public List<DatabaseInfo>? Databases { get; set; }
 
         /// <summary>
         /// 连接地址
@@ -92,7 +92,7 @@ namespace XStudio.Common.Nacos
     /// <summary>
     /// 数据库信息
     /// </summary>
-    public class DBSqlInfo
+    public class DatabaseInfo
     {
         /// <summary>
         /// 连接名称

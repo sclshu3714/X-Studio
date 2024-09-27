@@ -57,7 +57,5 @@ namespace XStudio.SchoolSchedule
         /// 其他教师(副老师)
         /// </summary>
         public Dictionary<string, string> OtherTeachers { get; set; } = new Dictionary<string, string>();
-        public int Priority { get; set; } = 0;
-        public RuleMode @Mode { get; set; } = RuleMode.Course;
     }
 }

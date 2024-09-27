@@ -9,8 +9,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="EntityFrameworkCore\CustomDbContextProvider.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="EntityFrameworkCore\CustomDbContextProvider.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\XStudio.Domain\XStudio.Domain.csproj" />
     <PackageReference Include="DM.Microsoft.EntityFrameworkCore" Version="7.0.0.20986" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.8" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
     <PackageReference Include="ShardingCore" Version="7.8.1.21" />
     <PackageReference Include="Volo.Abp.EntityFrameworkCore.MySQL" Version="8.3.1" />
