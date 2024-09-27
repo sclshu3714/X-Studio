@@ -153,8 +153,8 @@ public class XStudioHttpApiHostModule : AbpModule
         var hostingEnvironment = context.Services.GetHostingEnvironment();
 
         ConfigureNacos(context, configuration);
-        //ConfigureKafka(context, configuration);
-        //ConfigureRedis(context, configuration);
+        ConfigureKafka(context, configuration);
+        ConfigureRedis(context, configuration);
         ConfigureAuthentication(context, configuration);
         ConfigureBundles();
         ConfigureUrls(configuration);
@@ -169,41 +169,16 @@ public class XStudioHttpApiHostModule : AbpModule
     }
 
     #region 配置设置
-    private async void ConfigureNacos(ServiceConfigurationContext context, IConfiguration configuration)
+    private void ConfigureNacos(ServiceConfigurationContext context, IConfiguration configuration)
     {
         context.Services.AddNacosAspNet(configuration, "Nacos");
         context.Services.AddNacosV2Config(configuration);
-
-        string? dataId = configuration.GetSection("Nacos:DataId").Value;//: "xstudio.json", "xstudio.yaml",
-        string? group = configuration.GetSection("Nacos:GroupName").Value;//: "DEFAULT_GROUP",
-        long timeoutMs = 3000;
-        //监听nacos 应用配置
-        if (dataId != null && group != null)
+        //制作全局参数变量,方便使用,也可以直接使用IConfiguration,无需使用GlobalConfig.Default.NacosConfig
+        if (GlobalConfig.Default.NacosConfig == null)
         {
-            string? format = Path.GetExtension(dataId);// configuration.GetSection("Nacos:Format").Value;//: "JSON","YAML", "YML"
-            using (var serviceProvider = context.Services.BuildServiceProvider())
-            {
-                INacosConfigService nacosConfigService = serviceProvider.GetRequiredService<INacosConfigService>();
-                string currentConfig = await nacosConfigService.GetConfig(dataId, group, timeoutMs);
-                if (string.IsNullOrEmpty(currentConfig))
-                {
-                    Log.Warning($"Nacos 配置文件 {dataId} 在组 {group} 中未找到或为空。");
-                }
-                else if (format.ToUpper() == ".JSON")
-                {
-                    GlobalConfig.Default.NacosConfig = currentConfig.ToObj<GlobalNacosConfig>();
-                }
-                else if (format.ToUpper() == ".YAML" || format.ToUpper() == ".YML")
-                {
-                    NacosYamlHelper helper = new NacosYamlHelper(nacosConfigService);
-                    GlobalConfig.Default.NacosConfig = await helper.GetYamlConfigAsync<GlobalNacosConfig>(currentConfig);
-                }
-
-                if (GlobalConfig.Default.NacosConfig != null)
-                {
-                    context.Services.AddSingleton(GlobalConfig.Default.NacosConfig);
-                }
-            }
+            GlobalConfig.Default.NacosConfig = new GlobalNacosConfig();
+            configuration.Bind(GlobalConfig.Default.NacosConfig);
+            context.Services.AddSingleton(GlobalConfig.Default.NacosConfig);
         }
     }
 

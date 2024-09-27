@@ -54,9 +54,6 @@ public class Program
             //var app = builder.Build();
             //await app.InitializeApplicationAsync();
             //await app.RunAsync();
-
-
-
             var builder = WebApplication.CreateBuilder(args);
             builder.Host.AddAppSettingsSecretsJson()
                 .UseAutofac()
