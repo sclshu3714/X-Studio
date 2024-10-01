@@ -12,4 +12,8 @@
     <PackageReference Include="System.Runtime.Caching" Version="8.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\XStadio.Modules\XStudio.SchoolSchedule\XStudio.SchoolSchedule.csproj" />
+  </ItemGroup>
+
 </Project>

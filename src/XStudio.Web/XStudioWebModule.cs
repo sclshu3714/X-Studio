@@ -49,13 +49,14 @@ using Volo.Abp.MultiTenancy;
 using Medallion.Threading;
 using Microsoft.AspNetCore.DataProtection;
 using StackExchange.Redis;
+using System;
 
 namespace XStudio.Web;
 
 [DependsOn(
-    typeof(XStudioHttpApiClientModule),
-    typeof(XStudioHttpApiModule),
-    typeof(XStudioApplicationModule),
+    //typeof(XStudioHttpApiClientModule),
+    //typeof(XStudioHttpApiModule),
+    //typeof(XStudioApplicationModule),
     typeof(AbpAutofacModule),
     typeof(AbpIdentityWebModule),
     typeof(AbpSettingManagementWebModule),
@@ -67,7 +68,7 @@ namespace XStudio.Web;
     typeof(AbpAspNetCoreMvcClientModule),
     typeof(AbpHttpClientWebModule),
     typeof(AbpCachingStackExchangeRedisModule),
-    typeof(AbpDistributedLockingModule),
+    //typeof(AbpDistributedLockingModule),
     typeof(AbpHttpClientIdentityModelWebModule),
     typeof(AbpSwashbuckleModule)
     )]
@@ -109,7 +110,8 @@ public class XStudioWebModule : AbpModule
 
             PreConfigure<OpenIddictServerBuilder>(serverBuilder =>
             {
-                serverBuilder.AddProductionEncryptionAndSigningCertificate("openiddict.pfx", "a59331f9-c2f2-4f3e-925b-bff40634dc0a");
+                string fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "openiddict.pfx");
+                serverBuilder.AddProductionEncryptionAndSigningCertificate(fileName, "123456");
             });
         }
     }
@@ -121,8 +123,8 @@ public class XStudioWebModule : AbpModule
 
         ConfigureBundles();
         ConfigureCache();
-        //ConfigureDataProtection(context, configuration, hostingEnvironment);
-        //ConfigureDistributedLocking(context, configuration);
+        ConfigureDataProtection(context, configuration, hostingEnvironment);
+        ConfigureDistributedLocking(context, configuration);
         ConfigureUrls(configuration); 
         ConfigureAuthentication(context);
         ConfigureAutoMapper();
@@ -180,29 +182,29 @@ public class XStudioWebModule : AbpModule
         });
     }
 
-    //private void ConfigureDataProtection(
-    //    ServiceConfigurationContext context,
-    //    IConfiguration configuration,
-    //    IWebHostEnvironment hostingEnvironment)
-    //{
-    //    var dataProtectionBuilder = context.Services.AddDataProtection().SetApplicationName("XBookStore");
-    //    if (!hostingEnvironment.IsDevelopment())
-    //    {
-    //        var redis = ConnectionMultiplexer.Connect(configuration["Redis:Configuration"]!);
-    //        dataProtectionBuilder.PersistKeysToStackExchangeRedis(redis, "XBookStore-Protection-Keys");
-    //    }
-    //}
+    private void ConfigureDataProtection(
+        ServiceConfigurationContext context,
+        IConfiguration configuration,
+        IWebHostEnvironment hostingEnvironment)
+    {
+        var dataProtectionBuilder = context.Services.AddDataProtection().SetApplicationName("XStudio");
+        if (!hostingEnvironment.IsDevelopment())
+        {
+            //var redis = ConnectionMultiplexer.Connect(configuration["Redis:Configuration"]!);
+            //dataProtectionBuilder.PersistKeysToStackExchangeRedis(redis, "XStudio-Protection-Keys");
+        }
+    }
 
-    //private void ConfigureDistributedLocking(
-    //    ServiceConfigurationContext context,
-    //    IConfiguration configuration)
-    //{
-    //    context.Services.AddSingleton<IDistributedLockProvider>(sp =>
-    //    {
-    //        var connection = ConnectionMultiplexer.Connect(configuration["Redis:Configuration"]!);
-    //        return new RedisDistributedSynchronizationProvider(connection.GetDatabase());
-    //    });
-    //}
+    private void ConfigureDistributedLocking(
+        ServiceConfigurationContext context,
+        IConfiguration configuration)
+    {
+        //context.Services.AddSingleton<IDistributedLockProvider>(sp =>
+        //{
+        //    var connection = ConnectionMultiplexer.Connect(configuration["Redis:Configuration"]!);
+        //    return new RedisDistributedSynchronizationProvider(connection.GetDatabase());
+        //});
+    }
 
     private void ConfigureAutoMapper()
     {

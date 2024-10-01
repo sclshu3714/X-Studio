@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using XStudio.SchoolSchedule.Rules;
 
@@ -15,6 +17,7 @@ namespace XStudio.SchoolSchedule
     /// </example>
     public class Section
     {
+        private List<SectionContent> theContents = new List<SectionContent>();
         /// <summary>
         /// 教学周
         ///     从第0周开始计数,但是教学周从1开始，0为模版
@@ -28,14 +31,30 @@ namespace XStudio.SchoolSchedule
         public DayOfWeek Day { get; set; } = DayOfWeek.Monday;
 
         /// <summary>
+        /// 节次(Row)
+        /// </summary>
+        public int Period { get; set; } = 1;
+
+        /// <summary>
+        /// 行是否通栏
+        /// </summary>
+        public int ColumnSpan { get; set; } = 1;
+
+        /// <summary>
+        /// 列是否通栏
+        /// </summary>
+        public int RowSpan { get; set; } = 1;
+
+        /// <summary>
+        /// 当有通栏是，链接到前面的节次，本节次内容无效，使用通栏起始的节次
+        /// </summary>
+        [Newtonsoft.Json.JsonIgnore]
+        public Section? LinkTo { get; set; } = null;
+
+        /// <summary>
         /// 时段
         /// </summary>
         public string TimePeriod { get; set; } = "上午";
-
-        /// <summary>
-        /// 节次
-        /// </summary>
-        public int Index { get; set; } = 1;
 
         /// <summary>
         /// 节次代码
@@ -57,14 +76,30 @@ namespace XStudio.SchoolSchedule
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
-        /// 节次类型(早自习 正课授课 课间活动 午自习 午休 晚自习)
+        /// 节次类型(早自习(早读、早早读) 正课授课 课间活动 午自习 午休 晚自习)
         /// </summary>
         public SectionType @Type { get; set; }
 
         /// <summary>
         /// 内容
         /// </summary>
-        public List<SectionContent> Contents { get; set; } = new List<SectionContent>();
+        public List<SectionContent> Contents
+        {
+            get {
+                if (LinkTo != null)
+                {
+                    return LinkTo.Contents;
+                }
+                return theContents;
+            }
+            set {
+                if (LinkTo != null)
+                {
+                    LinkTo.Contents = value;
+                }
+                theContents = value;
+            }
+        }
 
         /// <summary>
         /// 节次状态
@@ -72,17 +107,28 @@ namespace XStudio.SchoolSchedule
         public SectionStatus @Status { get; set; } = SectionStatus.Normal;
 
         /// <summary>
+        /// 节次启动时间
+        /// </summary>
+        public TimeSpan @Start { get; set; } = TimeSpan.Zero;
+
+        /// <summary>
+        /// 节次结束时间
+        /// </summary>
+        public TimeSpan @End { get; set; } = TimeSpan.Zero;
+
+        /// <summary>
         /// 生成节次代码
         /// </summary>
-        /// <param name="index">第几节</param>
+        /// <param name="period">第几节</param>
         /// <param name="day">星期几，如果不设置，默认使用当前节次的星期</param>
         /// <param name="week">第几教学周，默认为0</param>
         /// <returns></returns>
-        public void SetSectionCode(int index, DayOfWeek day, int week = 0)
+        public void SetSectionCode(int period, DayOfWeek day, int week = 0)
         { 
             this.Day = day;
-            Index = index;
-            Code = $"{week:D2}{(int)day}{index:D2}";
+            Period = period;
+            Code = $"{week:D2}{(int)day}{period:D2}";
+            Name = $"第 {period} 节";
         }
 
         /// <summary>
@@ -102,7 +148,12 @@ namespace XStudio.SchoolSchedule
     ///     显示: 课程、教师、场所、时间、规则
     /// </summary>
     public class SectionContent : IContent<IRule>
-    { 
+    {
+        public SectionContent(int index, IRule rule, int interval = 0)
+        { 
+            Content = rule;
+        }
+
         /// <summary>
         /// 序列号，控制显示顺序
         /// </summary>
@@ -124,11 +175,29 @@ namespace XStudio.SchoolSchedule
     /// </summary>
     public enum SectionType
     {
+        /// <summary>
+        /// 早自习  (早读、早早读)
+        /// </summary>
         MorningStudy = 0, // 早间自习  
+        /// <summary>
+        /// 正课授课
+        /// </summary>
         RegularClass,     // 正课授课
+        /// <summary>
+        /// 课间活动
+        /// </summary>
         BreakExercise,    // 课间活动
+        /// <summary>
+        /// 午间自习
+        /// </summary>
         AfternoonStudy,   // 午间自习
+        /// <summary>
+        /// 午休时段
+        /// </summary>
         NoonBreak,        // 午休时段
+        /// <summary>
+        /// 晚间自习
+        /// </summary>
         EveningStudy,     // 晚间自习
     }
 
@@ -148,6 +217,11 @@ namespace XStudio.SchoolSchedule
         /// <summary>
         /// 禁用
         /// </summary>
-        Disable
+        Disable,
+        /// <summary>
+        /// 未启用
+        ///     与禁用的区别在于，未启用只是一个占位符号，一旦设置不参与一切活动；禁用此次操作禁止操作，如规则冲突、禁止交换等
+        /// </summary>
+        NotEnabled
     }
 }

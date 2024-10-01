@@ -196,22 +196,41 @@
                                 <Setter.Value>
                                     <ControlTemplate TargetType="avalonedit:TextArea">
                                         <DockPanel Focusable="False">
-                                            <ItemsControl DockPanel.Dock="Left" Focusable="False" ItemsSource="{Binding LeftMargins,RelativeSource={RelativeSource TemplatedParent}}">
+                                            <ItemsControl
+                                                DockPanel.Dock="Left"
+                                                Focusable="False"
+                                                ItemsSource="{Binding LeftMargins, RelativeSource={RelativeSource TemplatedParent}}">
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate>
                                                         <StackPanel Orientation="Horizontal" />
                                                     </ItemsPanelTemplate>
                                                 </ItemsControl.ItemsPanel>
                                             </ItemsControl>
-                                            <ContentPresenter Panel.ZIndex="-1" Content="{Binding TextView,RelativeSource={RelativeSource TemplatedParent}}" Focusable="False" />
+                                            <ContentPresenter
+                                                Panel.ZIndex="-1"
+                                                Content="{Binding TextView, RelativeSource={RelativeSource TemplatedParent}}"
+                                                Focusable="False" />
                                         </DockPanel>
                                     </ControlTemplate>
                                 </Setter.Value>
                             </Setter>
                         </Style>
                     </ControlTemplate.Resources>
-                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-                        <hc:ScrollViewer IsInertiaEnabled="True" Name="PART_ScrollViewer" Padding="{TemplateBinding Padding}" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" CanContentScroll="True" Content="{Binding TextArea,RelativeSource={RelativeSource TemplatedParent}}" Focusable="False" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <hc:ScrollViewer
+                            Name="PART_ScrollViewer"
+                            Padding="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="Left"
+                            VerticalContentAlignment="Top"
+                            CanContentScroll="True"
+                            Content="{Binding TextArea, RelativeSource={RelativeSource TemplatedParent}}"
+                            Focusable="False"
+                            HorizontalScrollBarVisibility="Auto"
+                            IsInertiaEnabled="True"
+                            VerticalScrollBarVisibility="Auto" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="WordWrap" Value="True">

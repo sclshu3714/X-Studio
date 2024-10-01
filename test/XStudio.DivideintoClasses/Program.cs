@@ -1,8 +1,10 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using MyConsoleApp.DivideintoClasses;
+using Newtonsoft.Json;
 using System.Security.Authentication;
 using XStudio.DivideintoClasses.Excels;
 using XStudio.DivideintoClasses.Test;
+using XStudio.SchoolSchedule;
 
 
 
@@ -13,7 +15,23 @@ reDivide:
 //await ExportToExcelHelper.ExportToExcelWithHeaderStyle();
 //await ExportToExcelHelper.ImportExcelToModel("");
 //DivideClasses.StartDivide(950, 21, 40, 50);
-Test2.Run();
+//Test2.Run();
+ClassSchedule classSchedule = new ClassSchedule();
+classSchedule.InitializeSchedule(17);
+classSchedule.SetSectionTimePeriod(new List<int>() { 1, 2 }, "早晨", SectionType.MorningStudy);
+classSchedule.SetSectionTimePeriod(new List<int>() { 3, 4 }, "上午", SectionType.RegularClass);
+classSchedule.SetSectionTimePeriod(new List<int>() { 5 }, "上午", SectionType.BreakExercise);
+classSchedule.SetSectionTimePeriod(new List<int>() { 6, 7 }, "上午", SectionType.RegularClass);
+classSchedule.SetSectionTimePeriod(new List<int>() { 8 }, "中午", SectionType.NoonBreak);
+classSchedule.SetSectionTimePeriod(new List<int>() { 9 }, "中午", SectionType.AfternoonStudy);
+classSchedule.SetSectionTimePeriod(new List<int>() { 10, 11, 12, 13 }, "下午", SectionType.RegularClass);
+classSchedule.SetSectionTimePeriod(new List<int>() { 14, 16,17 }, "晚上", SectionType.EveningStudy);
+classSchedule.SetColumnSpan(XStudio.SchoolSchedule.DayOfWeek.Monday, 5, 7);
+classSchedule.SetColumnSpan(XStudio.SchoolSchedule.DayOfWeek.Monday, 8, 7);
+classSchedule.SetColumnSpan(XStudio.SchoolSchedule.DayOfWeek.Monday, 9, 7);
+classSchedule.AddSectionContent("00101", new SectionContent(0, new ClassCourse() { Name = "语文", Mode= XStudio.SchoolSchedule.Rules.RuleMode.Course, Priority = 0, Type = XStudio.SchoolSchedule.Rules.RuleType.Unknown }));
+classSchedule.AddSectionContent("00105", new SectionContent(0, new ClassCourse() { Name = "眼保健操", Type = XStudio.SchoolSchedule.Rules.RuleType.Unknown }));
+Console.WriteLine($"班级课表: {JsonConvert.SerializeObject(classSchedule,Formatting.Indented)}");
 Console.WriteLine("输入ESC退出、其他案件重新计算");
 ConsoleKeyInfo keyInfo = Console.ReadKey();
 if (keyInfo.Key != ConsoleKey.Escape)

@@ -14,30 +14,30 @@ namespace XStudio.SchoolSchedule
         /// <summary>
         /// 星期一
         /// </summary>
-        Monday,
+        Monday = 1,
         /// <summary>
         /// 星期二
         /// </summary>
-        Tuesday,
+        Tuesday = 2,
         /// <summary>
         /// 星期三
         /// </summary>
-        Wednesday,
+        Wednesday = 3,
         /// <summary>
         /// 星期四
         /// </summary>
-        Thursday,
+        Thursday = 4,
         /// <summary>
         /// 星期五
         /// </summary>
-        Friday,
+        Friday = 5,
         /// <summary>
         /// 星期六
         /// </summary>
-        Saturday,
+        Saturday = 5,
         /// <summary>
         /// 星期天
         /// </summary>
-        Sunday
+        Sunday = 7
     }
 }

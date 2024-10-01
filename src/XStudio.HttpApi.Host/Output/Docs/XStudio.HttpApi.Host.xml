@@ -57,6 +57,11 @@
             </summary>
             <param name="context"></param>
         </member>
+        <member name="T:XStudio.Hubs.ChatHub">
+            <summary>
+            SignalR
+            </summary>
+        </member>
         <member name="M:XStudio.Swagger.ConfigureSwaggerOptions.#ctor(Asp.Versioning.ApiExplorer.IApiVersionDescriptionProvider)">
             <summary>
             Initializes a new instance of the <see cref="T:XStudio.Swagger.ConfigureSwaggerOptions"/> class.
