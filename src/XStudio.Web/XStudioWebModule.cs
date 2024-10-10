@@ -83,10 +83,10 @@ public class XStudioWebModule : AbpModule
         {
             options.AddAssemblyResource(
                 typeof(XStudioResource),
-                typeof(XStudioDomainModule).Assembly,
-                typeof(XStudioDomainSharedModule).Assembly,
-                typeof(XStudioApplicationModule).Assembly,
-                typeof(XStudioApplicationContractsModule).Assembly,
+                //typeof(XStudioDomainModule).Assembly,
+                //typeof(XStudioDomainSharedModule).Assembly,
+                //typeof(XStudioApplicationModule).Assembly,
+                //typeof(XStudioApplicationContractsModule).Assembly,
                 typeof(XStudioWebModule).Assembly
             );
         });
@@ -130,9 +130,9 @@ public class XStudioWebModule : AbpModule
         ConfigureAutoMapper();
         ConfigureVirtualFileSystem(hostingEnvironment);
         ConfigureNavigationServices();
-        ConfigureAutoApiControllers();
+        //ConfigureAutoApiControllers();
         ConfigureMultiTenancy();
-        ConfigureSwaggerServices(context.Services);
+        //ConfigureSwaggerServices(context.Services);
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
@@ -220,10 +220,10 @@ public class XStudioWebModule : AbpModule
         {
             Configure<AbpVirtualFileSystemOptions>(options =>
             {
-                options.FileSets.ReplaceEmbeddedByPhysical<XStudioDomainSharedModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}XStudio.Domain.Shared"));
-                options.FileSets.ReplaceEmbeddedByPhysical<XStudioDomainModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}XStudio.Domain"));
-                options.FileSets.ReplaceEmbeddedByPhysical<XStudioApplicationContractsModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}XStudio.Application.Contracts"));
-                options.FileSets.ReplaceEmbeddedByPhysical<XStudioApplicationModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}XStudio.Application"));
+                //options.FileSets.ReplaceEmbeddedByPhysical<XStudioDomainSharedModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}XStudio.Domain.Shared"));
+                //options.FileSets.ReplaceEmbeddedByPhysical<XStudioDomainModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}XStudio.Domain"));
+                //options.FileSets.ReplaceEmbeddedByPhysical<XStudioApplicationContractsModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}XStudio.Application.Contracts"));
+                //options.FileSets.ReplaceEmbeddedByPhysical<XStudioApplicationModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}XStudio.Application"));
                 options.FileSets.ReplaceEmbeddedByPhysical<XStudioWebModule>(hostingEnvironment.ContentRootPath);
             });
         }
@@ -241,7 +241,7 @@ public class XStudioWebModule : AbpModule
     {
         Configure<AbpAspNetCoreMvcOptions>(options =>
         {
-            options.ConventionalControllers.Create(typeof(XStudioApplicationModule).Assembly);
+            //options.ConventionalControllers.Create(typeof(XStudioApplicationModule).Assembly);
         });
     }
 
@@ -280,8 +280,7 @@ public class XStudioWebModule : AbpModule
         app.UseAuthentication();
         app.UseAbpOpenIddictValidation();
 
-        if (MultiTenancyConsts.IsEnabled)
-        {
+        if (MultiTenancyConsts.IsEnabled) {
             app.UseMultiTenancy();
         }
 
@@ -289,11 +288,11 @@ public class XStudioWebModule : AbpModule
         app.UseDynamicClaims();
         app.UseAuthorization();
 
-        app.UseSwagger();
-        app.UseAbpSwaggerUI(options =>
-        {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "XStudio API");
-        });
+        //app.UseSwagger();
+        //app.UseAbpSwaggerUI(options =>
+        //{
+        //    options.SwaggerEndpoint("/swagger/v1/swagger.json", "XStudio API");
+        //});
 
         app.UseAuditing();
         app.UseAbpSerilogEnrichers();

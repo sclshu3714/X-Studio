@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using XStudio.SchoolSchedule.Rules;
 
-namespace XStudio.SchoolSchedule
+namespace XStudio.SchoolSchedule.Rules
 {
     /// <summary>
     /// 课程
     /// </summary>
-    public class ClassCourse : IRule
+    public class ClassCourseRule : IRule
     {
         /// <summary>
         /// 课程编号，主要用于快速识别和查询
@@ -22,6 +21,10 @@ namespace XStudio.SchoolSchedule
         /// </summary>
         public string Name { get; set; } = string.Empty;
 
+        /// <summary>
+        /// 显示名称
+        /// </summary>
+        public override string DisplayName { get => Name; set => Name = value; }
         /// <summary>
         /// 教室Id
         /// </summary>

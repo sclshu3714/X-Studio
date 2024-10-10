@@ -46,6 +46,11 @@ namespace XStudio.SchoolSchedule
         public int RowSpan { get; set; } = 1;
 
         /// <summary>
+        /// 是否合并单元格, 默认不合并false
+        /// </summary>
+        public bool IsMergeCell => ColumnSpan != 1 || RowSpan != 1 || LinkTo != null;
+
+        /// <summary>
         /// 当有通栏是，链接到前面的节次，本节次内容无效，使用通栏起始的节次
         /// </summary>
         [Newtonsoft.Json.JsonIgnore]

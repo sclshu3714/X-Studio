@@ -4,27 +4,52 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace XStudio.SchoolSchedule.Rules
-{
+namespace XStudio.SchoolSchedule.Rules {
     /// <summary>
     /// 单双周
     /// </summary>
-    public class SingleOrBiweeklyRule : IRule
-    {
-        public SingleOrBiweeklyRule(int priority, ClassCourse singleWeekly, ClassCourse biWeekly)
-        {
-            Priority = priority;
+    public class SingleOrBiweeklyRule : IRule {
+        /// <summary>
+        /// 课时,单周或者双周分别占classHour的一半
+        /// </summary>
+        public SingleOrBiweeklyRule(PriorityMode priority, ClassCourseRule singleWeekly, ClassCourseRule biWeekly) {
             SingleWeekly = singleWeekly;
             BiWeekly = biWeekly;
         }
         /// <summary>
+        /// 单双周
+        /// </summary>
+        /// <param name="priority">优先级</param>
+        /// <param name="singleWeekly">单周课程</param>
+        /// <param name="biWeekly">双周课程</param>
+        /// <param name="actionRange">作用范围</param>
+        /// <param name="classHour">课时,单周或者双周分别占classHour的一半</param>
+        public SingleOrBiweeklyRule(PriorityMode priority, ClassCourseRule singleWeekly, ClassCourseRule biWeekly, List<string> actionRange, float classHour = 1) :
+            base(priority, RuleMode.Course, RuleType.SingleOrBiweekly, ActionRangeType.Class, actionRange) {
+            SingleWeekly = singleWeekly;
+            BiWeekly = biWeekly;
+            ClassHour = classHour;
+        }
+        /// <summary>
+        /// 显示名称
+        /// </summary>
+        public override string DisplayName {
+            get {
+                if (SingleWeekly != null && BiWeekly != null) {
+                    return $"({SingleWeekly.DisplayName}|{BiWeekly.DisplayName})";
+                }
+                return "无";
+            }
+        }
+
+        /// <summary>
         /// 单周课程
         /// </summary>
-        public ClassCourse SingleWeekly { get; set; }
+        public ClassCourseRule SingleWeekly { get; set; }
 
         /// <summary>
         /// 双周课程
         /// </summary>
-        public ClassCourse BiWeekly { get; set; }
+        public ClassCourseRule BiWeekly { get; set; }
     }
 }

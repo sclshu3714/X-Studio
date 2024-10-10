@@ -5,6 +5,8 @@ using System.Security.Authentication;
 using XStudio.DivideintoClasses.Excels;
 using XStudio.DivideintoClasses.Test;
 using XStudio.SchoolSchedule;
+using XStudio.SchoolSchedule.Rules;
+using DayOfWeek = XStudio.SchoolSchedule.DayOfWeek;
 
 
 
@@ -17,25 +19,46 @@ reDivide:
 //DivideClasses.StartDivide(950, 21, 40, 50);
 //Test2.Run();
 ClassSchedule classSchedule = new ClassSchedule();
-classSchedule.InitializeSchedule(17);
-classSchedule.SetSectionTimePeriod(new List<int>() { 1, 2 }, "早晨", SectionType.MorningStudy);
+// 设置每周的上课时间和表格样式
+classSchedule.LayoutOfWeek = new List<DayOfWeek>() {
+             DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday,
+             DayOfWeek.Friday, DayOfWeek.Saturday,DayOfWeek.Sunday };
+// 设置节次 16 * 7 = 112 课时; 16 * 40 = 640 分钟
+classSchedule.InitializeSchedule(16);
+// 设置时段, 节次属性
+classSchedule.SetSectionTimePeriod(new List<int>() { 1, 2 }, "早晨", SectionType.MorningStudy); // 14
 classSchedule.SetSectionTimePeriod(new List<int>() { 3, 4 }, "上午", SectionType.RegularClass);
 classSchedule.SetSectionTimePeriod(new List<int>() { 5 }, "上午", SectionType.BreakExercise);
-classSchedule.SetSectionTimePeriod(new List<int>() { 6, 7 }, "上午", SectionType.RegularClass);
+classSchedule.SetSectionTimePeriod(new List<int>() { 6, 7 }, "上午", SectionType.RegularClass); // 35 = 49
 classSchedule.SetSectionTimePeriod(new List<int>() { 8 }, "中午", SectionType.NoonBreak);
-classSchedule.SetSectionTimePeriod(new List<int>() { 9 }, "中午", SectionType.AfternoonStudy);
-classSchedule.SetSectionTimePeriod(new List<int>() { 10, 11, 12, 13 }, "下午", SectionType.RegularClass);
-classSchedule.SetSectionTimePeriod(new List<int>() { 14, 16,17 }, "晚上", SectionType.EveningStudy);
-classSchedule.SetColumnSpan(XStudio.SchoolSchedule.DayOfWeek.Monday, 5, 7);
-classSchedule.SetColumnSpan(XStudio.SchoolSchedule.DayOfWeek.Monday, 8, 7);
-classSchedule.SetColumnSpan(XStudio.SchoolSchedule.DayOfWeek.Monday, 9, 7);
-classSchedule.AddSectionContent("00101", new SectionContent(0, new ClassCourse() { Name = "语文", Mode= XStudio.SchoolSchedule.Rules.RuleMode.Course, Priority = 0, Type = XStudio.SchoolSchedule.Rules.RuleType.Unknown }));
-classSchedule.AddSectionContent("00105", new SectionContent(0, new ClassCourse() { Name = "眼保健操", Type = XStudio.SchoolSchedule.Rules.RuleType.Unknown }));
-Console.WriteLine($"班级课表: {JsonConvert.SerializeObject(classSchedule,Formatting.Indented)}");
+classSchedule.SetSectionTimePeriod(new List<int>() { 9 }, "中午", SectionType.AfternoonStudy);    // 14 = 63
+classSchedule.SetSectionTimePeriod(new List<int>() { 10, 11, 12, 13 }, "下午", SectionType.RegularClass); // 35 = 98
+classSchedule.SetSectionTimePeriod(new List<int>() { 14, 15, 16 }, "晚上", SectionType.EveningStudy);     // 21 = 119
+// 设置通栏即合并单元格 - 不参与排课与自动排课
+classSchedule.SetColumnSpan(DayOfWeek.Monday, 5, 7); // 设置第5|8|9节从周1到周日合并单元格(通栏) - 不参与排课与自动排课
+classSchedule.SetColumnSpan(DayOfWeek.Monday, 8, 7);
+classSchedule.SetColumnSpan(DayOfWeek.Monday, 9, 7);
+// 排课 总课时: 16 * 7 = 112; 早读: 2 * 7 = 14 课时; 正课: 8 * 7 = 56 课时; 晚自习: 3 * 7 = 21 课时; 课间操: 1 * 7 = 7 课时; 午休: 2 * 7 = 14 课时;
+List<string> ClassCourseList = new() { "语文", "数学", "英语", "物理", "化学", "生物", "历史", "地理", "政治", "公共课", "体育", "美术", "音乐", "舞蹈", "戏剧", "电影", "健康课", "心理课", "综合课" };
+Dictionary<string, ClassCourseRule> classCourses = ClassCourseList.ToDictionary(k => k, v => new ClassCourseRule() { Name = v, Mode = RuleMode.Course, Priority = PriorityMode.Medium, Type = RuleType.None });
+//分解课时
+ 
+/* 自动排课 - 默认校验:只校验班级课程课时，
+ *            选择校验：
+ *              1.年级课程冲突；
+ *              2.教师课时；
+ *              3.教师课程冲突；
+ */
+classSchedule.AddSectionContent("00101", new SectionContent(0, new ClassCourseRule() { Name = "语文", Mode = RuleMode.Course, Priority = 0, Type = RuleType.None }));
+classSchedule.AddSectionContent("00105", new SectionContent(0, new ClassCourseRule() { Name = "眼保健操", Type = RuleType.Unknown }));
+ClassCourseRule courseRule1 = new() { Name = "语文", Mode = RuleMode.Course, Priority = 0, Type = RuleType.Single };
+ClassCourseRule courseRule2 = new() { Name = "数学", Mode = RuleMode.Course, Priority = 0, Type = RuleType.Biweekly };
+classSchedule.AddSectionContent("00106", new SectionContent(0, new SingleOrBiweeklyRule(PriorityMode.Highest, courseRule1, courseRule2)));
+
+Console.WriteLine($"班级课表: {JsonConvert.SerializeObject(classSchedule, Formatting.Indented)}");
 Console.WriteLine("输入ESC退出、其他案件重新计算");
 ConsoleKeyInfo keyInfo = Console.ReadKey();
-if (keyInfo.Key != ConsoleKey.Escape)
-{
+if (keyInfo.Key != ConsoleKey.Escape) {
     Console.Clear();
     goto reDivide;
 }

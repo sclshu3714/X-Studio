@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
-using XStudio.Localization;
-using XStudio.MultiTenancy;
 using Volo.Abp.Identity.Web.Navigation;
 using Volo.Abp.SettingManagement.Web.Navigation;
 using Volo.Abp.TenantManagement.Web.Navigation;
 using Volo.Abp.UI.Navigation;
+using XStudio.Localization;
+using XStudio.MultiTenancy;
 
 namespace XStudio.Web.Menus;
 
