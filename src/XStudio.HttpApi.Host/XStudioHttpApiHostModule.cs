@@ -355,7 +355,7 @@ public class XStudioHttpApiHostModule : AbpModule {
     }
 
     private void ConfigureUrls(IConfiguration configuration) {
-        Configure<AppUrlOptions>(options => {
+        Configure<AppUrlOptions>(options => { 
             options.Applications["MVC"].RootUrl = configuration["App:SelfUrl"];
             options.RedirectAllowedUrls.AddRange(configuration["App:RedirectAllowedUrls"]?.Split(',') ?? Array.Empty<string>());
 
