@@ -1,4 +1,8 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.RequestLocalization;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Nacos.V2;
 using System;
 using System.Collections.Generic;
@@ -8,9 +12,27 @@ using System.Threading.Tasks;
 
 namespace XStudio.Common.Nacos
 {
+    public static class NacosConfigListenerExtensions
+    {
+        public static IApplicationBuilder UseNacosConfigListener(this IApplicationBuilder app, Microsoft.Extensions.Configuration.IConfiguration configuration) {
+            IHostApplicationLifetime appLifetime = app.ApplicationServices.GetRequiredService<IHostApplicationLifetime>();
+            INacosConfigService ncsvc = app.ApplicationServices.GetRequiredService<INacosConfigService>();
+            NacosConfigListener _configListen = new NacosConfigListener(appLifetime);
+            // 遍历 Nacos:Listeners 内的值
+            var listeners = configuration.GetSection("Nacos:Listeners").Get<List<NacosListener>>();
+            if (listeners != null) {
+                foreach (var listener in listeners) {
+                    ncsvc.AddListener(listener.DataId, listener.Group, _configListen);
+                }
+            }
+            return app;
+        }
+    }
+
     public class NacosConfigListener : IListener, IHostedService
     {
         private readonly IHostApplicationLifetime _appLifetime;
+
         public NacosConfigListener(IHostApplicationLifetime appLifetime)
         {
             _appLifetime = appLifetime;

@@ -70,7 +70,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Properties\openiddict.pfx" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="OAuth\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Properties\openiddict.pfx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>

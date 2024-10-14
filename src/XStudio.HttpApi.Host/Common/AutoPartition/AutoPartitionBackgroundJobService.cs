@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,6 +14,21 @@ using XStudio.EntityFrameworkCore;
 
 namespace XStudio.Common
 {
+    public static class UseAutoPartition
+    {
+        public static void UseAutoPartitionBackgroundJob(this IHostBuilder hostBuilder)
+        {
+            hostBuilder.ConfigureServices(services =>
+            {
+                services.AddHostedService<AutoPartitionBackgroundJobService>();
+            });
+        }
+
+        public static void UseAutoPartitionBackgroundJob(this IServiceCollection services) {
+            services.AddHostedService<AutoPartitionBackgroundJobService>();
+        }
+    }
+
     /// <summary>
     /// 数据库分区后台任务
     /// 说明:

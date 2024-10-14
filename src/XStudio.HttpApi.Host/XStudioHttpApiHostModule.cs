@@ -76,6 +76,9 @@ using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Confluent.Kafka;
 using XStudio.Helpers;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Hosting.Internal;
+using Volo.Abp.OpenIddict;
+using Polly;
 
 namespace XStudio;
 
@@ -96,36 +99,46 @@ namespace XStudio;
     typeof(AbpCachingStackExchangeRedisModule),         // Redis
     typeof(AbpEventBusKafkaModule)                      // Kafka
 )]
-public class XStudioHttpApiHostModule : AbpModule
-{
-    public override void PreConfigureServices(ServiceConfigurationContext context)
-    {
-        var configuration = context.Services.GetConfiguration();
-        PreConfigureEnvironment(configuration);
-        PreConfigure<OpenIddictBuilder>(builder =>
-        {
-            builder.AddValidation(options =>
-            {
+public class XStudioHttpApiHostModule : AbpModule {
+    public override void PreConfigureServices(ServiceConfigurationContext context) {
+        
+        PreConfigureEnvironment(context);
+        PreConfigureCertificate(context);
+    }
+
+    private void PreConfigureCertificate(ServiceConfigurationContext context) {
+        PreConfigure<OpenIddictBuilder>(builder => {
+            builder.AddValidation(options => {
                 options.AddAudiences("XStudio");
                 options.UseLocalServer();
                 options.UseAspNetCore();
             });
         });
+
+        //var hostingEnvironment = context.Services.GetHostingEnvironment();
+        //if (!hostingEnvironment.IsDevelopment()) {
+        //    PreConfigure<AbpOpenIddictAspNetCoreOptions>(options => {
+        //        options.AddDevelopmentEncryptionAndSigningCertificate = false;
+        //    });
+
+        //    PreConfigure<OpenIddictServerBuilder>(serverBuilder => {
+        //        string fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "openiddict.pfx");
+        //        serverBuilder.AddProductionEncryptionAndSigningCertificate(fileName, "123456");
+        //    });
+        //}
     }
 
-    private void PreConfigureEnvironment(IConfiguration configuration)
-    {
+    private void PreConfigureEnvironment(ServiceConfigurationContext context) {
+        var configuration = context.Services.GetConfiguration();
         // 检查环境变量是否已设置，如果没有，则设置为开发环境
         var environment = configuration["App:Environment"]; // Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
         if (string.IsNullOrEmpty(environment) ||
-            (environment != Environments.Development && environment != Environments.Staging && environment != Environments.Production))
-        {
+            (environment != Environments.Development && environment != Environments.Staging && environment != Environments.Production)) {
             // 这里可以根据需要设置不同的环境
             Log.Warning($"当前运行环境：{environment}, 不是常规环境，环境变量将切换到Development环境，但是配置文件依然读取 appsettings.{environment}.json");
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
         }
-        else
-        {
+        else {
             Log.Warning($"当前运行环境：{environment}");
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", environment);
         }
@@ -136,22 +149,20 @@ public class XStudioHttpApiHostModule : AbpModule
             .AddJsonFile($"appsettings.json", optional: false, reloadOnChange: true);
 
         // 加载补充配置文件
-        if (File.Exists($"appsettings.{environment}.json"))
-        {
+        if (File.Exists($"appsettings.{environment}.json")) {
             builder.AddJsonFile($"appsettings.{environment}.json", optional: true, true);
         }
-        else
-        {
+        else {
             Log.Warning($"没有检查到配置文件:appsettings.{environment}.json; 告知：全部配置默认在appsettings.json中");
         }
         builder.AddEnvironmentVariables();
     }
 
-    public override void ConfigureServices(ServiceConfigurationContext context)
-    {
+    public override void ConfigureServices(ServiceConfigurationContext context) {
         var configuration = context.Services.GetConfiguration();
         var hostingEnvironment = context.Services.GetHostingEnvironment();
 
+        ConfigureNewtonsoftJson(context);
         ConfigureNacos(context, configuration);
         ConfigureKafka(context, configuration);
         ConfigureRedis(context, configuration);
@@ -163,80 +174,70 @@ public class XStudioHttpApiHostModule : AbpModule
         ConfigureCors(context, configuration);
         ConfigureSwaggerServices(context, configuration);
         ConfigureAbpApiVersioning(context);
-        ConfigureNewtonsoftJson(context);
         ConfigureRateLimit(context, configuration);
-        AddAbpBackgroundJobs(context);
+        ConfigureBackgroundJobs(context);
     }
 
     #region 配置设置
-    private void ConfigureNacos(ServiceConfigurationContext context, IConfiguration configuration)
-    {
+    private void ConfigureNacos(ServiceConfigurationContext context, IConfiguration configuration) {
         context.Services.AddNacosAspNet(configuration, "Nacos");
         context.Services.AddNacosV2Config(configuration);
         //制作全局参数变量,方便使用,也可以直接使用IConfiguration,无需使用GlobalConfig.Default.NacosConfig
-        if (GlobalConfig.Default.NacosConfig == null)
-        {
+        if (GlobalConfig.Default.NacosConfig == null) {
             GlobalConfig.Default.NacosConfig = new GlobalNacosConfig();
             configuration.Bind(GlobalConfig.Default.NacosConfig);
             context.Services.AddSingleton(GlobalConfig.Default.NacosConfig);
         }
     }
 
-    private void ConfigureSerilog(ServiceConfigurationContext context, IConfiguration configuration)
-    {
+    private void ConfigureSerilog(ServiceConfigurationContext context, IConfiguration configuration) {
         // 将 Serilog 注册到 DI 容器
-        context.Services.AddLogging(loggingBuilder =>
-        {
+        context.Services.AddLogging(loggingBuilder => {
             loggingBuilder.ClearProviders(); // 清除默认的日志提供程序
             loggingBuilder.AddSerilog()
                           .AddConfiguration(configuration)
                           .AddConsole(); // 添加 Serilog
         });
     }
-    private void ConfigureKafka(ServiceConfigurationContext context, IConfiguration configuration)
-    {
-        //配置连接
-        var kafkaOptions = new AbpKafkaOptions();
-        configuration.GetSection("Kafka:Connections").Bind(kafkaOptions.Connections);
-        var kafkaEventBusOptions = new AbpKafkaEventBusOptions();
-        configuration.GetSection("Kafka:EventBus").Bind(kafkaEventBusOptions);
-        context.Services.Configure<AbpKafkaOptions>(options =>
-        {
-            foreach (var connection in kafkaOptions.Connections)
-            {
-                options.Connections.TryAdd(connection.Key, connection.Value);
-                options.Connections[connection.Key].SaslUsername = connection.Value.SaslUsername;
-                options.Connections[connection.Key].SaslPassword = connection.Value.SaslPassword;
-            }
+    private void ConfigureKafka(ServiceConfigurationContext context, IConfiguration configuration) {
+        if (GlobalConfig.Default.NacosConfig?.Kafka?.IsEnabled == true) {
+            //配置连接
+            var kafkaOptions = new AbpKafkaOptions();
+            configuration.GetSection("Kafka:Connections").Bind(kafkaOptions.Connections);
+            var kafkaEventBusOptions = new AbpKafkaEventBusOptions();
+            configuration.GetSection("Kafka:EventBus").Bind(kafkaEventBusOptions);
+            context.Services.Configure<AbpKafkaOptions>(options => {
+                foreach (var connection in kafkaOptions.Connections) {
+                    options.Connections.TryAdd(connection.Key, connection.Value);
+                    options.Connections[connection.Key].SaslUsername = connection.Value.SaslUsername;
+                    options.Connections[connection.Key].SaslPassword = connection.Value.SaslPassword;
+                }
 
-            // 配置 consumer config
-            options.ConfigureConsumer = config =>
-            {
-                config.GroupId = kafkaEventBusOptions.GroupId;
-                config.EnableAutoCommit = false;
-            };
+                // 配置 consumer config
+                options.ConfigureConsumer = config => {
+                    config.GroupId = kafkaEventBusOptions.GroupId;
+                    config.EnableAutoCommit = false;
+                };
 
-            // 配置 producer config
-            options.ConfigureProducer = config =>
-            {
-                config.MessageTimeoutMs = 6000;
-                config.Acks = Acks.All;
-            };
+                // 配置 producer config
+                options.ConfigureProducer = config => {
+                    config.MessageTimeoutMs = 6000;
+                    config.Acks = Acks.All;
+                };
 
-            // 配置 topic specification
-            options.ConfigureTopic = specification =>
-            {
-                specification.ReplicationFactor = 3;
-                specification.NumPartitions = 3;
-            };
-        });
+                // 配置 topic specification
+                options.ConfigureTopic = specification => {
+                    specification.ReplicationFactor = 3;
+                    specification.NumPartitions = 3;
+                };
+            });
 
-        context.Services.Configure<AbpKafkaEventBusOptions>(options =>
-        {
-            options.GroupId = kafkaEventBusOptions.GroupId;
-            options.TopicName = kafkaEventBusOptions.TopicName;
-            options.ConnectionName = kafkaEventBusOptions.ConnectionName;
-        });
+            context.Services.Configure<AbpKafkaEventBusOptions>(options => {
+                options.GroupId = kafkaEventBusOptions.GroupId;
+                options.TopicName = kafkaEventBusOptions.TopicName;
+                options.ConnectionName = kafkaEventBusOptions.ConnectionName;
+            });
+        }
     }
 
     /// <summary>
@@ -245,43 +246,39 @@ public class XStudioHttpApiHostModule : AbpModule
     /// <param name="context"></param>
     /// <param name="configuration"></param>
     /// <exception cref="NotImplementedException"></exception>
-    private void ConfigureRedis(ServiceConfigurationContext context, IConfiguration configuration)
-    {
-        // 配置Redis
-        context.Services.AddStackExchangeRedisCache(options =>
-        {
-            options.Configuration = configuration["Redis:Configuration"];
-            //options.InstanceName = configuration["Redis:InstanceName"];
-        });
+    private void ConfigureRedis(ServiceConfigurationContext context, IConfiguration configuration) {
+        if (GlobalConfig.Default.NacosConfig?.Redis?.IsEnabled == true) {
+            var redisOptions = new RedisCacheOptions();
+            configuration.GetSection("Redis:Configuration").Bind(redisOptions);
+            // 配置Redis
+            context.Services.AddStackExchangeRedisCache(options => {
+                options.Configuration = configuration["Redis:Configuration"];
+                //options.InstanceName = configuration["Redis:InstanceName"];
+            });
+        }
     }
-    private void AddAbpBackgroundJobs(ServiceConfigurationContext context)
-    {
-        Configure<AbpBackgroundJobOptions>(options =>
-        {
+    private void ConfigureBackgroundJobs(ServiceConfigurationContext context) {
+        Configure<AbpBackgroundJobOptions>(options => {
             options.IsJobExecutionEnabled = false;
         });
         context.Services.AddTransient<AutoPartitionBackgroundJobService>(); // 注册后台任务服务-数据库分区任务
         context.Services.AddHostedService<AutoPartitionBackgroundJobService>(); // 注册后台任务服务-数据库分区任务
     }
 
-    private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)
-    {
+    private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration) {
         EncrypterHelper.EncryptionKey = configuration.GetSection("StringEncryption:DefaultPassPhrase").Value ?? "xstudio_encryptionkey";
         context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
-        context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
-        {
+        context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options => {
             options.IsDynamicClaimsEnabled = true;
         });
         //注册自定义权限过滤器
-        context.Services.AddControllersWithViews(Options =>
-        {
+        context.Services.AddControllersWithViews(Options => {
             Options.Filters.Add<AbpAuthorizeFilter>();
             Options.Filters.Add<CustomExceptionFilter>(); // 注册自定义异常过滤器
         });
 
         // 禁用自动验证
-        Configure<AbpAntiForgeryOptions>(options =>
-        {
+        Configure<AbpAntiForgeryOptions>(options => {
             // TODO wxz
             options.AutoValidate = false; // 禁用自动验证
         });
@@ -294,8 +291,7 @@ public class XStudioHttpApiHostModule : AbpModule
         //});
     }
 
-    private void ConfigureRateLimit(ServiceConfigurationContext context, IConfiguration configuration)
-    {
+    private void ConfigureRateLimit(ServiceConfigurationContext context, IConfiguration configuration) {
         // 限制配置
         context.Services.AddOptions();
         context.Services.AddMemoryCache();
@@ -304,8 +300,7 @@ public class XStudioHttpApiHostModule : AbpModule
         context.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
         context.Services.AddInMemoryRateLimiting();
 
-        context.Services.Configure<IdentityOptions>(options =>
-        {
+        context.Services.Configure<IdentityOptions>(options => {
             // 锁定配置
             options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
             options.Lockout.MaxFailedAccessAttempts = 3;
@@ -313,10 +308,8 @@ public class XStudioHttpApiHostModule : AbpModule
         });
     }
 
-    private void ConfigureNewtonsoftJson(ServiceConfigurationContext context)
-    {
-        context.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
-        {
+    private void ConfigureNewtonsoftJson(ServiceConfigurationContext context) {
+        context.Services.AddControllersWithViews().AddNewtonsoftJson(options => {
             //修改属性名称的序列化方式，首字母小写
             options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             options.SerializerSettings.MissingMemberHandling = MissingMemberHandling.Ignore;
@@ -329,10 +322,8 @@ public class XStudioHttpApiHostModule : AbpModule
         });
     }
 
-    private void ConfigureAbpApiVersioning(ServiceConfigurationContext context)
-    {
-        context.Services.AddAbpApiVersioning(options =>
-        {
+    private void ConfigureAbpApiVersioning(ServiceConfigurationContext context) {
+        context.Services.AddAbpApiVersioning(options => {
             options.ReportApiVersions = true;
             options.AssumeDefaultVersionWhenUnspecified = true;
             options.DefaultApiVersion = new ApiVersion(1, 0);
@@ -342,36 +333,29 @@ public class XStudioHttpApiHostModule : AbpModule
                 new MediaTypeApiVersionReader("version")
             );
         })
-        .AddApiExplorer(options =>
-        {
+        .AddApiExplorer(options => {
             options.GroupNameFormat = "'v'VVV";
             options.SubstituteApiVersionInUrl = true;
         });
 
-        Configure<AbpAspNetCoreMvcOptions>(options =>
-        {
+        Configure<AbpAspNetCoreMvcOptions>(options => {
             options.ChangeControllerModelApiExplorerGroupName = false;
         });
     }
 
-    private void ConfigureBundles()
-    {
-        Configure<AbpBundlingOptions>(options =>
-        {
+    private void ConfigureBundles() {
+        Configure<AbpBundlingOptions>(options => {
             options.StyleBundles.Configure(
                 LeptonXLiteThemeBundles.Styles.Global,
-                bundle =>
-                {
+                bundle => {
                     bundle.AddFiles("/global-styles.css");
                 }
             );
         });
     }
 
-    private void ConfigureUrls(IConfiguration configuration)
-    {
-        Configure<AppUrlOptions>(options =>
-        {
+    private void ConfigureUrls(IConfiguration configuration) {
+        Configure<AppUrlOptions>(options => {
             options.Applications["MVC"].RootUrl = configuration["App:SelfUrl"];
             options.RedirectAllowedUrls.AddRange(configuration["App:RedirectAllowedUrls"]?.Split(',') ?? Array.Empty<string>());
 
@@ -380,13 +364,10 @@ public class XStudioHttpApiHostModule : AbpModule
         });
     }
 
-    private void ConfigureVirtualFileSystem(ServiceConfigurationContext context)
-    {
+    private void ConfigureVirtualFileSystem(ServiceConfigurationContext context) {
         var hostingEnvironment = context.Services.GetHostingEnvironment();
-        if (hostingEnvironment.IsDevelopment())
-        {
-            Configure<AbpVirtualFileSystemOptions>(options =>
-            {
+        if (hostingEnvironment.IsDevelopment()) {
+            Configure<AbpVirtualFileSystemOptions>(options => {
                 options.FileSets.ReplaceEmbeddedByPhysical<XStudioDomainSharedModule>(
                     Path.Combine(hostingEnvironment.ContentRootPath,
                         $"..{Path.DirectorySeparatorChar}XStudio.Domain.Shared"));
@@ -404,12 +385,9 @@ public class XStudioHttpApiHostModule : AbpModule
     }
 
     // 自动生成控制器
-    private void ConfigureConventionalControllers()
-    {
-        Configure<AbpAspNetCoreMvcOptions>(options =>
-        {
-            options.ConventionalControllers.Create(typeof(XStudioApplicationModule).Assembly, opts =>
-            {
+    private void ConfigureConventionalControllers() {
+        Configure<AbpAspNetCoreMvcOptions>(options => {
+            options.ConventionalControllers.Create(typeof(XStudioApplicationModule).Assembly, opts => {
                 // 指定后:https://localhost:44345/api/xstudio/project; 默认:https://localhost:44345/api/app/project
                 opts.RootPath = "xstudio";
                 // opts.TypePredicate = type => { return true; }; //是否公开
@@ -417,8 +395,7 @@ public class XStudioHttpApiHostModule : AbpModule
         });
     }
 
-    private static void ConfigureSwaggerServices(ServiceConfigurationContext context, IConfiguration configuration)
-    {
+    private static void ConfigureSwaggerServices(ServiceConfigurationContext context, IConfiguration configuration) {
         context.Services.AddSignalR();
         context.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
         context.Services.AddAbpSwaggerGenWithOAuth(
@@ -429,12 +406,9 @@ public class XStudioHttpApiHostModule : AbpModule
             });
     }
 
-    private void ConfigureCors(ServiceConfigurationContext context, IConfiguration configuration)
-    {
-        context.Services.AddCors(options =>
-        {
-            options.AddDefaultPolicy(builder =>
-            {
+    private void ConfigureCors(ServiceConfigurationContext context, IConfiguration configuration) {
+        context.Services.AddCors(options => {
+            options.AddDefaultPolicy(builder => {
                 builder.WithOrigins(configuration["App:CorsOrigins"]?
                        .Split(",", StringSplitOptions.RemoveEmptyEntries)
                        .Select(o => o.RemovePostFix("/"))
@@ -450,35 +424,20 @@ public class XStudioHttpApiHostModule : AbpModule
 
     #endregion
 
-    public override void OnApplicationInitialization(ApplicationInitializationContext context)
-    {
+    public override void OnApplicationInitialization(ApplicationInitializationContext context) {
         var app = context.GetApplicationBuilder();
         var env = context.GetEnvironment();
 
-        if (env.IsDevelopment())
-        {
+        if (env.IsDevelopment()) {
             app.UseDeveloperExceptionPage();
         }
 
-        IConfiguration configuration = context.ServiceProvider.GetRequiredService<IConfiguration>();
-        //nacos 监听
-        IHostApplicationLifetime appLifetime = app.ApplicationServices.GetRequiredService<IHostApplicationLifetime>();
-        INacosConfigService ncsvc = app.ApplicationServices.GetRequiredService<INacosConfigService>();
-        NacosConfigListener _configListen = new NacosConfigListener(appLifetime);
-        // 遍历 Nacos:Listeners 内的值
-        var listeners = configuration.GetSection("Nacos:Listeners").Get<List<NacosListener>>();
-        if (listeners != null)
-        {
-            foreach (var listener in listeners)
-            {
-                ncsvc.AddListener(listener.DataId, listener.Group, _configListen);
-            }
-        }
+        //nacos 监听配置文件
+        app.UseNacosConfigListener(context.ServiceProvider.GetRequiredService<IConfiguration>());
 
         app.UseAbpRequestLocalization();
 
-        if (!env.IsDevelopment())
-        {
+        if (!env.IsDevelopment()) {
             app.UseErrorPage();
         }
         app.UseIpRateLimiting(); // 启用访问限制
@@ -493,8 +452,7 @@ public class XStudioHttpApiHostModule : AbpModule
         app.UseAuthentication();
         //app.UseAbpOpenIddictValidation();
 
-        if (MultiTenancyConsts.IsEnabled)
-        {
+        if (MultiTenancyConsts.IsEnabled) {
             app.UseMultiTenancy();
         }
 
@@ -503,26 +461,22 @@ public class XStudioHttpApiHostModule : AbpModule
         app.UseAuthorization();
 
         app.UseSwagger();
-        app.UseAbpSwaggerUI(c =>
-        {
+        app.UseAbpSwaggerUI(c => {
             //c.SwaggerEndpoint("/swagger/v1/swagger.json", "XStudio API");
             IApiVersionDescriptionProvider provider;
-            try
-            {
+            try {
                 provider = app.ApplicationServices.GetRequiredService<IApiVersionDescriptionProvider>();
-                provider.If(provider.ApiVersionDescriptions != null, (provider) =>
-                {
+                provider.If(provider.ApiVersionDescriptions != null, (provider) => {
                     // build a swagger endpoint for each discovered API version
-                    foreach (var description in provider.ApiVersionDescriptions)
-                    {
+                    foreach (var description in provider.ApiVersionDescriptions) {
                         c.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
                     }
                 });
+                IConfiguration configuration = context.ServiceProvider.GetRequiredService<IConfiguration>();
                 c.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
                 c.OAuthScopes("XStudio");
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 Log.Error($"构建swagger文档失败,{ex.StackTrace}");
             }
         });

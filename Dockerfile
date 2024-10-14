@@ -4,9 +4,10 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER app
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
-
+EXPOSE 44344
+EXPOSE 44345
+EXPOSE 44346
+EXPOSE 44355
 
 # 此阶段用于生成服务项目
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
@@ -34,4 +35,13 @@ RUN dotnet publish "./XStudio.HttpApi.Host.csproj" -c $BUILD_CONFIGURATION -o /a
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+# 切换到 root 用户以执行 apt-get 命令
+USER root
+RUN apt-get update && apt-get install -q -y --no-install-recommends \
+    procps \
+    net-tools \
+    && rm -rf /var/lib/apt/lists/*
+
+USER app
 ENTRYPOINT ["dotnet", "XStudio.HttpApi.Host.dll"]

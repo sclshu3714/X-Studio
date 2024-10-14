@@ -168,6 +168,7 @@ namespace XStudio.Common.Nacos
     /// </summary>
     public class KafkaInfo
     {
+        public bool IsEnabled { get; set; } = true;
         public ConnectionInfo? Connections { get; set; }
         public EventBusInfo? EventBus { get; set; }
     }
@@ -194,6 +195,7 @@ namespace XStudio.Common.Nacos
     /// </summary>
     public class RedisInfo
     {
+        public bool IsEnabled { get; set; } = true;
         public string Configuration { get; set; } = string.Empty;
     }
 
