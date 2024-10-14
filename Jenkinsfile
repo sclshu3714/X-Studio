@@ -29,7 +29,7 @@ pipeline{
                     echo "========拉取代码 execution failed========"
                 }
             }
-        },
+        }
         stage("构建项目"){
             steps{
                 echo "========executing 构建项目========"
@@ -50,7 +50,7 @@ pipeline{
                     echo "========构建项目 execution failed========"
                 }
             }
-        },
+        }
         stage("测试项目"){
             steps{
                 echo "========executing 测试项目========"
@@ -71,7 +71,7 @@ pipeline{
                     echo "========测试项目 execution failed========"
                 }
             }
-        },
+        }
         stage("构建镜像"){
             steps{
                 echo "========executing 构建镜像========"
@@ -94,7 +94,7 @@ pipeline{
                     echo "========构建镜像 execution failed========"
                 }
             }
-        },
+        }
         stage("推送镜像"){
             steps{
                 echo "========executing 推送镜像========"
@@ -117,7 +117,7 @@ pipeline{
                     echo "========推送镜像 execution failed========"
                 }
             }
-        },
+        }
         stage("发版项目"){
             steps{
                 echo "========executing 发版项目========"
