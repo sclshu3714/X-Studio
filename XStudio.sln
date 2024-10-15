@@ -67,6 +67,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{A1D0D6
 		Jenkinsfile = Jenkinsfile
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XStudio.School.Timetable", "test\XStudio.School.Timetable\XStudio.School.Timetable.csproj", "{ADEC8FCB-4CC2-4CB2-B96B-7E3AABADD030}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +155,10 @@ Global
 		{B4AC290F-D6F4-43BD-B264-13F07E1A42D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4AC290F-D6F4-43BD-B264-13F07E1A42D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4AC290F-D6F4-43BD-B264-13F07E1A42D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADEC8FCB-4CC2-4CB2-B96B-7E3AABADD030}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADEC8FCB-4CC2-4CB2-B96B-7E3AABADD030}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADEC8FCB-4CC2-4CB2-B96B-7E3AABADD030}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADEC8FCB-4CC2-4CB2-B96B-7E3AABADD030}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -185,6 +191,7 @@ Global
 		{BBE51380-8B21-49FF-9CFC-B29447A40999} = {3CCBE074-32DA-4788-860E-4F3125731082}
 		{3531857C-28FC-4E0F-82D9-BFBB70740E04} = {3CCBE074-32DA-4788-860E-4F3125731082}
 		{6F0C9CFF-2269-46A7-9664-478354C582A4} = {3CCBE074-32DA-4788-860E-4F3125731082}
+		{ADEC8FCB-4CC2-4CB2-B96B-7E3AABADD030} = {04DBDB01-70F4-4E06-B468-8F87850B22BE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28315BFD-90E7-4E14-A2EA-F3D23AF4126F}

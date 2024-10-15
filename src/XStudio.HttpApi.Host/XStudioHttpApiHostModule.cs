@@ -79,6 +79,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting.Internal;
 using Volo.Abp.OpenIddict;
 using Polly;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace XStudio;
 
@@ -101,7 +102,7 @@ namespace XStudio;
 )]
 public class XStudioHttpApiHostModule : AbpModule {
     public override void PreConfigureServices(ServiceConfigurationContext context) {
-        
+
         PreConfigureEnvironment(context);
         PreConfigureCertificate(context);
     }
@@ -238,6 +239,10 @@ public class XStudioHttpApiHostModule : AbpModule {
                 options.ConnectionName = kafkaEventBusOptions.ConnectionName;
             });
         }
+        else {
+            context.Services.RemoveAll<AbpKafkaOptions>();
+            context.Services.RemoveAll<AbpKafkaEventBusOptions>();
+        }
     }
 
     /// <summary>
@@ -255,6 +260,9 @@ public class XStudioHttpApiHostModule : AbpModule {
                 options.Configuration = configuration["Redis:Configuration"];
                 //options.InstanceName = configuration["Redis:InstanceName"];
             });
+        }
+        else {
+            context.Services.RemoveAll<RedisCacheOptions>();
         }
     }
     private void ConfigureBackgroundJobs(ServiceConfigurationContext context) {
@@ -355,7 +363,7 @@ public class XStudioHttpApiHostModule : AbpModule {
     }
 
     private void ConfigureUrls(IConfiguration configuration) {
-        Configure<AppUrlOptions>(options => { 
+        Configure<AppUrlOptions>(options => {
             options.Applications["MVC"].RootUrl = configuration["App:SelfUrl"];
             options.RedirectAllowedUrls.AddRange(configuration["App:RedirectAllowedUrls"]?.Split(',') ?? Array.Empty<string>());
 
@@ -435,11 +443,18 @@ public class XStudioHttpApiHostModule : AbpModule {
         //nacos 监听配置文件
         app.UseNacosConfigListener(context.ServiceProvider.GetRequiredService<IConfiguration>());
 
+        //if (GlobalConfig.Default.NacosConfig?.Kafka?.IsEnabled == false) {
+        //    context.ServiceProvider.GetRequiredService<KafkaMessageConsumer>()?.Dispose();
+        //    context.ServiceProvider.GetRequiredService<IConsumerPool>()?.Dispose();
+        //    context.ServiceProvider.GetRequiredService<IProducerPool>()?.Dispose();
+        //}
         app.UseAbpRequestLocalization();
 
         if (!env.IsDevelopment()) {
             app.UseErrorPage();
         }
+
+        
         app.UseIpRateLimiting(); // 启用访问限制
         app.UseCorrelationId();
         app.UseStaticFiles();
