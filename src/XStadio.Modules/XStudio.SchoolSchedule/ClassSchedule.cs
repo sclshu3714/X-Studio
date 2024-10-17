@@ -189,7 +189,12 @@ namespace XStudio.SchoolSchedule
         {
             get
             {
-                return Sections.Where(s => s.Period == period && s.Day > day && s.Day < day + columnCount);
+                int startDay = LayoutOfWeek.IndexOf(day);
+                if (startDay + columnCount >= LayoutOfWeek.Count) {
+                    columnCount = LayoutOfWeek.Count - startDay;
+                }
+                List<DayOfWeek> days = LayoutOfWeek.GetRange(startDay, columnCount);
+                return Sections.Where(s => s.Period == period && days.Contains(s.Day));
             }
         }
 
@@ -252,19 +257,30 @@ namespace XStudio.SchoolSchedule
         public bool InitializeSchedule(int maxPeriod)
         {
             MaxPeriod = maxPeriod;
-            for (int d = 1; d <= 7; d++)
-            {
-                DayOfWeek day = (DayOfWeek)d;
+            foreach (var day in LayoutOfWeek) {
                 for (int i = 1; i <= maxPeriod; i++)
                 {
                     Section section = new Section();
                     section.Day = day;
                     section.Period = i;
-                    section.Status = LayoutOfWeek.Contains(day) ? SectionStatus.Normal : SectionStatus.NotEnabled;
+                    section.Status = SectionStatus.Normal;
                     section.SetSectionCode(section.Period, day);
                     AddSection(section);
                 }
             }
+            //for (int d = 1; d <= 7; d++)
+            //{
+            //    DayOfWeek day = (DayOfWeek)d;
+            //    for (int i = 1; i <= maxPeriod; i++)
+            //    {
+            //        Section section = new Section();
+            //        section.Day = day;
+            //        section.Period = i;
+            //        section.Status = LayoutOfWeek.Contains(day) ? SectionStatus.Normal : SectionStatus.NotEnabled;
+            //        section.SetSectionCode(section.Period, day);
+            //        AddSection(section);
+            //    }
+            //}
             return true;
         }
 
@@ -330,11 +346,11 @@ namespace XStudio.SchoolSchedule
             int span = (int)day + columnSpan - 1;
             Section section = this[day, period];
             IEnumerable<Section> Sections = this[period, day, columnSpan];
-            if (Sections.Any(it=>(it.ColumnSpan > 1 || it.RowSpan > 1) && it.LinkTo != null))
+            if (Sections.Any(it=>(it.ColSpan > 1 || it.RowSpan > 1) && it.LinkTo != null))
             {
                 return;
             }
-            section.ColumnSpan = columnSpan;
+            section.ColSpan = columnSpan;
             for (int i = (int)day + 1; i <= span; i++)
             {
                 Section item = this[i, period];
@@ -354,7 +370,7 @@ namespace XStudio.SchoolSchedule
             int span = period + rowSpan - 1;
             Section section = this[day, period];
             IEnumerable<Section> Sections = this[day, period, rowSpan];
-            if (Sections.Any(it => (it.ColumnSpan > 1 || it.RowSpan > 1) && it.LinkTo != null))
+            if (Sections.Any(it => (it.ColSpan > 1 || it.RowSpan > 1) && it.LinkTo != null))
             {
                 return;
             }
@@ -428,7 +444,7 @@ namespace XStudio.SchoolSchedule
 
                 // 规则5: 验证具体规则是否可以放置
                 bool canPlace = (
-                    sourceSection.ColumnSpan == targetSection.ColumnSpan &&
+                    sourceSection.ColSpan == targetSection.ColSpan &&
                     sourceSection.RowSpan == targetSection.RowSpan &&
                     !targetSection.Contents.Any(x => 
                         x.Content?.Type == RuleType.CanOnlyArrange || 

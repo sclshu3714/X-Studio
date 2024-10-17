@@ -1,0 +1,370 @@
+﻿<UserControl
+    x:Class="XStudio.School.Timetable.Views.HamburgerMenuControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:contentViews="clr-namespace:XStudio.School.Timetable.Views.ContentViews"
+    xmlns:converters="clr-namespace:XStudio.School.Timetable.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:viewmodels="clr-namespace:XStudio.School.Timetable.ViewModels"
+    d:DesignHeight="600"
+    d:DesignWidth="900"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+
+            <!--  This is the template for all menu items. In this sample we use the glyph items.  -->
+            <DataTemplate x:Key="HamburgerMenuItem" DataType="{x:Type viewmodels:HamburgerMenuControlViewModel}">
+                <DockPanel Height="48" LastChildFill="True">
+                    <ContentControl
+                        x:Name="IconPart"
+                        Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type mah:HamburgerMenu}}, Path=CompactPaneLength}"
+                        Content="{Binding Icon}"
+                        DockPanel.Dock="Left"
+                        Focusable="False"
+                        IsTabStop="False" />
+                    <TextBlock
+                        x:Name="TextPart"
+                        VerticalAlignment="Center"
+                        FontSize="16"
+                        Text="{Binding Label}" />
+                </DockPanel>
+                <DataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type mah:HamburgerMenu}}, Path=PanePlacement}" Value="Right">
+                        <Setter TargetName="IconPart" Property="DockPanel.Dock" Value="Right" />
+                        <Setter TargetName="TextPart" Property="Margin" Value="8,0,0,0" />
+                    </DataTrigger>
+                </DataTemplate.Triggers>
+            </DataTemplate>
+
+            <!--  This is the template for the option menu item  -->
+            <DataTemplate x:Key="HamburgerOptionsMenuItem" DataType="{x:Type viewmodels:SettingsViewModel}">
+                <DockPanel Height="48" LastChildFill="True">
+                    <ContentControl
+                        x:Name="IconPart"
+                        Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type mah:HamburgerMenu}}, Path=CompactPaneLength}"
+                        Content="{Binding Icon}"
+                        DockPanel.Dock="Left"
+                        Focusable="False"
+                        IsTabStop="False" />
+                    <TextBlock
+                        x:Name="TextPart"
+                        VerticalAlignment="Center"
+                        FontSize="16"
+                        Text="{Binding Label}" />
+                </DockPanel>
+                <DataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type mah:HamburgerMenu}}, Path=PanePlacement}" Value="Right">
+                        <Setter TargetName="IconPart" Property="DockPanel.Dock" Value="Right" />
+                        <Setter TargetName="TextPart" Property="Margin" Value="8,0,0,0" />
+                    </DataTrigger>
+                </DataTemplate.Triggers>
+            </DataTemplate>
+
+            <ObjectDataProvider
+                x:Key="PanePlacementEnumValues"
+                MethodName="GetValues"
+                ObjectType="{x:Type mah:SplitViewPanePlacement}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="mah:SplitViewPanePlacement" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
+            <ObjectDataProvider
+                x:Key="DisplayModeEnumValues"
+                MethodName="GetValues"
+                ObjectType="{x:Type mah:SplitViewDisplayMode}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="mah:SplitViewDisplayMode" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
+            <ObjectDataProvider
+                x:Key="VisibilityEnumValues"
+                MethodName="GetValues"
+                ObjectType="{x:Type Visibility}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="Visibility" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
+            <!--  these are the templates for the view models  -->
+            <converters:SelectedItemToContentConverter x:Key="SelectedItemToContentConverter" />
+            <DataTemplate x:Key="TimePeriodViewModelKey" DataType="{x:Type viewmodels:TimePeriodControlViewModel}">
+                <contentViews:TimePeriodControl DataContext="{Binding}" />
+            </DataTemplate>
+            <!--<DataTemplate DataType="{x:Type viewModels:PrivateViewModel}">
+                <views:PrivateView DataContext="{Binding}" />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModels:AboutViewModel}">
+                <views:AboutView DataContext="{Binding}" />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModels:SettingsViewModel}">
+                <localViews:AppSettingsView DataContext="{Binding}" />
+            </DataTemplate>-->
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <ScrollViewer
+            Grid.Column="1"
+            MinWidth="230"
+            Margin="10,10,5,10"
+            Padding="0,0,5,0"
+            HorizontalContentAlignment="Stretch"
+            HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Margin="0,0,0,10" Orientation="Vertical">
+                <mah:ToggleSwitch
+                    Margin="0,10,0,5"
+                    Header="IsPaneOpen:"
+                    IsOn="{Binding ElementName=theHamburgerMenuControl, Path=IsPaneOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                <mah:ToggleSwitch
+                    Margin="0,10,0,5"
+                    Header="CanResizeOpenPane:"
+                    IsOn="{Binding ElementName=theHamburgerMenuControl, Path=CanResizeOpenPane, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                <mah:MetroHeader Margin="0,10,0,5" Header="DisplayMode:">
+                    <ComboBox
+                        MinWidth="150"
+                        HorizontalAlignment="Left"
+                        ItemsSource="{Binding Source={StaticResource DisplayModeEnumValues}}"
+                        SelectedItem="{Binding ElementName=theHamburgerMenuControl, Path=DisplayMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </mah:MetroHeader>
+
+                <mah:MetroHeader Margin="0,10,0,5" Header="SelectedIndex:">
+                    <Slider
+                        AutoToolTipPlacement="TopLeft"
+                        Maximum="3"
+                        Minimum="0"
+                        Value="{Binding ElementName=theHamburgerMenuControl, Path=SelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </mah:MetroHeader>
+
+                <mah:MetroHeader Margin="0,10,0,5" Header="CompactPaneLength:">
+                    <Slider
+                        AutoToolTipPlacement="TopLeft"
+                        Maximum="80"
+                        Minimum="10"
+                        Value="{Binding ElementName=theHamburgerMenuControl, Path=CompactPaneLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </mah:MetroHeader>
+
+                <mah:MetroHeader Margin="0,10,0,5" Header="OpenPaneLength:">
+                    <Slider
+                        AutoToolTipPlacement="TopLeft"
+                        Maximum="400"
+                        Minimum="50"
+                        Value="{Binding ElementName=theHamburgerMenuControl, Path=OpenPaneLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </mah:MetroHeader>
+
+                <mah:MetroHeader Margin="0,10,0,5" Header="HamburgerVisibility:">
+                    <ComboBox
+                        MinWidth="150"
+                        HorizontalAlignment="Left"
+                        ItemsSource="{Binding Source={StaticResource VisibilityEnumValues}}"
+                        SelectedItem="{Binding ElementName=theHamburgerMenuControl, Path=HamburgerVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </mah:MetroHeader>
+
+                <mah:MetroHeader Margin="0,10,0,5" Header="Hamburger Width / Height:">
+                    <UniformGrid Columns="2">
+                        <Slider
+                            Margin="0,0,5,0"
+                            AutoToolTipPlacement="TopLeft"
+                            Maximum="80"
+                            Minimum="10"
+                            Value="{Binding ElementName=theHamburgerMenuControl, Path=HamburgerWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <Slider
+                            Margin="5,0,0,0"
+                            AutoToolTipPlacement="TopLeft"
+                            Maximum="80"
+                            Minimum="10"
+                            Value="{Binding ElementName=theHamburgerMenuControl, Path=HamburgerHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </UniformGrid>
+                </mah:MetroHeader>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Border
+            Grid.Column="0"
+            Margin="0,0,0,0"
+            BorderBrush="{DynamicResource MahApps.Brushes.Gray7}"
+            BorderThickness="1">
+
+            <mah:HamburgerMenu
+                x:Name="theHamburgerMenuControl"
+                DisplayMode="CompactOverlay"
+                HamburgerWidth="48"
+                IsPaneOpen="{Binding IsHamburgerMenuPaneOpen}"
+                ItemInvoked="HamburgerMenuControl_OnItemInvoked"
+                ItemTemplate="{StaticResource HamburgerMenuItem}"
+                ItemsSource="{Binding MenuItems}"
+                OptionsItemTemplate="{StaticResource HamburgerOptionsMenuItem}"
+                OptionsItemsSource="{Binding MenuOptionItems}"
+                SelectedIndex="0"
+                VerticalScrollBarOnLeftSide="False">
+                <!--  Header  -->
+                <mah:HamburgerMenu.HamburgerMenuHeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="16"
+                            Foreground="White"
+                            Text="排课管理" />
+                    </DataTemplate>
+                </mah:HamburgerMenu.HamburgerMenuHeaderTemplate>
+                <!--  Items  -->
+                <!--<mah:HamburgerMenu.ItemsSource>
+                    <mah:HamburgerMenuItemCollection>
+                        <mah:HamburgerMenuIconItem Label="时 段">
+                            <mah:HamburgerMenuIconItem.Icon>
+                                <iconPacks:PackIconMaterial
+                                    Width="22"
+                                    Height="22"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Kind="Table" />
+                            </mah:HamburgerMenuIconItem.Icon>
+                            <mah:HamburgerMenuIconItem.Tag>
+                                <contentViews:TimePeriodControl x:Name="timePeriod" />
+                            </mah:HamburgerMenuIconItem.Tag>
+                        </mah:HamburgerMenuIconItem>
+                        <mah:HamburgerMenuIconItem Label="节 次">
+                            <mah:HamburgerMenuIconItem.Icon>
+                                <iconPacks:PackIconMaterial
+                                    Width="22"
+                                    Height="22"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Kind="PeriodicTable" />
+                            </mah:HamburgerMenuIconItem.Icon>
+                            <mah:HamburgerMenuIconItem.Tag>
+                                <TextBlock Text="defult" />
+                            </mah:HamburgerMenuIconItem.Tag>
+                        </mah:HamburgerMenuIconItem>
+                        <mah:HamburgerMenuIconItem Label="课 程">
+                            <mah:HamburgerMenuIconItem.Icon>
+                                <iconPacks:PackIconMaterial
+                                    Width="22"
+                                    Height="22"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Kind="Book" />
+                            </mah:HamburgerMenuIconItem.Icon>
+                            <mah:HamburgerMenuIconItem.Tag>
+                                <TextBlock Text="defult" />
+                            </mah:HamburgerMenuIconItem.Tag>
+                        </mah:HamburgerMenuIconItem>
+                        <mah:HamburgerMenuIconItem Label="教 师">
+                            <mah:HamburgerMenuIconItem.Icon>
+                                <iconPacks:PackIconMaterial
+                                    Width="22"
+                                    Height="22"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Kind="BookAlphabet" />
+                            </mah:HamburgerMenuIconItem.Icon>
+                            <mah:HamburgerMenuIconItem.Tag>
+                                <TextBlock Text="defult" />
+                            </mah:HamburgerMenuIconItem.Tag>
+                        </mah:HamburgerMenuIconItem>
+                        <mah:HamburgerMenuIconItem Label="教 室">
+                            <mah:HamburgerMenuIconItem.Icon>
+                                <iconPacks:PackIconMaterial
+                                    Width="22"
+                                    Height="22"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Kind="Home" />
+                            </mah:HamburgerMenuIconItem.Icon>
+                            <mah:HamburgerMenuIconItem.Tag>
+                                <TextBlock Text="defult" />
+                            </mah:HamburgerMenuIconItem.Tag>
+                        </mah:HamburgerMenuIconItem>
+                        <mah:HamburgerMenuIconItem Label="安 排">
+                            <mah:HamburgerMenuIconItem.Icon>
+                                <iconPacks:PackIconMaterial
+                                    Width="22"
+                                    Height="22"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Kind="MouseLeftClick" />
+                            </mah:HamburgerMenuIconItem.Icon>
+                            <mah:HamburgerMenuIconItem.Tag>
+                                <TextBlock Text="defult" />
+                            </mah:HamburgerMenuIconItem.Tag>
+                        </mah:HamburgerMenuIconItem>
+                    </mah:HamburgerMenuItemCollection>
+                </mah:HamburgerMenu.ItemsSource>-->
+
+                <!--  Options  -->
+                <!--<mah:HamburgerMenu.OptionsItemsSource>
+                    <mah:HamburgerMenuItemCollection>
+                        <mah:HamburgerMenuIconItem Label="设 置">
+                            <mah:HamburgerMenuIconItem.Icon>
+                                <iconPacks:PackIconMaterial
+                                    Width="22"
+                                    Height="22"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Kind="Cog" />
+                            </mah:HamburgerMenuIconItem.Icon>
+                            <mah:HamburgerMenuIconItem.Tag>
+                                <Label Content="Setting" />
+                            </mah:HamburgerMenuIconItem.Tag>
+                        </mah:HamburgerMenuIconItem>
+                    </mah:HamburgerMenuItemCollection>
+                </mah:HamburgerMenu.OptionsItemsSource>-->
+
+                <!--  Content  -->
+                <!--  select the ViewModel of the selected item (options item)  -->
+                <!--<mah:HamburgerMenu.Content>
+                    <MultiBinding Converter="{StaticResource SelectedItemToContentConverter}">
+                        <Binding
+                            FallbackValue="{x:Null}"
+                            Mode="OneWay"
+                            Path="SelectedItem"
+                            RelativeSource="{RelativeSource Self}" />
+                        <Binding
+                            FallbackValue="{x:Null}"
+                            Mode="OneWay"
+                            Path="SelectedOptionsItem"
+                            RelativeSource="{RelativeSource Self}" />
+                    </MultiBinding>
+                </mah:HamburgerMenu.Content>-->
+                <mah:HamburgerMenu.ContentTemplate>
+                    <DataTemplate DataType="{x:Type mah:HamburgerMenuIconItem}">
+                        <Grid Margin="20,0,10,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <TextBlock
+                                Grid.Row="0"
+                                Margin="0,15,0,5"
+                                Padding="0"
+                                FontFamily="{DynamicResource MahApps.Fonts.Family.Header}"
+                                FontSize="{DynamicResource MahApps.Font.Size.Header}"
+                                Text="{Binding Label}" />
+                            <ScrollViewer
+                                Grid.Row="1"
+                                Focusable="False"
+                                HorizontalScrollBarVisibility="Disabled"
+                                VerticalScrollBarVisibility="Auto">
+                                <ContentControl Content="{Binding Tag}" Focusable="False" />
+                            </ScrollViewer>
+                        </Grid>
+                    </DataTemplate>
+                </mah:HamburgerMenu.ContentTemplate>
+            </mah:HamburgerMenu>
+        </Border>
+    </Grid>
+</UserControl>

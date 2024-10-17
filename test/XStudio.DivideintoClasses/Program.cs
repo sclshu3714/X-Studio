@@ -21,8 +21,8 @@ reDivide:
 ClassSchedule classSchedule = new ClassSchedule();
 // 设置每周的上课时间和表格样式
 classSchedule.LayoutOfWeek = new List<DayOfWeek>() {
-             DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday,
-             DayOfWeek.Friday, DayOfWeek.Saturday,DayOfWeek.Sunday };
+             DayOfWeek.Sunday, DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday,
+             DayOfWeek.Friday, DayOfWeek.Saturday };
 // 设置节次 16 * 7 = 112 课时; 16 * 40 = 640 分钟
 classSchedule.InitializeSchedule(16);
 // 设置时段, 节次属性

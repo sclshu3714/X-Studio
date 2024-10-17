@@ -34,7 +34,7 @@ namespace XStudio.SchoolSchedule
         /// <summary>
         /// 星期六
         /// </summary>
-        Saturday = 5,
+        Saturday = 6,
         /// <summary>
         /// 星期天
         /// </summary>
