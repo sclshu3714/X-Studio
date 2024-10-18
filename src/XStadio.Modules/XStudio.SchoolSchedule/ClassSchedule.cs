@@ -495,5 +495,67 @@ namespace XStudio.SchoolSchedule
             return new Tuple<bool, string>(true, "交换完成");
         }
 
+        /// <summary>
+        /// 获取可用的节次
+        /// </summary>
+        /// <param name="course">规则</param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public Section? GetAvailableSections(IRule rule, SectionType regularClass) {
+            if(rule == null)   return null;
+            Random random = new Random();
+            switch (rule.Type) {
+                case RuleType.ContinuousClasses: // 连续课，只能取相同时段连续节次，中间无打断
+                    var availableContinuousSections = this.Sections
+                        .GroupBy(s => s.TimePeriod) // 根据时间段分组
+                        .SelectMany(g => g.SkipLast(1) // 排除最后一节
+                        .Where((s, i) => g.ElementAt(i + 1).Status == SectionStatus.Normal && s.LinkTo == null && !s.IsMergeCell && s.Type == regularClass) // 确保下一个节次也是正常状态
+                        .Select(s => s)); // 形成连续的节次对
+                    if (availableContinuousSections.Count() == 0) return null; // 确保列表不为空
+                    int it_index = random.Next(availableContinuousSections.Count()); // 随机获取索引
+                    return availableContinuousSections.ElementAt(it_index); // 返回随机选择的节次
+                case RuleType.None: // 无规则约束，在所有可用的节次中都可以分配
+                case RuleType.SingleOrBiweekly:  // 单双周，在所有可用的节次中都可以分配
+                case RuleType.AlternatePolling:  // 轮巡，在所有可用的节次中都可以分配
+                case RuleType.JointClassTeaching:  // 合班，在所有可用的节次中都可以分配
+                case RuleType.CentralizedLessonPreparation:  // 集中备课，只能取指定星期的节次
+                default:
+                    var availableSections = this.Sections
+                          .Where(s => s.Status == SectionStatus.Normal && s.LinkTo == null && !s.IsMergeCell && s.Type == regularClass);
+                    if (availableSections.Count() == 0) return null; // 如果没有可用的节次
+                    int index = random.Next(availableSections.Count()); // 随机获取索引
+                    return availableSections.ElementAt(index); // 返回随机选择的节次
+            }
+        }
+
+        /// <summary>
+        /// 判断是否可以分配课程到节次
+        /// </summary>
+        /// <param name="course"></param>
+        /// <param name="section"></param>
+        /// <returns></returns>
+        public bool CanAssign(IRule course, Section section) {
+            return !section.IsMergeCell && section.LinkTo == null && !HasCourseConflict(section,course);
+        }
+
+        /// <summary>
+        /// 判断是否有课程冲突
+        /// </summary>
+        /// <param name="section"></param>
+        /// <param name="course"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        private bool HasCourseConflict(Section section, IRule course) {
+            return false;
+        }
+
+        /// <summary>
+        /// 撤销已分配的课程
+        /// </summary>
+        /// <param name="id"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void RemoveSectionContent(object id) {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -23,6 +23,8 @@ namespace XStudio.Schools.Places
         [DbDescription("楼层编码")]
         public string FloorCode { get; set; } = string.Empty;
 
+        [DbDescription("用途编码")]
+        public string UsageCode { get; set; } = string.Empty;
         /// <summary>
         /// 序号
         /// </summary>
@@ -40,6 +42,11 @@ namespace XStudio.Schools.Places
         /// </summary>
         [DbDescription("名称")]
         public string Name { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 教室类型
+        /// </summary>
+        public RoomUsage? Usage { get; set; }
 
         /// <summary>
         /// 属于学校

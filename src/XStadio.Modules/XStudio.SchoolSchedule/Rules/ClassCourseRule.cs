@@ -35,6 +35,18 @@ namespace XStudio.SchoolSchedule.Rules
         /// </summary>
         public string ClassroomName { get; set; } = string.Empty;
 
+
+        /// <summary>
+        /// 年级Id
+        /// </summary>
+        public string GradeId { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 年级名称
+        /// </summary>
+        public string GradeName { get; set; } = string.Empty;
+
+
         /// <summary>
         /// 班级Id
         /// </summary>

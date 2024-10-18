@@ -25,7 +25,13 @@ namespace XStudio.School.Timetable.Models
         /// <summary>
         /// 内容
         /// </summary>
-        public Dictionary<DayOfWeek, string> Contents { get; set; } = new Dictionary<DayOfWeek, string>();
+        public string Day1 { get; set; }
+        public string Day2 { get; set; }
+        public string Day3 { get; set; }    
+        public string Day4 { get; set; }
+        public string Day5 { get; set; }
+        public string Day6 { get; set; }
+        public string Day7 { get; set; }
 
         public bool IsMerged { get; set; } // 是否合并
         public int RowSpan { get; set; }   // 行跨度

@@ -8,11 +8,11 @@ namespace XStudio.SchoolSchedule.Rules {
     /// <summary>
     /// 单双周
     /// </summary>
-    public class SingleOrBiweeklyRule : IRule {
+    public class SingleOrBiweekly : IRule {
         /// <summary>
         /// 课时,单周或者双周分别占classHour的一半
         /// </summary>
-        public SingleOrBiweeklyRule(PriorityMode priority, ClassCourseRule singleWeekly, ClassCourseRule biWeekly) {
+        public SingleOrBiweekly(PriorityMode priority, ClassCourseRule singleWeekly, ClassCourseRule biWeekly) {
             SingleWeekly = singleWeekly;
             BiWeekly = biWeekly;
         }
@@ -24,7 +24,7 @@ namespace XStudio.SchoolSchedule.Rules {
         /// <param name="biWeekly">双周课程</param>
         /// <param name="actionRange">作用范围</param>
         /// <param name="classHour">课时,单周或者双周分别占classHour的一半</param>
-        public SingleOrBiweeklyRule(PriorityMode priority, ClassCourseRule singleWeekly, ClassCourseRule biWeekly, List<string> actionRange, float classHour = 1) :
+        public SingleOrBiweekly(PriorityMode priority, ClassCourseRule singleWeekly, ClassCourseRule biWeekly, List<string> actionRange, float classHour = 1) :
             base(priority, RuleMode.Course, RuleType.SingleOrBiweekly, ActionRangeType.Class, actionRange) {
             SingleWeekly = singleWeekly;
             BiWeekly = biWeekly;

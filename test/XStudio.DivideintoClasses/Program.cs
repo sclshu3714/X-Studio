@@ -53,7 +53,7 @@ classSchedule.AddSectionContent("00101", new SectionContent(0, new ClassCourseRu
 classSchedule.AddSectionContent("00105", new SectionContent(0, new ClassCourseRule() { Name = "眼保健操", Type = RuleType.Unknown }));
 ClassCourseRule courseRule1 = new() { Name = "语文", Mode = RuleMode.Course, Priority = 0, Type = RuleType.Single };
 ClassCourseRule courseRule2 = new() { Name = "数学", Mode = RuleMode.Course, Priority = 0, Type = RuleType.Biweekly };
-classSchedule.AddSectionContent("00106", new SectionContent(0, new SingleOrBiweeklyRule(PriorityMode.Highest, courseRule1, courseRule2)));
+classSchedule.AddSectionContent("00106", new SectionContent(0, new SingleOrBiweekly(PriorityMode.Highest, courseRule1, courseRule2)));
 
 Console.WriteLine($"班级课表: {JsonConvert.SerializeObject(classSchedule, Formatting.Indented)}");
 Console.WriteLine("输入ESC退出、其他案件重新计算");

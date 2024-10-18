@@ -48,7 +48,7 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
     </ScrollViewer>-->
-    <DockPanel LastChildFill="True">
+    <!--<DockPanel LastChildFill="True">
         <DockPanel DockPanel.Dock="Top" LastChildFill="True">
             <ToolBar BorderThickness="0" Style="{StaticResource MahApps.Styles.ToolBar}">
                 <Button
@@ -74,15 +74,20 @@
             AutoGenerateColumns="False"
             CanUserAddRows="False"
             ItemsSource="{Binding TimetableRows}"
+            LoadingRow="ScheduleGrid_LoadingRow"
             RowHeaderStyle="{StaticResource MahApps.Styles.DataGridRowHeader.Azure}"
             Style="{StaticResource MahApps.Styles.DataGrid}">
             <DataGrid.Columns>
-                <!--  时段  -->
+    -->
+    <!--  时段  -->
+    <!--
                 <DataGridTextColumn
                     Width="*"
                     Binding="{Binding TimeSlot, Mode=TwoWay}"
                     Header="时段" />
-                <!--  节次  -->
+    -->
+    <!--  节次  -->
+    <!--
                 <DataGridTextColumn
                     Width="*"
                     Binding="{Binding PeriodName, Mode=OneWay}"
@@ -123,7 +128,9 @@
                     Header="周日"
                     IsReadOnly="True" />
 
-                <!--  操作列  -->
+    -->
+    <!--  操作列  -->
+    <!--
                 <DataGridTemplateColumn Width="200" Header="操作">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -171,8 +178,36 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <!--  不显示  -->
+    -->
+    <!--  不显示  -->
+    <!--
             </DataGrid.Columns>
         </DataGrid>
-    </DockPanel>
+    </DockPanel>-->
+    <DataGrid
+        x:Name="CourseDataGrid"
+        AutoGenerateColumns="True"
+        CanUserAddRows="False"
+        CanUserDeleteRows="False"
+        GridLinesVisibility="All"
+        HeadersVisibility="All"
+        ItemsSource="{Binding TimetableRows}"
+        RowHeaderWidth="1">
+        <DataGrid.Resources>
+            <!--<Style TargetType="{x:Type DataGridCell}">
+                <Setter Property="BorderBrush" Value="BurlyWood" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Style.Triggers>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding PeriodName}" Value="早晨" />
+                            <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGridCell}}, Path=PeriodName}" Value="早晨" />
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="BorderBrush" Value="Transparent" />
+                        <Setter Property="BorderThickness" Value="0,0,0,0" />
+                    </MultiDataTrigger>
+                </Style.Triggers>
+            </Style>-->
+        </DataGrid.Resources>
+    </DataGrid>
 </UserControl>

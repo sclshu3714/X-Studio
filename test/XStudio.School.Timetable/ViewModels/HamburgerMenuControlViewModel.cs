@@ -13,7 +13,6 @@ namespace XStudio.School.Timetable.ViewModels {
     public class HamburgerMenuControlViewModel : BindableBase, IDataErrorInfo, IDisposable {
         private readonly IDialogCoordinator _dialogCoordinator;
         private bool isHamburgerMenuPaneOpen;
-        private TimePeriodControlViewModel timePeriodControlViewModel;
         private BindableBase _selectedViewModel;
         private ObservableCollection<MenuItemViewModel> _menuItems;
         private ObservableCollection<MenuItemViewModel> _menuOptionItems;
