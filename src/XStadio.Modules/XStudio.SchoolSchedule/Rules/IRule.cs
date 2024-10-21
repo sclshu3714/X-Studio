@@ -32,6 +32,11 @@ namespace XStudio.SchoolSchedule.Rules {
         }
 
         /// <summary>
+        /// 课程编号，主要用于快速识别和查询
+        /// </summary>
+        public virtual string Id { get; set; } = string.Empty;
+
+        /// <summary>
         /// 使用课时,占用课时,如果为0,不限制
         /// </summary>
         [Description("课时")]

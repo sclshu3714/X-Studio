@@ -14,6 +14,7 @@ namespace XStudio.SchoolSchedule.Rules {
             : base(priority, mode, RuleType.CanOnlyArrange) {
             Location = location;
             ClassCourse = classCourse;
+            Id = classCourse.Id;
         }
 
         /// <summary>
@@ -32,6 +33,7 @@ namespace XStudio.SchoolSchedule.Rules {
                 return "无";
             }
         }
+
 
         /// <summary>
         /// 课程和老师信息

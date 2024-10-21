@@ -15,6 +15,7 @@ namespace XStudio.SchoolSchedule.Rules {
             Type = RuleType.ContinuousClasses;
             RangeType = ActionRangeType.Class;
             Mode = RuleMode.Course;
+            Id = classCourse.Id;
         }
         /// <summary>
         /// 单双周
@@ -28,6 +29,7 @@ namespace XStudio.SchoolSchedule.Rules {
             base(priority, RuleMode.Course, RuleType.ContinuousClasses, ActionRangeType.Class, actionRange) {
             ClassCourse = classCourse;
             ClassHour = classHour;
+            Id = classCourse.Id;
         }
         /// <summary>
         /// 显示名称
@@ -40,6 +42,11 @@ namespace XStudio.SchoolSchedule.Rules {
                 return "无";
             }
         }
+
+        /// <summary>
+        /// 课程编号，主要用于快速识别和查询
+        /// </summary>
+        public override string Id { get; set; } = string.Empty;
 
         /// <summary>
         /// 单周课程

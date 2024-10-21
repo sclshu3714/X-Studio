@@ -19,6 +19,7 @@ namespace XStudio.SchoolSchedule.Rules {
             RangeType = ActionRangeType.Class;
             Mode = RuleMode.Course;
             Type = RuleType.AlternatePolling;
+            Id = string.Join(";", rules.Select(r => r.Id));
         }
 
         /// <summary>

@@ -546,8 +546,8 @@ namespace XStudio.SchoolSchedule
         /// <param name="course"></param>
         /// <param name="section"></param>
         /// <returns></returns>
-        public bool CanAssign(IRule course, Section section) {
-            return section != null &&!section.IsMergeCell && section.LinkTo == null && !HasCourseConflict(section,course);
+        public bool CanAssign(IRule course, Section section, List<IRule> constraint) {
+            return section != null &&!section.IsMergeCell && section.LinkTo == null && !HasCourseConflict(section,course, constraint);
         }
 
         /// <summary>
@@ -557,7 +557,29 @@ namespace XStudio.SchoolSchedule
         /// <param name="course"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        private bool HasCourseConflict(Section section, IRule course) {
+        private bool HasCourseConflict(Section section, IRule course, List<IRule> constraint) {
+            foreach (var rule in constraint) {
+                switch (rule.Type) {
+                    case RuleType.CannotBeArranged: // 不可排课，
+                        CannotBeArranged cannotBeArranged = (CannotBeArranged)rule;
+                        if (cannotBeArranged.Id.Contains(course.Id) && 
+                            cannotBeArranged.Location.Item1 == section.Day &&
+                            cannotBeArranged.Location.Item2 == section.Period) {
+                            return true;
+                        }
+                        break;
+                    case RuleType.CoursesAreNotAdjacent:  // 课程不能相邻
+                        Section upSection = this[section.Day, section.Period - 1];
+                        Section downSection = this[section.Day, section.Period + 1];
+                        if (upSection.Contents.Any(c => c.Content != null && c.Content.Id.Contains(course.Id)) ||
+                            downSection.Contents.Any(c => c.Content != null && c.Content.Id.Contains(course.Id))) {
+                            return true;
+                        }
+                        break;
+                    default:
+                        return false;
+                }
+            }
             return false;
         }
 
@@ -568,6 +590,24 @@ namespace XStudio.SchoolSchedule
         /// <exception cref="NotImplementedException"></exception>
         public void RemoveSectionContent(object id) {
             //throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 安排只能排课程
+        /// </summary>
+        /// <param name="courses">需要安排的课程集合</param>
+        /// <param name="enumerable">只能排课程集合</param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void RunCanOnlyArrange(List<IRule> courses, IEnumerable<IRule> enumerables) {
+            foreach (var enumerable in enumerables) {
+                CanOnlyArrange canOnlyArrange = (CanOnlyArrange)enumerable;
+                IEnumerable<IRule> theCourses = courses.FindAll(c => c.Id == canOnlyArrange.Id && c.Type == RuleType.None);
+                if (theCourses.Any()) {
+                    Section section = this[canOnlyArrange.Location.Item1, canOnlyArrange.Location.Item2];
+                    AddSectionContent(section.Code, new SectionContent(0, canOnlyArrange));
+                }
+                courses.Remove(theCourses.First());
+            }
         }
     }
 }

@@ -30,34 +30,33 @@ namespace XStudio.School.Timetable.Models
         /// </summary>
         public ObservableCollection<TimetableCell> Cells { get; set; } = new ObservableCollection<TimetableCell>();
 
-
         /// <summary>
         /// 内容
         /// </summary>
-        public string Day1 { get; set; }
+        public TimetableCell Day1 { get; set; }
         public Brush Day1Foreground { get; set; } = Brushes.Black;
         public Brush Day1Background { get; set; } = Brushes.White;
-        public string Day2 { get; set; }
+        public TimetableCell Day2 { get; set; }
 
         public Brush Day2Foreground { get; set; } = Brushes.Black;
         public Brush Day2Background { get; set; } = Brushes.White;
-        public string Day3 { get; set; }
+        public TimetableCell Day3 { get; set; }
 
         public Brush Day3Foreground { get; set; } = Brushes.Black;
         public Brush Day3Background { get; set; } = Brushes.White;
-        public string Day4 { get; set; }
+        public TimetableCell Day4 { get; set; }
 
         public Brush Day4Foreground { get; set; } = Brushes.Black;
         public Brush Day4Background { get; set; } = Brushes.White;
-        public string Day5 { get; set; }
+        public TimetableCell Day5 { get; set; }
 
         public Brush Day5Foreground { get; set; } = Brushes.Black;
         public Brush Day5Background { get; set; } = Brushes.White;
-        public string Day6 { get; set; }
+        public TimetableCell Day6 { get; set; }
 
         public Brush Day6Foreground { get; set; } = Brushes.Black;
         public Brush Day6Background { get; set; } = Brushes.White;
-        public string Day7 { get; set; }
+        public TimetableCell Day7 { get; set; }
 
         public Brush Day7Foreground { get; set; } = Brushes.Black;
         public Brush Day7Background { get; set; } = Brushes.White;

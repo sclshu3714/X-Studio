@@ -20,7 +20,7 @@ namespace XStudio.SchoolSchedule.Rules
         /// <summary>
         /// 课程编号，主要用于快速识别和查询
         /// </summary>
-        public string Id { get; set; } = string.Empty;
+        public override string Id { get; set; } = string.Empty;
 
         /// <summary>
         /// 课程名称

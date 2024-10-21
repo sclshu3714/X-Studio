@@ -19,6 +19,7 @@ namespace XStudio.SchoolSchedule.Rules {
             Mode = RuleMode.Course;
             Priority = priority;
             RangeType = ActionRangeType.Class;
+            Id = $"{singleWeekly.Id};{biWeekly.Id}";
         }
         /// <summary>
         /// 单双周
@@ -33,6 +34,7 @@ namespace XStudio.SchoolSchedule.Rules {
             SingleWeekly = singleWeekly;
             BiWeekly = biWeekly;
             ClassHour = classHour;
+            Id = $"{singleWeekly.Id};{biWeekly.Id}";
         }
         /// <summary>
         /// 显示名称
@@ -45,6 +47,11 @@ namespace XStudio.SchoolSchedule.Rules {
                 return "无";
             }
         }
+
+        /// <summary>
+        /// 课程编号，主要用于快速识别和查询
+        /// </summary>
+        public override string Id { get; set; } = string.Empty;
 
         /// <summary>
         /// 单周课程

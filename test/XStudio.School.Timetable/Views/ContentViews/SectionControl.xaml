@@ -189,7 +189,8 @@
             <Button
                 Command="{Binding ReGenerateCommand}"
                 CommandParameter="{Binding}"
-                Content="生成" />
+                Content="生 成"
+                Style="{StaticResource MahApps.Styles.Button}" />
         </ToolBar>
         <DataGrid
             x:Name="CourseDataGrid"
@@ -200,15 +201,16 @@
             CanUserAddRows="False"
             CanUserDeleteRows="False"
             ColumnHeaderStyle="{StaticResource MahApps.Styles.DataGridColumnHeader}"
+            DragOver="CourseDataGrid_DragOver"
             Drop="CourseDataGrid_Drop"
             Focusable="True"
             GridLinesVisibility="All"
             HeadersVisibility="All"
             HorizontalScrollBarVisibility="Auto"
             ItemsSource="{Binding TimetableRows}"
-            PreviewMouseLeftButtonDown="CourseDataGrid_PreviewMouseLeftButtonDown"
             RowHeaderWidth="1"
             RowHeight="45"
+            SelectionMode="Single"
             VerticalScrollBarVisibility="Auto">
             <DataGrid.Resources>
                 <Style x:Key="theDay1CellStyle" TargetType="DataGridCell">
@@ -279,12 +281,17 @@
                                 VerticalAlignment="Center"
                                 Stretch="None">
                                 <TextBlock
-                                    Grid.ColumnSpan="{Binding ColSpan}"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
+                                    AllowDrop="True"
                                     Background="{Binding Day1Background}"
+                                    Cursor="Hand"
+                                    DragOver="TextBlock_DragOver"
+                                    Drop="TextBlock_Drop"
                                     Foreground="{Binding Day1Foreground}"
-                                    Text="{Binding Day1}"
+                                    PreviewMouseLeftButtonDown="TextBlock_PreviewMouseLeftButtonDown"
+                                    Tag="{Binding Day1, Mode=TwoWay}"
+                                    Text="{Binding Day1.Content, Mode=TwoWay}"
                                     TextAlignment="Center"
                                     TextWrapping="Wrap" />
                             </Viewbox>
@@ -304,9 +311,15 @@
                                 <TextBlock
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
+                                    AllowDrop="True"
                                     Background="{Binding Day2Background}"
+                                    Cursor="Hand"
+                                    DragOver="TextBlock_DragOver"
+                                    Drop="TextBlock_Drop"
                                     Foreground="{Binding Day2Foreground}"
-                                    Text="{Binding Day2}"
+                                    PreviewMouseLeftButtonDown="TextBlock_PreviewMouseLeftButtonDown"
+                                    Tag="{Binding Day2, Mode=TwoWay}"
+                                    Text="{Binding Day2.Content, Mode=TwoWay}"
                                     TextAlignment="Center"
                                     TextWrapping="Wrap" />
                             </Viewbox>
@@ -326,9 +339,15 @@
                                 <TextBlock
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
+                                    AllowDrop="True"
                                     Background="{Binding Day3Background}"
+                                    Cursor="Hand"
+                                    DragOver="TextBlock_DragOver"
+                                    Drop="TextBlock_Drop"
                                     Foreground="{Binding Day3Foreground}"
-                                    Text="{Binding Day3}"
+                                    PreviewMouseLeftButtonDown="TextBlock_PreviewMouseLeftButtonDown"
+                                    Tag="{Binding Day3, Mode=TwoWay}"
+                                    Text="{Binding Day3.Content, Mode=TwoWay}"
                                     TextAlignment="Center"
                                     TextWrapping="Wrap" />
                             </Viewbox>
@@ -348,9 +367,15 @@
                                 <TextBlock
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
+                                    AllowDrop="True"
                                     Background="{Binding Day4Background}"
+                                    Cursor="Hand"
+                                    DragOver="TextBlock_DragOver"
+                                    Drop="TextBlock_Drop"
                                     Foreground="{Binding Day4Foreground}"
-                                    Text="{Binding Day4}"
+                                    PreviewMouseLeftButtonDown="TextBlock_PreviewMouseLeftButtonDown"
+                                    Tag="{Binding Day4, Mode=TwoWay}"
+                                    Text="{Binding Day4.Content, Mode=TwoWay}"
                                     TextAlignment="Center"
                                     TextWrapping="Wrap" />
                             </Viewbox>
@@ -370,9 +395,15 @@
                                 <TextBlock
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
+                                    AllowDrop="True"
                                     Background="{Binding Day5Background}"
+                                    Cursor="Hand"
+                                    DragOver="TextBlock_DragOver"
+                                    Drop="TextBlock_Drop"
                                     Foreground="{Binding Day5Foreground}"
-                                    Text="{Binding Day5}"
+                                    PreviewMouseLeftButtonDown="TextBlock_PreviewMouseLeftButtonDown"
+                                    Tag="{Binding Day5, Mode=TwoWay}"
+                                    Text="{Binding Day5.Content, Mode=TwoWay}"
                                     TextAlignment="Center"
                                     TextWrapping="Wrap" />
                             </Viewbox>
@@ -392,9 +423,15 @@
                                 <TextBlock
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
+                                    AllowDrop="True"
                                     Background="{Binding Day6Background}"
+                                    Cursor="Hand"
+                                    DragOver="TextBlock_DragOver"
+                                    Drop="TextBlock_Drop"
                                     Foreground="{Binding Day6Foreground}"
-                                    Text="{Binding Day6}"
+                                    PreviewMouseLeftButtonDown="TextBlock_PreviewMouseLeftButtonDown"
+                                    Tag="{Binding Day6, Mode=TwoWay}"
+                                    Text="{Binding Day6.Content, Mode=TwoWay}"
                                     TextAlignment="Center"
                                     TextWrapping="Wrap" />
                             </Viewbox>
@@ -414,9 +451,15 @@
                                 <TextBlock
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
+                                    AllowDrop="True"
                                     Background="{Binding Day7Background}"
+                                    Cursor="Hand"
+                                    DragOver="TextBlock_DragOver"
+                                    Drop="TextBlock_Drop"
                                     Foreground="{Binding Day7Foreground}"
-                                    Text="{Binding Day7}"
+                                    PreviewMouseLeftButtonDown="TextBlock_PreviewMouseLeftButtonDown"
+                                    Tag="{Binding Day7, Mode=TwoWay}"
+                                    Text="{Binding Day7.Content, Mode=TwoWay}"
                                     TextAlignment="Center"
                                     TextWrapping="Wrap" />
                             </Viewbox>

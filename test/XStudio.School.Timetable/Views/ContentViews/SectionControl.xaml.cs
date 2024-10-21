@@ -16,207 +16,89 @@ namespace XStudio.School.Timetable.Views.ContentViews {
     /// Interaction logic for SectionControl
     /// </summary>
     public partial class SectionControl : UserControl {
-        //public SectionControl() {
-        //    InitializeComponent();
-        //}
-
-        //private void ScheduleGrid_LoadingRow(object sender, DataGridRowEventArgs e) {
-        //    var row = e.Row;
-        //    var item = row.Item as TimetableRow;
-        //    if (item != null) {
-        //        // 检查时段是否已经存在
-        //        var existingCell = dataSection.Columns[0].GetCellContent(row);
-        //        if (existingCell != null) {
-        //            var existingRow = dataSection.ItemContainerGenerator.ContainerFromIndex(dataSection.Items.IndexOf(existingCell.DataContext)) as DataGridRow;
-        //            if (existingRow != null) {
-        //                // 设置行的CellStyle以合并单元格
-        //                row.Style = new Style { BasedOn = row.Style };
-        //                row.Style.Setters.Add(new Setter(DataGridRow.HeaderProperty, item.TimeSlot));
-        //            }
-        //        }
-        //    }
-        //}
-        public ObservableCollection<Period> Periods { get; set; }
-
         public SectionControl() {
             InitializeComponent();
-
-            Periods = new ObservableCollection<Period>
-            {
-                new Period { Name = "早晨", Start = TimeSpan.Parse("08:00:00"), End = TimeSpan.Parse("09:00:00"), Sections = new List<int> { 1, 2 } },
-                new Period { Name = "上午", Start = TimeSpan.Parse("09:00:00"), End = TimeSpan.Parse("12:00:00"), Sections= new List<int> { 3, 4, 5, 6 } },
-                new Period { Name = "中午", Start = TimeSpan.Parse("12:00:00"), End = TimeSpan.Parse("13:30:00"), Sections = new List<int> { 7 } },
-                new Period { Name = "下午", Start = TimeSpan.Parse("13:30:00"), End = TimeSpan.Parse("17:00:00"), Sections = new List<int> { 8, 9, 10 } },
-                new Period { Name = "晚上", Start = TimeSpan.Parse("17:00:00"), End = TimeSpan.Parse("21:00:00"), Sections = new List<int> { 11, 12, 13 } }
-            };
-            // LoadDataGrid();
         }
 
-        private void LoadDataGrid() {
-            // Create Period and Session columns  
-            var periodColumn = new DataGridTextColumn { Header = "时段", Binding = new Binding("PeriodName") };
-            var sessionColumn = new DataGridTextColumn { Header = "节次", Binding = new Binding("Session") };
+        private void TextBlock_DragOver(object sender, DragEventArgs e) {
+            // 确保进行允许的拖放
+            e.Effects = e.Data.GetDataPresent(typeof(TimetableCell)) ? DragDropEffects.Move : DragDropEffects.None;
+        }
 
-            // Create dynamic day columns  
-            var days = new List<DayOfWeek> { DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday, DayOfWeek.Sunday };
-            foreach (var day in days) {
-                //var dayColumn = new DataGridTemplateColumn {
-                //    Header = day.ToString(),
-                //    CellTemplate = CreateDayCellTemplate(day),
-                //    CellEditingTemplate = CreateDayCellEditingTemplate(day)
-                //};
-                CourseDataGrid.Columns.Add(new DataGridTextColumn { Header = $"{day.ToString()}" });
-            }
+        private void TextBlock_Drop(object sender, DragEventArgs e) {
+            if (sender is TextBlock targetTextBlock) {
+                var targetDataContext = targetTextBlock.Tag as TimetableCell;
+                var draggedDataContext = e.Data.GetData(typeof(TimetableCell));
 
-            // Add Period and Session columns  
-            CourseDataGrid.Columns.Insert(0, periodColumn);
-            CourseDataGrid.Columns.Insert(1, sessionColumn);
+                // 交换数据
+                if (targetDataContext != null && draggedDataContext != null && targetDataContext != draggedDataContext) {
+                    //// 假设 Day1 和 Day2 是数据模型的属性
+                    //var targetProperty = targetDataContext.GetType().GetProperty("Day1");
+                    //var dragProperty = draggedDataContext.GetType().GetProperty("Day1");
 
-            // Create and bind items source  
-            var items = new ObservableCollection<ScheduleItem>();
-            foreach (var period in Periods) {
-                foreach (var section in period.Sections) {
-                    var item = new ScheduleItem {
-                        PeriodName = period.Name,
-                        Session = section.ToString(),
-                        Merged = false,
-                        DaySchedules = new Dictionary<DayOfWeek, string>() { { DayOfWeek.Monday, GetCourseForPeriod(DayOfWeek.Monday, period, section) } }
-                    };
-                    items.Add(item);
+                    //if (targetProperty != null && dragProperty != null) {
+                    //    var temp = targetProperty.GetValue(targetDataContext);
+                    //    targetProperty.SetValue(targetDataContext, dragProperty.GetValue(draggedDataContext));
+                    //    dragProperty.SetValue(draggedDataContext, temp);
+                    //}
                 }
             }
-
-            //// Merge cells for the same period  
-            //var mergedGroups = items.GroupBy(i => i.PeriodName).ToList();
-            //var mergedItems = new List<ScheduleItem>();
-            //foreach (var group in mergedGroups) {
-            //    var firstItem = group.First();
-            //    firstItem.Merged = true;
-            //    mergedItems.Add(firstItem);
-
-            //    foreach (var day in days) {
-            //        var courses = group.Where(it=>it.DaySchedules.ContainsKey(day)).Select(i => i.DaySchedules[day]).Distinct().ToList();
-            //        if (courses.Count == group.Count()) {
-            //            firstItem.DaySchedules[day] = string.Join(", ", courses);
-            //        }
-            //        else {
-            //            firstItem.DaySchedules[day] = string.Empty; // or handle partially filled periods differently  
-            //        }
-            //    }
-            //}
-
-            CourseDataGrid.ItemsSource = items;
         }
 
-        private string GetCourseForPeriod(DayOfWeek day, Period period, int session) {
-            List<string> ClassCourseList = new() { "语文", "数学", "英语", "物理", "化学", "生物", "历史", "地理", "政治", "公共课", "体育", "美术", "音乐", "舞蹈", "戏剧", "电影", "健康课", "心理课", "综合课" };
-            Random random = new(18);
-            return ClassCourseList[random.Next(0, 18)];
-            //if (daySchedule.Periods.TryGetValue(period, out var course) &&
-            //    course.Contains($"{session}")) // Adjust this logic as needed  
-            //{
-            //    return course;
-            //}
-            //return string.Empty;
-        }
-        private DataTemplate CreatePeriodCellTemplate() {
-            var factory = new FrameworkElementFactory(typeof(TextBlock));
-            factory.SetBinding(TextBlock.TextProperty, new Binding("PeriodName"));
-            factory.SetValue(TextBlock.StyleProperty, (Style)this.Resources["MergedCellStyle"]);
-            return new DataTemplate { VisualTree = factory };
-        }
-        private DataTemplate CreateDayCellTemplate(DayOfWeek day) {
-            var factory = new FrameworkElementFactory(typeof(TextBlock));
-            factory.SetBinding(TextBlock.TextProperty, new MultiBinding {
-                Converter = new DayScheduleConverter(day),
-                Bindings =
-                {
-                    new Binding("DaySchedules"),
-                    new Binding(nameof(ScheduleItem.Merged))
-                }
-            });
-            factory.SetValue(TextBlock.StyleProperty, (Style)this.Resources["MergedCellStyle"]);
-            return new DataTemplate { VisualTree = factory };
+        private void TextBlock_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
+            if (sender is TextBlock textBlock) {
+                // 启动拖拽操作
+                DragDrop.DoDragDrop(textBlock, textBlock.Tag, DragDropEffects.Move);
+            }
         }
 
-        private DataTemplate CreateDayCellEditingTemplate(DayOfWeek day) {
-            // For simplicity, we'll skip editing template in this example  
-            return new DataTemplate();
+        private void CourseDataGrid_DragOver(object sender, DragEventArgs e) {
+            e.Effects = e.Data.GetDataPresent(typeof(TimetableCell)) ? DragDropEffects.Move : DragDropEffects.None;
         }
 
         private void CourseDataGrid_Drop(object sender, DragEventArgs e) {
+            DataGrid dataGrid = sender as DataGrid;
+            if (dataGrid == null) {
+                return;
+            }
 
-            if (e.Data.GetDataPresent(typeof(TimetableRow))) // 替换为您的数据类型
-            {
-                var dataGrid = sender as DataGrid;
-                var targetItem = GetDataGridItemAtMousePosition(dataGrid, e.GetPosition(dataGrid));
+            var targetCell = GetDataGridItemAtMousePosition(dataGrid, e.GetPosition(dataGrid));
+            if (targetCell == null) {
+                // 放置位置没有数据
 
-                if (targetItem != null) {
-                    var draggedItem = e.Data.GetData(typeof(TimetableRow)) as TimetableRow; // 替换为您的数据类型
+                return;
+            }
 
-                    // 在这里交换数据
-                    SwapItems(draggedItem, targetItem);
+            var draggedCell = e.Data.GetData(typeof(TimetableCell)) as TimetableCell;
+            if (draggedCell == null) {
+                return;
+            }
+
+            // 交换数据
+            if (targetCell != null && draggedCell != null && targetCell != draggedCell) {
+                var targetProperty = targetCell.GetType().GetProperty("Content");
+                var dragProperty = draggedCell.GetType().GetProperty("Content");
+
+                if (targetProperty != null && dragProperty != null) {
+                    var temptarget = targetProperty.GetValue(targetCell);
+                    var tempdrag = dragProperty.GetValue(draggedCell);
+                    targetProperty.SetValue(targetCell, tempdrag);
+                    dragProperty.SetValue(draggedCell, temptarget);
                 }
             }
         }
 
-        private void CourseDataGrid_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
-            var dataGrid = sender as DataGrid;
-            var clickedItem = GetDataGridItemAtMousePosition(dataGrid, e.GetPosition(dataGrid));
-
-            if (clickedItem != null) {
-                DragDrop.DoDragDrop(dataGrid, clickedItem, DragDropEffects.Move);
-            }
-        }
-
-        private TimetableRow GetDataGridItemAtMousePosition(DataGrid dataGrid, Point position) {
+        private TimetableCell? GetDataGridItemAtMousePosition(DataGrid dataGrid, Point position) {
             var hit = dataGrid.InputHitTest(position) as FrameworkElement;
-            while (hit != null && !(hit is DataGridRow)) {
-                hit = VisualTreeHelper.GetParent(hit) as FrameworkElement;
+            if (hit is TextBlock textBlock) {
+                return textBlock.Tag as TimetableCell;
             }
-            return hit?.DataContext as TimetableRow; // 替换为您的数据类型
-        }
-
-        private void SwapItems(TimetableRow item1, TimetableRow item2) {
-            // 在这里实现交换逻辑，例如更新视图模型中的集合
-        }
-    }
-
-    public class Period {
-        public string Name { get; set; }
-        public TimeSpan Start { get; set; }
-        public TimeSpan End { get; set; }
-
-        public List<int> Sections { get; set; }
-    }
-
-
-    public class ScheduleItem {
-        public string PeriodName { get; set; }
-        public string Session { get; set; }
-        public Dictionary<DayOfWeek, string> DaySchedules { get; set; }
-        public bool Merged { get; set; }
-    }
-
-    public class DayScheduleConverter : IMultiValueConverter {
-        private DayOfWeek _day;
-
-        public DayScheduleConverter(DayOfWeek day) {
-            _day = day;
-        }
-
-        public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture) {
-            var daySchedules = values[0] as Dictionary<DayOfWeek, string>;
-            var merged = (bool)values[1];
-
-            //if (daySchedules != null && daySchedules.TryGetValue(_day, out var course)) {
-                return merged ? daySchedules.ElementAt(0).Value : new TextBlock { Text = daySchedules.ElementAt(0).Value, VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center };
-           // }
-            //return string.Empty;
-        }
-
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture) {
-            throw new NotImplementedException();
+            else {
+                while (hit != null && !(hit is DataGridCell)) {
+                    hit = VisualTreeHelper.GetParent(hit) as FrameworkElement;
+                }
+                return hit?.DataContext as TimetableCell; // 替换为您的数据类型
+            }
         }
     }
 }
