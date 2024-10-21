@@ -15,6 +15,10 @@ namespace XStudio.SchoolSchedule.Rules {
         public AlternatePollingRule(PriorityMode priority, List<ClassCourseRule> rules, float classHour = 1) {
             ClassHour = classHour;
             PollingCourses = rules;
+            Priority = priority;
+            RangeType = ActionRangeType.Class;
+            Mode = RuleMode.Course;
+            Type = RuleType.AlternatePolling;
         }
 
         /// <summary>
@@ -23,7 +27,7 @@ namespace XStudio.SchoolSchedule.Rules {
         public override string DisplayName {
             get {
                 if (PollingCourses != null && PollingCourses.Any()) {
-                    return $"({string.Join("|", PollingCourses.Select(r => r.DisplayName))})";
+                    return $"{string.Join("|", PollingCourses.Select(r => r.DisplayName))}\r\n({GetDescription(Type)})";
                 }
                 return "无";
             }

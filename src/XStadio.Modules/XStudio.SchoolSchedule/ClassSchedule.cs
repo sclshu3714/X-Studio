@@ -506,11 +506,23 @@ namespace XStudio.SchoolSchedule
             Random random = new Random();
             switch (rule.Type) {
                 case RuleType.ContinuousClasses: // 连续课，只能取相同时段连续节次，中间无打断
+                    //var availableContinuousSections = this.Sections
+                    //    .GroupBy(s => s.TimePeriod) // 根据时间段分组
+                    //    .SelectMany(g => g.SkipLast(1) // 排除最后一节
+                    //    .Where((s, i) => g.ElementAt(s.Period + 1).Status == SectionStatus.Normal && g.ElementAt(s.Period + 1).LinkTo == null && !g.ElementAt(s.Period + 1).IsMergeCell && g.ElementAt(s.Period + 1).Type == regularClass &&
+                    //                     s.Status == SectionStatus.Normal && s.LinkTo == null && !s.IsMergeCell && s.Type == regularClass) // 确保下一个节次也是正常状态
+                    //    .Select(s => s)); // 形成连续的节次对
+                    //if (availableContinuousSections.Count() == 0) return null; // 确保列表不为空
+                    //int it_index = random.Next(availableContinuousSections.Count()); // 随机获取索引
+                    //return availableContinuousSections.ElementAt(it_index); // 返回随机选择的节次
+
                     var availableContinuousSections = this.Sections
-                        .GroupBy(s => s.TimePeriod) // 根据时间段分组
-                        .SelectMany(g => g.SkipLast(1) // 排除最后一节
-                        .Where((s, i) => g.ElementAt(i + 1).Status == SectionStatus.Normal && s.LinkTo == null && !s.IsMergeCell && s.Type == regularClass) // 确保下一个节次也是正常状态
-                        .Select(s => s)); // 形成连续的节次对
+                        .GroupBy(d => d.Day) //根据星期分组
+                        .SelectMany(t => t.GroupBy(s => s.TimePeriod) //  根据时间段分组
+                        .SelectMany(g => g.SkipLast(1) 
+                        .Where((s, i) => s.Status == SectionStatus.Normal && s.LinkTo == null && !s.IsMergeCell && s.Type == regularClass && !s.Contents.Any() &&
+                                         g.ElementAt(i + 1).Status == SectionStatus.Normal && g.ElementAt(i + 1).LinkTo == null && !g.ElementAt(i + 1).IsMergeCell && g.ElementAt(i + 1).Type == regularClass && !g.ElementAt(i + 1).Contents.Any())
+                        .Select(s => s))); // 形成连续的节次对
                     if (availableContinuousSections.Count() == 0) return null; // 确保列表不为空
                     int it_index = random.Next(availableContinuousSections.Count()); // 随机获取索引
                     return availableContinuousSections.ElementAt(it_index); // 返回随机选择的节次
@@ -521,7 +533,7 @@ namespace XStudio.SchoolSchedule
                 case RuleType.CentralizedLessonPreparation:  // 集中备课，只能取指定星期的节次
                 default:
                     var availableSections = this.Sections
-                          .Where(s => s.Status == SectionStatus.Normal && s.LinkTo == null && !s.IsMergeCell && s.Type == regularClass);
+                          .Where(s => s.Status == SectionStatus.Normal && s.LinkTo == null && !s.IsMergeCell && s.Type == regularClass && !s.Contents.Any());
                     if (availableSections.Count() == 0) return null; // 如果没有可用的节次
                     int index = random.Next(availableSections.Count()); // 随机获取索引
                     return availableSections.ElementAt(index); // 返回随机选择的节次
@@ -535,7 +547,7 @@ namespace XStudio.SchoolSchedule
         /// <param name="section"></param>
         /// <returns></returns>
         public bool CanAssign(IRule course, Section section) {
-            return !section.IsMergeCell && section.LinkTo == null && !HasCourseConflict(section,course);
+            return section != null &&!section.IsMergeCell && section.LinkTo == null && !HasCourseConflict(section,course);
         }
 
         /// <summary>
@@ -555,7 +567,7 @@ namespace XStudio.SchoolSchedule
         /// <param name="id"></param>
         /// <exception cref="NotImplementedException"></exception>
         public void RemoveSectionContent(object id) {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 }

@@ -11,6 +11,12 @@ namespace XStudio.SchoolSchedule.Rules
     /// </summary>
     public class ClassCourseRule : IRule
     {
+        public ClassCourseRule()
+        {
+            Mode = RuleMode.Course;
+            Type = RuleType.None;
+            RangeType = ActionRangeType.Course;
+        }
         /// <summary>
         /// 课程编号，主要用于快速识别和查询
         /// </summary>

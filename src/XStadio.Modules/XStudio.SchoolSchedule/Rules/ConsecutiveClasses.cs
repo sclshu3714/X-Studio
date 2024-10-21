@@ -10,7 +10,11 @@ namespace XStudio.SchoolSchedule.Rules {
         /// 课时,单周或者双周分别占classHour的一半
         /// </summary>
         public ConsecutiveClasses(PriorityMode priority, ClassCourseRule classCourse) {
+            Priority = priority;
             ClassCourse = classCourse;
+            Type = RuleType.ContinuousClasses;
+            RangeType = ActionRangeType.Class;
+            Mode = RuleMode.Course;
         }
         /// <summary>
         /// 单双周
@@ -31,7 +35,7 @@ namespace XStudio.SchoolSchedule.Rules {
         public override string DisplayName {
             get {
                 if (ClassCourse != null) {
-                    return $"{ClassCourse.DisplayName}";
+                    return $"{ClassCourse.DisplayName}\r\n({GetDescription(Type)})";
                 }
                 return "无";
             }

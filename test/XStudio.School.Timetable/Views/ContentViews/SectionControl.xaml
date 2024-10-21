@@ -184,30 +184,246 @@
             </DataGrid.Columns>
         </DataGrid>
     </DockPanel>-->
-    <DataGrid
-        x:Name="CourseDataGrid"
-        AutoGenerateColumns="True"
-        CanUserAddRows="False"
-        CanUserDeleteRows="False"
-        GridLinesVisibility="All"
-        HeadersVisibility="All"
-        ItemsSource="{Binding TimetableRows}"
-        RowHeaderWidth="1">
-        <DataGrid.Resources>
-            <!--<Style TargetType="{x:Type DataGridCell}">
-                <Setter Property="BorderBrush" Value="BurlyWood" />
-                <Setter Property="BorderThickness" Value="1" />
-                <Style.Triggers>
-                    <MultiDataTrigger>
-                        <MultiDataTrigger.Conditions>
-                            <Condition Binding="{Binding PeriodName}" Value="早晨" />
-                            <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGridCell}}, Path=PeriodName}" Value="早晨" />
-                        </MultiDataTrigger.Conditions>
-                        <Setter Property="BorderBrush" Value="Transparent" />
-                        <Setter Property="BorderThickness" Value="0,0,0,0" />
-                    </MultiDataTrigger>
-                </Style.Triggers>
-            </Style>-->
-        </DataGrid.Resources>
-    </DataGrid>
+    <DockPanel LastChildFill="True">
+        <ToolBar DockPanel.Dock="Top">
+            <Button
+                Command="{Binding ReGenerateCommand}"
+                CommandParameter="{Binding}"
+                Content="生成" />
+        </ToolBar>
+        <DataGrid
+            x:Name="CourseDataGrid"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center"
+            AllowDrop="True"
+            AutoGenerateColumns="False"
+            CanUserAddRows="False"
+            CanUserDeleteRows="False"
+            ColumnHeaderStyle="{StaticResource MahApps.Styles.DataGridColumnHeader}"
+            Drop="CourseDataGrid_Drop"
+            Focusable="True"
+            GridLinesVisibility="All"
+            HeadersVisibility="All"
+            HorizontalScrollBarVisibility="Auto"
+            ItemsSource="{Binding TimetableRows}"
+            PreviewMouseLeftButtonDown="CourseDataGrid_PreviewMouseLeftButtonDown"
+            RowHeaderWidth="1"
+            RowHeight="45"
+            VerticalScrollBarVisibility="Auto">
+            <DataGrid.Resources>
+                <Style x:Key="theDay1CellStyle" TargetType="DataGridCell">
+                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                    <Setter Property="Foreground" Value="{Binding Day1Foreground}" />
+                    <Setter Property="Background" Value="{Binding Day1Background}" />
+                </Style>
+                <Style x:Key="theDay2CellStyle" TargetType="DataGridCell">
+                    <Setter Property="Foreground" Value="{Binding Day2Foreground}" />
+                    <Setter Property="Background" Value="{Binding Day2Background}" />
+                </Style>
+                <Style x:Key="theDay3CellStyle" TargetType="DataGridCell">
+                    <Setter Property="Foreground" Value="{Binding Day3Foreground}" />
+                    <Setter Property="Background" Value="{Binding Day3Background}" />
+                </Style>
+                <Style x:Key="theDay4CellStyle" TargetType="DataGridCell">
+                    <Setter Property="Foreground" Value="{Binding Day4Foreground}" />
+                    <Setter Property="Background" Value="{Binding Day4Background}" />
+                </Style>
+                <Style x:Key="theDay5CellStyle" TargetType="DataGridCell">
+                    <Setter Property="Foreground" Value="{Binding Day5Foreground}" />
+                    <Setter Property="Background" Value="{Binding Day5Background}" />
+                </Style>
+                <Style x:Key="theDay6CellStyle" TargetType="DataGridCell">
+                    <Setter Property="Foreground" Value="{Binding Day6Foreground}" />
+                    <Setter Property="Background" Value="{Binding Day6Background}" />
+                </Style>
+                <Style x:Key="theDay7CellStyle" TargetType="DataGridCell">
+                    <Setter Property="Foreground" Value="{Binding Day7Foreground}" />
+                    <Setter Property="Background" Value="{Binding Day7Background}" />
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="*" Header="时段">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Text="{Binding TimeSlot}"
+                                TextAlignment="Center"
+                                TextWrapping="Wrap" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Width="*" Header="节次">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Text="{Binding PeriodName}"
+                                TextAlignment="Center"
+                                TextWrapping="Wrap" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn
+                    Width="*"
+                    CellStyle="{StaticResource theDay1CellStyle}"
+                    Header="周一">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Viewbox
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Stretch="None">
+                                <TextBlock
+                                    Grid.ColumnSpan="{Binding ColSpan}"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Background="{Binding Day1Background}"
+                                    Foreground="{Binding Day1Foreground}"
+                                    Text="{Binding Day1}"
+                                    TextAlignment="Center"
+                                    TextWrapping="Wrap" />
+                            </Viewbox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn
+                    Width="*"
+                    CellStyle="{StaticResource theDay2CellStyle}"
+                    Header="周二">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Viewbox
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Stretch="None">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Background="{Binding Day2Background}"
+                                    Foreground="{Binding Day2Foreground}"
+                                    Text="{Binding Day2}"
+                                    TextAlignment="Center"
+                                    TextWrapping="Wrap" />
+                            </Viewbox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn
+                    Width="*"
+                    CellStyle="{StaticResource theDay3CellStyle}"
+                    Header="周三">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Viewbox
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Stretch="None">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Background="{Binding Day3Background}"
+                                    Foreground="{Binding Day3Foreground}"
+                                    Text="{Binding Day3}"
+                                    TextAlignment="Center"
+                                    TextWrapping="Wrap" />
+                            </Viewbox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn
+                    Width="*"
+                    CellStyle="{StaticResource theDay4CellStyle}"
+                    Header="周四">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Viewbox
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Stretch="None">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Background="{Binding Day4Background}"
+                                    Foreground="{Binding Day4Foreground}"
+                                    Text="{Binding Day4}"
+                                    TextAlignment="Center"
+                                    TextWrapping="Wrap" />
+                            </Viewbox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn
+                    Width="*"
+                    CellStyle="{StaticResource theDay5CellStyle}"
+                    Header="周五">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Viewbox
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Stretch="None">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Background="{Binding Day5Background}"
+                                    Foreground="{Binding Day5Foreground}"
+                                    Text="{Binding Day5}"
+                                    TextAlignment="Center"
+                                    TextWrapping="Wrap" />
+                            </Viewbox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn
+                    Width="*"
+                    CellStyle="{StaticResource theDay6CellStyle}"
+                    Header="周六">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Viewbox
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Stretch="None">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Background="{Binding Day6Background}"
+                                    Foreground="{Binding Day6Foreground}"
+                                    Text="{Binding Day6}"
+                                    TextAlignment="Center"
+                                    TextWrapping="Wrap" />
+                            </Viewbox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn
+                    Width="*"
+                    CellStyle="{StaticResource theDay7CellStyle}"
+                    Header="周日">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Viewbox
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Stretch="None">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Background="{Binding Day7Background}"
+                                    Foreground="{Binding Day7Foreground}"
+                                    Text="{Binding Day7}"
+                                    TextAlignment="Center"
+                                    TextWrapping="Wrap" />
+                            </Viewbox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
 </UserControl>

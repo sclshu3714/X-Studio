@@ -15,6 +15,10 @@ namespace XStudio.SchoolSchedule.Rules {
         public SingleOrBiweekly(PriorityMode priority, ClassCourseRule singleWeekly, ClassCourseRule biWeekly) {
             SingleWeekly = singleWeekly;
             BiWeekly = biWeekly;
+            Type = RuleType.SingleOrBiweekly;
+            Mode = RuleMode.Course;
+            Priority = priority;
+            RangeType = ActionRangeType.Class;
         }
         /// <summary>
         /// 单双周
@@ -36,7 +40,7 @@ namespace XStudio.SchoolSchedule.Rules {
         public override string DisplayName {
             get {
                 if (SingleWeekly != null && BiWeekly != null) {
-                    return $"({SingleWeekly.DisplayName}|{BiWeekly.DisplayName})";
+                    return $"{SingleWeekly.DisplayName}|{BiWeekly.DisplayName}\r\n({GetDescription(Type)})";
                 }
                 return "无";
             }

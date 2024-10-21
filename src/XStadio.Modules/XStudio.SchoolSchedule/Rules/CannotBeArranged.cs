@@ -19,9 +19,9 @@ namespace XStudio.SchoolSchedule.Rules {
             get {
                 switch (Mode) {
                     case RuleMode.Course:
-                        return $"{ClassCourse.DisplayName}";
+                        return $"{ClassCourse.DisplayName}\r\n({GetDescription(Type)})";
                     case RuleMode.Teacher:
-                        return $"{ClassCourse.TeacherName}";
+                        return $"{ClassCourse.TeacherName}\r\n({GetDescription(Type)})";
                     default:
                         break;
                 }

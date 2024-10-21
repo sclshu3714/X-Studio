@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using XStudio.School.Timetable.Models;
 using XStudio.SchoolSchedule;
 using XStudio.SchoolSchedule.Rules;
@@ -25,6 +26,10 @@ namespace XStudio.School.Timetable.ViewModels {
         public DelegateCommand<TimetableRow> DownCommand { get; private set; }
         public DelegateCommand<TimetableRow> DeleteCommand { get; private set; }
 
+        public DelegateCommand<object> ReGenerateCommand { get; private set; }
+
+        public ClassSchedule classSchedule { get; set; }
+
         public ObservableCollection<DayOfWeek> LayoutOfWeek { get; set; } = new ObservableCollection<DayOfWeek>() {
              DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday,
              DayOfWeek.Friday, DayOfWeek.Saturday,DayOfWeek.Sunday
@@ -33,7 +38,7 @@ namespace XStudio.School.Timetable.ViewModels {
         /// 节次内容
         /// </summary>
         public ObservableCollection<TimetableRow> TimetableRows { get; set; } = new ObservableCollection<TimetableRow>();
-        public ObservableCollection<ObservableCollection<Section>> Sections { get; set; }
+        //public ObservableCollection<ObservableCollection<Section>> Sections { get; set; }
 
         public SectionControlViewModel(IDialogCoordinator dialogCoordinator, HamburgerMenuControlViewModel viewModel)
             : base(viewModel) {
@@ -42,16 +47,24 @@ namespace XStudio.School.Timetable.ViewModels {
             UpCommand = new DelegateCommand<TimetableRow>(MoveUp);
             DownCommand = new DelegateCommand<TimetableRow>(MoveDown);
             DeleteCommand = new DelegateCommand<TimetableRow>(RemoveSection);
-            Sections = new ObservableCollection<ObservableCollection<Section>>();
+            ReGenerateCommand = new DelegateCommand<object>(ReGenerateSection);
+            //Sections = new ObservableCollection<ObservableCollection<Section>>();
             // 获取所有星期
-            ClassSchedule classSchedule = GenerateTimetable();
+            classSchedule = GenerateTimetable();
             Console.Write(JsonConvert.SerializeObject(classSchedule));
-            List<Section> SectionList = classSchedule.Sections;
-            for (int i = 1; i <= classSchedule.MaxPeriod; i++) {
-                var sectionsForDay = new ObservableCollection<Section>(SectionList.Where(s => s.Period == i));
-                Sections.Add(sectionsForDay);
-            }
+            //List<Section> SectionList = classSchedule.Sections;
+            //for (int i = 1; i <= classSchedule.MaxPeriod; i++) {
+            //    var sectionsForDay = new ObservableCollection<Section>(SectionList.Where(s => s.Period == i));
+            //    Sections.Add(sectionsForDay);
+            //}
             ConvertToDataTable(classSchedule);
+        }
+
+        private void ReGenerateSection(object row) {
+            SectionControlViewModel sectionControlViewModel = (SectionControlViewModel)row;
+            sectionControlViewModel.classSchedule = GenerateTimetable();
+            Console.Write(JsonConvert.SerializeObject(classSchedule));
+            ConvertToDataTable(sectionControlViewModel.classSchedule);
         }
 
         private void ConvertToDataTable(ClassSchedule classSchedule) {
@@ -59,41 +72,107 @@ namespace XStudio.School.Timetable.ViewModels {
             List<Section> SectionList = classSchedule.Sections;
             for (int i = 1; i <= classSchedule.MaxPeriod; i++) {
                 var sectionsForDay = new ObservableCollection<Section>(SectionList.Where(s => s.Period == i));
-                if(!sectionsForDay.Any()) continue;
+                if (!sectionsForDay.Any()) continue;
+                // 构造 TimetableRow
+                Section tempSection = sectionsForDay.FirstOrDefault();
                 TimetableRow timetable = new TimetableRow() {
-                    ColSpan = 1,
-                    RowSpan = 1,
-                    TimeSlot = sectionsForDay.FirstOrDefault().TimePeriod,
-                    Period = i,
+                    IsMerged = tempSection.IsMergeCell,
+                    ColSpan = tempSection.ColSpan,
+                    RowSpan = tempSection.RowSpan,
+                    TimeSlot = tempSection.TimePeriod,
+                    Period = i
                 };
                 foreach (var section in sectionsForDay) {
-                    
-                    switch (section.Day) { 
+                    Brush dayForeground = Brushes.Black;
+                    Brush dayBackground = Brushes.White;
+                    if (section.IsMergeCell && section.LinkTo == null) {
+                        timetable.IsMerged = section.IsMergeCell;
+                        timetable.ColSpan = section.ColSpan;
+                        timetable.RowSpan = section.RowSpan;
+                    }
+                    TimetableCell cell = new TimetableCell() {
+                        Row = timetable,
+                        Column = classSchedule.LayoutOfWeek.IndexOf(section.Day),
+                        Day = section.Day,
+                        Content = section.Contents.FirstOrDefault()?.Content?.DisplayName,
+                    };
+                    if (SetDayCellBrush(section.Contents.FirstOrDefault()?.Content?.Type, ref dayForeground, ref dayBackground)) {
+                        cell.Foreground = dayForeground;
+                        cell.Background = dayBackground;
+                    }
+                    timetable.Cells.Add(cell);
+                    switch (section.Day) {
                         case DayOfWeek.Monday:
                             timetable.Day1 = section.Contents.FirstOrDefault()?.Content?.DisplayName;
-                        break;
+                            if (SetDayCellBrush(section.Contents.FirstOrDefault()?.Content?.Type, ref dayForeground, ref dayBackground)) {
+                                timetable.Day1Foreground = dayForeground;
+                                timetable.Day1Background = dayBackground;
+                            }
+                            break;
                         case DayOfWeek.Tuesday:
                             timetable.Day2 = section.Contents.FirstOrDefault()?.Content?.DisplayName;
-                        break; 
+                            if (SetDayCellBrush(section.Contents.FirstOrDefault()?.Content?.Type, ref dayForeground, ref dayBackground)) {
+                                timetable.Day2Foreground = dayForeground;
+                                timetable.Day2Background = dayBackground;
+                            }
+                            break;
                         case DayOfWeek.Wednesday:
                             timetable.Day3 = section.Contents.FirstOrDefault()?.Content?.DisplayName;
-                        break;
+                            if (SetDayCellBrush(section.Contents.FirstOrDefault()?.Content?.Type, ref dayForeground, ref dayBackground)) {
+                                timetable.Day3Foreground = dayForeground;
+                                timetable.Day3Background = dayBackground;
+                            }
+                            break;
                         case DayOfWeek.Thursday:
                             timetable.Day4 = section.Contents.FirstOrDefault()?.Content?.DisplayName;
-                        break;
+                            if (SetDayCellBrush(section.Contents.FirstOrDefault()?.Content?.Type, ref dayForeground, ref dayBackground)) {
+                                timetable.Day4Foreground = dayForeground;
+                                timetable.Day4Background = dayBackground;
+                            }
+                            break;
                         case DayOfWeek.Friday:
                             timetable.Day5 = section.Contents.FirstOrDefault()?.Content?.DisplayName;
-                        break;
+                            if (SetDayCellBrush(section.Contents.FirstOrDefault()?.Content?.Type, ref dayForeground, ref dayBackground)) {
+                                timetable.Day5Foreground = dayForeground;
+                                timetable.Day5Background = dayBackground;
+                            }
+                            break;
                         case DayOfWeek.Saturday:
                             timetable.Day6 = section.Contents.FirstOrDefault()?.Content?.DisplayName;
-                        break;
-                        case DayOfWeek.Sunday:
+                            if (SetDayCellBrush(section.Contents.FirstOrDefault()?.Content?.Type, ref dayForeground, ref dayBackground)) {
+                                timetable.Day6Foreground = dayForeground;
+                                timetable.Day6Background = dayBackground;
+                            }
+                            break;
+                        case DayOfWeek.Sunday:                            
                             timetable.Day7 = section.Contents.FirstOrDefault()?.Content?.DisplayName;
-                        break;
+                            if (SetDayCellBrush(section.Contents.FirstOrDefault()?.Content?.Type, ref dayForeground, ref dayBackground)) {
+                                timetable.Day7Foreground = dayForeground;
+                                timetable.Day7Background = dayBackground;
+                            }
+                            break;
                     }
-                    TimetableRows.Add(timetable);
                 }
+                TimetableRows.Add(timetable);
             }
+        }
+
+        private bool SetDayCellBrush(RuleType? type, ref Brush dayForeground, ref Brush dayBackground) {
+            switch (type) {
+                case RuleType.ContinuousClasses:
+                    dayForeground = Brushes.Blue;
+                    dayBackground = Brushes.LightGray;
+                    break;
+                case RuleType.AlternatePolling:
+                    dayForeground = Brushes.BlueViolet;
+                    dayBackground = Brushes.LightGray;
+                    break;
+                default:
+                    dayForeground = Brushes.Black;
+                    dayBackground = Brushes.White;
+                    break;
+            }
+            return true;
         }
 
         private async void AddSection() {
@@ -177,8 +256,8 @@ namespace XStudio.School.Timetable.ViewModels {
             classSchedule.SetColumnSpan(DayOfWeek.Monday, 5, 7); // 设置第5|8|9节从周1到周日合并单元格(通栏) - 不参与排课与自动排课
             classSchedule.SetColumnSpan(DayOfWeek.Monday, 8, 7);
             classSchedule.SetColumnSpan(DayOfWeek.Monday, 9, 7);
-            // 排课 总课时: 16 * 7 = 112; 早读: 2 * 7 = 14 课时; 正课: 8 * 7 - 4 = 52 课时; 晚自习: 3 * 7 = 21 课时; 课间操: 1 * 7 = 7 课时; 午休: 2 * 7 = 14 课时;
-            List<Tuple<string, float>> ClassCourseList = new() 
+            // 排课 总课时: 16 * 7 = 112; 早读: 2 * 7 = 14 课时; 正课: 8 * 7 = 56 课时; 晚自习: 3 * 7 = 21 课时; 课间操: 1 * 7 = 7 课时; 午休: 2 * 7 = 14 课时;
+            List<Tuple<string, float>> ClassCourseList = new()
             {
                 Tuple.Create("语文", 6.0f),
                 Tuple.Create("数学", 6.0f),
@@ -201,20 +280,20 @@ namespace XStudio.School.Timetable.ViewModels {
                 Tuple.Create("综合", 0.1f)
             };
             // 构建测试规则
-            // 1 语文 6 课时
-            // 2 数学 6 课时
-            // 3 英语 6 课时 18 课时
-            // 4 物理 4.5 课时
-            // 5 化学 4.5 课时
-            // 6 生物 4.5 课时
-            // 7 历史 4.5 课时
+            // 1 语文 7 课时
+            // 2 数学 7 课时
+            // 3 英语 7 课时                                     -> 21 课时
+            // 4 物理 5.5 课时
+            // 5 化学 5.5 课时
+            // 6 生物 5.5 课时 
+            // 7 历史 5.5 课时
             // 8 地理 4.5 课时
-            // 9 政治 4.5 课时 4.5 * 6 = 27
+            // 9 政治 4.5 课时                                    -> 31 课时
             // 10 体育 1 课时
             // 11 美术 0.5 课时
             // 12 音乐 0.5 课时
-            // 13 舞蹈、戏剧, 电影, 健康课, 心理课, 综合课 1 课时 3
-            // 14 班会 1 课时
+            // 13 舞蹈、戏剧, 电影, 健康课, 心理课, 综合课 1 课时 -> 3
+            // 14 班会 1 课时                                     -> 1
             Dictionary<string, ClassCourseRule> classCourses = ClassCourseList.ToDictionary(k => k.Item1, v => new ClassCourseRule() { Name = v.Item1, ClassHour = v.Item2, Mode = RuleMode.Course, Priority = PriorityMode.Medium, Type = RuleType.None });
             List<IRule> rules = new();
             // 语数英都有一个连堂
@@ -230,10 +309,12 @@ namespace XStudio.School.Timetable.ViewModels {
             rules.Add(classCourses["语文"]);
             rules.Add(classCourses["语文"]);
             rules.Add(classCourses["语文"]);
+            rules.Add(classCourses["语文"]);
             rules.Add(classCourses["数学"]);
             rules.Add(classCourses["数学"]);
             rules.Add(classCourses["数学"]);
-            rules.Add(classCourses["数学"]); 
+            rules.Add(classCourses["数学"]);
+            rules.Add(classCourses["数学"]);
             rules.Add(classCourses["英语"]);
             rules.Add(classCourses["英语"]);
             rules.Add(classCourses["英语"]);
@@ -243,6 +324,8 @@ namespace XStudio.School.Timetable.ViewModels {
             rules.Add(classCourses["物理"]);
             rules.Add(classCourses["物理"]);
             rules.Add(classCourses["物理"]);
+            rules.Add(classCourses["物理"]);
+            rules.Add(classCourses["化学"]);
             rules.Add(classCourses["化学"]);
             rules.Add(classCourses["化学"]);
             rules.Add(classCourses["化学"]);
@@ -251,6 +334,8 @@ namespace XStudio.School.Timetable.ViewModels {
             rules.Add(classCourses["生物"]);
             rules.Add(classCourses["生物"]);
             rules.Add(classCourses["生物"]);
+            rules.Add(classCourses["生物"]);
+            rules.Add(classCourses["历史"]);
             rules.Add(classCourses["历史"]);
             rules.Add(classCourses["历史"]);
             rules.Add(classCourses["历史"]);
@@ -264,7 +349,10 @@ namespace XStudio.School.Timetable.ViewModels {
             rules.Add(classCourses["政治"]);
             rules.Add(classCourses["政治"]);
             rules.Add(classCourses["体育"]);
+            rules.Add(classCourses["班会"]);
+            NoAssignCourses = null;
             AutoAssignCourses(classSchedule, rules, 0);
+            Console.Write(NoAssignCourses);
             //分解课时 
             /* 自动排课 - 默认校验:只校验班级课程课时，
              *            选择校验：
@@ -291,7 +379,7 @@ namespace XStudio.School.Timetable.ViewModels {
             classSchedule.SetSectionTimePeriod(new List<int>() { 10, 11, 12, 13 }, "下午", SectionType.RegularClass);
             classSchedule.SetSectionTimePeriod(new List<int>() { 14, 15, 16 }, "晚上", SectionType.EveningStudy);
         }
-
+        private string NoAssignCourses = null;
         // 自动分配课程的函数
         private bool AutoAssignCourses(ClassSchedule classSchedule, List<IRule> courses, int index) {
             if (index >= courses.Count) {
@@ -303,16 +391,20 @@ namespace XStudio.School.Timetable.ViewModels {
             // 遍历所有时段尝试分配
             var section = classSchedule.GetAvailableSections(rule, SectionType.RegularClass);
             if (classSchedule.CanAssign(rule, section)) {
-                classSchedule.AddSectionContent(section.Code, new SectionContent(0, new ClassCourseRule() { Name = rule.DisplayName, Mode = rule.Mode }));
-
+                classSchedule.AddSectionContent(section.Code, new SectionContent(0, rule));
+                if (rule.Type == RuleType.ContinuousClasses) {
+                    section = classSchedule[section.Day, section.Period + 1];
+                    classSchedule.AddSectionContent(section.Code, new SectionContent(0, rule));
+                }
                 // 递归尝试下一个课程
                 if (AutoAssignCourses(classSchedule, courses, index + 1)) {
                     return true; // 找到了有效的课程安排
                 }
-
+                NoAssignCourses += rule.DisplayName + " ";
                 // 如果失败，撤销分配
                 classSchedule.RemoveSectionContent(section.Code);
-             }
+            }
+            NoAssignCourses += rule.DisplayName + " ";
             return false; // 该课程无法分配，返回失败
         }
     }

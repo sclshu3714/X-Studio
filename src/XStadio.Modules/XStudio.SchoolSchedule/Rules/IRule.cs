@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -77,6 +78,20 @@ namespace XStudio.SchoolSchedule.Rules {
         /// 位置信息
         /// </summary>
         public Tuple<DayOfWeek, int> Location;
+
+        /// <summary>
+        /// 获取属性的DescriptionAttribute注释
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static string GetDescription<T>(T obj) {
+            if (obj == null) return "未知";
+            Type type = obj.GetType();
+            var field = type.GetField($"{obj}");
+            var descriptionAttribute = field?.GetCustomAttribute<DescriptionAttribute>();
+            return descriptionAttribute?.Description ?? $"{obj}";
+        }
     }
 
     public enum PriorityMode {

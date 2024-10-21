@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media;
 using XStudio.School.Timetable.Models;
 using XStudio.SchoolSchedule;
 using DayOfWeek = XStudio.SchoolSchedule.DayOfWeek;
@@ -141,6 +142,43 @@ namespace XStudio.School.Timetable.Views.ContentViews {
         private DataTemplate CreateDayCellEditingTemplate(DayOfWeek day) {
             // For simplicity, we'll skip editing template in this example  
             return new DataTemplate();
+        }
+
+        private void CourseDataGrid_Drop(object sender, DragEventArgs e) {
+
+            if (e.Data.GetDataPresent(typeof(TimetableRow))) // 替换为您的数据类型
+            {
+                var dataGrid = sender as DataGrid;
+                var targetItem = GetDataGridItemAtMousePosition(dataGrid, e.GetPosition(dataGrid));
+
+                if (targetItem != null) {
+                    var draggedItem = e.Data.GetData(typeof(TimetableRow)) as TimetableRow; // 替换为您的数据类型
+
+                    // 在这里交换数据
+                    SwapItems(draggedItem, targetItem);
+                }
+            }
+        }
+
+        private void CourseDataGrid_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
+            var dataGrid = sender as DataGrid;
+            var clickedItem = GetDataGridItemAtMousePosition(dataGrid, e.GetPosition(dataGrid));
+
+            if (clickedItem != null) {
+                DragDrop.DoDragDrop(dataGrid, clickedItem, DragDropEffects.Move);
+            }
+        }
+
+        private TimetableRow GetDataGridItemAtMousePosition(DataGrid dataGrid, Point position) {
+            var hit = dataGrid.InputHitTest(position) as FrameworkElement;
+            while (hit != null && !(hit is DataGridRow)) {
+                hit = VisualTreeHelper.GetParent(hit) as FrameworkElement;
+            }
+            return hit?.DataContext as TimetableRow; // 替换为您的数据类型
+        }
+
+        private void SwapItems(TimetableRow item1, TimetableRow item2) {
+            // 在这里实现交换逻辑，例如更新视图模型中的集合
         }
     }
 
