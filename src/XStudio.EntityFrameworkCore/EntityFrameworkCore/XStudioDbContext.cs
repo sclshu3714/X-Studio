@@ -74,6 +74,7 @@ public class XStudioDbContext :
     public DbSet<SchoolBuilding> SchoolBuildings { get; set; }
     public DbSet<BuildingFloor> BuildingFloors { get; set; }
     public DbSet<Classroom> Classrooms { get; set; }
+    public DbSet<RoomUsage> RoomUsages { get; set; }
     #endregion
 
     #region 课表
@@ -223,6 +224,19 @@ public class XStudioDbContext :
             AddCommentsToProperties(b);
         });
 
+        builder.Entity<RoomUsage>(b => {
+            b.ToTable(XStudioConsts.DbTablePrefix + "RoomUsages", XStudioConsts.DbSchema);
+            b.ConfigureByConvention(); //auto configure for the base class props
+            b.Property(x => x.Code).IsRequired().HasMaxLength(128);
+            b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+            b.HasKey(x => x.Code);
+            // 设置 Code 和 Name 为索引列
+            b.HasIndex(x => x.Code).HasDatabaseName("IX_TimePeriod_Code");
+            b.HasIndex(x => x.Name).HasDatabaseName("IX_TimePeriod_Name");
+
+            //自动添加注释
+            AddCommentsToProperties(b);
+        });
         #endregion
 
         #region 课表

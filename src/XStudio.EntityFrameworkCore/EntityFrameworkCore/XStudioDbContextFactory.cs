@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using XStudio.Common;
+using XStudio.Common.Helper;
 using XStudio.Common.Nacos;
 
 namespace XStudio.EntityFrameworkCore;
@@ -19,34 +20,32 @@ public class XStudioDbContextFactory : IDesignTimeDbContextFactory<XStudioDbCont
         XStudioEfCoreEntityExtensionMappings.Configure();
 
         var configuration = BuildConfiguration();
-        if (GlobalConfig.Default.NacosConfig == null || GlobalConfig.Default.NacosConfig.Databases == null ||
-           !GlobalConfig.Default.NacosConfig.Databases.Any())
-        {
+        if (GlobalConfig.Default.NacosConfig == null) {
+            GlobalConfig.Default.NacosConfig = new GlobalNacosConfig();
+        }
+        if (!GlobalConfig.Default.NacosConfig.Databases.Any()) {
             configuration.Bind(GlobalConfig.Default.NacosConfig);
         }
         DatabaseInfo? info = GlobalConfig.Default.NacosConfig?.Databases?.Find(db => db.ConnectionName == "Default");
-        if (info == null)
+        if (GlobalConfig.Default.NacosConfig == null || info == null)
         {
-            throw new InvalidOperationException($"数据库连接失败，没有检测到连接地址");
+            throw new InvalidOperationException($"数据库连接失败，没有检测到连接地址, 配置内容：{GlobalConfig.Default.NacosConfig?.ToJson()}");
         }
-        switch (info.DbMode)
-        {
+        // Console.WriteLine($"配置内容：{GlobalConfig.Default.NacosConfig.ToJson()}");
+        switch (info.DbMode) {
             case DatabaseType.Dmdbms:
-                string? myDmdbms = configuration.GetConnectionString("Dmdbms");
-                if (!string.IsNullOrWhiteSpace(myDmdbms))
-                {
+                if (!string.IsNullOrWhiteSpace(info.ConnectionString)) {
                     var builder = new DbContextOptionsBuilder<XStudioDbContext>()
-                        .UseDm(myDmdbms, (DmDbContextOptionsBuilder opt) => { });
+                        .UseDm(info.ConnectionString, (DmDbContextOptionsBuilder opt) => { });
 
                     return new XStudioDbContext(builder.Options);
                 }
                 break;
             default:
-                string? mySql = configuration.GetConnectionString("Default");
-                if (!string.IsNullOrWhiteSpace(mySql))
+                if (!string.IsNullOrWhiteSpace(info.ConnectionString))
                 {
                     var builder = new DbContextOptionsBuilder<XStudioDbContext>()
-                        .UseMySql(mySql, MySqlServerVersion.LatestSupportedServerVersion);
+                        .UseMySql(info.ConnectionString, MySqlServerVersion.LatestSupportedServerVersion);
                     return new XStudioDbContext(builder.Options);
                 }
                 break;

@@ -42,7 +42,7 @@ namespace XStudio.EntityFrameworkCore
             DatabaseInfo? info = GlobalConfig.Default.NacosConfig?.Databases?.Find(db => db.ConnectionName == "Default");
             if (info == null)
             {
-                throw new InvalidOperationException($"数据库连接失败，没有检测到连接地址");
+                throw new InvalidOperationException($"数据库连接失败，没有检测到连接地址, 配置内容:{GlobalConfig.Default.NacosConfig?.ToJson()}");
             }
             switch (info.DbMode)
             {

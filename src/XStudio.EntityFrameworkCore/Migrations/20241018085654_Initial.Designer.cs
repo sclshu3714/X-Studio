@@ -13,8 +13,8 @@ using XStudio.EntityFrameworkCore;
 namespace XStudio.Migrations
 {
     [DbContext(typeof(XStudioDbContext))]
-    [Migration("20240911032552_hasIndex")]
-    partial class hasIndex
+    [Migration("20241018085654_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -22,7 +22,7 @@ namespace XStudio.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("_Abp_DatabaseProvider", EfCoreDatabaseProvider.MySql)
-                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("ProductVersion", "8.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
@@ -31,7 +31,7 @@ namespace XStudio.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("ApplicationName")
                         .HasMaxLength(96)
@@ -100,7 +100,7 @@ namespace XStudio.Migrations
                         .HasColumnName("HttpStatusCode");
 
                     b.Property<Guid?>("ImpersonatorTenantId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("ImpersonatorTenantId");
 
                     b.Property<string>("ImpersonatorTenantName")
@@ -109,7 +109,7 @@ namespace XStudio.Migrations
                         .HasColumnName("ImpersonatorTenantName");
 
                     b.Property<Guid?>("ImpersonatorUserId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("ImpersonatorUserId");
 
                     b.Property<string>("ImpersonatorUserName")
@@ -118,7 +118,7 @@ namespace XStudio.Migrations
                         .HasColumnName("ImpersonatorUserName");
 
                     b.Property<Guid?>("TenantId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("TenantId");
 
                     b.Property<string>("TenantName")
@@ -132,7 +132,7 @@ namespace XStudio.Migrations
                         .HasColumnName("Url");
 
                     b.Property<Guid?>("UserId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("UserId");
 
                     b.Property<string>("UserName")
@@ -153,10 +153,10 @@ namespace XStudio.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<Guid>("AuditLogId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("AuditLogId");
 
                     b.Property<int>("ExecutionDuration")
@@ -187,7 +187,7 @@ namespace XStudio.Migrations
                         .HasColumnName("ServiceName");
 
                     b.Property<Guid?>("TenantId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("TenantId");
 
                     b.HasKey("Id");
@@ -203,10 +203,10 @@ namespace XStudio.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<Guid>("AuditLogId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("AuditLogId");
 
                     b.Property<DateTime>("ChangeTime")
@@ -223,7 +223,7 @@ namespace XStudio.Migrations
                         .HasColumnName("EntityId");
 
                     b.Property<Guid?>("EntityTenantId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("EntityTypeFullName")
                         .IsRequired()
@@ -236,7 +236,7 @@ namespace XStudio.Migrations
                         .HasColumnName("ExtraProperties");
 
                     b.Property<Guid?>("TenantId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("TenantId");
 
                     b.HasKey("Id");
@@ -252,10 +252,10 @@ namespace XStudio.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<Guid>("EntityChangeId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("NewValue")
                         .HasMaxLength(512)
@@ -280,7 +280,7 @@ namespace XStudio.Migrations
                         .HasColumnName("PropertyTypeFullName");
 
                     b.Property<Guid?>("TenantId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("TenantId");
 
                     b.HasKey("Id");
@@ -294,7 +294,7 @@ namespace XStudio.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -354,7 +354,7 @@ namespace XStudio.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("AllowedProviders")
                         .HasMaxLength(256)
@@ -415,7 +415,7 @@ namespace XStudio.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
@@ -443,7 +443,7 @@ namespace XStudio.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -474,7 +474,7 @@ namespace XStudio.Migrations
             modelBuilder.Entity("Volo.Abp.Identity.IdentityClaimType", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -522,19 +522,19 @@ namespace XStudio.Migrations
             modelBuilder.Entity("Volo.Abp.Identity.IdentityLinkUser", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<Guid?>("SourceTenantId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<Guid>("SourceUserId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<Guid?>("TargetTenantId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<Guid>("TargetUserId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.HasKey("Id");
 
@@ -547,7 +547,7 @@ namespace XStudio.Migrations
             modelBuilder.Entity("Volo.Abp.Identity.IdentityRole", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -587,7 +587,7 @@ namespace XStudio.Migrations
                         .HasColumnType("varchar(256)");
 
                     b.Property<Guid?>("TenantId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("TenantId");
 
                     b.HasKey("Id");
@@ -600,7 +600,7 @@ namespace XStudio.Migrations
             modelBuilder.Entity("Volo.Abp.Identity.IdentityRoleClaim", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("ClaimType")
                         .IsRequired()
@@ -612,10 +612,10 @@ namespace XStudio.Migrations
                         .HasColumnType("varchar(1024)");
 
                     b.Property<Guid>("RoleId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<Guid?>("TenantId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("TenantId");
 
                     b.HasKey("Id");
@@ -628,7 +628,7 @@ namespace XStudio.Migrations
             modelBuilder.Entity("Volo.Abp.Identity.IdentitySecurityLog", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("Action")
                         .HasMaxLength(96)
@@ -674,7 +674,7 @@ namespace XStudio.Migrations
                         .HasColumnType("varchar(96)");
 
                     b.Property<Guid?>("TenantId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("TenantId");
 
                     b.Property<string>("TenantName")
@@ -682,7 +682,7 @@ namespace XStudio.Migrations
                         .HasColumnType("varchar(64)");
 
                     b.Property<Guid?>("UserId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
@@ -704,7 +704,7 @@ namespace XStudio.Migrations
             modelBuilder.Entity("Volo.Abp.Identity.IdentitySession", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("ClientId")
                         .HasMaxLength(64)
@@ -735,11 +735,11 @@ namespace XStudio.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<Guid?>("TenantId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("TenantId");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.HasKey("Id");
 
@@ -755,7 +755,7 @@ namespace XStudio.Migrations
             modelBuilder.Entity("Volo.Abp.Identity.IdentityUser", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<int>("AccessFailedCount")
                         .ValueGeneratedOnAdd()
@@ -775,11 +775,11 @@ namespace XStudio.Migrations
                         .HasColumnName("CreationTime");
 
                     b.Property<Guid?>("CreatorId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("CreatorId");
 
                     b.Property<Guid?>("DeleterId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("DeleterId");
 
                     b.Property<DateTime?>("DeletionTime")
@@ -827,7 +827,7 @@ namespace XStudio.Migrations
                         .HasColumnName("LastModificationTime");
 
                     b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("LastModifierId");
 
                     b.Property<DateTimeOffset?>("LastPasswordChangeTime")
@@ -890,7 +890,7 @@ namespace XStudio.Migrations
                         .HasColumnName("Surname");
 
                     b.Property<Guid?>("TenantId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("TenantId");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -921,7 +921,7 @@ namespace XStudio.Migrations
             modelBuilder.Entity("Volo.Abp.Identity.IdentityUserClaim", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("ClaimType")
                         .IsRequired()
@@ -933,11 +933,11 @@ namespace XStudio.Migrations
                         .HasColumnType("varchar(1024)");
 
                     b.Property<Guid?>("TenantId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("TenantId");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.HasKey("Id");
 
@@ -949,22 +949,22 @@ namespace XStudio.Migrations
             modelBuilder.Entity("Volo.Abp.Identity.IdentityUserDelegation", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime(6)");
 
                     b.Property<Guid>("SourceUserId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime(6)");
 
                     b.Property<Guid>("TargetUserId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<Guid?>("TenantId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("TenantId");
 
                     b.HasKey("Id");
@@ -975,7 +975,7 @@ namespace XStudio.Migrations
             modelBuilder.Entity("Volo.Abp.Identity.IdentityUserLogin", b =>
                 {
                     b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("LoginProvider")
                         .HasMaxLength(64)
@@ -991,7 +991,7 @@ namespace XStudio.Migrations
                         .HasColumnType("varchar(196)");
 
                     b.Property<Guid?>("TenantId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("TenantId");
 
                     b.HasKey("UserId", "LoginProvider");
@@ -1004,21 +1004,21 @@ namespace XStudio.Migrations
             modelBuilder.Entity("Volo.Abp.Identity.IdentityUserOrganizationUnit", b =>
                 {
                     b.Property<Guid>("OrganizationUnitId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("CreationTime");
 
                     b.Property<Guid?>("CreatorId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("CreatorId");
 
                     b.Property<Guid?>("TenantId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("TenantId");
 
                     b.HasKey("OrganizationUnitId", "UserId");
@@ -1031,13 +1031,13 @@ namespace XStudio.Migrations
             modelBuilder.Entity("Volo.Abp.Identity.IdentityUserRole", b =>
                 {
                     b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<Guid>("RoleId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<Guid?>("TenantId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("TenantId");
 
                     b.HasKey("UserId", "RoleId");
@@ -1050,7 +1050,7 @@ namespace XStudio.Migrations
             modelBuilder.Entity("Volo.Abp.Identity.IdentityUserToken", b =>
                 {
                     b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("LoginProvider")
                         .HasMaxLength(64)
@@ -1061,7 +1061,7 @@ namespace XStudio.Migrations
                         .HasColumnType("varchar(128)");
 
                     b.Property<Guid?>("TenantId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("TenantId");
 
                     b.Property<string>("Value")
@@ -1075,7 +1075,7 @@ namespace XStudio.Migrations
             modelBuilder.Entity("Volo.Abp.Identity.OrganizationUnit", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -1095,11 +1095,11 @@ namespace XStudio.Migrations
                         .HasColumnName("CreationTime");
 
                     b.Property<Guid?>("CreatorId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("CreatorId");
 
                     b.Property<Guid?>("DeleterId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("DeleterId");
 
                     b.Property<DateTime?>("DeletionTime")
@@ -1131,14 +1131,14 @@ namespace XStudio.Migrations
                         .HasColumnName("LastModificationTime");
 
                     b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("LastModifierId");
 
                     b.Property<Guid?>("ParentId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<Guid?>("TenantId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("TenantId");
 
                     b.HasKey("Id");
@@ -1153,21 +1153,21 @@ namespace XStudio.Migrations
             modelBuilder.Entity("Volo.Abp.Identity.OrganizationUnitRole", b =>
                 {
                     b.Property<Guid>("OrganizationUnitId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<Guid>("RoleId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("CreationTime");
 
                     b.Property<Guid?>("CreatorId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("CreatorId");
 
                     b.Property<Guid?>("TenantId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("TenantId");
 
                     b.HasKey("OrganizationUnitId", "RoleId");
@@ -1181,7 +1181,7 @@ namespace XStudio.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("ApplicationType")
                         .HasMaxLength(50)
@@ -1217,11 +1217,11 @@ namespace XStudio.Migrations
                         .HasColumnName("CreationTime");
 
                     b.Property<Guid?>("CreatorId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("CreatorId");
 
                     b.Property<Guid?>("DeleterId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("DeleterId");
 
                     b.Property<DateTime?>("DeletionTime")
@@ -1253,7 +1253,7 @@ namespace XStudio.Migrations
                         .HasColumnName("LastModificationTime");
 
                     b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("LastModifierId");
 
                     b.Property<string>("LogoUri")
@@ -1288,10 +1288,10 @@ namespace XStudio.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<Guid?>("ApplicationId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -1308,11 +1308,11 @@ namespace XStudio.Migrations
                         .HasColumnName("CreationTime");
 
                     b.Property<Guid?>("CreatorId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("CreatorId");
 
                     b.Property<Guid?>("DeleterId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("DeleterId");
 
                     b.Property<DateTime?>("DeletionTime")
@@ -1335,7 +1335,7 @@ namespace XStudio.Migrations
                         .HasColumnName("LastModificationTime");
 
                     b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("LastModifierId");
 
                     b.Property<string>("Properties")
@@ -1367,7 +1367,7 @@ namespace XStudio.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -1381,11 +1381,11 @@ namespace XStudio.Migrations
                         .HasColumnName("CreationTime");
 
                     b.Property<Guid?>("CreatorId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("CreatorId");
 
                     b.Property<Guid?>("DeleterId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("DeleterId");
 
                     b.Property<DateTime?>("DeletionTime")
@@ -1420,7 +1420,7 @@ namespace XStudio.Migrations
                         .HasColumnName("LastModificationTime");
 
                     b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("LastModifierId");
 
                     b.Property<string>("Name")
@@ -1444,13 +1444,13 @@ namespace XStudio.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<Guid?>("ApplicationId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<Guid?>("AuthorizationId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -1467,11 +1467,11 @@ namespace XStudio.Migrations
                         .HasColumnName("CreationTime");
 
                     b.Property<Guid?>("CreatorId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("CreatorId");
 
                     b.Property<Guid?>("DeleterId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("DeleterId");
 
                     b.Property<DateTime?>("DeletionTime")
@@ -1497,7 +1497,7 @@ namespace XStudio.Migrations
                         .HasColumnName("LastModificationTime");
 
                     b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("LastModifierId");
 
                     b.Property<string>("Payload")
@@ -1540,7 +1540,7 @@ namespace XStudio.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
@@ -1593,7 +1593,7 @@ namespace XStudio.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -1611,7 +1611,7 @@ namespace XStudio.Migrations
                         .HasColumnType("varchar(64)");
 
                     b.Property<Guid?>("TenantId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("TenantId");
 
                     b.HasKey("Id");
@@ -1626,7 +1626,7 @@ namespace XStudio.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
@@ -1654,7 +1654,7 @@ namespace XStudio.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -1686,7 +1686,7 @@ namespace XStudio.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("DefaultValue")
                         .HasMaxLength(2048)
@@ -1734,7 +1734,7 @@ namespace XStudio.Migrations
             modelBuilder.Entity("Volo.Abp.TenantManagement.Tenant", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -1748,11 +1748,11 @@ namespace XStudio.Migrations
                         .HasColumnName("CreationTime");
 
                     b.Property<Guid?>("CreatorId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("CreatorId");
 
                     b.Property<Guid?>("DeleterId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("DeleterId");
 
                     b.Property<DateTime?>("DeletionTime")
@@ -1778,7 +1778,7 @@ namespace XStudio.Migrations
                         .HasColumnName("LastModificationTime");
 
                     b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("LastModifierId");
 
                     b.Property<string>("Name")
@@ -1803,7 +1803,7 @@ namespace XStudio.Migrations
             modelBuilder.Entity("Volo.Abp.TenantManagement.TenantConnectionString", b =>
                 {
                     b.Property<Guid>("TenantId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(64)
@@ -1822,10 +1822,10 @@ namespace XStudio.Migrations
             modelBuilder.Entity("XStudio.Projects.Project", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<Guid>("AuthorId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -1839,7 +1839,7 @@ namespace XStudio.Migrations
                         .HasColumnName("CreationTime");
 
                     b.Property<Guid?>("CreatorId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("CreatorId");
 
                     b.Property<string>("Description")
@@ -1856,7 +1856,7 @@ namespace XStudio.Migrations
                         .HasColumnName("LastModificationTime");
 
                     b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("LastModifierId");
 
                     b.Property<string>("Name")
@@ -1904,7 +1904,7 @@ namespace XStudio.Migrations
                         .HasColumnName("CreationTime");
 
                     b.Property<Guid?>("CreatorId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("CreatorId");
 
                     b.Property<string>("ExtraProperties")
@@ -1913,14 +1913,14 @@ namespace XStudio.Migrations
                         .HasColumnName("ExtraProperties");
 
                     b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("LastModificationTime");
 
                     b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("LastModifierId");
 
                     b.Property<string>("Name")
@@ -1991,7 +1991,7 @@ namespace XStudio.Migrations
                         .HasColumnName("CreationTime");
 
                     b.Property<Guid?>("CreatorId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("CreatorId");
 
                     b.Property<string>("ExtraProperties")
@@ -2005,14 +2005,14 @@ namespace XStudio.Migrations
                         .HasComment("楼层编码");
 
                     b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("LastModificationTime");
 
                     b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("LastModifierId");
 
                     b.Property<string>("Name")
@@ -2034,6 +2034,11 @@ namespace XStudio.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(128)")
                         .HasComment("学校编码");
+
+                    b.Property<string>("UsageCode")
+                        .IsRequired()
+                        .HasColumnType("varchar(128)")
+                        .HasComment("用途编码");
 
                     b.Property<int>("ValidState")
                         .HasColumnType("int")
@@ -2059,7 +2064,73 @@ namespace XStudio.Migrations
                     b.HasIndex("SchoolCode")
                         .HasDatabaseName("IX_TimePeriod_SchoolCode");
 
+                    b.HasIndex("UsageCode")
+                        .IsUnique();
+
                     b.ToTable("AppX_Classrooms", (string)null);
+                });
+
+            modelBuilder.Entity("XStudio.Schools.Places.RoomUsage", b =>
+                {
+                    b.Property<string>("Code")
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)")
+                        .HasComment("编码");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("varchar(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("binary(16)")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("binary(16)");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("binary(16)")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)")
+                        .HasComment("名称");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int")
+                        .HasComment("序号");
+
+                    b.Property<int>("ValidState")
+                        .HasColumnType("int")
+                        .HasComment("数据有效标识");
+
+                    b.HasKey("Code");
+
+                    b.HasIndex("Code")
+                        .HasDatabaseName("IX_TimePeriod_Code");
+
+                    b.HasIndex("Name")
+                        .HasDatabaseName("IX_TimePeriod_Name");
+
+                    b.ToTable("AppX_RoomUsages", (string)null);
                 });
 
             modelBuilder.Entity("XStudio.Schools.Places.School", b =>
@@ -2091,7 +2162,7 @@ namespace XStudio.Migrations
                         .HasColumnName("CreationTime");
 
                     b.Property<Guid?>("CreatorId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("CreatorId");
 
                     b.Property<string>("Description")
@@ -2105,14 +2176,14 @@ namespace XStudio.Migrations
                         .HasColumnName("ExtraProperties");
 
                     b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("LastModificationTime");
 
                     b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("LastModifierId");
 
                     b.Property<string>("Name")
@@ -2160,7 +2231,7 @@ namespace XStudio.Migrations
                         .HasColumnName("CreationTime");
 
                     b.Property<Guid?>("CreatorId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("CreatorId");
 
                     b.Property<string>("ExtraProperties")
@@ -2169,14 +2240,14 @@ namespace XStudio.Migrations
                         .HasColumnName("ExtraProperties");
 
                     b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("LastModificationTime");
 
                     b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("LastModifierId");
 
                     b.Property<string>("Name")
@@ -2242,7 +2313,7 @@ namespace XStudio.Migrations
                         .HasColumnName("CreationTime");
 
                     b.Property<Guid?>("CreatorId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("CreatorId");
 
                     b.Property<string>("ExtraProperties")
@@ -2251,14 +2322,14 @@ namespace XStudio.Migrations
                         .HasColumnName("ExtraProperties");
 
                     b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("LastModificationTime");
 
                     b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("LastModifierId");
 
                     b.Property<string>("Name")
@@ -2312,7 +2383,7 @@ namespace XStudio.Migrations
                         .HasColumnName("CreationTime");
 
                     b.Property<Guid?>("CreatorId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("CreatorId");
 
                     b.Property<string>("ExtraProperties")
@@ -2321,14 +2392,14 @@ namespace XStudio.Migrations
                         .HasColumnName("ExtraProperties");
 
                     b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("LastModificationTime");
 
                     b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("LastModifierId");
 
                     b.Property<string>("Name")
@@ -2375,7 +2446,7 @@ namespace XStudio.Migrations
                         .HasColumnName("CreationTime");
 
                     b.Property<Guid?>("CreatorId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("CreatorId");
 
                     b.Property<string>("ExtraProperties")
@@ -2384,14 +2455,14 @@ namespace XStudio.Migrations
                         .HasColumnName("ExtraProperties");
 
                     b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("LastModificationTime");
 
                     b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("LastModifierId");
 
                     b.Property<string>("LayoutOfWeek")
@@ -2443,7 +2514,7 @@ namespace XStudio.Migrations
                         .HasColumnName("CreationTime");
 
                     b.Property<Guid?>("CreatorId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("CreatorId");
 
                     b.Property<TimeSpan?>("EndTime")
@@ -2456,7 +2527,7 @@ namespace XStudio.Migrations
                         .HasColumnName("ExtraProperties");
 
                     b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<bool>("IsBanner")
                         .HasColumnType("tinyint(1)")
@@ -2475,7 +2546,7 @@ namespace XStudio.Migrations
                         .HasColumnName("LastModificationTime");
 
                     b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("LastModifierId");
 
                     b.Property<string>("Name")
@@ -2541,7 +2612,7 @@ namespace XStudio.Migrations
                         .HasColumnName("CreationTime");
 
                     b.Property<Guid?>("CreatorId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("CreatorId");
 
                     b.Property<string>("ExtraProperties")
@@ -2550,14 +2621,14 @@ namespace XStudio.Migrations
                         .HasColumnName("ExtraProperties");
 
                     b.Property<Guid>("Id")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("binary(16)");
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("LastModificationTime");
 
                     b.Property<Guid?>("LastModifierId")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("binary(16)")
                         .HasColumnName("LastModifierId");
 
                     b.Property<string>("Name")
@@ -2780,6 +2851,12 @@ namespace XStudio.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("XStudio.Schools.Places.RoomUsage", "Usage")
+                        .WithOne("Classroom")
+                        .HasForeignKey("XStudio.Schools.Places.Classroom", "UsageCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Building");
 
                     b.Navigation("Campus");
@@ -2787,6 +2864,8 @@ namespace XStudio.Migrations
                     b.Navigation("Floor");
 
                     b.Navigation("School");
+
+                    b.Navigation("Usage");
                 });
 
             modelBuilder.Entity("XStudio.Schools.Places.SchoolBuilding", b =>
@@ -2881,6 +2960,11 @@ namespace XStudio.Migrations
             modelBuilder.Entity("XStudio.Schools.Places.BuildingFloor", b =>
                 {
                     b.Navigation("Classrooms");
+                });
+
+            modelBuilder.Entity("XStudio.Schools.Places.RoomUsage", b =>
+                {
+                    b.Navigation("Classroom");
                 });
 
             modelBuilder.Entity("XStudio.Schools.Places.School", b =>

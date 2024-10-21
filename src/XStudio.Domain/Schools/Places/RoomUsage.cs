@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp.Domain.Entities.Auditing;
 using XStudio.Common;
 
 namespace XStudio.Schools.Places {
@@ -10,7 +11,7 @@ namespace XStudio.Schools.Places {
     /// 房间用途表
     /// </summary>
     [DbDescription("房间用途")]
-    public class RoomUsage {
+    public class RoomUsage : AuditedAggregateRoot<Guid> {
         /// <summary>
         /// 用途序号
         /// </summary>
@@ -47,5 +48,7 @@ namespace XStudio.Schools.Places {
         /// </summary>
         [DbDescription("数据有效标识")]
         public ValidStateType ValidState { get; set; } = ValidStateType.A;
+
+        public virtual Classroom? Classroom { get; set; } // 一对-关系
     }
 }
