@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Prism.Mvvm;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
@@ -9,17 +10,33 @@ using XStudio.SchoolSchedule.Rules;
 
 namespace XStudio.School.Timetable.Models
 {
-    public class TimetableRow
-    {
+    public class TimetableRow : BindableBase {
+        private string timeSlot;
+        private int period;
+        private ObservableCollection<TimetableCell> cells = new();
+        private TimetableCell monday;
+        private TimetableCell tuesday;
+        private TimetableCell webnesday;
+        private TimetableCell thursday;
+        private TimetableCell saturday;
+        private TimetableCell friday;
+        private TimetableCell sunday;
+
         /// <summary>
         /// 时段
         /// </summary>
-        public string TimeSlot { get; set; }
+        public string TimeSlot  {
+            get => timeSlot;
+            set => SetProperty(ref timeSlot, value);
+        }
 
         /// <summary>
         /// 节次
         /// </summary>
-        public int Period { get; internal set; }
+        public int Period { 
+            get => period;
+            set => SetProperty(ref period, value);
+        }
         /// <summary>
         /// 节次名称
         /// </summary>
@@ -28,54 +45,97 @@ namespace XStudio.School.Timetable.Models
         /// <summary>
         /// 单元格集合
         /// </summary>
-        public ObservableCollection<TimetableCell> Cells { get; set; } = new ObservableCollection<TimetableCell>();
+        public ObservableCollection<TimetableCell> Cells { 
+            get => cells;
+            set => SetProperty(ref cells, value);
+        }
 
         /// <summary>
-        /// 内容
+        /// 周一至周日的单元格
         /// </summary>
-        public TimetableCell Day1 { get; set; }
-        public Brush Day1Foreground { get; set; } = Brushes.Black;
-        public Brush Day1Background { get; set; } = Brushes.White;
-        public TimetableCell Day2 { get; set; }
+        public TimetableCell Monday {
+            get => monday;
+            set => SetProperty(ref monday, value);
+        }
 
-        public Brush Day2Foreground { get; set; } = Brushes.Black;
-        public Brush Day2Background { get; set; } = Brushes.White;
-        public TimetableCell Day3 { get; set; }
+        public TimetableCell Tuesday {
+            get => tuesday;
+            set => SetProperty(ref tuesday, value);
+        }
 
-        public Brush Day3Foreground { get; set; } = Brushes.Black;
-        public Brush Day3Background { get; set; } = Brushes.White;
-        public TimetableCell Day4 { get; set; }
+        public TimetableCell Wednesday {
+            get=>webnesday;
+            set=>SetProperty(ref webnesday, value);
+        }
 
-        public Brush Day4Foreground { get; set; } = Brushes.Black;
-        public Brush Day4Background { get; set; } = Brushes.White;
-        public TimetableCell Day5 { get; set; }
+        public TimetableCell Thursday { 
+            get=>thursday;
+            set=>SetProperty(ref thursday, value);
+        }
 
-        public Brush Day5Foreground { get; set; } = Brushes.Black;
-        public Brush Day5Background { get; set; } = Brushes.White;
-        public TimetableCell Day6 { get; set; }
+        public TimetableCell Friday {
+            get => friday;
+            set => SetProperty(ref friday, value);
+        }
 
-        public Brush Day6Foreground { get; set; } = Brushes.Black;
-        public Brush Day6Background { get; set; } = Brushes.White;
-        public TimetableCell Day7 { get; set; }
+        public TimetableCell Saturday {
+            get => saturday;
+            set => SetProperty(ref saturday, value);
+        }
 
-        public Brush Day7Foreground { get; set; } = Brushes.Black;
-        public Brush Day7Background { get; set; } = Brushes.White;
-
-        public bool IsMerged { get; set; } // 是否合并
-        public int RowSpan { get; set; }   // 行跨度
-        public int ColSpan { get; set; }   // 列跨度
+        public TimetableCell Sunday {
+            get => sunday;
+            set => SetProperty(ref sunday, value);
+        }
     }
 
-    public class TimetableCell
-    {
-        public TimetableRow Row { get; set; }
-        public int Column { get; set; }
-        public DayOfWeek Day { get; set; } = DayOfWeek.Monday;
-        public string Content { get; set; }
-        public Brush Foreground { get; set; } = Brushes.Black;
-        public Brush Background { get; set; } = Brushes.White;
-        public bool IsMerged { get; set; } // 是否合并
-        public int RowSpan { get; set; }   // 行跨度
-        public int ColSpan { get; set; }   // 列跨度
+    public class TimetableCell : BindableBase {
+        private TimetableRow row;
+        private int column;
+        private DayOfWeek day = DayOfWeek.Monday;
+        private string content;
+        private Brush foreground = Brushes.Black;
+        private Brush background = Brushes.White;
+        private bool merged = false;
+        private int rowSpan = 1;
+        private int colSpan = 1;
+
+        public TimetableRow Row { 
+            get => row;
+            set => SetProperty(ref row, value);
+        }
+        
+        public int Column { 
+            get => column;
+            set => SetProperty(ref column, value);
+        }
+        public DayOfWeek Day {
+            get => day;
+            set => SetProperty(ref day, value);
+        }
+        public string Content { 
+            get => content;
+            set => SetProperty(ref content, value);
+        }
+        public Brush Foreground { 
+            get =>foreground; 
+            set => SetProperty(ref foreground, value);
+        }
+        public Brush Background {
+            get => background;
+            set => SetProperty(ref background, value);
+        }
+        public bool IsMerged {
+            get =>merged;
+            set => SetProperty(ref merged, value);
+        }
+        public int RowSpan { 
+            get => rowSpan;
+            set => SetProperty(ref rowSpan, value);
+        }
+        public int ColSpan {
+            get => colSpan;
+            set => SetProperty(ref colSpan, value);
+        }
     }
 }

@@ -36,33 +36,27 @@ namespace XStudio.App;
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
-public partial class App : PrismApplication
-{
+public partial class App : PrismApplication {
     private IAbpApplicationWithInternalServiceProvider? _abpApplication;
 
-    protected override Window CreateShell()
-    {
+    protected override Window CreateShell() {
         return Container.Resolve<MainWindow>();
     }
 
-    protected override void RegisterTypes(IContainerRegistry containerRegistry)
-    {
+    protected override void RegisterTypes(IContainerRegistry containerRegistry) {
         containerRegistry.ConfigurationServices();
     }
 
-    protected override async void OnStartup(StartupEventArgs e)
-    {
+    protected override async void OnStartup(StartupEventArgs e) {
         IConfigurationRoot? configuration = ConfigurationInitialized();
         AppSettings.OnInitialized();
         ApplyConfiguration();
-        if (configuration != null)
-        {
+        if (configuration != null) {
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(configuration)
                 .CreateLogger();
         }
-        else
-        {
+        else {
             Log.Logger = new LoggerConfiguration()
 #if DEBUG
                 .MinimumLevel.Debug()
@@ -74,32 +68,30 @@ public partial class App : PrismApplication
                 .WriteTo.Async(c => c.File("Logs/logs.txt"))
                 .CreateLogger();
         }
-        try
-        {
+        try {
             Log.Information("Starting WPF host.");
 
-            _abpApplication = await AbpApplicationFactory.CreateAsync<AppModule>(options =>
-            {
+            _abpApplication = await AbpApplicationFactory.CreateAsync<AppModule>(options => {
                 options.UseAutofac();
-                options.Services.AddLogging(loggingBuilder =>
-                {
+                options.Services.AddLogging(loggingBuilder => {
                     loggingBuilder.AddSerilog(dispose: true);
                 });
             });
 
             await _abpApplication.InitializeAsync();
-
+            // 注册配置到服务容器
+            if (configuration != null) {
+                _abpApplication.Services.AddSingleton<IConfigurationRoot>(configuration);
+            }
             _abpApplication.Services.GetRequiredService<MainWindow>()?.Show();
 
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex) {
             Log.Fatal(ex, "Host terminated unexpectedly!");
         }
     }
 
-    private IConfigurationRoot? ConfigurationInitialized()
-    {
+    private IConfigurationRoot? ConfigurationInitialized() {
 
         var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
@@ -108,49 +100,40 @@ public partial class App : PrismApplication
         // 检查环境变量是否已设置，如果没有，则设置为开发环境
         var environment = configurationRoot["App:Environment"]; // Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
         if (string.IsNullOrEmpty(environment) ||
-            (environment != Environments.Development && environment != Environments.Staging && environment != Environments.Production))
-        {
+            (environment != Environments.Development && environment != Environments.Staging && environment != Environments.Production)) {
             // 这里可以根据需要设置不同的环境
             environment = "Development";
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", environment);
         }
-        else
-        {
+        else {
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", environment);
         }
-        if (configuration != null && File.Exists($"appsettings.{environment}.json"))
-        {
+        if (configuration != null && File.Exists($"appsettings.{environment}.json")) {
             configuration.AddJsonFile($"appsettings.{environment}.json", optional: true, true);
         }
         configuration?.AddEnvironmentVariables();
         return configuration?.Build();
     }
 
-    protected override async void OnExit(ExitEventArgs e)
-    {
-        if (_abpApplication != null)
-        {
+    protected override async void OnExit(ExitEventArgs e) {
+        if (_abpApplication != null) {
             await _abpApplication.ShutdownAsync();
         }
         Log.CloseAndFlush();
     }
 
-    protected override void OnInitialized()
-    {
+    protected override void OnInitialized() {
         //accountService = Container.Resolve<IAccountService>();
 
-        if (SplashScreenInitialized())
-        {
+        if (SplashScreenInitialized()) {
             (App.Current.MainWindow.DataContext as INavigationAware)?.OnNavigatedTo(null);
             base.OnInitialized();
         }
     }
 
-    protected override IContainerExtension CreateContainerExtension()
-    {
+    protected override IContainerExtension CreateContainerExtension() {
         var serviceCollection = new ServiceCollection();
-        serviceCollection.AddAutoMapper(config =>
-        {
+        serviceCollection.AddAutoMapper(config => {
             config.AddProfile<AppMapper>();
             //config.AddProfile<AppCommonMapper>();
         });
@@ -158,46 +141,38 @@ public partial class App : PrismApplication
             .WithDependencyInjectionAdapter(serviceCollection));
     }
 
-    protected override void ConfigureRegionAdapterMappings(RegionAdapterMappings regionAdapterMappings)
-    {
+    protected override void ConfigureRegionAdapterMappings(RegionAdapterMappings regionAdapterMappings) {
         base.ConfigureRegionAdapterMappings(regionAdapterMappings);
         //regionAdapterMappings..ConfigurationAdapters(Container);
     }
 
-    private static bool SplashScreenInitialized()
-    {
+    private static bool SplashScreenInitialized() {
         var dialogService = ContainerLocator.Container.Resolve<IHostDialogService>();
-        if (dialogService.ShowWindow(AppViewManager.SplashScreen).Result == ButtonResult.No)
-        {
-            if (!Authorization())
-            {
+        if (dialogService.ShowWindow(AppViewManager.SplashScreen).Result == ButtonResult.No) {
+            if (!Authorization()) {
                 Environment.Exit(0);
             }
         }
         return true;
     }
 
-    private static bool Authorization()
-    {
+    private static bool Authorization() {
         var validationResult = Validation();
         if (validationResult == ButtonResult.Retry)
             return Authorization();
 
         return validationResult == ButtonResult.OK;
 
-        static ButtonResult Validation()
-        {
+        static ButtonResult Validation() {
             var dialogService = ContainerLocator.Container.Resolve<IHostDialogService>();
             return dialogService.ShowWindow(AppViewManager.Login).Result;
         }
     }
 
-    public static void LogOut()
-    {
+    public static void LogOut() {
         App.Current.MainWindow.Hide();
 
-        if (SplashScreenInitialized())
-        {
+        if (SplashScreenInitialized()) {
             App.Current.MainWindow.Show();
             (App.Current.MainWindow.DataContext as INavigationAware)?.OnNavigatedTo(null);
         }
@@ -205,15 +180,13 @@ public partial class App : PrismApplication
             Environment.Exit(0);
     }
 
-    public static async Task OnSessionTimeout()
-    {
+    public static async Task OnSessionTimeout() {
         //await ContainerLocator.Container.Resolve<IAccountService>()
         //    .LogoutAsync();
         await Task.CompletedTask;
     }
 
-    public static async Task OnAccessTokenRefresh(string newAccessToken)
-    {
+    public static async Task OnAccessTokenRefresh(string newAccessToken) {
         //await ContainerLocator.Container.Resolve<IAccountStorageService>()
         //    .StoreAccessTokenAsync(newAccessToken);
         await Task.CompletedTask;
@@ -222,8 +195,7 @@ public partial class App : PrismApplication
 
     #region demo
     private static Mutex? AppMutex = null;
-    internal void UpdateSkin(SkinType skin)
-    {
+    internal void UpdateSkin(SkinType skin) {
         var skins0 = Resources.MergedDictionaries[0];
         skins0.MergedDictionaries.Clear();
         skins0.MergedDictionaries.Add(ResourceHelper.GetSkin(skin));
@@ -231,27 +203,24 @@ public partial class App : PrismApplication
 
         var skins1 = Resources.MergedDictionaries[1];
         skins1.MergedDictionaries.Clear();
-        skins1.MergedDictionaries.Add(new ResourceDictionary
-        {
+        skins1.MergedDictionaries.Add(new ResourceDictionary {
             Source = new Uri("pack://application:,,,/XStudio.App;component/Resources/Themes/Theme.xaml")
         });
-        skins1.MergedDictionaries.Add(new ResourceDictionary
-        {
+        skins1.MergedDictionaries.Add(new ResourceDictionary {
             Source = new Uri("pack://application:,,,/XStudio.App;component/Resources/Themes/Theme.xaml")
         });
 
         Current.MainWindow?.OnApplyTemplate();
     }
 
-    private void ApplyConfiguration()
-    {
+    private void ApplyConfiguration() {
         ShutdownMode = ShutdownMode.OnMainWindowClose;
         GlobalData.Init();
+        if (GlobalData.Config == null) { return; }
         ConfigHelper.Instance.SetLang(GlobalData.Config.Lang);
         //XStudio.App.Properties.Langs.LangProvider.Culture = new CultureInfo(GlobalData.Config.Lang);
 
-        if (GlobalData.Config.Skin != SkinType.Default)
-        {
+        if (GlobalData.Config.Skin != SkinType.Default) {
             UpdateSkin(GlobalData.Config.Skin);
         }
 
@@ -265,18 +234,15 @@ public partial class App : PrismApplication
 #endif
     }
 
-    private static void OpenSplashScreen()
-    {
+    private static void OpenSplashScreen() {
         var splashScreen = new SplashScreen("Resources/Img/Cover.png");
         splashScreen.Show(true);
     }
 
-    private static void EnsureProfileOptimization()
-    {
+    private static void EnsureProfileOptimization() {
 #if !NET40
         var cachePath = $"{AppDomain.CurrentDomain.BaseDirectory}Cache";
-        if (!Directory.Exists(cachePath))
-        {
+        if (!Directory.Exists(cachePath)) {
             Directory.CreateDirectory(cachePath);
         }
         ProfileOptimization.SetProfileRoot(cachePath);
@@ -284,21 +250,17 @@ public partial class App : PrismApplication
 #endif
     }
 
-    private void EnsureSingleton()
-    {
+    private void EnsureSingleton() {
         AppMutex = new Mutex(true, "XStudio.App", out var createdNew);
 
-        if (createdNew)
-        {
+        if (createdNew) {
             return;
         }
 
         var current = Process.GetCurrentProcess();
 
-        foreach (var process in Process.GetProcessesByName(current.ProcessName))
-        {
-            if (process.Id != current.Id)
-            {
+        foreach (var process in Process.GetProcessesByName(current.ProcessName)) {
+            if (process.Id != current.Id) {
                 Win32Helper.SetForegroundWindow(process.MainWindowHandle);
                 break;
             }
@@ -307,23 +269,18 @@ public partial class App : PrismApplication
         Shutdown();
     }
 
-    private static void UpdateRegistry()
-    {
+    private static void UpdateRegistry() {
         var processModule = Process.GetCurrentProcess().MainModule;
-        if (processModule != null)
-        {
+        if (processModule != null) {
             var registryFilePath = $"{Path.GetDirectoryName(processModule.FileName)}\\Registry.reg";
-            if (!File.Exists(registryFilePath))
-            {
+            if (!File.Exists(registryFilePath)) {
                 var streamResourceInfo = GetResourceStream(new Uri("pack://application:,,,/Resources/Registry.txt"));
-                if (streamResourceInfo != null)
-                {
+                if (streamResourceInfo != null) {
                     using var reader = new StreamReader(streamResourceInfo.Stream);
                     var registryStr = reader.ReadToEnd();
                     var newRegistryStr = registryStr.Replace("#", processModule.FileName.Replace("\\", "\\\\"));
                     File.WriteAllText(registryFilePath, newRegistryStr);
-                    Process.Start(new ProcessStartInfo("cmd", $"/c {registryFilePath}")
-                    {
+                    Process.Start(new ProcessStartInfo("cmd", $"/c {registryFilePath}") {
                         UseShellExecute = false,
                         CreateNoWindow = true
                     });
@@ -332,22 +289,17 @@ public partial class App : PrismApplication
         }
     }
 
-    private static void UpdateApp()
-    {
+    private static void UpdateApp() {
         const string api = "https://github.com/handyorg/handycontrol/releases/latest";
 
-        try
-        {
+        try {
             var mainDirectory = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory.TrimEnd('\\'));
-            var updateExePath = Path.Combine(mainDirectory, "Update.exe");
-
-            if (File.Exists(updateExePath))
-            {
+            if (mainDirectory != null && Path.Combine(mainDirectory, "Update.exe") is string updateExePath &&
+                File.Exists(updateExePath)) {
                 Task.Factory.StartNew(() => Process.Start(updateExePath, $"--update={api}"));
             }
         }
-        catch
-        {
+        catch {
             // ignored
         }
     }

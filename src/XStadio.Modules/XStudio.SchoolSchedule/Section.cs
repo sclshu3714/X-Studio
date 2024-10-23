@@ -157,6 +157,8 @@ namespace XStudio.SchoolSchedule
         public SectionContent(int index, IRule rule, int interval = 0)
         { 
             Content = rule;
+            WeeklyInterval = interval;
+            Index = index;
         }
 
         /// <summary>
@@ -168,9 +170,9 @@ namespace XStudio.SchoolSchedule
         /// 周间隔
         /// </summary>
         /// <example>
-        /// 常规课：每周都需要上         => 0
-        /// 单双周：单周或者双周才上的课 => 单周 1 | 双周 2
-        /// 轮巡周：每间隔多少周轮巡1次  => 轮巡次数 n， n <= 学期周 最少一个学期上1次， 如设置为3，那么每3周上一次课，该节次内容可以排3个课程，轮巡上课
+        /// 常规课：每周都需要上         => 0 间隔0周
+        /// 单双周：单周或者双周才上的课 => 1 间隔1周
+        /// 轮巡周：每间隔多少周轮巡1次  => n 间隔n周 n， n <= 学期周 最少一个学期上1次， 如设置为3，那么每3周上一次课，该节次内容可以排3个课程，轮巡上课
         /// </example>
         public int WeeklyInterval { get; set; } = 0;
     }

@@ -33,7 +33,6 @@ namespace XStudio.App.Views.UserControls
             if (homePage.DataList.Any())
             {
                 FrameHome.Navigate(homePage.DataList[0]);
-                FrameHome.Navigate(homePage.DataList[0]);
             }
         }
 

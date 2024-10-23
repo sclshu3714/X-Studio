@@ -7,26 +7,27 @@ using System.Threading.Tasks;
 namespace XStudio.SchoolSchedule.Rules {
     public class ConsecutiveClasses : IRule {
         /// <summary>
-        /// 课时,单周或者双周分别占classHour的一半
+        /// 连堂课
         /// </summary>
+        /// <param name="priority"></param>
+        /// <param name="classCourse"></param>
         public ConsecutiveClasses(PriorityMode priority, ClassCourseRule classCourse) {
             Priority = priority;
             ClassCourse = classCourse;
-            Type = RuleType.ContinuousClasses;
+            Type = RuleType.ConsecutiveClasses;
             RangeType = ActionRangeType.Class;
             Mode = RuleMode.Course;
             Id = classCourse.Id;
         }
         /// <summary>
-        /// 单双周
+        /// 连堂课
         /// </summary>
-        /// <param name="priority">优先级</param>
-        /// <param name="singleWeekly">单周课程</param>
-        /// <param name="biWeekly">双周课程</param>
-        /// <param name="actionRange">作用范围</param>
-        /// <param name="classHour">课时,单周或者双周分别占classHour的一半</param>
+        /// <param name="priority"></param>
+        /// <param name="classCourse"></param>
+        /// <param name="actionRange"></param>
+        /// <param name="classHour"></param>
         public ConsecutiveClasses(PriorityMode priority, ClassCourseRule classCourse, List<string> actionRange, float classHour = 1) :
-            base(priority, RuleMode.Course, RuleType.ContinuousClasses, ActionRangeType.Class, actionRange) {
+            base(priority, RuleMode.Course, RuleType.ConsecutiveClasses, ActionRangeType.Class, actionRange) {
             ClassCourse = classCourse;
             ClassHour = classHour;
             Id = classCourse.Id;
@@ -52,5 +53,10 @@ namespace XStudio.SchoolSchedule.Rules {
         /// 单周课程
         /// </summary>
         public ClassCourseRule ClassCourse { get; set; }
+
+        /// <summary>
+        /// 连堂
+        /// </summary>
+        public List<int> Periods { get; set; } = new List<int>();
     }
 }

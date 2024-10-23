@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 using XStudio.App.Models;
 using XStudio.App.ViewModel;
@@ -19,7 +21,6 @@ namespace XStudio.App.Models.Data
         private string _targetCtlName = string.Empty;
         private object? _imageBrush;
         private bool _isNew = true;
-
         public int Index
         {
             get => _index;

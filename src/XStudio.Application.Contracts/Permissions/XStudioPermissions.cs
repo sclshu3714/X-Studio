@@ -21,4 +21,11 @@ public static class XStudioPermissions
         public const string Edit = Default + ".Edit";
         public const string Delete = Default + ".Delete";
     }
+
+    public static class TimePeriods {
+        public const string Default = GroupName + ".TimePeriod";
+        public const string Create = Default + ".Create";
+        public const string Edit = Default + ".Edit";
+        public const string Delete = Default + ".Delete";
+    }
 }

@@ -88,6 +88,7 @@ namespace XStudio.App.Properties.Langs
             OnPropertyChanged(nameof(Clock));
             OnPropertyChanged(nameof(CloseMainWindowDialog));
             OnPropertyChanged(nameof(ColorPicker));
+            OnPropertyChanged(nameof(Code));
             OnPropertyChanged(nameof(ColumnOffset));
             OnPropertyChanged(nameof(ColumnSpacing));
             OnPropertyChanged(nameof(ComboBox));
@@ -458,6 +459,11 @@ namespace XStudio.App.Properties.Langs
         public string ColorPicker => Lang.ColorPicker;
 
         /// <summary>
+        ///   查找类似 编码 的本地化字符串。
+        /// </summary>
+        public string Code => Lang.Code;
+
+        /// <summary>
         ///   查找类似 分栏偏移 的本地化字符串。
         /// </summary>
         public string ColumnOffset => Lang.ColumnOffset;
@@ -471,6 +477,8 @@ namespace XStudio.App.Properties.Langs
         ///   查找类似 组合框 的本地化字符串。
         /// </summary>
         public string ComboBox => Lang.ComboBox;
+
+        
 
         /// <summary>
         ///   查找类似 敬请期待 的本地化字符串。
@@ -1641,6 +1649,11 @@ namespace XStudio.App.Properties.Langs
         ///   查找类似 颜色拾取器 的本地化字符串。
         /// </summary>
         public static string ColorPicker = nameof(ColorPicker);
+
+        /// <summary>
+        ///   查找类似 颜色拾取器 的本地化字符串。
+        /// </summary>
+        public static string Code = nameof(Code);
 
         /// <summary>
         ///   查找类似 分栏偏移 的本地化字符串。

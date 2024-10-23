@@ -11,11 +11,11 @@ namespace XStudio.App.Models.Data
         /// <summary>
         /// 头显示
         /// </summary>
-        public string Header { get; set; }
+        public string? Header { get; set; }
 
         /// <summary>
         /// 背景
         /// </summary>
-        public string BackgroundToken { get; set; }
+        public string? BackgroundToken { get; set; }
     }
 }

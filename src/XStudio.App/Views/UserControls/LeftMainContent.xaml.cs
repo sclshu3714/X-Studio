@@ -40,24 +40,23 @@ namespace XStudio.App.Views.UserControls
 
         private void TabControl_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.AddedItems.Count == 0) return;
-            if (e.AddedItems[0] is WorkspaceInfoViewModel workspaceInfo)
-            {
-                ViewModelLocator.Instance.Main.WorkspaceInfoCurrent = workspaceInfo;
-                var selectedIndex = workspaceInfo.SelectedIndex;
-                workspaceInfo.SelectedIndex = -1;
-                workspaceInfo.SelectedIndex = selectedIndex;
+            if (sender is System.Windows.Controls.TabControl tabControl) {
+                if (e.AddedItems.Count == 0) return;
+                if (e.AddedItems[0] is WorkspaceInfoViewModel workspaceInfo) {
+                    ViewModelLocator.Instance.Main.WorkspaceInfoCurrent = workspaceInfo;
+                    var selectedIndex = workspaceInfo.SelectedIndex;
+                    workspaceInfo.SelectedIndex = -1;
+                    workspaceInfo.SelectedIndex = selectedIndex;
 
-                FilterItems();
-                GroupItems(sender as System.Windows.Controls.TabControl, workspaceInfo);
-            }
-            else if (e.AddedItems[0] is WorkspaceItemModel workspaceItem)
-            {
-                if (ViewModelLocator.Instance.Main.WorkspaceInfoCollection.Count != 1)
-                {
-                    return;
+                    FilterItems();
+                    GroupItems(sender as System.Windows.Controls.TabControl, workspaceInfo);
                 }
-                ViewModelLocator.Instance.Main.SwitchWorkspace(workspaceItem);
+                else if (tabControl.SelectedIndex == 0 && e.AddedItems[0] is WorkspaceItemModel workspaceItem) {
+                    ViewModelLocator.Instance.Main.SwitchWorkspace(workspaceItem);
+                }
+                else if (tabControl.SelectedIndex == 1 && e.AddedItems[0] is WorkspaceItemModel theWorkspaceItem) {
+                    ViewModelLocator.Instance.Main.ActivateWorkspace(theWorkspaceItem);
+                }
             }
         }
 

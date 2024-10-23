@@ -349,6 +349,15 @@ namespace XStudio.App.Properties.Langs {
         }
         
         /// <summary>
+        ///   查找类似 编码 的本地化字符串。
+        /// </summary>
+        internal static string Code {
+            get {
+                return ResourceManager.GetString("Code", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 颜色拾取器 的本地化字符串。
         /// </summary>
         internal static string ColorPicker {

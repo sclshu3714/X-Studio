@@ -449,7 +449,7 @@ namespace XStudio.SchoolSchedule
                     !targetSection.Contents.Any(x => 
                         x.Content?.Type == RuleType.CanOnlyArrange || 
                         x.Content?.Type == RuleType.CannotBeArranged || 
-                        x.Content?.Type == RuleType.ContinuousClasses)
+                        x.Content?.Type == RuleType.ConsecutiveClasses)
                 );
 
                 targetSection.Status = canPlace ? SectionStatus.Normal : SectionStatus.Disable;
@@ -505,7 +505,7 @@ namespace XStudio.SchoolSchedule
             if(rule == null)   return null;
             Random random = new Random();
             switch (rule.Type) {
-                case RuleType.ContinuousClasses: // 连续课，只能取相同时段连续节次，中间无打断
+                case RuleType.ConsecutiveClasses: // 连续课，只能取相同时段连续节次，中间无打断
                     //var availableContinuousSections = this.Sections
                     //    .GroupBy(s => s.TimePeriod) // 根据时间段分组
                     //    .SelectMany(g => g.SkipLast(1) // 排除最后一节

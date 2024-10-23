@@ -861,4 +861,8 @@
     <value>场所</value>
     <comment>场所管理</comment>
   </data>
+  <data name="Code" xml:space="preserve">
+    <value>编码</value>
+    <comment>编码代码</comment>
+  </data>
 </root>

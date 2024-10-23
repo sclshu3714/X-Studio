@@ -8,11 +8,11 @@ namespace XStudio.SchoolSchedule.Rules {
     /// <summary>
     /// 交替轮巡
     /// </summary>
-    public class AlternatePollingRule : IRule {
+    public class AlternatePolling : IRule {
         /// <summary>
         /// 课时,单周或者双周分别占classHour的一半
         /// </summary>
-        public AlternatePollingRule(PriorityMode priority, List<ClassCourseRule> rules, float classHour = 1) {
+        public AlternatePolling(PriorityMode priority, List<ClassCourseRule> rules, float classHour = 1) {
             ClassHour = classHour;
             PollingCourses = rules;
             Priority = priority;
@@ -20,6 +20,7 @@ namespace XStudio.SchoolSchedule.Rules {
             Mode = RuleMode.Course;
             Type = RuleType.AlternatePolling;
             Id = string.Join(";", rules.Select(r => r.Id));
+            
         }
 
         /// <summary>

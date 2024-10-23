@@ -36,7 +36,7 @@ namespace XStudio.App.Views.UserControls
             if (e.OriginalSource is Button { Tag: string langName })
             {
                 PopupConfig.IsOpen = false;
-                if (langName.Equals(GlobalData.Config.Lang))
+                if (GlobalData.Config == null || langName.Equals(GlobalData.Config.Lang))
                 {
                     return;
                 }
@@ -60,7 +60,7 @@ namespace XStudio.App.Views.UserControls
             if (e.OriginalSource is Button { Tag: SkinType skinType })
             {
                 PopupConfig.IsOpen = false;
-                if (skinType.Equals(GlobalData.Config.Skin))
+                if ( GlobalData.Config == null || skinType.Equals(GlobalData.Config.Skin))
                 {
                     return;
                 }

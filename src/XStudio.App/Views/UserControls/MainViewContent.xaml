@@ -35,31 +35,34 @@
                     CornerRadius="10"
                     Effect="{StaticResource EffectShadow4}" />
                 <hc:TabControl
-                    Style="{StaticResource TabControlPlusBaseStyle}"
-                    Margin="3 3 3 3"
                     Grid.Row="2"
+                    Margin="3,3,3,3"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    BorderThickness="0"
                     IsAnimationEnabled="True"
                     IsDraggable="True"
                     ItemsSource="{Binding DisplayAreaInfoCollection}"
                     OverflowMenuDisplayMemberPath="Header"
+                    SelectedIndex="{Binding DisplayAreaSelectedIndex}"
                     ShowCloseButton="False"
-                    BorderThickness="0"  
-                    Background="Transparent"
-                    BorderBrush="Transparent">
+                    Style="{StaticResource TabControlPlusBaseStyle}">
                     <TabControl.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Header}" 
-                                       TextAlignment="Center" 
-                                       VerticalAlignment="Center"
-                                       Background="Transparent"/>
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                Background="Transparent"
+                                Text="{Binding Header}"
+                                TextAlignment="Center" />
                         </DataTemplate>
                     </TabControl.ItemTemplate>
                     <TabControl.ContentTemplate>
                         <DataTemplate>
-                            <Border HorizontalAlignment="Stretch" 
-                                            VerticalAlignment="Stretch" 
-                                            Background="Transparent"
-                                            BorderThickness="0">
+                            <Border
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Background="Transparent"
+                                BorderThickness="0">
                                 <ContentControl Content="{Binding Content}" />
                             </Border>
                         </DataTemplate>

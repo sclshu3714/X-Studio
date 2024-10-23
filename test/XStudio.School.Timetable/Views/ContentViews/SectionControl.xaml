@@ -201,47 +201,47 @@
             CanUserAddRows="False"
             CanUserDeleteRows="False"
             ColumnHeaderStyle="{StaticResource MahApps.Styles.DataGridColumnHeader}"
-            DragOver="CourseDataGrid_DragOver"
-            Drop="CourseDataGrid_Drop"
             Focusable="True"
             GridLinesVisibility="All"
             HeadersVisibility="All"
             HorizontalScrollBarVisibility="Auto"
             ItemsSource="{Binding TimetableRows}"
+            PreviewDragOver="CourseDataGrid_DragOver"
+            PreviewDrop="CourseDataGrid_Drop"
             RowHeaderWidth="1"
             RowHeight="45"
             SelectionMode="Single"
             VerticalScrollBarVisibility="Auto">
             <DataGrid.Resources>
-                <Style x:Key="theDay1CellStyle" TargetType="DataGridCell">
+                <Style x:Key="theMondayCellStyle" TargetType="DataGridCell">
                     <Setter Property="HorizontalContentAlignment" Value="Center" />
                     <Setter Property="VerticalContentAlignment" Value="Center" />
-                    <Setter Property="Foreground" Value="{Binding Day1Foreground}" />
-                    <Setter Property="Background" Value="{Binding Day1Background}" />
+                    <Setter Property="Foreground" Value="{Binding MondayForeground}" />
+                    <Setter Property="Background" Value="{Binding MondayBackground}" />
                 </Style>
-                <Style x:Key="theDay2CellStyle" TargetType="DataGridCell">
-                    <Setter Property="Foreground" Value="{Binding Day2Foreground}" />
-                    <Setter Property="Background" Value="{Binding Day2Background}" />
+                <Style x:Key="theTuesdayCellStyle" TargetType="DataGridCell">
+                    <Setter Property="Foreground" Value="{Binding TuesdayForeground}" />
+                    <Setter Property="Background" Value="{Binding TuesdayBackground}" />
                 </Style>
-                <Style x:Key="theDay3CellStyle" TargetType="DataGridCell">
-                    <Setter Property="Foreground" Value="{Binding Day3Foreground}" />
-                    <Setter Property="Background" Value="{Binding Day3Background}" />
+                <Style x:Key="theWednesdayCellStyle" TargetType="DataGridCell">
+                    <Setter Property="Foreground" Value="{Binding WednesdayForeground}" />
+                    <Setter Property="Background" Value="{Binding WednesdayBackground}" />
                 </Style>
-                <Style x:Key="theDay4CellStyle" TargetType="DataGridCell">
-                    <Setter Property="Foreground" Value="{Binding Day4Foreground}" />
-                    <Setter Property="Background" Value="{Binding Day4Background}" />
+                <Style x:Key="theThursdayCellStyle" TargetType="DataGridCell">
+                    <Setter Property="Foreground" Value="{Binding ThursdayForeground}" />
+                    <Setter Property="Background" Value="{Binding ThursdayBackground}" />
                 </Style>
-                <Style x:Key="theDay5CellStyle" TargetType="DataGridCell">
-                    <Setter Property="Foreground" Value="{Binding Day5Foreground}" />
-                    <Setter Property="Background" Value="{Binding Day5Background}" />
+                <Style x:Key="theFridayCellStyle" TargetType="DataGridCell">
+                    <Setter Property="Foreground" Value="{Binding FridayForeground}" />
+                    <Setter Property="Background" Value="{Binding FridayBackground}" />
                 </Style>
-                <Style x:Key="theDay6CellStyle" TargetType="DataGridCell">
-                    <Setter Property="Foreground" Value="{Binding Day6Foreground}" />
-                    <Setter Property="Background" Value="{Binding Day6Background}" />
+                <Style x:Key="theSaturdayCellStyle" TargetType="DataGridCell">
+                    <Setter Property="Foreground" Value="{Binding SaturdayForeground}" />
+                    <Setter Property="Background" Value="{Binding SaturdayBackground}" />
                 </Style>
-                <Style x:Key="theDay7CellStyle" TargetType="DataGridCell">
-                    <Setter Property="Foreground" Value="{Binding Day7Foreground}" />
-                    <Setter Property="Background" Value="{Binding Day7Background}" />
+                <Style x:Key="theSundayCellStyle" TargetType="DataGridCell">
+                    <Setter Property="Foreground" Value="{Binding SundayForeground}" />
+                    <Setter Property="Background" Value="{Binding SundayBackground}" />
                 </Style>
             </DataGrid.Resources>
             <DataGrid.Columns>
@@ -262,8 +262,8 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
                                 Text="{Binding PeriodName}"
                                 TextAlignment="Center"
                                 TextWrapping="Wrap" />
@@ -272,197 +272,177 @@
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn
                     Width="*"
-                    CellStyle="{StaticResource theDay1CellStyle}"
+                    CellStyle="{StaticResource theMondayCellStyle}"
                     Header="周一">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Viewbox
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Stretch="None">
-                                <TextBlock
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    AllowDrop="True"
-                                    Background="{Binding Day1Background}"
-                                    Cursor="Hand"
-                                    DragOver="TextBlock_DragOver"
-                                    Drop="TextBlock_Drop"
-                                    Foreground="{Binding Day1Foreground}"
-                                    PreviewMouseLeftButtonDown="TextBlock_PreviewMouseLeftButtonDown"
-                                    Tag="{Binding Day1, Mode=TwoWay}"
-                                    Text="{Binding Day1.Content, Mode=TwoWay}"
-                                    TextAlignment="Center"
-                                    TextWrapping="Wrap" />
-                            </Viewbox>
+                            <TextBox
+                                Padding="0"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                AllowDrop="True"
+                                Background="{Binding Monday.Background}"
+                                BorderThickness="0"
+                                Cursor="Hand"
+                                Foreground="{Binding Monday.Foreground}"
+                                IsReadOnly="True"
+                                PreviewMouseLeftButtonDown="TextBlock_PreviewMouseLeftButtonDown"
+                                Tag="{Binding Monday, Mode=TwoWay}"
+                                Text="{Binding Monday.Content, Mode=TwoWay}"
+                                TextAlignment="Center"
+                                TextWrapping="Wrap" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn
                     Width="*"
-                    CellStyle="{StaticResource theDay2CellStyle}"
+                    CellStyle="{StaticResource theTuesdayCellStyle}"
                     Header="周二">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Viewbox
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Stretch="None">
-                                <TextBlock
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    AllowDrop="True"
-                                    Background="{Binding Day2Background}"
-                                    Cursor="Hand"
-                                    DragOver="TextBlock_DragOver"
-                                    Drop="TextBlock_Drop"
-                                    Foreground="{Binding Day2Foreground}"
-                                    PreviewMouseLeftButtonDown="TextBlock_PreviewMouseLeftButtonDown"
-                                    Tag="{Binding Day2, Mode=TwoWay}"
-                                    Text="{Binding Day2.Content, Mode=TwoWay}"
-                                    TextAlignment="Center"
-                                    TextWrapping="Wrap" />
-                            </Viewbox>
+                            <TextBox
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                AllowDrop="True"
+                                Background="{Binding Tuesday.Background}"
+                                BorderThickness="0"
+                                Cursor="Hand"
+                                Foreground="{Binding Tuesday.Foreground}"
+                                IsReadOnly="True"
+                                PreviewMouseLeftButtonDown="TextBlock_PreviewMouseLeftButtonDown"
+                                Tag="{Binding Tuesday, Mode=TwoWay}"
+                                Text="{Binding Tuesday.Content, Mode=TwoWay}"
+                                TextAlignment="Center"
+                                TextWrapping="Wrap" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn
                     Width="*"
-                    CellStyle="{StaticResource theDay3CellStyle}"
+                    CellStyle="{StaticResource theWednesdayCellStyle}"
                     Header="周三">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Viewbox
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Stretch="None">
-                                <TextBlock
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    AllowDrop="True"
-                                    Background="{Binding Day3Background}"
-                                    Cursor="Hand"
-                                    DragOver="TextBlock_DragOver"
-                                    Drop="TextBlock_Drop"
-                                    Foreground="{Binding Day3Foreground}"
-                                    PreviewMouseLeftButtonDown="TextBlock_PreviewMouseLeftButtonDown"
-                                    Tag="{Binding Day3, Mode=TwoWay}"
-                                    Text="{Binding Day3.Content, Mode=TwoWay}"
-                                    TextAlignment="Center"
-                                    TextWrapping="Wrap" />
-                            </Viewbox>
+                            <TextBox
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                AllowDrop="True"
+                                Background="{Binding Wednesday.Background}"
+                                BorderThickness="0"
+                                Cursor="Hand"
+                                Foreground="{Binding Wednesday.Foreground}"
+                                IsReadOnly="True"
+                                PreviewMouseLeftButtonDown="TextBlock_PreviewMouseLeftButtonDown"
+                                Tag="{Binding Wednesday, Mode=TwoWay}"
+                                Text="{Binding Wednesday.Content, Mode=TwoWay}"
+                                TextAlignment="Center"
+                                TextWrapping="Wrap" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn
                     Width="*"
-                    CellStyle="{StaticResource theDay4CellStyle}"
+                    CellStyle="{StaticResource theThursdayCellStyle}"
                     Header="周四">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Viewbox
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Stretch="None">
-                                <TextBlock
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    AllowDrop="True"
-                                    Background="{Binding Day4Background}"
-                                    Cursor="Hand"
-                                    DragOver="TextBlock_DragOver"
-                                    Drop="TextBlock_Drop"
-                                    Foreground="{Binding Day4Foreground}"
-                                    PreviewMouseLeftButtonDown="TextBlock_PreviewMouseLeftButtonDown"
-                                    Tag="{Binding Day4, Mode=TwoWay}"
-                                    Text="{Binding Day4.Content, Mode=TwoWay}"
-                                    TextAlignment="Center"
-                                    TextWrapping="Wrap" />
-                            </Viewbox>
+                            <TextBox
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                AllowDrop="True"
+                                Background="{Binding Thursday.Background}"
+                                BorderThickness="0"
+                                Cursor="Hand"
+                                Foreground="{Binding Thursday.Foreground}"
+                                IsReadOnly="True"
+                                PreviewMouseLeftButtonDown="TextBlock_PreviewMouseLeftButtonDown"
+                                Tag="{Binding Thursday, Mode=TwoWay}"
+                                Text="{Binding Thursday.Content, Mode=TwoWay}"
+                                TextAlignment="Center"
+                                TextWrapping="Wrap" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn
                     Width="*"
-                    CellStyle="{StaticResource theDay5CellStyle}"
+                    CellStyle="{StaticResource theFridayCellStyle}"
                     Header="周五">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Viewbox
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Stretch="None">
-                                <TextBlock
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    AllowDrop="True"
-                                    Background="{Binding Day5Background}"
-                                    Cursor="Hand"
-                                    DragOver="TextBlock_DragOver"
-                                    Drop="TextBlock_Drop"
-                                    Foreground="{Binding Day5Foreground}"
-                                    PreviewMouseLeftButtonDown="TextBlock_PreviewMouseLeftButtonDown"
-                                    Tag="{Binding Day5, Mode=TwoWay}"
-                                    Text="{Binding Day5.Content, Mode=TwoWay}"
-                                    TextAlignment="Center"
-                                    TextWrapping="Wrap" />
-                            </Viewbox>
+                            <TextBox
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                AllowDrop="True"
+                                Background="{Binding Friday.Background}"
+                                BorderThickness="0"
+                                Cursor="Hand"
+                                Foreground="{Binding Friday.Foreground}"
+                                IsReadOnly="True"
+                                PreviewMouseLeftButtonDown="TextBlock_PreviewMouseLeftButtonDown"
+                                Tag="{Binding Friday, Mode=TwoWay}"
+                                Text="{Binding Friday.Content, Mode=TwoWay}"
+                                TextAlignment="Center"
+                                TextWrapping="Wrap" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn
                     Width="*"
-                    CellStyle="{StaticResource theDay6CellStyle}"
+                    CellStyle="{StaticResource theSaturdayCellStyle}"
                     Header="周六">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Viewbox
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Stretch="None">
-                                <TextBlock
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    AllowDrop="True"
-                                    Background="{Binding Day6Background}"
-                                    Cursor="Hand"
-                                    DragOver="TextBlock_DragOver"
-                                    Drop="TextBlock_Drop"
-                                    Foreground="{Binding Day6Foreground}"
-                                    PreviewMouseLeftButtonDown="TextBlock_PreviewMouseLeftButtonDown"
-                                    Tag="{Binding Day6, Mode=TwoWay}"
-                                    Text="{Binding Day6.Content, Mode=TwoWay}"
-                                    TextAlignment="Center"
-                                    TextWrapping="Wrap" />
-                            </Viewbox>
+                            <TextBox
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                AllowDrop="True"
+                                Background="{Binding Saturday.Background}"
+                                BorderThickness="0"
+                                Cursor="Hand"
+                                Foreground="{Binding Saturday.Foreground}"
+                                IsReadOnly="True"
+                                PreviewMouseLeftButtonDown="TextBlock_PreviewMouseLeftButtonDown"
+                                Tag="{Binding Saturday, Mode=TwoWay}"
+                                Text="{Binding Saturday.Content, Mode=TwoWay}"
+                                TextAlignment="Center"
+                                TextWrapping="Wrap" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn
                     Width="*"
-                    CellStyle="{StaticResource theDay7CellStyle}"
+                    CellStyle="{StaticResource theSundayCellStyle}"
                     Header="周日">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Viewbox
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Stretch="None">
-                                <TextBlock
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    AllowDrop="True"
-                                    Background="{Binding Day7Background}"
-                                    Cursor="Hand"
-                                    DragOver="TextBlock_DragOver"
-                                    Drop="TextBlock_Drop"
-                                    Foreground="{Binding Day7Foreground}"
-                                    PreviewMouseLeftButtonDown="TextBlock_PreviewMouseLeftButtonDown"
-                                    Tag="{Binding Day7, Mode=TwoWay}"
-                                    Text="{Binding Day7.Content, Mode=TwoWay}"
-                                    TextAlignment="Center"
-                                    TextWrapping="Wrap" />
-                            </Viewbox>
+                            <TextBox
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                AllowDrop="True"
+                                Background="{Binding Sunday.Background}"
+                                BorderThickness="0"
+                                Cursor="Hand"
+                                Foreground="{Binding Sunday.Foreground}"
+                                IsReadOnly="True"
+                                PreviewMouseLeftButtonDown="TextBlock_PreviewMouseLeftButtonDown"
+                                Tag="{Binding Sunday, Mode=TwoWay}"
+                                Text="{Binding Sunday.Content, Mode=TwoWay}"
+                                TextAlignment="Center"
+                                TextWrapping="Wrap" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

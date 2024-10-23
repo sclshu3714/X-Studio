@@ -18,6 +18,9 @@ using XStudio.App.Models;
 using XStudio.App.Models.Data;
 using XStudio.App.Service;
 using XStudio.App.ViewModel.Home;
+using XStudio.App.ViewModel.Module;
+using XStudio.App.Views.Module;
+using XStudio.App.Views.UserControls;
 
 namespace XStudio.App.ViewModel.Main
 {
@@ -29,6 +32,7 @@ namespace XStudio.App.ViewModel.Main
         private WorkspaceInfoViewModel? _workspaceInfoCurrent;
         private WorkspaceItemModel? _workspaceItemModel;
         private HomePageViewModel? _homePage;
+        private int displayAreaSelectedIndex = 0;
         private readonly DataService _dataService;
 
         public MainViewModel(DataService dataService)
@@ -76,6 +80,11 @@ namespace XStudio.App.ViewModel.Main
             set => SetProperty(ref _isCodeOpened, value);
         }
 
+        public int DisplayAreaSelectedIndex {
+            get => displayAreaSelectedIndex;
+            set => SetProperty(ref displayAreaSelectedIndex, value);
+        }
+
         public ObservableCollection<WorkspaceInfoViewModel> WorkspaceInfoCollection { get; set; }
 
         public ObservableCollection<DisplayAreaInfoViewModel> DisplayAreaInfoCollection { get; set; }
@@ -114,8 +123,8 @@ namespace XStudio.App.ViewModel.Main
 
         private void UpdateMainContent()
         {
-            //// 注册接收 ThemeChangedMessage
-            //StrongReferenceMessenger.Default.Register()
+            // 注册接收 ThemeChangedMessage
+            // StrongReferenceMessenger.Default.Register()
             WeakReferenceMessenger.Default.Register<MainViewModel,string>(this, MessageToken.LoadShowContent, (obj, msg) =>
             {
                 if (SubContent is IDisposable disposable)
@@ -170,6 +179,10 @@ namespace XStudio.App.ViewModel.Main
                         SwitchWorkspace(item);
                         break;
                     case 1:
+                        if (Equals(WorkspaceItemCurrent, item)) {
+                            return;
+                        }
+                        ViewModelLocator.Instance.Main.ActivateWorkspace(item);
                         break;
                     default:
                         return;
@@ -182,7 +195,7 @@ namespace XStudio.App.ViewModel.Main
         {
             if (WorkspaceInfoCollection.Count > 1)
             {
-                Growl.Ask("已经加载了模板，是否切换？", isConfirmed =>
+                Growl.Ask("已经加载了模板，是否切换?", isConfirmed =>
                 {
                     if (isConfirmed)
                     {
@@ -220,6 +233,29 @@ namespace XStudio.App.ViewModel.Main
             //WeakReferenceMessenger.Default.Send<object>(null, MessageToken.ClearLeftSelected);
             //WeakReferenceMessenger.Default.Send(AssemblyHelper.CreateInternalInstance($"UserControl.{MessageToken.PracticalDemo}"), MessageToken.LoadShowContent);
             //WeakReferenceMessenger.Default.Send(true, MessageToken.FullSwitch);
+        }
+
+        /// <summary>
+        /// 激活工作区
+        /// </summary>
+        /// <param name="theWorkspaceItem"></param>
+        public void ActivateWorkspace(WorkspaceItemModel theWorkspaceItem) {
+            ViewModelLocator.Instance.Main.DisplayAreaSelectedIndex = 1;
+            var workspace = DisplayAreaInfoCollection.FirstOrDefault(it => it.Type == DisplayAreaType.Display);
+            if (workspace != null && workspace.Content is DisplayAreaPageControl displayAreaPageControl &&
+                !displayAreaPageControl.ExistPage(theWorkspaceItem.Name)) {
+                ViewModelDataBase<Page>? thePage = null;
+                switch (theWorkspaceItem.Name) {
+                    case "TimePeriod":
+                        thePage = new TimePeriodViewModel(_dataService, theWorkspaceItem.Name);
+                        break;
+                    default:
+                        break;
+                }
+                if (thePage != null && thePage.DataList.Any()) {
+                    displayAreaPageControl.AddPage(thePage.DataList.First());
+                }
+            }
         }
     }
 }

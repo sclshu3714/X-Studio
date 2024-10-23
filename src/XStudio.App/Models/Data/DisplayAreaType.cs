@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Volo.Abp.Application.Dtos;
 
-namespace XStudio.Schools.Timetable
-{
-    public class SectionDto : AuditedEntityDto<Guid> {
+namespace XStudio.App.Models.Data {
+    public enum DisplayAreaType {
+        None = 0,
+        Home = 1,
+        Display = 2
     }
 }

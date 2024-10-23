@@ -20,6 +20,8 @@ namespace XStudio.App.ViewModel.Main
         private string _header = string.Empty;
         private string _BackgroundToken = string.Empty;
         private UserControl? _Content = null;
+        private DisplayAreaType type = DisplayAreaType.None;
+
         /// <summary>
         /// 背景
         /// </summary>
@@ -47,9 +49,17 @@ namespace XStudio.App.ViewModel.Main
             set { SetProperty(ref _Content, value); }
         }
 
+        public DisplayAreaType @Type {
+            get => type;
+            set => SetProperty(ref type, value);
+        }
+
         public DisplayAreaInfoViewModel(DataService dataService) { }
 
         public RelayCommand<CancelRoutedEventArgs> ClosingCmd => new(Closing);
+
+        public void SetContent(UserControl control) { Content = control; }
+
 
         private void Closing(CancelRoutedEventArgs? args)
         {

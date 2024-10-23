@@ -1,17 +1,22 @@
-﻿using HandyControl.Data;
+﻿using Abp.Application.Services.Dto;
+using HandyControl.Data;
 using HandyControl.Tools;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using Volo.Abp.DependencyInjection;
+using XStudio.App.Helper;
 using XStudio.App.Models;
 using XStudio.App.Models.Data;
 using XStudio.App.ViewModel.Home;
 using XStudio.App.ViewModel.Main;
+using XStudio.App.Views.Module;
 using XStudio.App.Views.UserControls;
 
 namespace XStudio.App.Service;
@@ -19,11 +24,21 @@ namespace XStudio.App.Service;
 public class DataService : ITransientDependency
 {
     public ILogger<DataService> Logger { get; set; }
+    private readonly ApiHelper apiHelper;
+    private string? baseAddress { get; set; }
 
-    public DataService()
+    public DataService(IConfigurationRoot configuration)
     {
         Logger = NullLogger<DataService>.Instance;
+        baseAddress = configuration["AppSettings:BaseUrls"];
+        apiHelper = new ApiHelper(baseAddress);
     }
+
+    #region 登录相关
+    #endregion
+
+    #region 项目相关
+
     public string SayHello()
     {
         Logger.LogInformation("Call SayHello");
@@ -169,36 +184,14 @@ public class DataService : ITransientDependency
         {
             new DisplayAreaInfoViewModel(this){
                 Header = "首页",
+                Type = DisplayAreaType.Home,
                 Content = new HomePageControl(_homePage)
             },
             new DisplayAreaInfoViewModel(this){
                 Header = "显示",
-                BackgroundToken = ResourceToken.SuccessBrush
-            },
-            new DisplayAreaInfoViewModel(this)
-            {
-                Header = "Success",
-                BackgroundToken = ResourceToken.SuccessBrush
-            },
-            new DisplayAreaInfoViewModel(this)
-            {
-                Header = "Primary",
-                BackgroundToken = ResourceToken.PrimaryBrush
-            },
-            new DisplayAreaInfoViewModel(this)
-            {
-                Header = "Warning",
-                BackgroundToken = ResourceToken.WarningBrush
-            },
-            new DisplayAreaInfoViewModel(this)
-            {
-                Header = "Danger",
-                BackgroundToken = ResourceToken.DangerBrush
-            },
-            new DisplayAreaInfoViewModel(this)
-            {
-                Header = "Info",
-                BackgroundToken = ResourceToken.InfoBrush
+                Type = DisplayAreaType.Display,
+                BackgroundToken = ResourceToken.SuccessBrush,
+                Content = new DisplayAreaPageControl()
             }
         };
     }
@@ -215,8 +208,53 @@ public class DataService : ITransientDependency
         return pages;
     }
 
-    internal void SetHomePageViewModel(HomePageViewModel homePage)
+    public DisplayAreaInfoViewModel SetHomePageViewModel(HomePageViewModel homePage)
     {
-        throw new NotImplementedException();
+        return new DisplayAreaInfoViewModel(this) {
+            Header = "首页",
+            Content = new HomePageControl(homePage)
+        };
     }
+
+    public ObservableCollection<Page> getTimePeriodPage(ViewModel.Module.TimePeriodViewModel timePeriodViewModel) {
+        ObservableCollection<Page> pages = new ObservableCollection<Page>();
+        pages.Add(new TimePeriodPage(timePeriodViewModel) {  Name=timePeriodViewModel.Type});
+        return pages;
+    }
+
+    #endregion
+
+    #region 模块相关
+    public async Task<TimePeriod> CreateAsync(TimePeriod input) {
+        TimePeriod timePeriod = await apiHelper.PostAsync("api/add", input);
+        return timePeriod;
+    }
+
+    public async Task<List<TimePeriod>> InsertManyAsync(List<TimePeriod> inputs) {
+        List<TimePeriod> timePeriods = await apiHelper.PostAsync("api/adds", inputs);
+        return timePeriods;
+    }
+    public async Task DeleteAsync(Guid id) {
+        await apiHelper.DeleteAsync<string>($"api/delete/{id}");
+    }
+
+    public async Task DeleteManyAsync(List<Guid> ids) {
+        await Task.CompletedTask;
+    }
+
+    public async Task<TimePeriod> GetAsync(Guid id) {
+        TimePeriod timePeriod = await apiHelper.GetAsync<TimePeriod>($"api/get/{id}");
+        return timePeriod;
+    }
+
+    public async Task<PagedResultDto<TimePeriod>> GetListAsync(PagedAndSortedResultRequestDto input) {
+        PagedResultDto<TimePeriod> timePeriods = await apiHelper.GetListAsync<PagedResultDto<TimePeriod>>($"api/get", input);
+        return timePeriods;
+    }
+
+    public async Task<TimePeriod> UpdateAsync(Guid id, TimePeriod input) {
+        TimePeriod timePeriod = await apiHelper.PutAsync($"api/get", input);
+        return timePeriod;
+    }
+    #endregion
 }

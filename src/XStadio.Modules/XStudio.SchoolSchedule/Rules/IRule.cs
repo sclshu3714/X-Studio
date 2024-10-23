@@ -149,7 +149,7 @@ namespace XStudio.SchoolSchedule.Rules {
         /// 连堂[课程]
         /// </summary>
         [Description("连堂")]
-        ContinuousClasses = 2,
+        ConsecutiveClasses = 2,
 
         /// <summary>
         /// 单周[课程]

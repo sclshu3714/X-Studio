@@ -22,7 +22,10 @@ namespace XStudio.App.ViewModel.Main
         {
             MessengerInstance?.Send<object, string>("", MessageToken.ClearLeftSelected);
             MessengerInstance?.Send<object, string>(true, MessageToken.FullSwitch);
-            MessengerInstance?.Send<object, string>(AssemblyHelper.CreateInternalInstance($"UserControl.{viewName}"), MessageToken.LoadShowContent);
+            object? view = AssemblyHelper.CreateInternalInstance($"UserControl.{viewName}");
+            if (view is not null) {
+                MessengerInstance?.Send<object, string>(view, MessageToken.LoadShowContent);
+            }
         }
 
         private string _versionInfo = string.Empty;

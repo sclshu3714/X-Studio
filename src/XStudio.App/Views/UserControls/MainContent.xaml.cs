@@ -26,11 +26,11 @@ namespace XStudio.App.Views.UserControls
     /// </summary>
     public partial class MainContent : UserControl
     {
-        private bool _isFull;
+        private bool _isFull = false;
 
-        private string _currentDemoKey;
+        private string _currentDemoKey = string.Empty;
 
-        private bool _drawerCodeUsed;
+        private bool _drawerCodeUsed = false;
 
         //private Dictionary<string, TextEditor> _textEditor;
         public MainContent()
@@ -142,7 +142,7 @@ namespace XStudio.App.Views.UserControls
         {
             var typeKey = ViewModelLocator.Instance.Main.WorkspaceInfoCurrent?.Key;
             var demoKey = ViewModelLocator.Instance.Main.WorkspaceItemCurrent?.TargetCtlName;
-            if (Equals(_currentDemoKey, demoKey))
+            if (string.IsNullOrEmpty(typeKey) || string.IsNullOrEmpty(demoKey) || Equals(_currentDemoKey, demoKey))
             {
                 return;
             }

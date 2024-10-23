@@ -36,7 +36,7 @@ namespace XStudio.App.Models.Data
             File.WriteAllText(AppConfig.SavePath, json);
         }
 
-        public static AppConfig Config { get; set; }
+        public static AppConfig? Config { get; set; }
 
         public static bool NotifyIconIsShow { get; set; }
     }
