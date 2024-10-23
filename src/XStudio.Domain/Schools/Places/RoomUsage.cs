@@ -48,7 +48,5 @@ namespace XStudio.Schools.Places {
         /// </summary>
         [DbDescription("数据有效标识")]
         public ValidStateType ValidState { get; set; } = ValidStateType.A;
-
-        public virtual Classroom? Classroom { get; set; } // 一对-关系
     }
 }

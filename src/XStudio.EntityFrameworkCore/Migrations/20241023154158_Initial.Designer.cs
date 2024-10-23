@@ -13,7 +13,7 @@ using XStudio.EntityFrameworkCore;
 namespace XStudio.Migrations
 {
     [DbContext(typeof(XStudioDbContext))]
-    [Migration("20241018085654_Initial")]
+    [Migration("20241023154158_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -2064,8 +2064,7 @@ namespace XStudio.Migrations
                     b.HasIndex("SchoolCode")
                         .HasDatabaseName("IX_TimePeriod_SchoolCode");
 
-                    b.HasIndex("UsageCode")
-                        .IsUnique();
+                    b.HasIndex("UsageCode");
 
                     b.ToTable("AppX_Classrooms", (string)null);
                 });
@@ -2125,10 +2124,10 @@ namespace XStudio.Migrations
                     b.HasKey("Code");
 
                     b.HasIndex("Code")
-                        .HasDatabaseName("IX_TimePeriod_Code");
+                        .HasDatabaseName("IX_RoomUsage_Code");
 
                     b.HasIndex("Name")
-                        .HasDatabaseName("IX_TimePeriod_Name");
+                        .HasDatabaseName("IX_RoomUsage_Name");
 
                     b.ToTable("AppX_RoomUsages", (string)null);
                 });
@@ -2852,8 +2851,8 @@ namespace XStudio.Migrations
                         .IsRequired();
 
                     b.HasOne("XStudio.Schools.Places.RoomUsage", "Usage")
-                        .WithOne("Classroom")
-                        .HasForeignKey("XStudio.Schools.Places.Classroom", "UsageCode")
+                        .WithMany()
+                        .HasForeignKey("UsageCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2960,11 +2959,6 @@ namespace XStudio.Migrations
             modelBuilder.Entity("XStudio.Schools.Places.BuildingFloor", b =>
                 {
                     b.Navigation("Classrooms");
-                });
-
-            modelBuilder.Entity("XStudio.Schools.Places.RoomUsage", b =>
-                {
-                    b.Navigation("Classroom");
                 });
 
             modelBuilder.Entity("XStudio.Schools.Places.School", b =>

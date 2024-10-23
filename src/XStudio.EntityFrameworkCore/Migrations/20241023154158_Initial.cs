@@ -18,19 +18,19 @@ namespace XStudio.Migrations
                 name: "AbpAuditLogs",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     ApplicationName = table.Column<string>(type: "varchar(96)", maxLength: 96, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    UserId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    UserId = table.Column<Guid>(type: "char(36)", nullable: true),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    TenantId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    TenantId = table.Column<Guid>(type: "char(36)", nullable: true),
                     TenantName = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ImpersonatorUserId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    ImpersonatorUserId = table.Column<Guid>(type: "char(36)", nullable: true),
                     ImpersonatorUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ImpersonatorTenantId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    ImpersonatorTenantId = table.Column<Guid>(type: "char(36)", nullable: true),
                     ImpersonatorTenantName = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ExecutionTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
@@ -69,7 +69,7 @@ namespace XStudio.Migrations
                 name: "AbpBackgroundJobs",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     JobName = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     JobArgs = table.Column<string>(type: "longtext", maxLength: 1048576, nullable: false)
@@ -95,7 +95,7 @@ namespace XStudio.Migrations
                 name: "AbpClaimTypes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     Name = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Required = table.Column<bool>(type: "tinyint(1)", nullable: false),
@@ -122,7 +122,7 @@ namespace XStudio.Migrations
                 name: "AbpFeatureGroups",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DisplayName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false)
@@ -140,7 +140,7 @@ namespace XStudio.Migrations
                 name: "AbpFeatures",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     GroupName = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false)
@@ -172,7 +172,7 @@ namespace XStudio.Migrations
                 name: "AbpFeatureValues",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Value = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false)
@@ -192,11 +192,11 @@ namespace XStudio.Migrations
                 name: "AbpLinkUsers",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    SourceUserId = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    SourceTenantId = table.Column<Guid>(type: "binary(16)", nullable: true),
-                    TargetUserId = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    TargetTenantId = table.Column<Guid>(type: "binary(16)", nullable: true)
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
+                    SourceUserId = table.Column<Guid>(type: "char(36)", nullable: false),
+                    SourceTenantId = table.Column<Guid>(type: "char(36)", nullable: true),
+                    TargetUserId = table.Column<Guid>(type: "char(36)", nullable: false),
+                    TargetTenantId = table.Column<Guid>(type: "char(36)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -208,9 +208,9 @@ namespace XStudio.Migrations
                 name: "AbpOrganizationUnits",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    TenantId = table.Column<Guid>(type: "binary(16)", nullable: true),
-                    ParentId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
+                    TenantId = table.Column<Guid>(type: "char(36)", nullable: true),
+                    ParentId = table.Column<Guid>(type: "char(36)", nullable: true),
                     Code = table.Column<string>(type: "varchar(95)", maxLength: 95, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DisplayName = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false)
@@ -221,11 +221,11 @@ namespace XStudio.Migrations
                     ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true),
                     LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    DeleterId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    DeleterId = table.Column<Guid>(type: "char(36)", nullable: true),
                     DeletionTime = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
@@ -243,8 +243,8 @@ namespace XStudio.Migrations
                 name: "AbpPermissionGrants",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    TenantId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
+                    TenantId = table.Column<Guid>(type: "char(36)", nullable: true),
                     Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ProviderName = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false)
@@ -262,7 +262,7 @@ namespace XStudio.Migrations
                 name: "AbpPermissionGroups",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DisplayName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false)
@@ -280,7 +280,7 @@ namespace XStudio.Migrations
                 name: "AbpPermissions",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     GroupName = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false)
@@ -308,8 +308,8 @@ namespace XStudio.Migrations
                 name: "AbpRoles",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    TenantId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
+                    TenantId = table.Column<Guid>(type: "char(36)", nullable: true),
                     Name = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     NormalizedName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false)
@@ -333,15 +333,15 @@ namespace XStudio.Migrations
                 name: "AbpSecurityLogs",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    TenantId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
+                    TenantId = table.Column<Guid>(type: "char(36)", nullable: true),
                     ApplicationName = table.Column<string>(type: "varchar(96)", maxLength: 96, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Identity = table.Column<string>(type: "varchar(96)", maxLength: 96, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Action = table.Column<string>(type: "varchar(96)", maxLength: 96, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    UserId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    UserId = table.Column<Guid>(type: "char(36)", nullable: true),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TenantName = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: true)
@@ -370,15 +370,15 @@ namespace XStudio.Migrations
                 name: "AbpSessions",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     SessionId = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Device = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DeviceInfo = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    TenantId = table.Column<Guid>(type: "binary(16)", nullable: true),
-                    UserId = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    TenantId = table.Column<Guid>(type: "char(36)", nullable: true),
+                    UserId = table.Column<Guid>(type: "char(36)", nullable: false),
                     ClientId = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     IpAddresses = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
@@ -396,7 +396,7 @@ namespace XStudio.Migrations
                 name: "AbpSettingDefinitions",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DisplayName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false)
@@ -423,7 +423,7 @@ namespace XStudio.Migrations
                 name: "AbpSettings",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Value = table.Column<string>(type: "varchar(2048)", maxLength: 2048, nullable: false)
@@ -443,7 +443,7 @@ namespace XStudio.Migrations
                 name: "AbpTenants",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     Name = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     NormalizedName = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false)
@@ -454,11 +454,11 @@ namespace XStudio.Migrations
                     ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true),
                     LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    DeleterId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    DeleterId = table.Column<Guid>(type: "char(36)", nullable: true),
                     DeletionTime = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
@@ -471,10 +471,10 @@ namespace XStudio.Migrations
                 name: "AbpUserDelegations",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    TenantId = table.Column<Guid>(type: "binary(16)", nullable: true),
-                    SourceUserId = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    TargetUserId = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
+                    TenantId = table.Column<Guid>(type: "char(36)", nullable: true),
+                    SourceUserId = table.Column<Guid>(type: "char(36)", nullable: false),
+                    TargetUserId = table.Column<Guid>(type: "char(36)", nullable: false),
                     StartTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     EndTime = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
@@ -488,8 +488,8 @@ namespace XStudio.Migrations
                 name: "AbpUsers",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    TenantId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
+                    TenantId = table.Column<Guid>(type: "char(36)", nullable: true),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false)
@@ -524,11 +524,11 @@ namespace XStudio.Migrations
                     ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true),
                     LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    DeleterId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    DeleterId = table.Column<Guid>(type: "char(36)", nullable: true),
                     DeletionTime = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
@@ -547,15 +547,15 @@ namespace XStudio.Migrations
                     Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "课程名称")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ValidState = table.Column<int>(type: "int", nullable: false, comment: "数据有效标识"),
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     ExtraProperties = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true),
                     LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "binary(16)", nullable: true)
+                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -567,12 +567,12 @@ namespace XStudio.Migrations
                 name: "AppX_Projects",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "项目名称")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Type = table.Column<int>(type: "int", nullable: false),
                     PublishDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    AuthorId = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    AuthorId = table.Column<Guid>(type: "char(36)", nullable: false),
                     Description = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ValidState = table.Column<int>(type: "int", nullable: false, comment: "数据有效标识"),
@@ -581,9 +581,9 @@ namespace XStudio.Migrations
                     ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true),
                     LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "binary(16)", nullable: true)
+                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -601,15 +601,15 @@ namespace XStudio.Migrations
                     Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "名称")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ValidState = table.Column<int>(type: "int", nullable: false, comment: "数据有效标识"),
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     ExtraProperties = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true),
                     LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "binary(16)", nullable: true)
+                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -629,15 +629,15 @@ namespace XStudio.Migrations
                     LayoutOfWeek = table.Column<string>(type: "longtext", nullable: false, comment: "布局节次表")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ValidState = table.Column<int>(type: "int", nullable: false, comment: "数据有效标识"),
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     ExtraProperties = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true),
                     LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "binary(16)", nullable: true)
+                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -662,15 +662,15 @@ namespace XStudio.Migrations
                     Address = table.Column<string>(type: "longtext", nullable: false, comment: "校址")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ValidState = table.Column<int>(type: "int", nullable: false, comment: "数据有效标识"),
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     ExtraProperties = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true),
                     LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "binary(16)", nullable: true)
+                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -688,15 +688,15 @@ namespace XStudio.Migrations
                     Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "名称")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ValidState = table.Column<int>(type: "int", nullable: false, comment: "数据有效标识"),
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     ExtraProperties = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true),
                     LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "binary(16)", nullable: true)
+                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -708,7 +708,7 @@ namespace XStudio.Migrations
                 name: "OpenIddictApplications",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     ApplicationType = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ClientId = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
@@ -746,11 +746,11 @@ namespace XStudio.Migrations
                     ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true),
                     LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    DeleterId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    DeleterId = table.Column<Guid>(type: "char(36)", nullable: true),
                     DeletionTime = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
@@ -763,7 +763,7 @@ namespace XStudio.Migrations
                 name: "OpenIddictScopes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     Description = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Descriptions = table.Column<string>(type: "longtext", nullable: true)
@@ -783,11 +783,11 @@ namespace XStudio.Migrations
                     ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true),
                     LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    DeleterId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    DeleterId = table.Column<Guid>(type: "char(36)", nullable: true),
                     DeletionTime = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
@@ -800,9 +800,9 @@ namespace XStudio.Migrations
                 name: "AbpAuditLogActions",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    TenantId = table.Column<Guid>(type: "binary(16)", nullable: true),
-                    AuditLogId = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
+                    TenantId = table.Column<Guid>(type: "char(36)", nullable: true),
+                    AuditLogId = table.Column<Guid>(type: "char(36)", nullable: false),
                     ServiceName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     MethodName = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: true)
@@ -830,12 +830,12 @@ namespace XStudio.Migrations
                 name: "AbpEntityChanges",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    AuditLogId = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    TenantId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
+                    AuditLogId = table.Column<Guid>(type: "char(36)", nullable: false),
+                    TenantId = table.Column<Guid>(type: "char(36)", nullable: true),
                     ChangeTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     ChangeType = table.Column<byte>(type: "tinyint unsigned", nullable: false),
-                    EntityTenantId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    EntityTenantId = table.Column<Guid>(type: "char(36)", nullable: true),
                     EntityId = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     EntityTypeFullName = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false)
@@ -859,11 +859,11 @@ namespace XStudio.Migrations
                 name: "AbpOrganizationUnitRoles",
                 columns: table => new
                 {
-                    RoleId = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    OrganizationUnitId = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    TenantId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    RoleId = table.Column<Guid>(type: "char(36)", nullable: false),
+                    OrganizationUnitId = table.Column<Guid>(type: "char(36)", nullable: false),
+                    TenantId = table.Column<Guid>(type: "char(36)", nullable: true),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "binary(16)", nullable: true)
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -887,9 +887,9 @@ namespace XStudio.Migrations
                 name: "AbpRoleClaims",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    RoleId = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    TenantId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
+                    RoleId = table.Column<Guid>(type: "char(36)", nullable: false),
+                    TenantId = table.Column<Guid>(type: "char(36)", nullable: true),
                     ClaimType = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ClaimValue = table.Column<string>(type: "varchar(1024)", maxLength: 1024, nullable: true)
@@ -911,7 +911,7 @@ namespace XStudio.Migrations
                 name: "AbpTenantConnectionStrings",
                 columns: table => new
                 {
-                    TenantId = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    TenantId = table.Column<Guid>(type: "char(36)", nullable: false),
                     Name = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Value = table.Column<string>(type: "varchar(1024)", maxLength: 1024, nullable: false)
@@ -933,9 +933,9 @@ namespace XStudio.Migrations
                 name: "AbpUserClaims",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    UserId = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    TenantId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
+                    UserId = table.Column<Guid>(type: "char(36)", nullable: false),
+                    TenantId = table.Column<Guid>(type: "char(36)", nullable: true),
                     ClaimType = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ClaimValue = table.Column<string>(type: "varchar(1024)", maxLength: 1024, nullable: true)
@@ -957,10 +957,10 @@ namespace XStudio.Migrations
                 name: "AbpUserLogins",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    UserId = table.Column<Guid>(type: "char(36)", nullable: false),
                     LoginProvider = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    TenantId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    TenantId = table.Column<Guid>(type: "char(36)", nullable: true),
                     ProviderKey = table.Column<string>(type: "varchar(196)", maxLength: 196, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ProviderDisplayName = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: true)
@@ -982,11 +982,11 @@ namespace XStudio.Migrations
                 name: "AbpUserOrganizationUnits",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    OrganizationUnitId = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    TenantId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    UserId = table.Column<Guid>(type: "char(36)", nullable: false),
+                    OrganizationUnitId = table.Column<Guid>(type: "char(36)", nullable: false),
+                    TenantId = table.Column<Guid>(type: "char(36)", nullable: true),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "binary(16)", nullable: true)
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1010,9 +1010,9 @@ namespace XStudio.Migrations
                 name: "AbpUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    RoleId = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    TenantId = table.Column<Guid>(type: "binary(16)", nullable: true)
+                    UserId = table.Column<Guid>(type: "char(36)", nullable: false),
+                    RoleId = table.Column<Guid>(type: "char(36)", nullable: false),
+                    TenantId = table.Column<Guid>(type: "char(36)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1036,12 +1036,12 @@ namespace XStudio.Migrations
                 name: "AbpUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    UserId = table.Column<Guid>(type: "char(36)", nullable: false),
                     LoginProvider = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    TenantId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    TenantId = table.Column<Guid>(type: "char(36)", nullable: true),
                     Value = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
@@ -1071,15 +1071,15 @@ namespace XStudio.Migrations
                     Address = table.Column<string>(type: "longtext", nullable: false, comment: "校址")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ValidState = table.Column<int>(type: "int", nullable: false, comment: "数据有效标识"),
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     ExtraProperties = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true),
                     LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "binary(16)", nullable: true)
+                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1112,15 +1112,15 @@ namespace XStudio.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ScheduleCode = table.Column<string>(type: "varchar(128)", nullable: false, comment: "节次编码")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     ExtraProperties = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true),
                     LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "binary(16)", nullable: true)
+                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1144,8 +1144,8 @@ namespace XStudio.Migrations
                 name: "OpenIddictAuthorizations",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    ApplicationId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
+                    ApplicationId = table.Column<Guid>(type: "char(36)", nullable: true),
                     CreationDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Properties = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -1162,11 +1162,11 @@ namespace XStudio.Migrations
                     ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true),
                     LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    DeleterId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    DeleterId = table.Column<Guid>(type: "char(36)", nullable: true),
                     DeletionTime = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
@@ -1184,9 +1184,9 @@ namespace XStudio.Migrations
                 name: "AbpEntityPropertyChanges",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    TenantId = table.Column<Guid>(type: "binary(16)", nullable: true),
-                    EntityChangeId = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
+                    TenantId = table.Column<Guid>(type: "char(36)", nullable: true),
+                    EntityChangeId = table.Column<Guid>(type: "char(36)", nullable: false),
                     NewValue = table.Column<string>(type: "varchar(512)", maxLength: 512, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     OriginalValue = table.Column<string>(type: "varchar(512)", maxLength: 512, nullable: true)
@@ -1222,15 +1222,15 @@ namespace XStudio.Migrations
                     Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "名称")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ValidState = table.Column<int>(type: "int", nullable: false, comment: "数据有效标识"),
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     ExtraProperties = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true),
                     LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "binary(16)", nullable: true)
+                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1254,9 +1254,9 @@ namespace XStudio.Migrations
                 name: "OpenIddictTokens",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    ApplicationId = table.Column<Guid>(type: "binary(16)", nullable: true),
-                    AuthorizationId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
+                    ApplicationId = table.Column<Guid>(type: "char(36)", nullable: true),
+                    AuthorizationId = table.Column<Guid>(type: "char(36)", nullable: true),
                     CreationDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     ExpirationDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Payload = table.Column<string>(type: "longtext", nullable: true)
@@ -1277,11 +1277,11 @@ namespace XStudio.Migrations
                     ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true),
                     LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
-                    DeleterId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    DeleterId = table.Column<Guid>(type: "char(36)", nullable: true),
                     DeletionTime = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
@@ -1316,15 +1316,15 @@ namespace XStudio.Migrations
                     Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "名称")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ValidState = table.Column<int>(type: "int", nullable: false, comment: "数据有效标识"),
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     ExtraProperties = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true),
                     LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "binary(16)", nullable: true)
+                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1370,15 +1370,15 @@ namespace XStudio.Migrations
                     Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false, comment: "名称")
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ValidState = table.Column<int>(type: "int", nullable: false, comment: "数据有效标识"),
-                    Id = table.Column<Guid>(type: "binary(16)", nullable: false),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     ExtraProperties = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ConcurrencyStamp = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "binary(16)", nullable: true),
+                    CreatorId = table.Column<Guid>(type: "char(36)", nullable: true),
                     LastModificationTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "binary(16)", nullable: true)
+                    LastModifierId = table.Column<Guid>(type: "char(36)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1658,8 +1658,7 @@ namespace XStudio.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_AppX_Classrooms_UsageCode",
                 table: "AppX_Classrooms",
-                column: "UsageCode",
-                unique: true);
+                column: "UsageCode");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TimePeriod_BuildingCode",
@@ -1702,12 +1701,12 @@ namespace XStudio.Migrations
                 column: "Name");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TimePeriod_Code",
+                name: "IX_RoomUsage_Code",
                 table: "AppX_RoomUsages",
                 column: "Code");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TimePeriod_Name",
+                name: "IX_RoomUsage_Name",
                 table: "AppX_RoomUsages",
                 column: "Name");
 

@@ -28,6 +28,15 @@ public class XStudioPermissionDefinitionProvider : PermissionDefinitionProvider
             XStudioPermissions.Schools.Edit, L("Permission:Schools.Edit"));
         schoolsPermission.AddChild(
             XStudioPermissions.Schools.Delete, L("Permission:Schools.Delete"));
+        //school
+        var timePeriodsPermission = myGroup.AddPermission(
+            XStudioPermissions.TimePeriods.Default, L("Permission:TimePeriods"));
+        timePeriodsPermission.AddChild(
+            XStudioPermissions.TimePeriods.Create, L("Permission:TimePeriods.Create"));
+        timePeriodsPermission.AddChild(
+            XStudioPermissions.TimePeriods.Edit, L("Permission:TimePeriods.Edit"));
+        timePeriodsPermission.AddChild(
+            XStudioPermissions.TimePeriods.Delete, L("Permission:TimePeriods.Delete"));
     }
 
     private static LocalizableString L(string name)

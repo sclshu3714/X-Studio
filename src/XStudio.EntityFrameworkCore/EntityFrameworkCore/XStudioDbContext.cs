@@ -231,8 +231,8 @@ public class XStudioDbContext :
             b.Property(x => x.Name).IsRequired().HasMaxLength(128);
             b.HasKey(x => x.Code);
             // 设置 Code 和 Name 为索引列
-            b.HasIndex(x => x.Code).HasDatabaseName("IX_TimePeriod_Code");
-            b.HasIndex(x => x.Name).HasDatabaseName("IX_TimePeriod_Name");
+            b.HasIndex(x => x.Code).HasDatabaseName("IX_RoomUsage_Code");
+            b.HasIndex(x => x.Name).HasDatabaseName("IX_RoomUsage_Name");
 
             //自动添加注释
             AddCommentsToProperties(b);
