@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +28,14 @@ namespace XStudio.App.ViewModel.Module {
             UpCommand = new DelegateCommand<TimePeriod>(MoveUp);
             DownCommand = new DelegateCommand<TimePeriod>(MoveDown);
             DeleteCommand = new DelegateCommand<TimePeriod>(RemoveTimePeriod);
+            LoadData();
+        }
+
+        private async void LoadData() {
+            var data = await _dataService.GetListAsync(new Abp.Application.Services.Dto.PagedAndSortedResultRequestDto() { MaxResultCount = 100, SkipCount = 0, Sorting = "Order" });
+            if (data != null && data.Items.Any()) {
+                TimePeriods.AddRange(data.Items);
+            }
         }
 
         public string @Type {

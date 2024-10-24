@@ -80,6 +80,8 @@ using Microsoft.Extensions.Hosting.Internal;
 using Volo.Abp.OpenIddict;
 using Polly;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Volo.Abp.BackgroundWorkers;
+using Volo.Abp.EventBus.Distributed;
 
 namespace XStudio;
 
@@ -201,48 +203,42 @@ public class XStudioHttpApiHostModule : AbpModule {
         });
     }
     private void ConfigureKafka(ServiceConfigurationContext context, IConfiguration configuration) {
-        if (GlobalConfig.Default.NacosConfig?.Kafka?.IsEnabled == true) {
-            //配置连接
-            var kafkaOptions = new AbpKafkaOptions();
-            configuration.GetSection("Kafka:Connections").Bind(kafkaOptions.Connections);
-            var kafkaEventBusOptions = new AbpKafkaEventBusOptions();
-            configuration.GetSection("Kafka:EventBus").Bind(kafkaEventBusOptions);
-            context.Services.Configure<AbpKafkaOptions>(options => {
-                foreach (var connection in kafkaOptions.Connections) {
-                    options.Connections.TryAdd(connection.Key, connection.Value);
-                    options.Connections[connection.Key].SaslUsername = connection.Value.SaslUsername;
-                    options.Connections[connection.Key].SaslPassword = connection.Value.SaslPassword;
-                }
+        //配置连接
+        var kafkaOptions = new AbpKafkaOptions();
+        configuration.GetSection("Kafka:Connections").Bind(kafkaOptions.Connections);
+        var kafkaEventBusOptions = new AbpKafkaEventBusOptions();
+        configuration.GetSection("Kafka:EventBus").Bind(kafkaEventBusOptions);
+        context.Services.Configure<AbpKafkaOptions>(options => {
+            foreach (var connection in kafkaOptions.Connections) {
+                options.Connections.TryAdd(connection.Key, connection.Value);
+                options.Connections[connection.Key].SaslUsername = connection.Value.SaslUsername;
+                options.Connections[connection.Key].SaslPassword = connection.Value.SaslPassword;
+            }
 
-                // 配置 consumer config
-                options.ConfigureConsumer = config => {
-                    config.GroupId = kafkaEventBusOptions.GroupId;
-                    config.EnableAutoCommit = false;
-                };
+            // 配置 consumer config
+            options.ConfigureConsumer = config => {
+                config.GroupId = kafkaEventBusOptions.GroupId;
+                config.EnableAutoCommit = false;
+            };
 
-                // 配置 producer config
-                options.ConfigureProducer = config => {
-                    config.MessageTimeoutMs = 6000;
-                    config.Acks = Acks.All;
-                };
+            // 配置 producer config
+            options.ConfigureProducer = config => {
+                config.MessageTimeoutMs = 6000;
+                config.Acks = Acks.All;
+            };
 
-                // 配置 topic specification
-                options.ConfigureTopic = specification => {
-                    specification.ReplicationFactor = 3;
-                    specification.NumPartitions = 3;
-                };
-            });
+            // 配置 topic specification
+            options.ConfigureTopic = specification => {
+                specification.ReplicationFactor = 3;
+                specification.NumPartitions = 3;
+            };
+        });
 
-            context.Services.Configure<AbpKafkaEventBusOptions>(options => {
-                options.GroupId = kafkaEventBusOptions.GroupId;
-                options.TopicName = kafkaEventBusOptions.TopicName;
-                options.ConnectionName = kafkaEventBusOptions.ConnectionName;
-            });
-        }
-        else {
-            context.Services.RemoveAll<AbpKafkaOptions>();
-            context.Services.RemoveAll<AbpKafkaEventBusOptions>();
-        }
+        context.Services.Configure<AbpKafkaEventBusOptions>(options => {
+            options.GroupId = kafkaEventBusOptions.GroupId;
+            options.TopicName = kafkaEventBusOptions.TopicName;
+            options.ConnectionName = kafkaEventBusOptions.ConnectionName;
+        });
     }
 
     /// <summary>
@@ -275,6 +271,12 @@ public class XStudioHttpApiHostModule : AbpModule {
 
     private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration) {
         EncrypterHelper.EncryptionKey = configuration.GetSection("StringEncryption:DefaultPassPhrase").Value ?? "xstudio_encryptionkey";
+        // 禁用自动验证
+        Configure<AbpAntiForgeryOptions>(options => {
+            // TODO wxz
+            options.AutoValidate = false; // 禁用自动验证
+        });
+
         context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
         context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options => {
             options.IsDynamicClaimsEnabled = true;
@@ -285,11 +287,7 @@ public class XStudioHttpApiHostModule : AbpModule {
             Options.Filters.Add<CustomExceptionFilter>(); // 注册自定义异常过滤器
         });
 
-        // 禁用自动验证
-        Configure<AbpAntiForgeryOptions>(options => {
-            // TODO wxz
-            options.AutoValidate = false; // 禁用自动验证
-        });
+
 
         //默认的
         //context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
@@ -432,7 +430,7 @@ public class XStudioHttpApiHostModule : AbpModule {
 
     #endregion
 
-    public override void OnApplicationInitialization(ApplicationInitializationContext context) {
+    public override async void OnApplicationInitialization(ApplicationInitializationContext context) {
         var app = context.GetApplicationBuilder();
         var env = context.GetEnvironment();
 
@@ -443,18 +441,21 @@ public class XStudioHttpApiHostModule : AbpModule {
         //nacos 监听配置文件
         app.UseNacosConfigListener(context.ServiceProvider.GetRequiredService<IConfiguration>());
 
-        //if (GlobalConfig.Default.NacosConfig?.Kafka?.IsEnabled == false) {
-        //    context.ServiceProvider.GetRequiredService<KafkaMessageConsumer>()?.Dispose();
-        //    context.ServiceProvider.GetRequiredService<IConsumerPool>()?.Dispose();
-        //    context.ServiceProvider.GetRequiredService<IProducerPool>()?.Dispose();
-        //}
+        if (GlobalConfig.Default.NacosConfig?.Kafka?.IsEnabled == false) {
+            //context.ServiceProvider.GetRequiredService<KafkaMessageConsumer>()?.Dispose();
+            //context.ServiceProvider.GetRequiredService<IConsumerPool>()?.Dispose();
+            //context.ServiceProvider.GetRequiredService<IProducerPool>()?.Dispose();
+            await context.ServiceProvider.GetRequiredService<OutboxSenderManager>().StopAsync();
+            await context.ServiceProvider.GetRequiredService<InboxProcessManager>().StopAsync();
+        }
+
         app.UseAbpRequestLocalization();
 
         if (!env.IsDevelopment()) {
             app.UseErrorPage();
         }
 
-        
+
         app.UseIpRateLimiting(); // 启用访问限制
         app.UseCorrelationId();
         app.UseStaticFiles();

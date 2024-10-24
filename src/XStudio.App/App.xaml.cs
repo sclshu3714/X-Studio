@@ -49,7 +49,7 @@ public partial class App : PrismApplication {
 
     protected override async void OnStartup(StartupEventArgs e) {
         IConfigurationRoot? configuration = ConfigurationInitialized();
-        AppSettings.OnInitialized();
+        AppSettings.Instance.OnInitialized();
         ApplyConfiguration();
         if (configuration != null) {
             Log.Logger = new LoggerConfiguration()
@@ -81,7 +81,7 @@ public partial class App : PrismApplication {
             await _abpApplication.InitializeAsync();
             // 注册配置到服务容器
             if (configuration != null) {
-                _abpApplication.Services.AddSingleton<IConfigurationRoot>(configuration);
+                configuration.Bind(AppSettings.Instance);
             }
             _abpApplication.Services.GetRequiredService<MainWindow>()?.Show();
 

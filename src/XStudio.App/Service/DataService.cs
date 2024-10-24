@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using Volo.Abp.DependencyInjection;
+using XStudio.App.Common;
 using XStudio.App.Helper;
 using XStudio.App.Models;
 using XStudio.App.Models.Data;
@@ -25,13 +26,13 @@ public class DataService : ITransientDependency
 {
     public ILogger<DataService> Logger { get; set; }
     private readonly ApiHelper apiHelper;
-    private string? baseAddress { get; set; }
+    private string? RootUrl { get; set; }
 
-    public DataService(IConfigurationRoot configuration)
+    public DataService()
     {
         Logger = NullLogger<DataService>.Instance;
-        baseAddress = configuration["AppSettings:BaseUrls"];
-        apiHelper = new ApiHelper(baseAddress);
+        RootUrl = AppSettings.Instance.RootUrl;
+        apiHelper = new ApiHelper(RootUrl);
     }
 
     #region 登录相关
@@ -226,34 +227,35 @@ public class DataService : ITransientDependency
 
     #region 模块相关
     public async Task<TimePeriod> CreateAsync(TimePeriod input) {
-        TimePeriod timePeriod = await apiHelper.PostAsync("api/add", input);
+        TimePeriod timePeriod = await apiHelper.PostAsync("api/xstudio/v1/TimePeriod/add", input);
         return timePeriod;
     }
 
     public async Task<List<TimePeriod>> InsertManyAsync(List<TimePeriod> inputs) {
-        List<TimePeriod> timePeriods = await apiHelper.PostAsync("api/adds", inputs);
+        List<TimePeriod> timePeriods = await apiHelper.PostManyAsync("api/xstudio/v1/TimePeriod/adds", inputs);
         return timePeriods;
     }
     public async Task DeleteAsync(Guid id) {
-        await apiHelper.DeleteAsync<string>($"api/delete/{id}");
+        await apiHelper.DeleteAsync<string>($"api/xstudio/v1/School/delete/{id}");
     }
 
     public async Task DeleteManyAsync(List<Guid> ids) {
+        await apiHelper.DeleteManyAsync<string>($"api/xstudio/v1/School/deletes", ids);
         await Task.CompletedTask;
     }
 
     public async Task<TimePeriod> GetAsync(Guid id) {
-        TimePeriod timePeriod = await apiHelper.GetAsync<TimePeriod>($"api/get/{id}");
+        TimePeriod timePeriod = await apiHelper.GetAsync<TimePeriod>($"api/xstudio/v1/TimePeriod/{id}");
         return timePeriod;
     }
 
     public async Task<PagedResultDto<TimePeriod>> GetListAsync(PagedAndSortedResultRequestDto input) {
-        PagedResultDto<TimePeriod> timePeriods = await apiHelper.GetListAsync<PagedResultDto<TimePeriod>>($"api/get", input);
+        PagedResultDto<TimePeriod> timePeriods = await apiHelper.GetListAsync<PagedResultDto<TimePeriod>>($"/api/xstudio/v1/TimePeriod/list", input);
         return timePeriods;
     }
 
     public async Task<TimePeriod> UpdateAsync(Guid id, TimePeriod input) {
-        TimePeriod timePeriod = await apiHelper.PutAsync($"api/get", input);
+        TimePeriod timePeriod = await apiHelper.PutAsync($"api/xstudio/v1/TimePeriod/update", input);
         return timePeriod;
     }
     #endregion

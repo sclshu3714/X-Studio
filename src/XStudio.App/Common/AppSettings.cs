@@ -13,13 +13,27 @@ namespace XStudio.App.Common
     {
         private bool isDarkTheme = true;
         private string themeName = "Material";
-
-        static AppSettings()
+        private string rootUrl = "https://localhost:44345";
+        private readonly static object lockObject = new object();
+        private static AppSettings? _Instance;
+        public static AppSettings Instance 
         {
-            Instance = new AppSettings();
+            get {
+                if (_Instance == null) { 
+                    lock (lockObject) {
+                        if (_Instance == null) {
+                            _Instance = new AppSettings();
+                        }
+                    }
+                }
+                return _Instance;
+            }
         }
 
-        public static AppSettings Instance { get; }
+        public string RootUrl {
+            get => rootUrl;
+            set { rootUrl = value; }
+        }
 
         public bool IsDarkTheme
         {
@@ -36,7 +50,7 @@ namespace XStudio.App.Common
             set { themeName = value; }
         }
 
-        public static void OnInitialized()
+        public void OnInitialized()
         {
             //Syncfusion.SfSkinManager.SfSkinManager.ApplyStylesOnApplication = true;
             ////Syncfusion LicenseKey
