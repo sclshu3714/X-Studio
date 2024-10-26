@@ -4,21 +4,25 @@ using HandyControl.Tools;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using Volo.Abp.DependencyInjection;
 using XStudio.App.Common;
 using XStudio.App.Helper;
-using XStudio.App.Models;
 using XStudio.App.Models.Data;
+using XStudio.App.Models.Users;
 using XStudio.App.ViewModel.Home;
 using XStudio.App.ViewModel.Main;
 using XStudio.App.Views.Module;
 using XStudio.App.Views.UserControls;
+using XStudio.Users;
 
 namespace XStudio.App.Service;
 
@@ -36,6 +40,34 @@ public class DataService : ITransientDependency
     }
 
     #region 登录相关
+    public async Task<User> LoginAsync(string userName, string password, bool rememberMe)
+    {
+        var input = new LoginInfo {
+            userNameOrEmailAddress = userName,
+            password = password,
+            rememberMe = rememberMe
+        };
+        var request = new TokenRequest { 
+            ClientId = "XStudio_App",
+            //ClientSecret = "XStudio",
+            Scope = "XStudio",
+            UserName = userName,
+            Password = password,
+            GrantType = "password",
+        };
+        User user = await apiHelper.LoginAsync<User>("api/xstudio/v1/login", input);
+        //var content = new StringContent(JsonConvert.SerializeObject(ids), Encoding.UTF8, "application/x-www-form-urlencoded");
+        TokenResponse tokenResponse = await apiHelper.TokenAsync("connect/token", request);
+        if (tokenResponse != null) {
+            user.TokenResponse = tokenResponse;
+        }
+        return user;
+    }
+
+    public async Task LogoutAsync()
+    {
+        await apiHelper.GetAsync<object>("api/account/logout");
+    }
     #endregion
 
     #region 项目相关

@@ -11,14 +11,15 @@ using Abp.Application.Services.Dto;
 using XStudio.App.Models.Data;
 using Newtonsoft.Json;
 using Microsoft.AspNet.SignalR.Client.Http;
+using XStudio.App.Models.Users;
+using XStudio.Users;
 
 namespace XStudio.App.Helper {
     public class ApiHelper {
         private static readonly HttpClient httpClient = new HttpClient();
 
         public ApiHelper(string? baseAddress) {
-            if(baseAddress == null)
-            {
+            if (baseAddress == null) {
                 throw new ArgumentException("Base address cannot be null.");
             }
             httpClient.BaseAddress = new Uri(baseAddress);
@@ -81,6 +82,32 @@ namespace XStudio.App.Helper {
             }
 
             throw new Exception($"Error retrieving data from API: {response.ReasonPhrase}");
+        }
+
+        public async Task<T> LoginAsync<T>(string endpoint, LoginInfo data) {
+            HttpResponseMessage response = await httpClient.PostAsJsonAsync<LoginInfo>(endpoint, data);
+            if (response.IsSuccessStatusCode) {
+                return await ExecuteAsync(response.Content.ReadAsAsync<T>);
+            }
+
+            throw new Exception($"Error posting data to API: {response.ReasonPhrase}");
+        }
+
+        public async Task<TokenResponse> TokenAsync(string endpoint, TokenRequest data) {
+            var keyValuePairs = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("grant_type", data.GrantType),
+                new KeyValuePair<string, string>("scope", data.Scope),
+                new KeyValuePair<string, string>("username", data.UserName),
+                new KeyValuePair<string, string>("password", data.Password),
+                // 添加其他必要的字段
+            };
+            HttpResponseMessage response = await httpClient.PostAsJsonAsync(endpoint, new FormUrlEncodedContent(keyValuePairs));
+            if (response.IsSuccessStatusCode) {
+                return await ExecuteAsync(response.Content.ReadAsAsync<TokenResponse>);
+            }
+
+            throw new Exception($"Error posting data to API: {response.ReasonPhrase}");
         }
 
         /// <summary>
@@ -165,7 +192,7 @@ namespace XStudio.App.Helper {
         /// <param name="ids"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task<T> DeleteManyAsync<T>(string endpoint, List<Guid> ids) { 
+        public async Task<T> DeleteManyAsync<T>(string endpoint, List<Guid> ids) {
             var content = new StringContent(JsonConvert.SerializeObject(ids), Encoding.UTF8, "application/json");
             // 发送 DELETE 请求并包含请求体
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Delete, endpoint) {
@@ -186,8 +213,8 @@ namespace XStudio.App.Helper {
         /// <param name="request"></param>
         /// <returns></returns>
         public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request) {
-           
-            return await ExecuteAsync(async () =>  await httpClient.SendAsync(request));
+
+            return await ExecuteAsync(async () => await httpClient.SendAsync(request));
         }
 
         /// <summary>

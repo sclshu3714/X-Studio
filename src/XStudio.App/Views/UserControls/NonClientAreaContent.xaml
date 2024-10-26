@@ -17,6 +17,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <StackPanel VerticalAlignment="Stretch" Orientation="Horizontal">
             <Menu Margin="10,0,0,0" Background="Transparent">
@@ -221,14 +222,21 @@
             </Border>
         </StackPanel>
         <Button
-            Name="ButtonConfig"
+            Name="LoginButton"
             Grid.Column="1"
+            hc:IconElement.Geometry="{StaticResource LoginGeometry}"
+            Command="{Binding LoginViewCmd}"
+            CommandParameter="{x:Static data:MessageToken.LoginWindow}"
+            Style="{StaticResource ButtonIcon}" />
+        <Button
+            Name="ButtonConfig"
+            Grid.Column="2"
             hc:IconElement.Geometry="{StaticResource ConfigGeometry}"
             Click="ButtonConfig_OnClick"
             Style="{StaticResource ButtonIcon}" />
         <Popup
             Name="PopupConfig"
-            Grid.Column="1"
+            Grid.Column="2"
             AllowsTransparency="True"
             Placement="Center"
             PlacementTarget="{Binding ElementName=ButtonConfig}"

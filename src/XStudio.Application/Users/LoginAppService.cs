@@ -13,6 +13,8 @@ using System.Security.Claims;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace XStudio.Users
 {
@@ -24,6 +26,7 @@ namespace XStudio.Users
         private readonly IdentityUserManager _userManager;
         private readonly SignInManager<Volo.Abp.Identity.IdentityUser> _signInManager;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<LoginAppService> _logger;
 
         public LoginAppService(IdentityUserManager userManager,
                                SignInManager<Volo.Abp.Identity.IdentityUser> signInManager,
@@ -32,15 +35,16 @@ namespace XStudio.Users
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
+            _logger = NullLogger<LoginAppService>.Instance;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Login(string username, string password)
+        [HttpPost("/login")]
+        public async Task<IActionResult> Login(LoginDto loginDto)
         {
-            var user = await _userManager.FindByNameAsync(username);
+            var user = await _userManager.FindByNameAsync(loginDto.UserNameOrEmailAddress);
             if (user == null)
             {
-                return new OkObjectResult("Invalid username or password.");
+                return new OkObjectResult("Invalid username.");
             }
 
             if (await _userManager.IsLockedOutAsync(user))
@@ -48,7 +52,7 @@ namespace XStudio.Users
                 return new OkObjectResult("Account is locked. Please try again later.");
             }
 
-            var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
+            var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
             if (!result.Succeeded)
             {
                 await _userManager.AccessFailedAsync(user);
@@ -61,10 +65,11 @@ namespace XStudio.Users
                 return new OkObjectResult("Invalid username or password.");
             }
 
-            await _userManager.ResetAccessFailedCountAsync(user);
-
-            var token = GenerateJwtToken(user);
-            return new OkObjectResult(new { Token = token });
+            var identityResult = await _userManager.ResetAccessFailedCountAsync(user);
+            //var key = _userManager.GenerateNewAuthenticatorKey();
+            //var aa = _userManager.GenerateUserTokenAsync(user, "AuthenticatorApp", key);
+            //var token = GenerateToken(user);
+            return new OkObjectResult(user);
         }
 
         private string GenerateJwtToken(Volo.Abp.Identity.IdentityUser user)
@@ -91,7 +96,7 @@ namespace XStudio.Users
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    throw new InvalidOperationException($"Failed to generate JWT token.", ex);
                 }
             }
             return "";

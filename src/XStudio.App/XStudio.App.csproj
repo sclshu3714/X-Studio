@@ -115,6 +115,7 @@
       <None Remove="Resources\Img\QQ\9.gif" />
       <None Remove="Resources\Img\Slack.png" />
       <None Remove="Resources\Img\under_construction.gif" />
+      <None Remove="Resources\Img\wxz.png" />
       <None Remove="Resources\Img\xlogo.ico" />
       <None Remove="Resources\LangProvider.tt" />
       <None Remove="Views\icon.ico" />
@@ -127,7 +128,8 @@
         <Generator>TextTemplatingFileGenerator</Generator>
         <LastGenOutput>LangProvider.cs</LastGenOutput>
       </Content>
-      <EmbeddedResource Include="Resources\Img\xlogo.ico" />
+      <Resource Include="Resources\Img\wxz.png" />
+      <Resource Include="Resources\Img\xlogo.ico" />
       <EmbeddedResource Include="xlogo.ico" />
     </ItemGroup>
 

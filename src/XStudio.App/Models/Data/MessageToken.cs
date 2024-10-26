@@ -24,6 +24,8 @@ namespace XStudio.App.Models.Data
 
         public static readonly string MainWindow = nameof(MainWindow);
 
+        public static readonly string LoginWindow = nameof(LoginWindow);
+
         public static readonly string PracticalWorkspace = nameof(PracticalWorkspace);
 
         public static readonly string SwitchWorkspace = nameof(SwitchWorkspace);

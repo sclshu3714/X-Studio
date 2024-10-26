@@ -37,9 +37,11 @@ namespace XStudio.App.ViewModel.Main
 
         public MainViewModel(DataService dataService)
         {
+            MessengerInstance = WeakReferenceMessenger.Default;
             _dataService = dataService;
             WorkspaceInfoCollection = new ObservableCollection<WorkspaceInfoViewModel>();
             DisplayAreaInfoCollection = new ObservableCollection<DisplayAreaInfoViewModel>();
+            UpdateTopContent();
             UpdateMainContent();
             UpdateLeftContent();
         }
@@ -121,11 +123,31 @@ namespace XStudio.App.ViewModel.Main
             IsCodeOpened = !IsCodeOpened;
         });
 
+        private void UpdateTopContent() {
+
+            MessengerInstance?.Register<object, string>(this, MessageToken.LoginWindow, (obj, cmd) => {
+                switch (cmd)
+                {
+                    case string action  when action == MessageToken.LoginWindow:
+                        object? view = AssemblyHelper.CreateInternalInstance($"Views.Module.LoginWindow");
+                        if (view is not null && view is HandyControl.Controls.Window window) {
+                            window.Owner = Application.Current.MainWindow;
+                            if (window.ShowDialog() == true) {
+                                // 登录成功
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            });
+        }
+
         private void UpdateMainContent()
         {
             // 注册接收 ThemeChangedMessage
             // StrongReferenceMessenger.Default.Register()
-            WeakReferenceMessenger.Default.Register<MainViewModel,string>(this, MessageToken.LoadShowContent, (obj, msg) =>
+            MessengerInstance?.Register<object, string>(this, MessageToken.LoadShowContent, (obj, msg) =>
             {
                 if (SubContent is IDisposable disposable)
                 {
@@ -141,7 +163,7 @@ namespace XStudio.App.ViewModel.Main
         private void UpdateLeftContent()
         {
             //clear status
-            WeakReferenceMessenger.Default.Register<MainViewModel, string>(this, MessageToken.ClearLeftSelected, (obj, msg) =>
+            MessengerInstance?.Register<object, string>(this, MessageToken.ClearLeftSelected, (obj, msg) =>
             {
                 WorkspaceItemCurrent = null;
                 foreach (var item in WorkspaceInfoCollection)
@@ -150,7 +172,7 @@ namespace XStudio.App.ViewModel.Main
                 }
             });
 
-            WeakReferenceMessenger.Default.Register<MainViewModel, string>(this, MessageToken.LangUpdated, (obj, msg) =>
+            MessengerInstance?.Register<object, string>(this, MessageToken.LangUpdated, (obj, msg) =>
             {
                 if (WorkspaceItemCurrent == null) return;
                 ContentTitle = LangProvider.GetLang(WorkspaceItemCurrent.Name);
@@ -230,9 +252,9 @@ namespace XStudio.App.ViewModel.Main
 
         private void OpenPracticalDemo()
         {
-            //WeakReferenceMessenger.Default.Send<object>(null, MessageToken.ClearLeftSelected);
-            //WeakReferenceMessenger.Default.Send(AssemblyHelper.CreateInternalInstance($"UserControl.{MessageToken.PracticalDemo}"), MessageToken.LoadShowContent);
-            //WeakReferenceMessenger.Default.Send(true, MessageToken.FullSwitch);
+            MessengerInstance?.Send<object, string>("", MessageToken.ClearLeftSelected);
+            MessengerInstance?.Send<object, string>(AssemblyHelper.CreateInternalInstance($"UserControl.{MessageToken.PracticalWorkspace}") ?? "", MessageToken.LoadShowContent);
+            MessengerInstance?.Send<object, string>(true, MessageToken.FullSwitch);
         }
 
         /// <summary>

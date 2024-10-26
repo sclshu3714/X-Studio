@@ -14,25 +14,35 @@
     <hc:TransitioningContentControl>
         <hc:UniformSpacingPanel Orientation="Vertical" Spacing="3">
             <hc:UniformSpacingPanel ChildWrapping="Wrap" Spacing="32">
-                <hc:ButtonGroup>
-                    <Button
-                        Margin="0"
-                        hc:IconElement.Geometry="{StaticResource SaveGeometry}"
-                        hc:IconElement.Height="12"
-                        hc:IconElement.Width="12"
-                        Command="{Binding SaveCommand}"
-                        CommandParameter="{Binding}"
-                        Content="保 存"
-                        Style="{StaticResource ButtonBaseStyle}" />
-                    <Button
-                        Margin="0"
-                        hc:IconElement.Geometry="{StaticResource AddGeometry}"
-                        hc:IconElement.Height="12"
-                        hc:IconElement.Width="12"
-                        Command="{Binding AddCommand}"
-                        Content="添 加"
-                        Style="{StaticResource ButtonBaseStyle}" />
-                </hc:ButtonGroup>
+                <hc:SimplePanel HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <Rectangle
+                        Height="30"
+                        Margin="3"
+                        VerticalAlignment="Top"
+                        RadiusX="4"
+                        RadiusY="4"
+                        Stroke="{DynamicResource Brush.Effects}"
+                        StrokeDashArray="2,2" />
+                    <hc:ButtonGroup Margin="5,0,0,0" VerticalAlignment="Center">
+                        <Button
+                            Margin="0"
+                            hc:IconElement.Geometry="{StaticResource SaveGeometry}"
+                            hc:IconElement.Height="12"
+                            hc:IconElement.Width="12"
+                            Command="{Binding SaveCommand}"
+                            CommandParameter="{Binding}"
+                            Content="保 存"
+                            Style="{StaticResource ButtonBaseStyle}" />
+                        <Button
+                            Margin="0"
+                            hc:IconElement.Geometry="{StaticResource AddGeometry}"
+                            hc:IconElement.Height="12"
+                            hc:IconElement.Width="12"
+                            Command="{Binding AddCommand}"
+                            Content="添 加"
+                            Style="{StaticResource ButtonBaseStyle}" />
+                    </hc:ButtonGroup>
+                </hc:SimplePanel>
             </hc:UniformSpacingPanel>
             <hc:UniformSpacingPanel ChildWrapping="Wrap" Spacing="32">
                 <DataGrid

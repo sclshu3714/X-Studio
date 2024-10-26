@@ -21,7 +21,7 @@
         <DrawingBrush.Drawing>
             <ImageDrawing
                 o:Freeze="True"
-                ImageSource="../../Img/cloud.png"
+                ImageSource="pack://application:,,,/XStudio.App;component/Resources/Img/cloud.png"
                 Rect="0,0,157,157" />
         </DrawingBrush.Drawing>
     </DrawingBrush>
