@@ -855,4 +855,19 @@
   <data name="SignText" xml:space="preserve">
     <value>开发之路，永不止步</value>
   </data>
+  <data name="User" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>UserName</value>
+  </data>
+  <data name="LoginUserContent" xml:space="preserve">
+    <value>LoginUserContent</value>
+  </data>
+  <data name="LoginPasswordContent" xml:space="preserve">
+    <value>LoginPasswordContent</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
 </root>

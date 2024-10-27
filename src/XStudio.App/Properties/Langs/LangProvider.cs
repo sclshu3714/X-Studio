@@ -302,6 +302,11 @@ namespace XStudio.App.Properties.Langs
             OnPropertyChanged(nameof(Section));
             OnPropertyChanged(nameof(Course));
             OnPropertyChanged(nameof(Place));
+            OnPropertyChanged(nameof(User));
+            OnPropertyChanged(nameof(UserName));
+            OnPropertyChanged(nameof(LoginUserContent));
+            OnPropertyChanged(nameof(Password));
+            OnPropertyChanged(nameof(LoginPasswordContent));
         }
 
         /// <summary>
@@ -1490,6 +1495,16 @@ namespace XStudio.App.Properties.Langs
         public string Section => Lang.Section;
         public string Course => Lang.Course;
         public string Place => Lang.Place;
+
+        public string User => Lang.User;
+
+        public string UserName => Lang.UserName;
+
+        public string LoginUserContent => Lang.LoginUserContent;
+
+        public string Password => Lang.Password;
+
+        public string LoginPasswordContent => Lang.LoginPasswordContent; 
 
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -2685,5 +2700,11 @@ namespace XStudio.App.Properties.Langs
         public static string Section = nameof(Section);
         public static string Course = nameof(Course);
         public static string Place = nameof(Place);
+
+        public static string User = nameof(User);
+        public static string UserName = nameof(UserName);
+        public static string LoginUserContent = nameof(LoginUserContent);
+        public static string Password = nameof(Password);
+        public static string LoginPasswordContent = nameof(LoginPasswordContent);
     }
 }

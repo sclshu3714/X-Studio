@@ -1105,6 +1105,24 @@ namespace XStudio.App.Properties.Langs {
         }
         
         /// <summary>
+        ///   查找类似 请输入密码 的本地化字符串。
+        /// </summary>
+        internal static string LoginPasswordContent {
+            get {
+                return ResourceManager.GetString("LoginPasswordContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 请输入用户名或者邮箱 的本地化字符串。
+        /// </summary>
+        internal static string LoginUserContent {
+            get {
+                return ResourceManager.GetString("LoginUserContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 放大镜 的本地化字符串。
         /// </summary>
         internal static string Magnifier {
@@ -1389,6 +1407,15 @@ namespace XStudio.App.Properties.Langs {
         internal static string Pagination {
             get {
                 return ResourceManager.GetString("Pagination", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 密码 的本地化字符串。
+        /// </summary>
+        internal static string Password {
+            get {
+                return ResourceManager.GetString("Password", resourceCulture);
             }
         }
         
@@ -2208,6 +2235,24 @@ namespace XStudio.App.Properties.Langs {
         internal static string UploadStr {
             get {
                 return ResourceManager.GetString("UploadStr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 用户 的本地化字符串。
+        /// </summary>
+        internal static string User {
+            get {
+                return ResourceManager.GetString("User", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 用户名 的本地化字符串。
+        /// </summary>
+        internal static string UserName {
+            get {
+                return ResourceManager.GetString("UserName", resourceCulture);
             }
         }
         

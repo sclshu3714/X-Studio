@@ -75,7 +75,7 @@
                            HorizontalAlignment="Center" 
                            VerticalAlignment="Center" 
                            Margin="5"
-                           Source="pack://application:,,,/XStudio.App;component/Resources/Img/Album/12.png"/>
+                           Source="pack://application:,,,/XStudio.App;component/Resources/Img/Album/14.png"/>
                     <hc:OutlineText StrokePosition="Outside" 
                                     FontSize="20" 
                                     FontWeight="Normal" 
@@ -113,8 +113,8 @@
                             MinHeight="40"
                             Margin="0,16,0,0"
                             hc:InfoElement.Necessary="True"
-                            hc:InfoElement.Placeholder="{ex:Lang Key={x:Static langs:LangKeys.PlsEnterContent}}"
-                            hc:InfoElement.Title="{ex:Lang Key={x:Static langs:LangKeys.Name}}"
+                            hc:InfoElement.Placeholder="{ex:Lang Key={x:Static langs:LangKeys.LoginUserContent}}"
+                            hc:InfoElement.Title="{ex:Lang Key={x:Static langs:LangKeys.UserName}}"
                             hc:InfoElement.TitlePlacement="Top"
                             hc:InfoElement.TitleWidth="250"
                             IsEditable="True"
@@ -132,25 +132,17 @@
                         Margin="0,16,0,0"
                         hc:InfoElement.IsReadOnly="True"
                         hc:InfoElement.Necessary="True"
-                        hc:InfoElement.Placeholder="{ex:Lang Key={x:Static langs:LangKeys.PlsEnterContent}}"
-                        hc:InfoElement.Title="{ex:Lang Key={x:Static langs:LangKeys.Code}}"
+                        hc:InfoElement.Placeholder="{ex:Lang Key={x:Static langs:LangKeys.LoginPasswordContent}}"
+                        hc:InfoElement.Title="{ex:Lang Key={x:Static langs:LangKeys.Password}}"
                         hc:InfoElement.TitlePlacement="Top"
                         hc:InfoElement.TitleWidth="250"
                         helper:PasswordBoxHelper.BindPassword="{Binding Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                         Foreground="Black"
                         Style="{StaticResource PasswordBoxExtend}" />
-
-                <CheckBox Margin="0,16,0,0" Content="{ex:Lang Key={x:Static langs:LangKeys.CheckBox}}" IsChecked="{Binding RememberMe}"/>
-
-                <Button Width="250"
-                        x:Name="LoginButton"
-                        Margin="0,16,0,0"
-                        Content="登 录"
-                        HorizontalAlignment="center"
-                        Click="LoginButton_Click"
-                        Style="{StaticResource ButtonCustom}">
-                    <!--<hc:LoadingLine Margin="0,30" Foreground="BlueViolet" Style="{StaticResource LoadingLineLarge}"/>-->
-                </Button>
+                <CheckBox Margin="0,16,0,0"
+                          Content="{ex:Lang Key={x:Static langs:LangKeys.CheckBox}}"
+                          IsChecked="{Binding RememberMe}" />
+                
                 <Button hc:BorderElement.CornerRadius="4" 
                         Margin="5" 
                         Height="28" 
@@ -158,7 +150,7 @@
                         Background="#24292e" 
                         Foreground="White"    
                         Click="LoginButton_Click"
-                        Content="{ex:Lang Key={x:Static langs:LangKeys.ButtonCustom}}" 
+                        Content="{ex:Lang Key={x:Static langs:LangKeys.ButtonCustom}}"
                         Style="{StaticResource ButtonCustom}" 
                         hc:BackgroundSwitchElement.MouseHoverBackground="{DynamicResource DangerBrush}" 
                         hc:BackgroundSwitchElement.MouseDownBackground="PaleVioletRed"/>
