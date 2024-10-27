@@ -889,4 +889,12 @@
     <value>密码</value>
     <comment>密码</comment>
   </data>
+  <data name="Login" xml:space="preserve">
+    <value>登 录</value>
+    <comment>登 录</comment>
+  </data>
+  <data name="Logging" xml:space="preserve">
+    <value>正在登录</value>
+    <comment>正在登录</comment>
+  </data>
 </root>

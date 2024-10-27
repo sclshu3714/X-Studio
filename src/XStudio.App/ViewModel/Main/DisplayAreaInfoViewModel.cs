@@ -21,6 +21,7 @@ namespace XStudio.App.ViewModel.Main
         private string _BackgroundToken = string.Empty;
         private UserControl? _Content = null;
         private DisplayAreaType type = DisplayAreaType.None;
+        private Visibility _visibility = Visibility.Visible;
 
         /// <summary>
         /// 背景
@@ -38,6 +39,11 @@ namespace XStudio.App.ViewModel.Main
         {
             get { return _header; }
             set { SetProperty(ref _header, value); }
+        }
+
+        public Visibility @Visibility {
+            get { return _visibility; }
+            set { SetProperty(ref _visibility, value); }
         }
 
         /// <summary>
@@ -67,7 +73,7 @@ namespace XStudio.App.ViewModel.Main
             {
                 return;
             }
-            Growl.Info($"{(args.OriginalSource as System.Windows.Controls.TabItem)?.Header} Closing");
+            Growl.Info($"{(args.OriginalSource as System.Windows.Controls.TabItem)?.Header} Closing", MessageToken.GrowlMainWindow);
         }
 
         public RelayCommand<RoutedEventArgs> ClosedCmd => new(Closed);
@@ -78,7 +84,7 @@ namespace XStudio.App.ViewModel.Main
             {
                 return;
             }
-            Growl.Info($"{(args.OriginalSource as System.Windows.Controls.TabItem)?.Header} Closed");
+            Growl.Info($"{(args.OriginalSource as System.Windows.Controls.TabItem)?.Header} Closed", MessageToken.GrowlMainWindow);
         }
     }
 }

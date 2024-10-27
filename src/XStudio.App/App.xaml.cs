@@ -30,6 +30,7 @@ using XStudio.App.Helper;
 using Prism.Dialogs;
 using Prism.Navigation.Regions;
 using Prism.Container.DryIoc;
+using System.Windows.Threading;
 
 namespace XStudio.App;
 
@@ -70,6 +71,10 @@ public partial class App : PrismApplication {
         }
         try {
             Log.Information("Starting WPF host.");
+            // 在应用程序启动时设置全局异常处理
+            this.DispatcherUnhandledException += App_DispatcherUnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
             _abpApplication = await AbpApplicationFactory.CreateAsync<AppModule>(options => {
                 options.UseAutofac();
@@ -302,6 +307,38 @@ public partial class App : PrismApplication {
         catch {
             // ignored
         }
+    }
+    #endregion
+
+    #region 异常捕获
+    private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e) {
+        // 处理UI线程中抛出的未捕获异常
+        HandleException(e.Exception);
+        e.Handled = true; // 表示异常已处理
+    }
+
+    private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e) {
+        // 处理非UI线程中抛出的未捕获异常
+        Exception? exception = e.ExceptionObject as Exception;
+        HandleException(exception);
+    }
+
+    private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e) {
+        // 处理使用Task生成的异常
+        HandleException(e.Exception);
+        e.SetObserved(); // 通知系统异常已处理
+    }
+
+    private void HandleException(Exception? ex) {
+        // 在这里实现异常处理逻辑，例如显示错误对话框、记录日志等
+        // MessageBox.Show($"发生异常: {ex.Message}\n\n异常类型: {ex.GetType().Name}");
+        HandyControl.Controls.Growl.Clear(MessageToken.GrowlMainWindow);
+        if (ex == null) {
+            HandyControl.Controls.Growl.Error("发生了未知错误", MessageToken.GrowlMainWindow);
+            return;
+        }
+        HandyControl.Controls.Growl.Error($"{ex.Message}", MessageToken.GrowlMainWindow);
+        Log.Error(ex, ex.Message);
     }
     #endregion
 }

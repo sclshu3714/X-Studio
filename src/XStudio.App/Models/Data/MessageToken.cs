@@ -26,6 +26,10 @@ namespace XStudio.App.Models.Data
 
         public static readonly string LoginWindow = nameof(LoginWindow);
 
+        public static readonly string GrowlMainWindow = nameof(GrowlMainWindow);
+
+        public static readonly string GrowlLoginWindow = nameof(GrowlLoginWindow);
+
         public static readonly string PracticalWorkspace = nameof(PracticalWorkspace);
 
         public static readonly string SwitchWorkspace = nameof(SwitchWorkspace);

@@ -1105,6 +1105,24 @@ namespace XStudio.App.Properties.Langs {
         }
         
         /// <summary>
+        ///   查找类似 正在登录 的本地化字符串。
+        /// </summary>
+        internal static string Logging {
+            get {
+                return ResourceManager.GetString("Logging", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 登 录 的本地化字符串。
+        /// </summary>
+        internal static string Login {
+            get {
+                return ResourceManager.GetString("Login", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 请输入密码 的本地化字符串。
         /// </summary>
         internal static string LoginPasswordContent {

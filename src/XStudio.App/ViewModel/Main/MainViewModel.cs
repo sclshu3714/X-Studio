@@ -232,7 +232,7 @@ namespace XStudio.App.ViewModel.Main
                         }
                     }
                     return true;
-                }, "");
+                }, MessageToken.GrowlMainWindow);
             }
             else
             {

@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:XStudio.App.Views.UserControls"
              xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:data="clr-namespace:XStudio.App.Models.Data"
              BorderThickness="0,1,0,0"
              BorderBrush="{DynamicResource BorderBrush}"
              Background="{StaticResource CloudDrawingBrush}"
@@ -49,13 +50,15 @@
                 VerticalAlignment="Top" 
                 Margin="-12 26 0 0" 
                 Style="{StaticResource ButtonIconCircular}" />
-
-        <ScrollViewer Grid.Column="1" 
-                      VerticalScrollBarVisibility="Hidden" 
+        <ScrollViewer Grid.Column="1"
+                      VerticalScrollBarVisibility="Hidden"
                       HorizontalAlignment="Center"
                       VerticalAlignment="Bottom"
                       Margin="0 0 0 16">
-            <StackPanel hc:Growl.GrowlParent="True" VerticalAlignment="Bottom" Margin="0 0 0 16"/>
+            <StackPanel hc:Growl.GrowlParent="True"
+                        hc:Growl.Token="{x:Static data:MessageToken.GrowlMainWindow}"
+                        VerticalAlignment="Bottom"
+                        Margin="0 0 0 16" />
         </ScrollViewer>
     </Grid>
 </UserControl>

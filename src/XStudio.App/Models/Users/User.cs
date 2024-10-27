@@ -11,6 +11,37 @@ namespace XStudio.App.Models.Users
 {
     public class User
     {
+        public User() { }
+
+        public void SetUser(User user) { 
+            TenantId = user.TenantId;
+            UserName = user.UserName;
+            NormalizedUserName = user.NormalizedUserName;
+            Name = user.Name;
+            Surname = user.Surname;
+            Email = user.Email;
+            NormalizedEmail = user.NormalizedEmail;
+            EmailConfirmed = user.EmailConfirmed;
+            PasswordHash = user.PasswordHash;
+            SecurityStamp = user.SecurityStamp;
+            IsExternal = user.IsExternal;
+            PhoneNumber = user.PhoneNumber;
+            PhoneNumberConfirmed = user.PhoneNumberConfirmed;
+            IsActive = user.IsActive;
+            TwoFactorEnabled = user.TwoFactorEnabled;
+            LockoutEnd = user.LockoutEnd;
+            LockoutEnabled = user.LockoutEnabled;
+            AccessFailedCount = user.AccessFailedCount;
+            ShouldChangePasswordOnNextLogin = user.ShouldChangePasswordOnNextLogin;
+            EntityVersion = user.EntityVersion;
+            LastPasswordChangeTime = user.LastPasswordChangeTime;
+            Roles = user.Roles;
+            Claims = user.Claims;
+            Logins = user.Logins;
+            Tokens = user.Tokens;
+            OrganizationUnits = user.OrganizationUnits;
+            TokenResponse = user.TokenResponse;
+        }
         public virtual Guid? TenantId { get; protected set; }
 
         /// <summary>
@@ -155,5 +186,7 @@ namespace XStudio.App.Models.Users
         /// token
         /// </summary>
         public TokenResponse TokenResponse { get; internal set; }
+
+        
     }
 }

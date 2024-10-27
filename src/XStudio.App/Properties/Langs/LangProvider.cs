@@ -307,6 +307,8 @@ namespace XStudio.App.Properties.Langs
             OnPropertyChanged(nameof(LoginUserContent));
             OnPropertyChanged(nameof(Password));
             OnPropertyChanged(nameof(LoginPasswordContent));
+            OnPropertyChanged(nameof(Login));
+            OnPropertyChanged(nameof(Logging));
         }
 
         /// <summary>
@@ -1504,8 +1506,10 @@ namespace XStudio.App.Properties.Langs
 
         public string Password => Lang.Password;
 
-        public string LoginPasswordContent => Lang.LoginPasswordContent; 
+        public string LoginPasswordContent => Lang.LoginPasswordContent;
 
+        public string Login => Lang.Login;
+        public string Logging => Lang.Logging;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -2706,5 +2710,7 @@ namespace XStudio.App.Properties.Langs
         public static string LoginUserContent = nameof(LoginUserContent);
         public static string Password = nameof(Password);
         public static string LoginPasswordContent = nameof(LoginPasswordContent);
+        public static string Login = nameof(Login);
+        public static string Logging = nameof(Logging);
     }
 }

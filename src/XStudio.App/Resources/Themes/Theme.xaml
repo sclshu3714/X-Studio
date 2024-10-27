@@ -4,9 +4,11 @@
     xmlns:PresentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
     xmlns:converter="clr-namespace:HandyControl.Tools.Converter;assembly=HandyControl"
     xmlns:ex="clr-namespace:HandyControl.Tools.Extension;assembly=HandyControl"
+    xmlns:exmy="clr-namespace:XStudio.App.Extensions"
     xmlns:hc="clr-namespace:HandyControl.Controls;assembly=HandyControl"
     xmlns:interactivity="clr-namespace:HandyControl.Interactivity;assembly=HandyControl"
     xmlns:langs="clr-namespace:HandyControl.Properties.Langs;assembly=HandyControl"
+    xmlns:langsmy="clr-namespace:XStudio.App.Properties.Langs"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
     xmlns:shapes="clr-namespace:HandyControl.Expression.Shapes;assembly=HandyControl"
@@ -419,6 +421,112 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+    <Style x:Key="ToggleButtonLoadingCustom"
+           BasedOn="{StaticResource ToggleButtonBaseStyle}"
+           TargetType="{x:Type ToggleButton}">
+        <Setter Property="Background"
+                Value="{DynamicResource PrimaryBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border Name="Chrome"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{Binding Path=(hc:BorderElement.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}">
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center">
+                            <Viewbox Margin="8">
+                                <hc:LoadingCircle Name="Loading"
+                                                  Width="22"
+                                                  Height="22"
+                                                  Foreground="{TemplateBinding Foreground}"
+                                                  DotDiameter="3"
+                                                  IsRunning="{TemplateBinding IsChecked}"
+                                                  Visibility="Collapsed" />
+                            </Viewbox>
+                            <hc:SimplePanel>
+                                <ContentPresenter Name="UnCheckedElement"
+                                                  Margin="{TemplateBinding Padding}"
+                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  RecognizesAccessKey="True"
+                                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                                  Content="{exmy:Lang Key={x:Static langsmy:LangKeys.Login}}"/>
+                                <ContentPresenter Name="CheckedElement"
+                                                  Margin="{TemplateBinding Padding}"
+                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  RecognizesAccessKey="True"
+                                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                                  Visibility="Collapsed"
+                                                  Content="{Binding Path=(hc:StatusSwitchElement.CheckedElement), RelativeSource={RelativeSource TemplatedParent}}" />
+                            </hc:SimplePanel>
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver"
+                                 Value="True">
+                            <Setter Property="UIElement.Opacity"
+                                    Value=".9" />
+                        </Trigger>
+                        <Trigger Property="IsPressed"
+                                 Value="True">
+                            <Setter Property="UIElement.Opacity"
+                                    Value=".6" />
+                        </Trigger>
+                        <Trigger Property="ToggleButton.IsChecked"
+                                 Value="True">
+                            <Setter TargetName="Loading"
+                                    Property="Visibility"
+                                    Value="Visible" />
+                            <Setter TargetName="CheckedElement"
+                                    Property="Visibility"
+                                    Value="Visible" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="hc:StatusSwitchElement.HideUncheckedElement"
+                                           Value="True" />
+                                <Condition Property="ToggleButton.IsChecked"
+                                           Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="UnCheckedElement"
+                                    Property="Visibility"
+                                    Value="Collapsed" />
+                        </MultiTrigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="UIElement.Opacity"
+                                    Value="0.4" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ToggleButtonLoadingLogin"
+           BasedOn="{StaticResource ToggleButtonLoadingCustom}"
+           TargetType="{x:Type ToggleButton}">
+        <Style.Triggers>
+            <Trigger Property="UIElement.IsMouseOver"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{DynamicResource SecondaryRegionBrush}" />
+            </Trigger>
+            <Trigger Property="IsPressed"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="{DynamicResource BorderBrush}" />
+            </Trigger>
+        </Style.Triggers>
+        <Setter Property="Background"
+                Value="{DynamicResource RegionBrush}" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource PrimaryTextBrush}" />
+        <Setter Property="BorderThickness"
+                Value="1" />
     </Style>
     <Geometry x:Key="LoginGeometry" PresentationOptions:Freeze="True">M575.215 547.318c53.367-24.316 90.562-78.011 90.562-140.522 0-85.257-69.149-154.383-154.406-154.383-85.299 0-154.427 69.126-154.427 154.383 0 62.49 37.172 116.185 90.562 140.522-87.156 27.24-150.586 108.698-150.586 204.715 0 12.071 9.779 21.827 21.827 21.827s21.827-9.756 21.827-21.827c0-94.161 76.613-170.774 170.776-170.774 94.184 0 170.797 76.613 170.797 170.774 0 12.071 9.756 21.827 21.827 21.827 12.07 0 21.827-9.756 21.827-21.827 0.021-95.994-63.43-177.475-150.586-204.715zM400.621 406.817c0-61.072 49.678-110.729 110.773-110.729 61.072 0 110.75 49.657 110.75 110.729 0 61.094-49.678 110.794-110.75 110.794-61.095 0-110.773-49.7-110.773-110.794z M511.371 960.81c-246.951 0-447.869-200.918-447.869-447.891 0-246.93 200.919-447.871 447.869-447.871 246.973 0 447.892 200.919 447.892 447.871 0 246.973-200.919 447.891-447.892 447.891z m0-854.269c-224.098 0-406.398 182.301-406.398 406.377s182.3 406.397 406.398 406.397c224.099 0 406.42-182.321 406.42-406.397S735.47 106.541 511.371 106.541z</Geometry>
 </ResourceDictionary>

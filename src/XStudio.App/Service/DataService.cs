@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using Volo.Abp.DependencyInjection;
@@ -217,11 +218,13 @@ public class DataService : ITransientDependency
         {
             new DisplayAreaInfoViewModel(this){
                 Header = "首页",
+                Visibility = Visibility.Visible,
                 Type = DisplayAreaType.Home,
                 Content = new HomePageControl(_homePage)
             },
             new DisplayAreaInfoViewModel(this){
                 Header = "显示",
+                Visibility= Visibility.Collapsed,
                 Type = DisplayAreaType.Display,
                 BackgroundToken = ResourceToken.SuccessBrush,
                 Content = new DisplayAreaPageControl()
