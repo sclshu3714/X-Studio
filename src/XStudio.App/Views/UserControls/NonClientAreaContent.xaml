@@ -224,10 +224,18 @@
         <Button
             Name="LoginButton"
             Grid.Column="1"
+            Command="{Binding LoginViewCmd}"  
             hc:IconElement.Geometry="{StaticResource LoginGeometry}"
-            Command="{Binding LoginViewCmd}"
-            CommandParameter="{x:Static data:MessageToken.LoginWindow}"
-            Style="{StaticResource ButtonIcon}" />
+            CommandParameter="{x:Static data:MessageToken.LoginWindow}"   
+            Style="{StaticResource ButtonIcon}"
+            hc:BackgroundSwitchElement.MouseHoverBackground="{DynamicResource BorderBrush}" 
+            hc:BackgroundSwitchElement.MouseDownBackground="Red">
+            <!--<hc:TransitioningContentControl HorizontalAlignment="Center" VerticalAlignment="Center" Background="Transparent">
+                <Viewbox Margin="0">
+                    <hc:AnimationPath VerticalAlignment="Center" Duration="0:0:6" Stretch="Uniform" Width="1024" Height="1024" StrokeThickness="50" Stroke="{DynamicResource PrimaryBrush}" Data="{StaticResource GithubGeometry}"/>
+                </Viewbox>
+            </hc:TransitioningContentControl>-->
+        </Button>
         <Button
             Name="ButtonConfig"
             Grid.Column="2"

@@ -1861,6 +1861,15 @@ namespace XStudio.App.Properties.Langs {
         }
         
         /// <summary>
+        ///   查找类似 开发之路，永不止步 的本地化字符串。
+        /// </summary>
+        internal static string SignText {
+            get {
+                return ResourceManager.GetString("SignText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 滑块 的本地化字符串。
         /// </summary>
         internal static string Slider {

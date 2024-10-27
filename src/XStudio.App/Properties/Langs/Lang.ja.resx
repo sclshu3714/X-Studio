@@ -852,4 +852,7 @@
   <data name="Code" xml:space="preserve">
     <value>Code</value>
   </data>
+  <data name="SignText" xml:space="preserve">
+    <value>开发之路，永不止步</value>
+  </data>
 </root>

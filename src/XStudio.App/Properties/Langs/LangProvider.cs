@@ -258,6 +258,7 @@ namespace XStudio.App.Properties.Langs
             OnPropertyChanged(nameof(TabControl));
             OnPropertyChanged(nameof(Tag));
             OnPropertyChanged(nameof(Text));
+            OnPropertyChanged(nameof(SignText));
             OnPropertyChanged(nameof(TextBlock));
             OnPropertyChanged(nameof(TextBox));
             OnPropertyChanged(nameof(TextDialog));
@@ -1315,6 +1316,10 @@ namespace XStudio.App.Properties.Langs
         /// </summary>
         public string Text => Lang.Text;
 
+        /// <summary>
+        ///   查找类似 正文 的本地化字符串。
+        /// </summary>
+        public string SignText => Lang.SignText;
         /// <summary>
         ///   查找类似 文本块 的本地化字符串。
         /// </summary>
@@ -2504,6 +2509,11 @@ namespace XStudio.App.Properties.Langs
         ///   查找类似 正文 的本地化字符串。
         /// </summary>
         public static string Text = nameof(Text);
+
+        /// <summary>
+        ///   查找类似 正文 的本地化字符串。
+        /// </summary>
+        public static string SignText = nameof(SignText);
 
         /// <summary>
         ///   查找类似 文本块 的本地化字符串。

@@ -4,18 +4,35 @@ using Prism.Commands;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Forms;
 using XStudio.App.Models.Data;
+using XStudio.App.Models.Users;
+using XStudio.App.Service;
 using XStudio.App.ViewModel.Main;
 using XStudio.App.Views.Module;
 
 namespace XStudio.App.ViewModel.Module {
     public class LoginViewModel : ViewModelBase {
-        public LoginViewModel() {
+        private DataService _dataService;
+        public LoginViewModel(DataService dataService) {
+            //MessengerInstance = WeakReferenceMessenger.Default;
+            _dataService = dataService;
             LoginCommand = new DelegateCommand<LoginViewModel>(OnLoginAction);
-            // 订阅消息
-            //Messenger.Default.Register<object>(this, MessageToken.LoginWindow, OnLoginWindow);
         }
+
+        /// <summary>
+        /// 记录5个历史登录账号
+        /// </summary>
+        public ObservableCollection<UserViewModel> DefaultSelectList {
+            get => defaultSelectList;
+            set => SetProperty(ref defaultSelectList, value);
+        }
+
+        private ObservableCollection<UserViewModel> defaultSelectList = new ObservableCollection<UserViewModel>() { 
+            new UserViewModel(){ index = 0, userNameOrEmailAddress="admin", password="1q2w3E*"  },
+        };
 
         public string Password { 
             get => _password;
@@ -37,7 +54,7 @@ namespace XStudio.App.ViewModel.Module {
         public DelegateCommand<LoginViewModel> LoginCommand { get; }
 
         private void OnLoginAction(LoginViewModel model) {
-            throw new NotImplementedException();
+            //MessengerInstance?.Send<object, string>(view, MessageToken.LoadShowContent);
         }
     }
 }

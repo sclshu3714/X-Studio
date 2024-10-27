@@ -60,6 +60,8 @@
       <None Remove="Resources\Img\5.jpg" />
       <None Remove="Resources\Img\Album\1.jpg" />
       <None Remove="Resources\Img\Album\10.jpg" />
+      <None Remove="Resources\Img\Album\11.png" />
+      <None Remove="Resources\Img\Album\12.png" />
       <None Remove="Resources\Img\Album\2.jpg" />
       <None Remove="Resources\Img\Album\3.jpg" />
       <None Remove="Resources\Img\Album\4.jpg" />
@@ -128,6 +130,8 @@
         <Generator>TextTemplatingFileGenerator</Generator>
         <LastGenOutput>LangProvider.cs</LastGenOutput>
       </Content>
+      <Resource Include="Resources\Img\Album\11.png" />
+      <Resource Include="Resources\Img\Album\12.png" />
       <Resource Include="Resources\Img\wxz.png" />
       <Resource Include="Resources\Img\xlogo.ico" />
       <EmbeddedResource Include="xlogo.ico" />

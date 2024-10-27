@@ -865,4 +865,8 @@
     <value>编码</value>
     <comment>编码代码</comment>
   </data>
+  <data name="SignText" xml:space="preserve">
+    <value>开发之路，永不止步</value>
+    <comment>开发之路，永不止步</comment>
+  </data>
 </root>

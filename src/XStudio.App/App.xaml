@@ -9,7 +9,8 @@
     xmlns:langs="clr-namespace:XStudio.App.Properties.Langs"
     xmlns:local="clr-namespace:XStudio.App"
     xmlns:prism="http://prismlibrary.com/"
-    xmlns:viewModel="clr-namespace:XStudio.App.ViewModel">
+    xmlns:viewModel="clr-namespace:XStudio.App.ViewModel" 
+    xmlns:converters="clr-namespace:XStudio.App.Converters">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -19,6 +20,9 @@
             </ResourceDictionary.MergedDictionaries>
             <langs:LangProvider x:Key="XStudioLangs" />
             <viewModel:ViewModelLocator x:Key="Locator" />
+            <converters:StringRepeatConverter x:Key="StringRepeatConverter"/>
+            <converters:String2BrushConverter x:Key="String2BrushConverter"/>
+            <converters:HatchBrushConverter x:Key="HatchBrushConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>

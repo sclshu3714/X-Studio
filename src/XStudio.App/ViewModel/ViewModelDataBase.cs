@@ -46,12 +46,10 @@ namespace XStudio.App.ViewModel
         //     using the Messenger's default instance.
         protected IMessenger? MessengerInstance
         {
-            get
-            {
+            get {
                 return _messengerInstance;
             }
-            set
-            {
+            set {
                 _messengerInstance = value;
             }
         }
@@ -62,6 +60,7 @@ namespace XStudio.App.ViewModel
         public ViewModelBase()
             : this(null)
         {
+            
         }
 
         //
@@ -73,9 +72,12 @@ namespace XStudio.App.ViewModel
         //     An instance of a GalaSoft.MvvmLight.Messaging.Messenger used to broadcast messages
         //     to other objects. If null, this class will attempt to broadcast using the Messenger's
         //     default instance.
-        public ViewModelBase(IMessenger? messenger)
+        public ViewModelBase(IMessenger? messenger) 
         {
             MessengerInstance = messenger;
+            if (MessengerInstance == null) {
+                MessengerInstance = WeakReferenceMessenger.Default;
+            }
         }
 
         //

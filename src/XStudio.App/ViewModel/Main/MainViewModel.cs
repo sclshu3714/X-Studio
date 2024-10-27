@@ -37,7 +37,7 @@ namespace XStudio.App.ViewModel.Main
 
         public MainViewModel(DataService dataService)
         {
-            MessengerInstance = WeakReferenceMessenger.Default;
+            //MessengerInstance = WeakReferenceMessenger.Default;
             _dataService = dataService;
             WorkspaceInfoCollection = new ObservableCollection<WorkspaceInfoViewModel>();
             DisplayAreaInfoCollection = new ObservableCollection<DisplayAreaInfoViewModel>();
@@ -130,7 +130,8 @@ namespace XStudio.App.ViewModel.Main
                 {
                     case string action  when action == MessageToken.LoginWindow:
                         object? view = AssemblyHelper.CreateInternalInstance($"Views.Module.LoginWindow");
-                        if (view is not null && view is HandyControl.Controls.Window window) {
+                        if (view is not null && view is LoginWindow window) {
+                            window.SetViewModel(new LoginViewModel(_dataService));
                             window.Owner = Application.Current.MainWindow;
                             if (window.ShowDialog() == true) {
                                 // 登录成功

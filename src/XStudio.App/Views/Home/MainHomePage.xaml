@@ -10,7 +10,27 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-
+    <Page.Resources>
+        <Storyboard x:Key="StoryboardLoaded" RepeatBehavior="Forever">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(RotateTransform.Angle)" Storyboard.TargetName="TransformRotate1">
+                <EasingDoubleKeyFrame KeyTime="0:0:3" Value="90">
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(RotateTransform.Angle)" Storyboard.TargetName="TransformRotate2">
+                <EasingDoubleKeyFrame KeyTime="0:0:3" Value="90">
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(RotateTransform.Angle)" Storyboard.TargetName="TransformRotate3">
+                <EasingDoubleKeyFrame KeyTime="0:0:3" Value="-90">
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+    </Page.Resources>
+    <Page.Triggers>
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource StoryboardLoaded}"/>
+        </EventTrigger>
+    </Page.Triggers>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
@@ -117,6 +137,46 @@
             Margin="3,3,3,3"
             Background="{DynamicResource RegionBrush}"
             CornerRadius="10"
-            Effect="{StaticResource EffectShadow5}" />
+            Effect="{StaticResource EffectShadow5}">
+            <StackPanel Orientation="Horizontal">
+                <hc:TransitioningContentControl Margin="8"  Width="80" Height="80" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <Viewbox Margin="0">
+                        <hc:AnimationPath VerticalAlignment="Center" Duration="0:0:6" Stretch="Uniform" Width="1024" Height="1024" StrokeThickness="10" Stroke="{DynamicResource PrimaryBrush}" Data="{StaticResource LoginGeometry}"/>
+                    </Viewbox>
+                </hc:TransitioningContentControl>
+                <hc:BlendEffectBox Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <hc:BlendEffectBox.Effects>
+                        <BlurEffect Radius="30"/>
+                        <hc:BrightnessEffect Brightness="1"/>
+                        <hc:ContrastEffect Contrast="20"/>
+                    </hc:BlendEffectBox.Effects>
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Border Width="50" Height="50" Background="Red" RenderTransformOrigin="0.5,0.5">
+                                <Border.RenderTransform>
+                                    <TransformGroup>
+                                        <RotateTransform Angle="0" x:Name="TransformRotate1"/>
+                                    </TransformGroup>
+                                </Border.RenderTransform>
+                            </Border>
+                            <Border Margin="35,0,0,0" Width="50" Height="50" Background="Red" RenderTransformOrigin="0.5,0.5">
+                                <Border.RenderTransform>
+                                    <TransformGroup>
+                                        <RotateTransform Angle="0" x:Name="TransformRotate2"/>
+                                    </TransformGroup>
+                                </Border.RenderTransform>
+                            </Border>
+                        </StackPanel>
+                        <Border Width="50" Height="50" Background="Red" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                            <Border.RenderTransform>
+                                <TransformGroup>
+                                    <RotateTransform Angle="0" x:Name="TransformRotate3"/>
+                                </TransformGroup>
+                            </Border.RenderTransform>
+                        </Border>
+                    </StackPanel>
+                </hc:BlendEffectBox>
+            </StackPanel>
+        </Border>
     </Grid>
 </Page>

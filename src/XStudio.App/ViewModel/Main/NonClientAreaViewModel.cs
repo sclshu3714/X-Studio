@@ -13,9 +13,9 @@ namespace XStudio.App.ViewModel.Main
 {
     public class NonClientAreaViewModel : ViewModelBase
     {
-        public NonClientAreaViewModel()
+        public NonClientAreaViewModel() 
         {
-            MessengerInstance = WeakReferenceMessenger.Default;
+            //MessengerInstance = WeakReferenceMessenger.Default;
             VersionInfo = VersionHelper.GetVersion();
         }
         public RelayCommand<string> OpenViewCmd => new(OpenView);
