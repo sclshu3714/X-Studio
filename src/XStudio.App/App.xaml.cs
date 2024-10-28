@@ -323,7 +323,7 @@ public partial class App : PrismApplication {
         HandleException(exception);
     }
 
-    private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e) {
+    private void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e) {
         // 处理使用Task生成的异常
         HandleException(e.Exception);
         e.SetObserved(); // 通知系统异常已处理

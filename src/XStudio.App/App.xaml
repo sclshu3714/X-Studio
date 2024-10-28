@@ -2,6 +2,7 @@
     x:Class="XStudio.App.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:XStudio.App.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:d1P1="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="clr-namespace:XStudio.App.Models.Data"
@@ -9,8 +10,7 @@
     xmlns:langs="clr-namespace:XStudio.App.Properties.Langs"
     xmlns:local="clr-namespace:XStudio.App"
     xmlns:prism="http://prismlibrary.com/"
-    xmlns:viewModel="clr-namespace:XStudio.App.ViewModel" 
-    xmlns:converters="clr-namespace:XStudio.App.Converters">
+    xmlns:viewModel="clr-namespace:XStudio.App.ViewModel">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -20,9 +20,9 @@
             </ResourceDictionary.MergedDictionaries>
             <langs:LangProvider x:Key="XStudioLangs" />
             <viewModel:ViewModelLocator x:Key="Locator" />
-            <converters:StringRepeatConverter x:Key="StringRepeatConverter"/>
-            <converters:String2BrushConverter x:Key="String2BrushConverter"/>
-            <converters:HatchBrushConverter x:Key="HatchBrushConverter"/>
+            <converters:StringRepeatConverter x:Key="StringRepeatConverter" />
+            <converters:String2BrushConverter x:Key="String2BrushConverter" />
+            <converters:HatchBrushConverter x:Key="HatchBrushConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>

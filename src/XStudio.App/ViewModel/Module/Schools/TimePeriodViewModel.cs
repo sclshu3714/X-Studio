@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using XStudio.App.ViewModel;
 
 namespace XStudio.App.Models.Data {
-    public class TimePeriod : ViewModelBase {
+    public class TimePeriodViewModel : ViewModelBase {
         private int _order = 0;
         private string _code = string.Empty;
         private string _name = string.Empty;

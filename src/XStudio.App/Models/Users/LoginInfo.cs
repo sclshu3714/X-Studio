@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,8 +7,16 @@ using System.Threading.Tasks;
 
 namespace XStudio.App.Models.Users {
     public class LoginInfo {
-        public string userNameOrEmailAddress;
-        public string password;
-        public bool rememberMe;
+        [JsonProperty("userNameOrEmailAddress")]
+        public string UserNameOrEmailAddress { get; set; } = string.Empty;
+
+        [JsonProperty("password")]
+        public string Password { get; set; } = string.Empty;
+
+        [JsonProperty("rememberMe")]
+        public bool RememberMe { get; set; } = false;
+
+        [JsonProperty("returnUrl")]
+        public string ClientId { get; set; } = "XStuido";
     }
 }

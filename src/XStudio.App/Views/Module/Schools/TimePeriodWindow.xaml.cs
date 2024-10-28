@@ -20,14 +20,14 @@ namespace XStudio.App.Views.Module {
     public partial class TimePeriodWindow : Window {
         public TimePeriodWindow() {
             InitializeComponent();
-            TimePeriodModel = new TimePeriod();
+            TimePeriodModel = new TimePeriodViewModel();
             TimePeriodModel.Order = Order;
             TimePeriodModel.Code = $"{Order}".PadLeft(6, '0');
             this.DataContext = TimePeriodModel;
         }
 
         public int Order { get; private set; } = 0;
-        public TimePeriod TimePeriodModel { get; private set; }
+        public TimePeriodViewModel TimePeriodModel { get; private set; }
 
         internal void SetOrder(int order) {
             Order = order;

@@ -44,9 +44,9 @@ public class DataService : ITransientDependency
     public async Task<User> LoginAsync(string userName, string password, bool rememberMe)
     {
         var input = new LoginInfo {
-            userNameOrEmailAddress = userName,
-            password = password,
-            rememberMe = rememberMe
+            UserNameOrEmailAddress = userName,
+            Password = password,
+            RememberMe = rememberMe
         };
         var request = new TokenRequest { 
             ClientId = "XStudio_App",
@@ -252,7 +252,7 @@ public class DataService : ITransientDependency
         };
     }
 
-    public ObservableCollection<Page> getTimePeriodPage(ViewModel.Module.TimePeriodViewModel timePeriodViewModel) {
+    public ObservableCollection<Page> getTimePeriodPage(ViewModel.Module.TimePeriodPageViewModel timePeriodViewModel) {
         ObservableCollection<Page> pages = new ObservableCollection<Page>();
         pages.Add(new TimePeriodPage(timePeriodViewModel) {  Name=timePeriodViewModel.Type});
         return pages;
@@ -261,13 +261,13 @@ public class DataService : ITransientDependency
     #endregion
 
     #region 模块相关
-    public async Task<TimePeriod> CreateAsync(TimePeriod input) {
-        TimePeriod timePeriod = await apiHelper.PostAsync("api/xstudio/v1/TimePeriod/add", input);
+    public async Task<TimePeriodViewModel> CreateAsync(TimePeriodViewModel input) {
+        TimePeriodViewModel timePeriod = await apiHelper.PostAsync("api/xstudio/v1/TimePeriod/add", input);
         return timePeriod;
     }
 
-    public async Task<List<TimePeriod>> InsertManyAsync(List<TimePeriod> inputs) {
-        List<TimePeriod> timePeriods = await apiHelper.PostManyAsync("api/xstudio/v1/TimePeriod/adds", inputs);
+    public async Task<List<TimePeriodViewModel>> InsertManyAsync(List<TimePeriodViewModel> inputs) {
+        List<TimePeriodViewModel> timePeriods = await apiHelper.PostManyAsync("api/xstudio/v1/TimePeriod/adds", inputs);
         return timePeriods;
     }
     public async Task DeleteAsync(Guid id) {
@@ -279,18 +279,18 @@ public class DataService : ITransientDependency
         await Task.CompletedTask;
     }
 
-    public async Task<TimePeriod> GetAsync(Guid id) {
-        TimePeriod timePeriod = await apiHelper.GetAsync<TimePeriod>($"api/xstudio/v1/TimePeriod/{id}");
+    public async Task<TimePeriodViewModel> GetAsync(Guid id) {
+        TimePeriodViewModel timePeriod = await apiHelper.GetAsync<TimePeriodViewModel>($"api/xstudio/v1/TimePeriod/{id}");
         return timePeriod;
     }
 
-    public async Task<PagedResultDto<TimePeriod>> GetListAsync(PagedAndSortedResultRequestDto input) {
-        PagedResultDto<TimePeriod> timePeriods = await apiHelper.GetListAsync<PagedResultDto<TimePeriod>>($"/api/xstudio/v1/TimePeriod/list", input);
+    public async Task<PagedResultDto<TimePeriodViewModel>> GetListAsync(PagedAndSortedResultRequestDto input) {
+        PagedResultDto<TimePeriodViewModel> timePeriods = await apiHelper.GetListAsync<PagedResultDto<TimePeriodViewModel>>($"/api/xstudio/v1/TimePeriod/list", input);
         return timePeriods;
     }
 
-    public async Task<TimePeriod> UpdateAsync(Guid id, TimePeriod input) {
-        TimePeriod timePeriod = await apiHelper.PutAsync($"api/xstudio/v1/TimePeriod/update", input);
+    public async Task<TimePeriodViewModel> UpdateAsync(Guid id, TimePeriodViewModel input) {
+        TimePeriodViewModel timePeriod = await apiHelper.PutAsync($"api/xstudio/v1/TimePeriod/update", input);
         return timePeriod;
     }
     #endregion

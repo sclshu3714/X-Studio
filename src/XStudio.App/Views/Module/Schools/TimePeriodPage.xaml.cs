@@ -20,8 +20,8 @@ namespace XStudio.App.Views.Module {
     /// </summary>
     public partial class TimePeriodPage : Page {
 
-        private TimePeriodViewModel _timePeriodViewModel;
-        public TimePeriodPage(TimePeriodViewModel timePeriodViewModel) {
+        private TimePeriodPageViewModel _timePeriodViewModel;
+        public TimePeriodPage(TimePeriodPageViewModel timePeriodViewModel) {
             InitializeComponent();
             _timePeriodViewModel = timePeriodViewModel;
             DataContext = _timePeriodViewModel;

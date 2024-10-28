@@ -123,6 +123,19 @@ namespace XStudio.App.ViewModel.Main
             IsCodeOpened = !IsCodeOpened;
         });
 
+        /// <summary>
+        /// 验证用户是否登录
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<bool> VerifyUserLoggedAsync() {
+            if (string.IsNullOrWhiteSpace(ViewModelLocator.Instance.AccessToken)) {
+                MessengerInstance?.Send<object, string>(MessageToken.LoginWindow, MessageToken.LoginWindow);
+                await Task.CompletedTask;
+                return false;
+            }
+            return true;
+        }
+
         private void UpdateTopContent() {
 
             MessengerInstance?.Register<object, string>(this, MessageToken.LoginWindow, (obj, cmd) => {
@@ -131,7 +144,11 @@ namespace XStudio.App.ViewModel.Main
                     case string action  when action == MessageToken.LoginWindow:
                         object? view = AssemblyHelper.CreateInternalInstance($"Views.Module.LoginWindow");
                         if (view is not null && view is LoginWindow window) {
-                            window.SetViewModel(new LoginViewModel(_dataService));
+                            LoginViewModel loginViewModel = new LoginViewModel(_dataService);
+                            if (ViewModelLocator.Instance.CurrentUser != null) {
+                                loginViewModel.UserNameOrEmailAddress = ViewModelLocator.Instance.CurrentUser.UserName;
+                            }
+                            window.SetViewModel(loginViewModel);
                             window.Owner = Application.Current.MainWindow;
                             if (window.ShowDialog() == true) {
                                 // 登录成功
@@ -270,7 +287,7 @@ namespace XStudio.App.ViewModel.Main
                 ViewModelDataBase<Page>? thePage = null;
                 switch (theWorkspaceItem.Name) {
                     case "TimePeriod":
-                        thePage = new TimePeriodViewModel(_dataService, theWorkspaceItem.Name);
+                        thePage = new TimePeriodPageViewModel(_dataService, theWorkspaceItem.Name);
                         break;
                     default:
                         break;

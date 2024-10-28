@@ -12,22 +12,22 @@ using XStudio.App.Service;
 using XStudio.App.Views.Module;
 
 namespace XStudio.App.ViewModel.Module {
-    public class TimePeriodViewModel : ViewModelDataBase<Page> {
+    public class TimePeriodPageViewModel : ViewModelDataBase<Page> {
         private readonly DataService _dataService;
         private string _type;
-        private ObservableCollection<TimePeriod> _timePeriods;
+        private ObservableCollection<TimePeriodViewModel> _timePeriods;
         
 
-        public TimePeriodViewModel(DataService dataService,string type) {
+        public TimePeriodPageViewModel(DataService dataService,string type) {
             _dataService = dataService;
             _type = type;
             DataList = dataService.getTimePeriodPage(this);
-            _timePeriods = new ObservableCollection<TimePeriod>();
-            SaveCommand = new DelegateCommand<TimePeriodViewModel>(SaveTimePeriod);
+            _timePeriods = new ObservableCollection<TimePeriodViewModel>();
+            SaveCommand = new DelegateCommand<TimePeriodPageViewModel>(SaveTimePeriod);
             AddCommand = new DelegateCommand(AddTimePeriod);
-            UpCommand = new DelegateCommand<TimePeriod>(MoveUp);
-            DownCommand = new DelegateCommand<TimePeriod>(MoveDown);
-            DeleteCommand = new DelegateCommand<TimePeriod>(RemoveTimePeriod);
+            UpCommand = new DelegateCommand<TimePeriodViewModel>(MoveUp);
+            DownCommand = new DelegateCommand<TimePeriodViewModel>(MoveDown);
+            DeleteCommand = new DelegateCommand<TimePeriodViewModel>(RemoveTimePeriod);
             LoadData();
         }
 
@@ -42,17 +42,17 @@ namespace XStudio.App.ViewModel.Module {
             get => _type;
             set => SetProperty(ref _type, value);
         }
-        public ObservableCollection<TimePeriod> TimePeriods {
+        public ObservableCollection<TimePeriodViewModel> TimePeriods {
             get { return _timePeriods; }
             set { SetProperty(ref _timePeriods, value); }
         }
 
         #region Commands
-        public DelegateCommand<TimePeriodViewModel> SaveCommand { get; private set; }
+        public DelegateCommand<TimePeriodPageViewModel> SaveCommand { get; private set; }
         public DelegateCommand AddCommand { get; private set; }
-        public DelegateCommand<TimePeriod> UpCommand { get; private set; }
-        public DelegateCommand<TimePeriod> DownCommand { get; private set; }
-        public DelegateCommand<TimePeriod> DeleteCommand { get; private set; }
+        public DelegateCommand<TimePeriodViewModel> UpCommand { get; private set; }
+        public DelegateCommand<TimePeriodViewModel> DownCommand { get; private set; }
+        public DelegateCommand<TimePeriodViewModel> DeleteCommand { get; private set; }
 
         private async void AddTimePeriod() {
             var dialog = new TimePeriodWindow();
@@ -64,7 +64,7 @@ namespace XStudio.App.ViewModel.Module {
             await Task.CompletedTask;
         }
 
-        private void MoveUp(TimePeriod timePeriod) {
+        private void MoveUp(TimePeriodViewModel timePeriod) {
             int index = TimePeriods.IndexOf(timePeriod);
             if (index > 0) {
                 // 交换当前项和上一个项的 Order 和 Code
@@ -85,7 +85,7 @@ namespace XStudio.App.ViewModel.Module {
             }
         }
 
-        private void MoveDown(TimePeriod timePeriod) {
+        private void MoveDown(TimePeriodViewModel timePeriod) {
             int index = TimePeriods.IndexOf(timePeriod);
             if (index < TimePeriods.Count - 1) {
                 // 交换当前项和下一个项的 Order 和 Code
@@ -106,7 +106,7 @@ namespace XStudio.App.ViewModel.Module {
             }
         }
 
-        private async void RemoveTimePeriod(TimePeriod period) {
+        private async void RemoveTimePeriod(TimePeriodViewModel period) {
             if (period != null) {
                 int index = TimePeriods.IndexOf(period);
                 for (int i = index + 1; i <= TimePeriods.Count - 1; i++) {
@@ -118,7 +118,7 @@ namespace XStudio.App.ViewModel.Module {
             await Task.CompletedTask;
         }
 
-        private async void SaveTimePeriod(TimePeriodViewModel model) {
+        private async void SaveTimePeriod(TimePeriodPageViewModel model) {
            await _dataService.InsertManyAsync(model.TimePeriods.ToList());
         }
         #endregion
