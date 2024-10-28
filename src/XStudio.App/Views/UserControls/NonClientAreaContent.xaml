@@ -230,29 +230,12 @@
             hc:IconElement.Geometry="{StaticResource LoginGeometry}"
             Command="{Binding LoginViewCmd}"
             CommandParameter="{x:Static data:MessageToken.LoginWindow}"
-            Content="wxz"
             Style="{StaticResource ButtonIcon}" />
-        <hc:SplitButton
-            Grid.Column="2"
-            Background="Transparent"
-            BorderThickness="0"
-            Content="{Binding ViewModelLocator.Main.CurrentUser.Name, Mode=OneWay}"
-            Visibility="Collapsed">
-            <hc:SplitButton.Style basedOn="{StaticResource SplitButtonStyle}">
-                <Style TargetType="hc:SplitButton">
-                    <Setter Property="Visibility" Value="Collapsed" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding ViewModelLocator.Main.CurrentUser}" Value="{x:Null}">
-                            <Setter Property="Visibility" Value="Collapsed" />
-                        </DataTrigger>
-                        <!--<DataTrigger Binding="{Binding ViewModelLocator.Main.CurrentUser}" Value="{x:Static sys:Object}">
-                            <Setter Property="Visibility" Value="Visible" />
-                            <Setter Property="Content" Value="{Binding ViewModelLocator.Main.CurrentUser.Name, Mode=OneWay}" />
-                        </DataTrigger>-->
-                    </Style.Triggers>
-                </Style>
-            </hc:SplitButton.Style>
-        </hc:SplitButton>
+        <hc:SplitButton Grid.Column="2"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Margin="0"
+                        Style="{StaticResource SplitButtonUserPrimary}"/>
         <Button
             Name="ButtonConfig"
             Grid.Column="3"

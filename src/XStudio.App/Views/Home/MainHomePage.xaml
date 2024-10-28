@@ -1,34 +1,37 @@
-﻿<Page
-    x:Class="XStudio.App.ViewModel.Home.MainHomePage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:hc="https://handyorg.github.io/handycontrol"
-    xmlns:local="clr-namespace:XStudio.App.ViewModel.Home"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="MainHomePage"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
-    mc:Ignorable="d">
+﻿<Page x:Class="XStudio.App.ViewModel.Home.MainHomePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:hc="https://handyorg.github.io/handycontrol"
+      xmlns:local="clr-namespace:XStudio.App.ViewModel.Home"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      Title="MainHomePage"
+      d:DesignHeight="450"
+      d:DesignWidth="800"
+      mc:Ignorable="d">
     <Page.Resources>
-        <Storyboard x:Key="StoryboardLoaded" RepeatBehavior="Forever">
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(RotateTransform.Angle)" Storyboard.TargetName="TransformRotate1">
-                <EasingDoubleKeyFrame KeyTime="0:0:3" Value="90">
-                </EasingDoubleKeyFrame>
+        <Storyboard x:Key="StoryboardLoaded"
+                    RepeatBehavior="Forever">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(RotateTransform.Angle)"
+                                           Storyboard.TargetName="TransformRotate1">
+                <EasingDoubleKeyFrame KeyTime="0:0:3"
+                                      Value="90"></EasingDoubleKeyFrame>
             </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(RotateTransform.Angle)" Storyboard.TargetName="TransformRotate2">
-                <EasingDoubleKeyFrame KeyTime="0:0:3" Value="90">
-                </EasingDoubleKeyFrame>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(RotateTransform.Angle)"
+                                           Storyboard.TargetName="TransformRotate2">
+                <EasingDoubleKeyFrame KeyTime="0:0:3"
+                                      Value="90"></EasingDoubleKeyFrame>
             </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(RotateTransform.Angle)" Storyboard.TargetName="TransformRotate3">
-                <EasingDoubleKeyFrame KeyTime="0:0:3" Value="-90">
-                </EasingDoubleKeyFrame>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(RotateTransform.Angle)"
+                                           Storyboard.TargetName="TransformRotate3">
+                <EasingDoubleKeyFrame KeyTime="0:0:3"
+                                      Value="-90"></EasingDoubleKeyFrame>
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
     </Page.Resources>
     <Page.Triggers>
         <EventTrigger RoutedEvent="FrameworkElement.Loaded">
-            <BeginStoryboard Storyboard="{StaticResource StoryboardLoaded}"/>
+            <BeginStoryboard Storyboard="{StaticResource StoryboardLoaded}" />
         </EventTrigger>
     </Page.Triggers>
     <Grid>
@@ -40,137 +43,152 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Border
-            Grid.RowSpan="1"
-            Grid.Column="0"
-            Margin="3,8,3,3"
-            Background="{DynamicResource RegionBrush}"
-            CornerRadius="10"
-            Effect="{StaticResource EffectShadow5}">
-            <hc:TransitioningContentControl
-                Grid.Row="0"
+        <Border Grid.RowSpan="1"
                 Grid.Column="0"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center">
-                <hc:Carousel
-                    Height="320"
-                    MinWidth="300"
-                    MaxWidth="1000"
-                    Margin="6"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Center"
-                    AutoRun="True"
-                    IsCenter="True">
-                    <Image
-                        MinWidth="300"
-                        MaxWidth="1000"
-                        Source="/XStudio.App;component/Resources/Img/1.jpg"
-                        Stretch="UniformToFill" />
-                    <Image
-                        MinWidth="300"
-                        MaxWidth="1000"
-                        Source="/XStudio.App;component/Resources/Img/2.jpg"
-                        Stretch="UniformToFill" />
-                    <hc:SimplePanel MinWidth="300" MaxWidth="1000">
-                        <Image Source="/XStudio.App;component/Resources/Img/3.jpg" Stretch="UniformToFill" />
-                        <TextBlock
-                            FontSize="100"
-                            FontWeight="Bold"
-                            Foreground="White"
-                            Style="{StaticResource TextBlockDefault}"
-                            Text="Demo Text" />
+                Margin="3,8,3,3"
+                Background="{DynamicResource RegionBrush}"
+                CornerRadius="10"
+                Effect="{StaticResource EffectShadow5}">
+            <hc:TransitioningContentControl Grid.Row="0"
+                                            Grid.Column="0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center">
+                <hc:Carousel Height="320"
+                             MinWidth="300"
+                             MaxWidth="1000"
+                             Margin="6"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             AutoRun="True"
+                             IsCenter="True">
+                    <Image MinWidth="300"
+                           MaxWidth="1000"
+                           Source="/XStudio.App;component/Resources/Img/1.jpg"
+                           Stretch="UniformToFill" />
+                    <Image MinWidth="300"
+                           MaxWidth="1000"
+                           Source="/XStudio.App;component/Resources/Img/2.jpg"
+                           Stretch="UniformToFill" />
+                    <hc:SimplePanel MinWidth="300"
+                                    MaxWidth="1000">
+                        <Image Source="/XStudio.App;component/Resources/Img/3.jpg"
+                               Stretch="UniformToFill" />
+                        <TextBlock FontSize="100"
+                                   FontWeight="Bold"
+                                   Foreground="White"
+                                   Style="{StaticResource TextBlockDefault}"
+                                   Text="Demo Text" />
                     </hc:SimplePanel>
-                    <Image
-                        MinWidth="300"
-                        MaxWidth="1000"
-                        Source="/XStudio.App;component/Resources/Img/4.jpg"
-                        Stretch="UniformToFill" />
-                    <Image
-                        MinWidth="300"
-                        MaxWidth="1000"
-                        Source="/XStudio.App;component/Resources/Img/5.jpg"
-                        Stretch="UniformToFill" />
+                    <Image MinWidth="300"
+                           MaxWidth="1000"
+                           Source="/XStudio.App;component/Resources/Img/4.jpg"
+                           Stretch="UniformToFill" />
+                    <Image MinWidth="300"
+                           MaxWidth="1000"
+                           Source="/XStudio.App;component/Resources/Img/5.jpg"
+                           Stretch="UniformToFill" />
                 </hc:Carousel>
             </hc:TransitioningContentControl>
         </Border>
-
-        <Grid
-            Grid.Row="0"
-            Grid.Column="1"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Top">
+        <Grid Grid.Row="0"
+              Grid.Column="1"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Top">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
-
-            <Border
-                Grid.Row="1"
-                Grid.RowSpan="1"
-                Margin="3,3,3,3"
-                Background="{DynamicResource RegionBrush}"
-                CornerRadius="10"
-                Effect="{StaticResource EffectShadow5}" />
-            <hc:TransitioningContentControl
-                Grid.Row="0"
-                Grid.Column="0"
-                Height="280"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center">
-                <Calendar Margin="3" SelectionMode="None" />
+            <Border Grid.Row="1"
+                    Grid.RowSpan="1"
+                    Margin="3,3,3,3"
+                    Background="{DynamicResource RegionBrush}"
+                    CornerRadius="10"
+                    Effect="{StaticResource EffectShadow5}" />
+            <hc:TransitioningContentControl Grid.Row="0"
+                                            Grid.Column="0"
+                                            Height="280"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center">
+                <Calendar Margin="3"
+                          SelectionMode="None" />
             </hc:TransitioningContentControl>
-            <hc:TransitioningContentControl
-                Grid.Row="1"
-                Grid.Column="0"
-                Height="70"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center">
+            <hc:TransitioningContentControl Grid.Row="1"
+                                            Grid.Column="0"
+                                            Height="70"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center">
                 <Viewbox MaxWidth="520">
                     <hc:FlipClock Margin="3" />
                 </Viewbox>
             </hc:TransitioningContentControl>
         </Grid>
-
-        <Border
-            Grid.Row="1"
-            Grid.ColumnSpan="2"
-            Margin="3,3,3,3"
-            Background="{DynamicResource RegionBrush}"
-            CornerRadius="10"
-            Effect="{StaticResource EffectShadow5}">
+        <Border Grid.Row="1"
+                Grid.ColumnSpan="2"
+                Margin="3,3,3,3"
+                Background="{DynamicResource RegionBrush}"
+                CornerRadius="10"
+                Effect="{StaticResource EffectShadow5}">
             <StackPanel Orientation="Horizontal">
-                <hc:TransitioningContentControl Margin="8"  Width="80" Height="80" HorizontalAlignment="Left" VerticalAlignment="Center">
+                <hc:TransitioningContentControl Margin="8"
+                                                Width="80"
+                                                Height="80"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center">
                     <Viewbox Margin="0">
-                        <hc:AnimationPath VerticalAlignment="Center" Duration="0:0:6" Stretch="Uniform" Width="1024" Height="1024" StrokeThickness="10" Stroke="{DynamicResource PrimaryBrush}" Data="{StaticResource LoginGeometry}"/>
+                        <hc:AnimationPath VerticalAlignment="Center"
+                                          Duration="0:0:6"
+                                          Stretch="Uniform"
+                                          Width="1024"
+                                          Height="1024"
+                                          StrokeThickness="10"
+                                          Stroke="{DynamicResource PrimaryBrush}"
+                                          Data="{StaticResource LoginGeometry}" />
                     </Viewbox>
                 </hc:TransitioningContentControl>
-                <hc:BlendEffectBox Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <hc:BlendEffectBox Margin="0,0,0,0"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center">
                     <hc:BlendEffectBox.Effects>
-                        <BlurEffect Radius="30"/>
-                        <hc:BrightnessEffect Brightness="1"/>
-                        <hc:ContrastEffect Contrast="20"/>
+                        <BlurEffect Radius="10" />
+                        <hc:BrightnessEffect Brightness="1" />
+                        <hc:ContrastEffect Contrast="20" />
                     </hc:BlendEffectBox.Effects>
                     <StackPanel>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <Border Width="50" Height="50" Background="Red" RenderTransformOrigin="0.5,0.5">
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center">
+                            <Border Width="40"
+                                    Height="40"
+                                    Background="Red"
+                                    RenderTransformOrigin="0.5,0.5">
                                 <Border.RenderTransform>
                                     <TransformGroup>
-                                        <RotateTransform Angle="0" x:Name="TransformRotate1"/>
+                                        <RotateTransform Angle="0"
+                                                         x:Name="TransformRotate1" />
                                     </TransformGroup>
                                 </Border.RenderTransform>
                             </Border>
-                            <Border Margin="35,0,0,0" Width="50" Height="50" Background="Red" RenderTransformOrigin="0.5,0.5">
+                            <Border Margin="30,0,0,0"
+                                    Width="40"
+                                    Height="40"
+                                    Background="Red"
+                                    RenderTransformOrigin="0.5,0.5">
                                 <Border.RenderTransform>
                                     <TransformGroup>
-                                        <RotateTransform Angle="0" x:Name="TransformRotate2"/>
+                                        <RotateTransform Angle="0"
+                                                         x:Name="TransformRotate2" />
                                     </TransformGroup>
                                 </Border.RenderTransform>
                             </Border>
                         </StackPanel>
-                        <Border Width="50" Height="50" Background="Red" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                        <Border Width="40"
+                                Height="40"
+                                Background="Red"
+                                HorizontalAlignment="Center"
+                                RenderTransformOrigin="0.5,0.5">
                             <Border.RenderTransform>
                                 <TransformGroup>
-                                    <RotateTransform Angle="0" x:Name="TransformRotate3"/>
+                                    <RotateTransform Angle="0"
+                                                     x:Name="TransformRotate3" />
                                 </TransformGroup>
                             </Border.RenderTransform>
                         </Border>

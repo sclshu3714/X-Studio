@@ -187,6 +187,5 @@ namespace XStudio.App.Models.Users
         /// </summary>
         public TokenResponse? TokenResponse { get; internal set; } = null!;
 
-        
     }
 }

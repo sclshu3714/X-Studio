@@ -10,7 +10,7 @@ using XStudio.App.ViewModel.Main;
 
 namespace XStudio.App.ViewModel
 {
-    public class ViewModelLocator
+    public class ViewModelLocator : ViewModelBase
     {
         private static readonly Lazy<ViewModelLocator> InstanceInternal = new(() => new ViewModelLocator(), isThreadSafe: true);
 
