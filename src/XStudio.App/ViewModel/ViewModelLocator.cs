@@ -42,5 +42,10 @@ namespace XStudio.App.ViewModel
         /// </summary>
         public User CurrentUser => _serviceProvider.GetService<User>()!;
 
+        /// <summary>
+        /// 用户登录后，快捷获取Token
+        /// </summary>
+        public string? AccessToken => Instance?.CurrentUser?.TokenResponse?.AccessToken;
+
     }
 }

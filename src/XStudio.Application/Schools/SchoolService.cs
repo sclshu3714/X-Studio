@@ -35,13 +35,13 @@ namespace XStudio.Schools
         {
         }
 
-        [HttpPost("Add")]
+        [HttpPost("add")]
         public override Task<SchoolDto> CreateAsync(CreateOrUpdateSchoolDto input)
         {
             return base.CreateAsync(input);
         }
 
-        [HttpPost("Adds")]
+        [HttpPost("adds")]
         public async Task<List<SchoolDto>> InsertManyAsync(List<CreateOrUpdateSchoolDto> inputs)
         {
             var entities = ObjectMapper.Map<List<CreateOrUpdateSchoolDto> ,List<School>>(inputs);

@@ -9,6 +9,8 @@
     xmlns:langs="clr-namespace:XStudio.App.Properties.Langs"
     xmlns:local="clr-namespace:XStudio.App.Views.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:viewModel="clr-namespace:XStudio.App.ViewModel"
     Height="29"
     d:DesignHeight="30"
     d:DesignWidth="800"
@@ -16,6 +18,7 @@
     <Grid DataContext="{Binding NoUser, Source={StaticResource Locator}}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
@@ -224,21 +227,35 @@
         <Button
             Name="LoginButton"
             Grid.Column="1"
-            Command="{Binding LoginViewCmd}"  
             hc:IconElement.Geometry="{StaticResource LoginGeometry}"
-            CommandParameter="{x:Static data:MessageToken.LoginWindow}"   
-            Style="{StaticResource ButtonIcon}"
-            hc:BackgroundSwitchElement.MouseHoverBackground="{DynamicResource BorderBrush}" 
-            hc:BackgroundSwitchElement.MouseDownBackground="Red">
-            <!--<hc:TransitioningContentControl HorizontalAlignment="Center" VerticalAlignment="Center" Background="Transparent">
-                <Viewbox Margin="0">
-                    <hc:AnimationPath VerticalAlignment="Center" Duration="0:0:6" Stretch="Uniform" Width="1024" Height="1024" StrokeThickness="50" Stroke="{DynamicResource PrimaryBrush}" Data="{StaticResource GithubGeometry}"/>
-                </Viewbox>
-            </hc:TransitioningContentControl>-->
-        </Button>
+            Command="{Binding LoginViewCmd}"
+            CommandParameter="{x:Static data:MessageToken.LoginWindow}"
+            Content="wxz"
+            Style="{StaticResource ButtonIcon}" />
+        <hc:SplitButton
+            Grid.Column="2"
+            Background="Transparent"
+            BorderThickness="0"
+            Content="{Binding ViewModelLocator.Main.CurrentUser.Name, Mode=OneWay}"
+            Visibility="Collapsed">
+            <hc:SplitButton.Style basedOn="{StaticResource SplitButtonStyle}">
+                <Style TargetType="hc:SplitButton">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ViewModelLocator.Main.CurrentUser}" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                        <!--<DataTrigger Binding="{Binding ViewModelLocator.Main.CurrentUser}" Value="{x:Static sys:Object}">
+                            <Setter Property="Visibility" Value="Visible" />
+                            <Setter Property="Content" Value="{Binding ViewModelLocator.Main.CurrentUser.Name, Mode=OneWay}" />
+                        </DataTrigger>-->
+                    </Style.Triggers>
+                </Style>
+            </hc:SplitButton.Style>
+        </hc:SplitButton>
         <Button
             Name="ButtonConfig"
-            Grid.Column="2"
+            Grid.Column="3"
             hc:IconElement.Geometry="{StaticResource ConfigGeometry}"
             Click="ButtonConfig_OnClick"
             Style="{StaticResource ButtonIcon}" />

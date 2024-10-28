@@ -27,6 +27,10 @@ namespace XStudio.App.Views.Module {
 
         internal void SetViewModel(LoginViewModel loginViewModel) {
             _loginViewModel = loginViewModel;
+            if (_loginViewModel !=  null && _loginViewModel.GetUserViewModel(_loginViewModel.UserNameOrEmailAddress) is UserViewModel userViewModel) {
+                _loginViewModel.Password = userViewModel.Password;
+                _loginViewModel.RememberMe = userViewModel.RememberMe;
+            }
             DataContext = _loginViewModel;
         }
 
@@ -78,7 +82,9 @@ namespace XStudio.App.Views.Module {
                 if (string.IsNullOrWhiteSpace(user?.TokenResponse?.AccessToken)) {
                     return false;
                 }
-                // 将User赋值给注册的单例
+                if (user == null) {
+                    return false;
+                }
                 ViewModelLocator.Instance.CurrentUser?.SetUser(user);
             }
             catch (Exception ex) {

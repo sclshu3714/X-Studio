@@ -80,5 +80,12 @@ namespace XStudio.App.ViewModel.Module {
             User user = await _dataService.LoginAsync(UserNameOrEmailAddress, Password, RememberMe);
             return user;
         }
+
+        public UserViewModel? GetUserViewModel(string userNameOrEmailAddress) {
+            if (string.IsNullOrEmpty(userNameOrEmailAddress)) {
+                return null;
+            }
+            return DefaultSelectList.FirstOrDefault(u => u.UserNameOrEmailAddress == userNameOrEmailAddress);
+        }
     }
 }

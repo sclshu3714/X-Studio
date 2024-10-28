@@ -25,6 +25,9 @@ public partial class MainWindow : HandyControl.Controls.Window
     {
         _helloWorldService = helloWorldService;
         InitializeComponent();
+        this.Loaded += async (sender, e) => { 
+            await ViewModelLocator.Instance.Main.VerifyUserLoggedAsync();
+        };
     }
 
     protected override void OnContentRendered(EventArgs e)

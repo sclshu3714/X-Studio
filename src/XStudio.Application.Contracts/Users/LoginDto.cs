@@ -8,17 +8,17 @@ using XStudio.Converters;
 
 namespace XStudio.Users
 {
-    public class LoginDto
-    {
+    public class LoginDto {
+
+        [JsonProperty("userNameOrEmailAddress")]
+        [JsonConverter(typeof(FluffyMinMaxLengthCheckConverter))]
+        public string UserNameOrEmailAddress { get; set; } = string.Empty;
+
         [JsonProperty("password")]
         [JsonConverter(typeof(PurpleMinMaxLengthCheckConverter))]
         public string Password { get; set; } = string.Empty;
 
         [JsonProperty("rememberMe", NullValueHandling = NullValueHandling.Ignore)]
         public bool? RememberMe { get; set; }
-
-        [JsonProperty("userNameOrEmailAddress")]
-        [JsonConverter(typeof(FluffyMinMaxLengthCheckConverter))]
-        public string UserNameOrEmailAddress { get; set; } = string.Empty;
     }
 }

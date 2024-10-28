@@ -94,15 +94,16 @@ namespace XStudio.App.Helper {
         }
 
         public async Task<TokenResponse> TokenAsync(string endpoint, TokenRequest data) {
-            var keyValuePairs = new List<KeyValuePair<string, string>>
+            var content = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("grant_type", data.GrantType),
+                new KeyValuePair<string, string>("client_id", data.ClientId),
+                //new KeyValuePair<string, string>("client_secret", _clientSecret),
                 new KeyValuePair<string, string>("scope", data.Scope),
                 new KeyValuePair<string, string>("username", data.UserName),
                 new KeyValuePair<string, string>("password", data.Password),
-                // 添加其他必要的字段
-            };
-            HttpResponseMessage response = await httpClient.PostAsJsonAsync(endpoint, new FormUrlEncodedContent(keyValuePairs));
+            });
+            HttpResponseMessage response = await httpClient.PostAsync(endpoint, content);
             if (response.IsSuccessStatusCode) {
                 return await ExecuteAsync(response.Content.ReadAsAsync<TokenResponse>);
             }

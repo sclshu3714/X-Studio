@@ -38,7 +38,7 @@ namespace XStudio.Users
             _logger = NullLogger<LoginAppService>.Instance;
         }
 
-        [HttpPost("/login")]
+        [HttpPost]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
             var user = await _userManager.FindByNameAsync(loginDto.UserNameOrEmailAddress);
@@ -71,6 +71,7 @@ namespace XStudio.Users
             //var token = GenerateToken(user);
             return new OkObjectResult(user);
         }
+
 
         private string GenerateJwtToken(Volo.Abp.Identity.IdentityUser user)
         {
