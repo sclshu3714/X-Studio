@@ -14,6 +14,7 @@ using XStudio.App.Models.Data;
 using XStudio.App.Models.Users;
 using XStudio.App.Service;
 using XStudio.App.ViewModel.Main;
+using XStudio.App.ViewModel.Users;
 using XStudio.App.Views.Module;
 
 namespace XStudio.App.ViewModel.Module {
@@ -28,13 +29,13 @@ namespace XStudio.App.ViewModel.Module {
         /// <summary>
         /// 记录5个历史登录账号
         /// </summary>
-        public ObservableCollection<UserViewModel> DefaultSelectList {
+        public ObservableCollection<HistoryUserViewModel> DefaultSelectList {
             get => defaultSelectList;
             set => SetProperty(ref defaultSelectList, value);
         }
 
-        private ObservableCollection<UserViewModel> defaultSelectList = new ObservableCollection<UserViewModel>() { 
-            new UserViewModel(){ index = 0, userNameOrEmailAddress="admin", password="1q2w3E*"  },
+        private ObservableCollection<HistoryUserViewModel> defaultSelectList = new ObservableCollection<HistoryUserViewModel>() { 
+            new HistoryUserViewModel(){ index = 0, userNameOrEmailAddress="admin", password="1q2w3E*"  },
         };
 
         public string Password { 
@@ -75,13 +76,13 @@ namespace XStudio.App.ViewModel.Module {
             //MessengerInstance?.Send<object, string>(view, MessageToken.LoadShowContent);
         }
 
-        public async Task<User> OnLoginAction() {
+        public async Task<UserViewModel> OnLoginAction() {
             //MessengerInstance?.Send<object, string>(view, MessageToken.LoadShowContent);
-            User user = await _dataService.LoginAsync(UserNameOrEmailAddress, Password, RememberMe);
+            UserViewModel user = await _dataService.LoginAsync(UserNameOrEmailAddress, Password, RememberMe);
             return user;
         }
 
-        public UserViewModel? GetUserViewModel(string userNameOrEmailAddress) {
+        public HistoryUserViewModel? GetUserViewModel(string userNameOrEmailAddress) {
             if (string.IsNullOrEmpty(userNameOrEmailAddress)) {
                 return null;
             }

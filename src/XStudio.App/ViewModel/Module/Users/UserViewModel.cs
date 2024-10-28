@@ -1,19 +1,31 @@
 ﻿using Abp.Auditing;
+using Castle.Components.DictionaryAdapter;
 using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using XStudio.App.ViewModel.Module.Users;
 using XStudio.Users;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
-namespace XStudio.App.Models.Users
-{
-    public class User
-    {
-        public User() { }
+namespace XStudio.App.ViewModel.Users {
+    public class UserViewModel : ViewModelBase {
+        private Guid? _tenantId = Guid.Empty;
+        private string _userName = string.Empty;
+        private string _normalizedUserName = string.Empty;
+        private string _name = string.Empty;
+        private string _surname = string.Empty;
+        private string _email = string.Empty;
+        private string _normalizedEmail = string.Empty;
+        private bool _emailConfirmed = false;
+        private bool _isActive = false;
+        private TokenViewModel _tokenViewModel = new TokenViewModel();
 
-        public void SetUser(User user) { 
+        public UserViewModel() { }
+
+        public void SetUser(UserViewModel user) {
             TenantId = user.TenantId;
             UserName = user.UserName;
             NormalizedUserName = user.NormalizedUserName;
@@ -42,47 +54,71 @@ namespace XStudio.App.Models.Users
             OrganizationUnits = user.OrganizationUnits;
             TokenResponse = user.TokenResponse;
         }
-        public virtual Guid? TenantId { get; protected set; } = Guid.Empty;
+        public virtual Guid? TenantId {
+            get => _tenantId;
+            protected set => SetProperty(ref _tenantId, value);
+        }
 
         /// <summary>
         /// Gets or sets the user name for this user.
         /// </summary>
-        public virtual string UserName { get; protected internal set; } = string.Empty;
+        public virtual string UserName {
+            get => _userName;
+            protected internal set => SetProperty(ref _userName, value);
+        }
 
         /// <summary>
         /// Gets or sets the normalized user name for this user.
         /// </summary>
         [DisableAuditing]
-        public virtual string NormalizedUserName { get; protected internal set; } = string.Empty;
+        public virtual string NormalizedUserName {
+            get => _normalizedUserName;
+            protected internal set => SetProperty(ref _normalizedUserName, value);
+        }
 
         /// <summary>
         /// Gets or sets the Name for the user.
         /// </summary>
         [CanBeNull]
-        public virtual string Name { get; set; } = string.Empty;
+        public virtual string Name {
+            get => _name;
+            set => SetProperty(ref _name, value);
+        }
 
         /// <summary>
         /// Gets or sets the Surname for the user.
         /// </summary>
         [CanBeNull]
-        public virtual string Surname { get; set; } = string.Empty;
+        public virtual string Surname {
+            get => _surname;
+            set => SetProperty(ref _surname, value);
+        }
 
         /// <summary>
         /// Gets or sets the email address for this user.
         /// </summary>
-        public virtual string Email { get; protected internal set; } = string.Empty;
+        public virtual string Email {
+            get => _email;
+            protected internal set => SetProperty(ref _email, value);
+        }
 
         /// <summary>
         /// Gets or sets the normalized email address for this user.
         /// </summary>
         [DisableAuditing]
-        public virtual string NormalizedEmail { get; protected internal set; } = string.Empty;
+        public virtual string NormalizedEmail {
+            get => _normalizedEmail;
+            protected internal set => SetProperty(ref _normalizedEmail, value);
+        }
 
         /// <summary>
         /// Gets or sets a flag indicating if a user has confirmed their email address.
         /// </summary>
         /// <value>True if the email address has been confirmed, otherwise false.</value>
-        public virtual bool EmailConfirmed { get; protected internal set; } = false;
+        public virtual bool EmailConfirmed {
+            get => _emailConfirmed;
+            protected internal set => SetProperty(ref _emailConfirmed, value);
+        }
 
         /// <summary>
         /// Gets or sets a salted and hashed representation of the password for this user.
@@ -113,7 +149,10 @@ namespace XStudio.App.Models.Users
         /// <summary>
         /// Gets or sets a flag indicating if the user is active.
         /// </summary>
-        public virtual bool IsActive { get; protected internal set; } = false;
+        public virtual bool IsActive {
+            get => _isActive;
+            protected internal set => SetProperty(ref _isActive, value);
+        }
 
         /// <summary>
         /// Gets or sets a flag indicating if two factor authentication is enabled for this user.
@@ -185,7 +224,9 @@ namespace XStudio.App.Models.Users
         /// <summary>
         /// token
         /// </summary>
-        public TokenResponse? TokenResponse { get; internal set; } = null!;
-
+        public TokenViewModel TokenResponse {
+            get => _tokenViewModel;
+            internal set => SetProperty(ref _tokenViewModel, value);
+        }
     }
 }

@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using XStudio.App.Models.Users;
 using XStudio.App.Service;
 using XStudio.App.ViewModel.Main;
+using XStudio.App.ViewModel.Module;
+using XStudio.App.ViewModel.Users;
 
 namespace XStudio.App.ViewModel
 {
@@ -25,7 +27,7 @@ namespace XStudio.App.ViewModel
             services.AddSingleton<DataService>(); // 单例
             services.AddSingleton<MainViewModel>(); // 单例
             services.AddTransient<NonClientAreaViewModel>(); //瞬时
-            services.AddSingleton<User>();
+            services.AddSingleton<HistoryUserViewModel>();
 
             _serviceProvider = services.BuildServiceProvider();
         }
@@ -40,7 +42,7 @@ namespace XStudio.App.ViewModel
         /// <summary>
         /// 当前用户
         /// </summary>
-        public User CurrentUser => _serviceProvider.GetService<User>()!;
+        public UserViewModel CurrentUser => _serviceProvider.GetService<UserViewModel>()!;
 
         /// <summary>
         /// 用户登录后，快捷获取Token

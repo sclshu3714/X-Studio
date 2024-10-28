@@ -8,13 +8,13 @@ using System.Linq;
 using System.Xml.Linq;
 
 namespace XStudio.App.ViewModel.Module {
-    public class UserViewModel : ViewModelBase {
+    public class HistoryUserViewModel : ViewModelBase {
         public int index = 0;
         public string userNameOrEmailAddress = string.Empty;
         public string password = string.Empty;
         public bool rememberMe = false;
         public bool isLoading = false;
-
+        
         public int Index {
             get => index;
             set => SetProperty(ref index, value);

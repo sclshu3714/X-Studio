@@ -21,6 +21,7 @@ using XStudio.App.Models.Data;
 using XStudio.App.Models.Users;
 using XStudio.App.ViewModel.Home;
 using XStudio.App.ViewModel.Main;
+using XStudio.App.ViewModel.Users;
 using XStudio.App.Views.Module;
 using XStudio.App.Views.UserControls;
 using XStudio.Users;
@@ -41,7 +42,7 @@ public class DataService : ITransientDependency
     }
 
     #region 登录相关
-    public async Task<User> LoginAsync(string userName, string password, bool rememberMe)
+    public async Task<UserViewModel> LoginAsync(string userName, string password, bool rememberMe)
     {
         var input = new LoginInfo {
             UserNameOrEmailAddress = userName,
@@ -56,11 +57,11 @@ public class DataService : ITransientDependency
             Password = password,
             GrantType = "password",
         };
-        User user = await apiHelper.LoginAsync<User>("api/xstudio/v1/login", input);
+        UserViewModel user = await apiHelper.LoginAsync<UserViewModel>("api/xstudio/v1/login", input);
         //var content = new StringContent(JsonConvert.SerializeObject(ids), Encoding.UTF8, "application/x-www-form-urlencoded");
         TokenResponse tokenResponse = await apiHelper.TokenAsync("connect/token", request);
         if (tokenResponse != null) {
-            user.TokenResponse = tokenResponse;
+            user.TokenResponse.SetTokenResponse(tokenResponse);
         }
         return user;
     }

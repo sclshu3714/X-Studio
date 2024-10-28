@@ -12,6 +12,7 @@ using XStudio.App.Models.Users;
 using XStudio.App.Service;
 using XStudio.App.ViewModel;
 using XStudio.App.ViewModel.Module;
+using XStudio.App.ViewModel.Users;
 
 namespace XStudio.App.Views.Module {
     /// <summary>
@@ -27,10 +28,6 @@ namespace XStudio.App.Views.Module {
 
         internal void SetViewModel(LoginViewModel loginViewModel) {
             _loginViewModel = loginViewModel;
-            if (_loginViewModel !=  null && _loginViewModel.GetUserViewModel(_loginViewModel.UserNameOrEmailAddress) is UserViewModel userViewModel) {
-                _loginViewModel.Password = userViewModel.Password;
-                _loginViewModel.RememberMe = userViewModel.RememberMe;
-            }
             DataContext = _loginViewModel;
         }
 
@@ -43,7 +40,7 @@ namespace XStudio.App.Views.Module {
         }
 
         private void NameTextBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) {
-            if (_loginViewModel != null && sender is ComboBox box && box.SelectedItem is UserViewModel user) {
+            if (_loginViewModel != null && sender is ComboBox box && box.SelectedItem is HistoryUserViewModel user) {
                 _loginViewModel.UserNameOrEmailAddress = user.UserNameOrEmailAddress;
                 _loginViewModel.Password = user.Password;
                 _loginViewModel.RememberMe = user.RememberMe;
@@ -78,13 +75,11 @@ namespace XStudio.App.Views.Module {
                 return false;
             }
             try {
-                User user = await _loginViewModel.OnLoginAction();
+                UserViewModel user = await _loginViewModel.OnLoginAction();
                 if (string.IsNullOrWhiteSpace(user?.TokenResponse?.AccessToken)) {
                     return false;
                 }
-                if (user == null) {
-                    return false;
-                }
+                // 将User赋值给注册的单例
                 ViewModelLocator.Instance.CurrentUser?.SetUser(user);
             }
             catch (Exception ex) {
