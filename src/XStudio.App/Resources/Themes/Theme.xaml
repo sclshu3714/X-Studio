@@ -563,7 +563,7 @@
                 <Setter Property="Visibility"
                         Value="Visible" />
                 <Setter Property="Content"
-                        Value="{Binding AccessToken, Mode=OneWay, Source={x:Static viewModel:ViewModelLocator.Instance}}" />
+                        Value="{Binding CurrentUser.UserName, Mode=OneWay, Source={x:Static viewModel:ViewModelLocator.Instance}}" />
             </DataTrigger>
         </Style.Triggers>
     </Style>
