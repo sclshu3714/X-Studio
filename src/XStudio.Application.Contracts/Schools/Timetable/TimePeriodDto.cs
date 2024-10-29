@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Volo.Abp.Application.Dtos;
+using XStudio.Common;
 
 namespace XStudio.Schools.Timetable {
     public class TimePeriodDto : AuditedEntityDto<Guid> {
@@ -20,6 +21,16 @@ namespace XStudio.Schools.Timetable {
         /// 学校名称
         /// </summary>
         public string Name { get; set; } = string.Empty;
+
+        ///// <summary>
+        ///// 学段
+        ///// </summary>
+        //public string Period { get; set; } = string.Empty;
+
+        ///// <summary>
+        ///// 年级Learning period
+        ///// </summary>
+        //public string Grade { get; set; } = string.Empty;
     }
 
     public class UpdateTimePeriodDto : AuditedEntityDto<Guid> {

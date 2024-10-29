@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using XStudio.App.Models.Data;
+using XStudio.App.ViewModel.Module;
 
 namespace XStudio.App.Views.Module {
     /// <summary>

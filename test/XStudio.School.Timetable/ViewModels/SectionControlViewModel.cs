@@ -458,8 +458,26 @@ namespace XStudio.School.Timetable.ViewModels {
             return true;
         }
 
-        internal TimetableCell GetTimetableCell(DayOfWeek day, int v) {
-            throw new NotImplementedException();
+        internal TimetableCell GetTimetableCell(DayOfWeek day, int period) {
+            TimetableRow draggedRow = TimetableRows.FirstOrDefault(x => x.Period == period);
+            switch (day) {
+                case DayOfWeek.Monday:
+                    return draggedRow.Monday;
+                case DayOfWeek.Tuesday:
+                    return draggedRow.Tuesday;
+                case DayOfWeek.Wednesday:
+                    return draggedRow.Wednesday;
+                case DayOfWeek.Thursday:
+                    return draggedRow.Thursday;
+                case DayOfWeek.Friday:
+                    return draggedRow.Friday;
+                case DayOfWeek.Saturday:
+                    return draggedRow.Saturday;
+                case DayOfWeek.Sunday:
+                    return draggedRow.Sunday;
+                default:
+                    return null;
+            }
         }
     }
 }

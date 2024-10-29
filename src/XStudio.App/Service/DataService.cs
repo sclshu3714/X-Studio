@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
+using AutoMapper;
 using HandyControl.Data;
 using HandyControl.Tools;
 using Microsoft.Extensions.Configuration;
@@ -16,12 +17,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using Volo.Abp.DependencyInjection;
+using Volo.Abp.ObjectMapping;
 using XStudio.App.Common;
 using XStudio.App.Helper;
 using XStudio.App.Models.Data;
 using XStudio.App.Models.Users;
 using XStudio.App.ViewModel.Home;
 using XStudio.App.ViewModel.Main;
+using XStudio.App.ViewModel.Module;
 using XStudio.App.ViewModel.Users;
 using XStudio.App.Views.Module;
 using XStudio.App.Views.UserControls;
@@ -34,16 +37,18 @@ public class DataService : ITransientDependency
     public ILogger<DataService> Logger { get; set; }
     private readonly ApiHelper apiHelper;
     private string? RootUrl { get; set; }
+    //private readonly IMapper ObjectMapper;
 
     public DataService()
     {
+        //ObjectMapper = mapper;
         Logger = NullLogger<DataService>.Instance;
         RootUrl = AppSettings.Instance.RootUrl;
         apiHelper = new ApiHelper(RootUrl);
     }
 
     #region 登录相关
-    public async Task<UserViewModel> LoginAsync(string userName, string password, bool rememberMe)
+    public async Task<UserViewModel?> LoginAsync(string userName, string password, bool rememberMe)
     {
         var input = new LoginInfo {
             UserNameOrEmailAddress = userName,
@@ -58,10 +63,10 @@ public class DataService : ITransientDependency
             Password = password,
             GrantType = "password",
         };
-        UserViewModel user = await apiHelper.LoginAsync<UserViewModel>("api/xstudio/v1/login", input);
+        UserViewModel? user = await apiHelper.LoginAsync<UserViewModel>("api/xstudio/v1/login", input);
         //var content = new StringContent(JsonConvert.SerializeObject(ids), Encoding.UTF8, "application/x-www-form-urlencoded");
-        TokenResponse tokenResponse = await apiHelper.TokenAsync("connect/token", request);
-        if (tokenResponse != null) {
+        TokenResponse? tokenResponse = await apiHelper.TokenAsync("connect/token", request);
+        if (user != null && tokenResponse != null) {
             user.TokenResponse.SetTokenResponse(tokenResponse);
             apiHelper.SetAuthorizationHeader(tokenResponse.AccessToken);
         }
@@ -265,13 +270,13 @@ public class DataService : ITransientDependency
     #endregion
 
     #region 模块相关
-    public async Task<TimePeriodViewModel> CreateAsync(TimePeriodViewModel input) {
-        TimePeriodViewModel timePeriod = await apiHelper.PostAsync("api/xstudio/v1/TimePeriod/add", input);
+    public async Task<TimePeriodViewModel?> CreateAsync(TimePeriodViewModel input) {
+        TimePeriodViewModel? timePeriod = await apiHelper.PostAsync("api/xstudio/v1/TimePeriod/add", input);
         return timePeriod;
     }
 
-    public async Task<List<TimePeriodViewModel>> InsertManyAsync(List<TimePeriodViewModel> inputs) {
-        List<TimePeriodViewModel> timePeriods = await apiHelper.PostManyAsync("api/xstudio/v1/TimePeriod/adds", inputs);
+    public async Task<List<TimePeriodViewModel>?> InsertManyAsync(List<TimePeriodViewModel> inputs) {
+        List<TimePeriodViewModel>? timePeriods = await apiHelper.PostManyAsync("api/xstudio/v1/TimePeriod/adds", inputs);
         return timePeriods;
     }
     public async Task DeleteAsync(Guid id) {
@@ -283,18 +288,18 @@ public class DataService : ITransientDependency
         await Task.CompletedTask;
     }
 
-    public async Task<TimePeriodViewModel> GetAsync(Guid id) {
-        TimePeriodViewModel timePeriod = await apiHelper.GetAsync<TimePeriodViewModel>($"api/xstudio/v1/TimePeriod/{id}");
+    public async Task<TimePeriodViewModel?> GetAsync(Guid id) {
+        TimePeriodViewModel? timePeriod = await apiHelper.GetAsync<TimePeriodViewModel>($"api/xstudio/v1/TimePeriod/{id}");
         return timePeriod;
     }
 
-    public async Task<PagedResultDto<TimePeriodViewModel>> GetListAsync(PagedAndSortedResultRequestDto input) {
-        PagedResultDto<TimePeriodViewModel> timePeriods = await apiHelper.GetListAsync<PagedResultDto<TimePeriodViewModel>>($"/api/xstudio/v1/TimePeriod/list", input);
+    public async Task<PagedResultDto<TimePeriodViewModel>?> GetListAsync(PagedAndSortedResultRequestDto input) {
+        PagedResultDto<TimePeriodViewModel>? timePeriods = await apiHelper.GetListAsync<PagedResultDto<TimePeriodViewModel>>($"/api/xstudio/v1/TimePeriod/list", input);
         return timePeriods;
     }
 
-    public async Task<TimePeriodViewModel> UpdateAsync(Guid id, TimePeriodViewModel input) {
-        TimePeriodViewModel timePeriod = await apiHelper.PutAsync($"api/xstudio/v1/TimePeriod/update", input);
+    public async Task<TimePeriodViewModel?> UpdateAsync(Guid id, TimePeriodViewModel input) {
+        TimePeriodViewModel?  timePeriod = await apiHelper.PutAsync($"api/xstudio/v1/TimePeriod/update", input);
         return timePeriod;
     }
     #endregion

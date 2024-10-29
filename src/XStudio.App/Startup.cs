@@ -5,6 +5,8 @@ using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using XStudio.App.Common;
+using XStudio.App.ViewModel.Main;
 
 namespace XStudio.App
 {

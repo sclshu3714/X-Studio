@@ -16,11 +16,9 @@ using XStudio.Common;
         晚上 - Evening
  */
 
-namespace XStudio.Schools.Timetable
-{
+namespace XStudio.Schools.Timetable {
     [DbDescription("时段")]
-    public class TimePeriod : AuditedAggregateRoot<Guid>
-    {
+    public class TimePeriod : AuditedAggregateRoot<Guid> {
         /// <summary>
         /// 序号
         /// </summary>
@@ -39,10 +37,22 @@ namespace XStudio.Schools.Timetable
         [DbDescription("名称")]
         public string Name { get; set; } = string.Empty;
 
+        ///// <summary>
+        ///// 学段
+        ///// </summary>
+        //[DbDescription("学段")]
+        //public string Period { get; set; } = string.Empty;
+
+        ///// <summary>
+        ///// 年级Learning period
+        ///// </summary>
+        //[DbDescription("年级")]
+        //public string Grade { get; set; } = string.Empty;
+
         /// <summary>
         /// "数据有效标识：A 正常 | E 异常 | S 停用 | D 删除
         /// </summary>
         [DbDescription("数据有效标识")]
-        public ValidStateType ValidState {  get; set; } = ValidStateType.A;
+        public ValidStateType ValidState { get; set; } = ValidStateType.A;
     }
 }

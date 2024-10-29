@@ -76,9 +76,8 @@ namespace XStudio.App.ViewModel.Module {
             //MessengerInstance?.Send<object, string>(view, MessageToken.LoadShowContent);
         }
 
-        public async Task<UserViewModel> OnLoginAction() {
-            //MessengerInstance?.Send<object, string>(view, MessageToken.LoadShowContent);
-            UserViewModel user = await _dataService.LoginAsync(UserNameOrEmailAddress, Password, RememberMe);
+        public async Task<UserViewModel?> OnLoginAction() {
+            UserViewModel? user = await _dataService.LoginAsync(UserNameOrEmailAddress, Password, RememberMe);
             return user;
         }
 

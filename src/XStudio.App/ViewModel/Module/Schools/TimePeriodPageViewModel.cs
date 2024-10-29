@@ -16,9 +16,10 @@ namespace XStudio.App.ViewModel.Module {
         private readonly DataService _dataService;
         private string _type;
         private ObservableCollection<TimePeriodViewModel> _timePeriods;
-        
+        private bool _isLoading = false;
 
         public TimePeriodPageViewModel(DataService dataService,string type) {
+            IsLoading = true;
             _dataService = dataService;
             _type = type;
             DataList = dataService.getTimePeriodPage(this);
@@ -29,13 +30,23 @@ namespace XStudio.App.ViewModel.Module {
             DownCommand = new DelegateCommand<TimePeriodViewModel>(MoveDown);
             DeleteCommand = new DelegateCommand<TimePeriodViewModel>(RemoveTimePeriod);
             LoadData();
+            IsLoading = false;
         }
 
         private async void LoadData() {
+            await Task.Delay(10 * 1000);
             var data = await _dataService.GetListAsync(new Abp.Application.Services.Dto.PagedAndSortedResultRequestDto() { MaxResultCount = 100, SkipCount = 0, Sorting = "Order" });
             if (data != null && data.Items.Any()) {
                 TimePeriods.AddRange(data.Items);
             }
+        }
+
+        /// <summary>
+        /// 是否正在加载数据
+        /// </summary>
+        public bool IsLoading {
+            get => _isLoading;
+            set => SetProperty(ref _isLoading, value);
         }
 
         public string @Type {

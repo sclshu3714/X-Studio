@@ -231,11 +231,12 @@
             Command="{Binding LoginViewCmd}"
             CommandParameter="{x:Static data:MessageToken.LoginWindow}"
             Style="{StaticResource ButtonIcon}" />
-        <hc:SplitButton Grid.Column="2"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Margin="0"
-                        Style="{StaticResource SplitButtonUserPrimary}"/>
+        <hc:SplitButton
+            Grid.Column="2"
+            Margin="0"
+            Background="Transparent"
+            BorderThickness="0"
+            Style="{StaticResource SplitButtonUserPrimary}" />
         <Button
             Name="ButtonConfig"
             Grid.Column="3"

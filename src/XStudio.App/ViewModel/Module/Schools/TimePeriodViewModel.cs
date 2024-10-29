@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using XStudio.App.ViewModel;
 
-namespace XStudio.App.Models.Data {
+namespace XStudio.App.ViewModel.Module {
     public class TimePeriodViewModel : ViewModelBase {
         private int _order = 0;
         private string _code = string.Empty;
@@ -18,6 +18,7 @@ namespace XStudio.App.Models.Data {
         /// 序号
         /// </summary>
         [Description("序号")]
+        [JsonProperty("order")]
         public int Order {
             get => _order;
             set => SetProperty(ref _order, value);
@@ -27,6 +28,7 @@ namespace XStudio.App.Models.Data {
         /// 时段编号
         /// </summary>
         [Description("编码")]
+        [JsonProperty("code")]
         public string Code {
             get => _code;
             set => SetProperty(ref _code, value);
@@ -36,6 +38,7 @@ namespace XStudio.App.Models.Data {
         /// 学校名称
         /// </summary>
         [Description("名称")]
+        [JsonProperty("name")]
         public string Name {
             get => _name;
             set => SetProperty(ref _name, value);

@@ -133,7 +133,10 @@ namespace XStudio.School.Timetable.Views.ContentViews {
             if (targetCell.Day == draggedCell.Day && targetCell.Row.Period == draggedCell.Row.Period) {
                 return;
             }
-
+            if (targetSection.Contents.FirstOrDefault(x => x.Content.Type == RuleType.ConsecutiveClasses)?.Content is ConsecutiveClasses theConsecutiveClasses) {
+                // 目标位置有连堂课 不能交换
+                return;
+            }
             // 特殊处理连堂课
             if (draggedSection.Contents.FirstOrDefault(x => x.Content.Type == RuleType.ConsecutiveClasses)?.Content is ConsecutiveClasses lectureContent) {
                 int index = lectureContent.Periods.IndexOf(draggedSection.Period);
@@ -143,7 +146,7 @@ namespace XStudio.School.Timetable.Views.ContentViews {
                 Section targetSection1 = null;
                 if (index == 0) { // 需要替换的节次 draggedSection.Period, draggedSection.Period + 1
                     draggedCell1 = sectionControlViewModel.GetTimetableCell(draggedCell.Day, draggedCell.Row.Period + 1);
-                    targetCell1= sectionControlViewModel.GetTimetableCell(targetCell.Day, targetCell.Row.Period + 1);
+                    targetCell1 = sectionControlViewModel.GetTimetableCell(targetCell.Day, targetCell.Row.Period + 1);
                     draggedSection1 = sectionControlViewModel.classSchedule[draggedCell.Day, draggedCell.Row.Period + 1];
                     targetSection1 = sectionControlViewModel.classSchedule[targetCell.Day, targetCell.Row.Period + 1];
                 }
@@ -158,7 +161,7 @@ namespace XStudio.School.Timetable.Views.ContentViews {
                     return;
                 }
                 await sectionControlViewModel.ExchangeTimetableCellAsync(draggedCell, targetCell);
-                await sectionControlViewModel.ExchangeTimetableCellAsync(draggedCell, targetCell);
+                await sectionControlViewModel.ExchangeTimetableCellAsync(draggedCell1, targetCell1);
                 await sectionControlViewModel.classSchedule.ExchangeSessionsAsync(draggedSection.Code, targetSection.Code);
                 await sectionControlViewModel.classSchedule.ExchangeSessionsAsync(draggedSection1.Code, targetSection1.Code);
             }

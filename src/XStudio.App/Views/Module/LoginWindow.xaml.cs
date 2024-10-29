@@ -81,7 +81,7 @@ namespace XStudio.App.Views.Module {
                 return false;
             }
             try {
-                UserViewModel user = await _loginViewModel.OnLoginAction();
+                UserViewModel? user = await _loginViewModel.OnLoginAction();
                 if (string.IsNullOrWhiteSpace(user?.TokenResponse?.AccessToken)) {
                     return false;
                 }
