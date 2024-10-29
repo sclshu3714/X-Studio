@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -62,6 +63,7 @@ public class DataService : ITransientDependency
         TokenResponse tokenResponse = await apiHelper.TokenAsync("connect/token", request);
         if (tokenResponse != null) {
             user.TokenResponse.SetTokenResponse(tokenResponse);
+            apiHelper.SetAuthorizationHeader(tokenResponse.AccessToken);
         }
         return user;
     }
@@ -69,6 +71,7 @@ public class DataService : ITransientDependency
     public async Task LogoutAsync()
     {
         await apiHelper.GetAsync<object>("api/account/logout");
+        apiHelper.SetAuthorizationHeader(null);
     }
     #endregion
 

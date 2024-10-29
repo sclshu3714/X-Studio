@@ -28,13 +28,14 @@ namespace XStudio.App.Helper {
 
         private static void OnBindPasswordChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
             PasswordBox? passwordBox = d as PasswordBox;
-            if (passwordBox == null) return; 
+            if (passwordBox == null) return;
             // 初始化绑定源的值（如果需要的话）  
             if (e.NewValue != null) {
                 passwordBox.Password = (string)e.NewValue; // 这通常不会触发 PasswordChanged 事件，因为它是由 SetBinding 触发的，而不是用户输入  
             }
-
-            SetSelection(passwordBox, passwordBox.Password.Length, 0);
+            if (passwordBox.Password != null) { // 防止空密码
+                SetSelection(passwordBox, passwordBox.Password.Length, 0);
+            }
         }
 
         private static void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e) {

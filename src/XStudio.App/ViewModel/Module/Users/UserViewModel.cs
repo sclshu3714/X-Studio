@@ -63,7 +63,7 @@ namespace XStudio.App.ViewModel.Users {
         /// Gets or sets the user name for this user.
         /// </summary>
         public virtual string UserName {
-            get => _userName;
+            get => !string.IsNullOrEmpty(_userName) ? _userName : Name;
             protected internal set => SetProperty(ref _userName, value);
         }
 

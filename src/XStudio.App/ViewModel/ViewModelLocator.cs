@@ -27,7 +27,7 @@ namespace XStudio.App.ViewModel
             services.AddSingleton<DataService>(); // 单例
             services.AddSingleton<MainViewModel>(); // 单例
             services.AddTransient<NonClientAreaViewModel>(); //瞬时
-            services.AddSingleton<HistoryUserViewModel>();
+            services.AddSingleton<UserViewModel>();
 
             _serviceProvider = services.BuildServiceProvider();
         }

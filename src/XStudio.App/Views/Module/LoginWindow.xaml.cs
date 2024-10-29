@@ -28,6 +28,12 @@ namespace XStudio.App.Views.Module {
 
         internal void SetViewModel(LoginViewModel loginViewModel) {
             _loginViewModel = loginViewModel;
+            if (_loginViewModel?.GetUserViewModel(_loginViewModel.UserNameOrEmailAddress) is HistoryUserViewModel user) {
+                _loginViewModel.RememberMe = user.RememberMe;
+                if (user.RememberMe) {
+                    _loginViewModel.Password = user.Password;
+                }
+            }
             DataContext = _loginViewModel;
         }
 

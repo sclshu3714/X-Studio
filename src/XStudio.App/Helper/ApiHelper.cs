@@ -18,6 +18,8 @@ namespace XStudio.App.Helper {
     public class ApiHelper {
         private static readonly HttpClient httpClient = new HttpClient();
 
+        public bool IsAuthorization { get; private set; } = false;
+
         public ApiHelper(string? baseAddress) {
             if (baseAddress == null) {
                 throw new ArgumentException("Base address cannot be null.");
@@ -27,8 +29,22 @@ namespace XStudio.App.Helper {
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
+        public void SetAuthorizationHeader(string? accessToken) {
+            if (string.IsNullOrEmpty(accessToken)) {
+                IsAuthorization = false;
+                httpClient.DefaultRequestHeaders.Authorization = null;
+                return;
+            }
+            IsAuthorization = true;
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        }
+
         public async Task<T> ExecuteAsync<T>(Func<Task<T>> func) {
             try {
+                if (!IsAuthorization) { 
+                    // 未授权，尝试获取token
+                    throw new InvalidOperationException("Authorization is required.");
+                }
                 // 尝试将内容读取为指定类型
                 return await func();
             }
@@ -57,13 +73,15 @@ namespace XStudio.App.Helper {
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<T> GetAsync<T>(string endpoint) {
-            HttpResponseMessage response = await httpClient.GetAsync(endpoint);
+            return await ExecuteAsync(async () => {
+                HttpResponseMessage response = await httpClient.GetAsync(endpoint);
+                response.EnsureSuccessStatusCode();
+                if (response.IsSuccessStatusCode) {
+                    return await response.Content.ReadAsAsync<T>();
+                }
 
-            if (response.IsSuccessStatusCode) {
-                return await ExecuteAsync(response.Content.ReadAsAsync<T>);
-            }
-
-            throw new Exception($"Error retrieving data from API: {response.ReasonPhrase}");
+                throw new Exception($"Error retrieving data from API: {response.ReasonPhrase}");
+            });
         }
 
         /// <summary>
@@ -75,19 +93,23 @@ namespace XStudio.App.Helper {
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<T> GetListAsync<T>(string endpoint, PagedAndSortedResultRequestDto input) {
-            HttpResponseMessage response = await httpClient.GetAsync(endpoint);
+            return await ExecuteAsync(async () => {
+                var content = new StringContent(JsonConvert.SerializeObject(input), Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await httpClient.PostAsync(endpoint, content);
+                response.EnsureSuccessStatusCode();
+                if (response.IsSuccessStatusCode) {
+                    return await response.Content.ReadAsAsync<T>();
+                }
 
-            if (response.IsSuccessStatusCode) {
-                return await ExecuteAsync(response.Content.ReadAsAsync<T>);
-            }
-
-            throw new Exception($"Error retrieving data from API: {response.ReasonPhrase}");
+                throw new Exception($"Error retrieving data from API: {response.ReasonPhrase}");
+            });
         }
 
         public async Task<T> LoginAsync<T>(string endpoint, LoginInfo data) {
             HttpResponseMessage response = await httpClient.PostAsJsonAsync<LoginInfo>(endpoint, data);
+            response.EnsureSuccessStatusCode();
             if (response.IsSuccessStatusCode) {
-                return await ExecuteAsync(response.Content.ReadAsAsync<T>);
+                return await response.Content.ReadAsAsync<T>();
             }
 
             throw new Exception($"Error posting data to API: {response.ReasonPhrase}");
@@ -105,7 +127,7 @@ namespace XStudio.App.Helper {
             });
             HttpResponseMessage response = await httpClient.PostAsync(endpoint, content);
             if (response.IsSuccessStatusCode) {
-                return await ExecuteAsync(response.Content.ReadAsAsync<TokenResponse>);
+                return await response.Content.ReadAsAsync<TokenResponse>();
             }
 
             throw new Exception($"Error posting data to API: {response.ReasonPhrase}");
@@ -120,13 +142,15 @@ namespace XStudio.App.Helper {
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<T> PostAsync<T>(string endpoint, T data) {
-            HttpResponseMessage response = await httpClient.PostAsJsonAsync(endpoint, data);
+            return await ExecuteAsync(async () => {
+                HttpResponseMessage response = await httpClient.PostAsJsonAsync(endpoint, data);
 
-            if (response.IsSuccessStatusCode) {
-                return await ExecuteAsync(response.Content.ReadAsAsync<T>);
-            }
+                if (response.IsSuccessStatusCode) {
+                    return await response.Content.ReadAsAsync<T>();
+                }
 
-            throw new Exception($"Error posting data to API: {response.ReasonPhrase}");
+                throw new Exception($"Error posting data to API: {response.ReasonPhrase}");
+            });
         }
 
         /// <summary>
@@ -138,18 +162,20 @@ namespace XStudio.App.Helper {
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<T> PostManyAsync<T>(string endpoint, T data) {
-            var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
-            // 发送 DELETE 请求并包含请求体
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, endpoint) {
-                Content = content
-            };
-            HttpResponseMessage response = await httpClient.SendAsync(request);
+            return await ExecuteAsync(async () => {
+                var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                // 发送 DELETE 请求并包含请求体
+                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, endpoint) {
+                    Content = content
+                };
+                HttpResponseMessage response = await httpClient.SendAsync(request);
 
-            if (response.IsSuccessStatusCode) {
-                return await ExecuteAsync(response.Content.ReadAsAsync<T>);
-            }
+                if (response.IsSuccessStatusCode) {
+                    return await response.Content.ReadAsAsync<T>();
+                }
 
-            throw new Exception($"Error posting data to API: {response.ReasonPhrase}");
+                throw new Exception($"Error posting data to API: {response.ReasonPhrase}");
+            });
         }
 
         /// <summary>
@@ -161,13 +187,15 @@ namespace XStudio.App.Helper {
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<T> PutAsync<T>(string endpoint, T data) {
-            HttpResponseMessage response = await httpClient.PutAsJsonAsync(endpoint, data);
+            return await ExecuteAsync(async () => {
+                HttpResponseMessage response = await httpClient.PutAsJsonAsync(endpoint, data);
 
-            if (response.IsSuccessStatusCode) {
-                return await ExecuteAsync(response.Content.ReadAsAsync<T>);
-            }
+                if (response.IsSuccessStatusCode) {
+                    return await response.Content.ReadAsAsync<T>();
+                }
 
-            throw new Exception($"Error putting data to API: {response.ReasonPhrase}");
+                throw new Exception($"Error putting data to API: {response.ReasonPhrase}");
+            });
         }
         /// <summary>
         /// 删除
@@ -177,13 +205,15 @@ namespace XStudio.App.Helper {
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<T> DeleteAsync<T>(string endpoint) {
-            HttpResponseMessage response = await httpClient.DeleteAsync(endpoint);
+            return await ExecuteAsync(async () => {
+                HttpResponseMessage response = await httpClient.DeleteAsync(endpoint);
 
-            if (response.IsSuccessStatusCode) {
-                return await ExecuteAsync(response.Content.ReadAsAsync<T>);
-            }
+                if (response.IsSuccessStatusCode) {
+                    return await response.Content.ReadAsAsync<T>();
+                }
 
-            throw new Exception($"Error deleting data from API: {response.ReasonPhrase}");
+                throw new Exception($"Error deleting data from API: {response.ReasonPhrase}");
+            });
         }
         /// <summary>
         /// 批量删除
@@ -194,18 +224,20 @@ namespace XStudio.App.Helper {
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<T> DeleteManyAsync<T>(string endpoint, List<Guid> ids) {
-            var content = new StringContent(JsonConvert.SerializeObject(ids), Encoding.UTF8, "application/json");
-            // 发送 DELETE 请求并包含请求体
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Delete, endpoint) {
-                Content = content
-            };
-            HttpResponseMessage response = await SendAsync(request);
+            return await ExecuteAsync(async () => {
+                var content = new StringContent(JsonConvert.SerializeObject(ids), Encoding.UTF8, "application/json");
+                // 发送 DELETE 请求并包含请求体
+                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Delete, endpoint) {
+                    Content = content
+                };
+                HttpResponseMessage response = await SendAsync(request);
 
-            if (response.IsSuccessStatusCode) {
-                return await ExecuteAsync(response.Content.ReadAsAsync<T>);
-            }
+                if (response.IsSuccessStatusCode) {
+                    return await response.Content.ReadAsAsync<T>();
+                }
 
-            throw new Exception($"Error deleting data from API: {response.ReasonPhrase}");
+                throw new Exception($"Error deleting data from API: {response.ReasonPhrase}");
+            });
         }
 
         /// <summary>
@@ -273,13 +305,15 @@ namespace XStudio.App.Helper {
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<T> GetResponseAsync<T>(string endpoint) {
-            HttpResponseMessage response = await httpClient.GetAsync(endpoint);
+            return await ExecuteAsync(async () => {
+                HttpResponseMessage response = await httpClient.GetAsync(endpoint);
 
-            if (response.IsSuccessStatusCode) {
-                return await ExecuteAsync(response.Content.ReadAsAsync<T>);
-            }
+                if (response.IsSuccessStatusCode) {
+                    return await response.Content.ReadAsAsync<T>();
+                }
 
-            throw new Exception($"Error retrieving data from API: {response.ReasonPhrase}");
+                throw new Exception($"Error retrieving data from API: {response.ReasonPhrase}");
+            });
         }
 
         /// <summary>
@@ -291,13 +325,15 @@ namespace XStudio.App.Helper {
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<T> PostResponseAsync<T>(string endpoint, HttpContent content) {
-            HttpResponseMessage response = await httpClient.PostAsync(endpoint, content);
+            return await ExecuteAsync(async () => {
+                HttpResponseMessage response = await httpClient.PostAsync(endpoint, content);
 
-            if (response.IsSuccessStatusCode) {
-                return await ExecuteAsync(response.Content.ReadAsAsync<T>);
-            }
+                if (response.IsSuccessStatusCode) {
+                    return await response.Content.ReadAsAsync<T>();
+                }
 
-            throw new Exception($"Error posting data to API: {response.ReasonPhrase}");
+                throw new Exception($"Error posting data to API: {response.ReasonPhrase}");
+            });
         }
 
         /// <summary>
@@ -309,13 +345,15 @@ namespace XStudio.App.Helper {
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<T> PutResponseAsync<T>(string endpoint, HttpContent content) {
-            HttpResponseMessage response = await httpClient.PutAsync(endpoint, content);
+            return await ExecuteAsync(async () => {
+                HttpResponseMessage response = await httpClient.PutAsync(endpoint, content);
 
-            if (response.IsSuccessStatusCode) {
-                return await ExecuteAsync(response.Content.ReadAsAsync<T>);
-            }
+                if (response.IsSuccessStatusCode) {
+                    return await response.Content.ReadAsAsync<T>();
+                }
 
-            throw new Exception($"Error putting data to API: {response.ReasonPhrase}");
+                throw new Exception($"Error putting data to API: {response.ReasonPhrase}");
+            });
         }
 
         /// <summary>
@@ -326,13 +364,15 @@ namespace XStudio.App.Helper {
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<T> DeleteResponseAsync<T>(string endpoint) {
-            HttpResponseMessage response = await httpClient.DeleteAsync(endpoint);
+            return await ExecuteAsync(async () => {
+                HttpResponseMessage response = await httpClient.DeleteAsync(endpoint);
 
-            if (response.IsSuccessStatusCode) {
-                return await ExecuteAsync(response.Content.ReadAsAsync<T>);
-            }
+                if (response.IsSuccessStatusCode) {
+                    return await response.Content.ReadAsAsync<T>();
+                }
 
-            throw new Exception($"Error deleting data from API: {response.ReasonPhrase}");
+                throw new Exception($"Error deleting data from API: {response.ReasonPhrase}");
+            });
         }
 
         /// <summary>
@@ -343,13 +383,15 @@ namespace XStudio.App.Helper {
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<T> SendResponseAsync<T>(HttpRequestMessage request) {
-            HttpResponseMessage response = await httpClient.SendAsync(request);
+            return await ExecuteAsync(async () => {
+                HttpResponseMessage response = await httpClient.SendAsync(request);
 
-            if (response.IsSuccessStatusCode) {
-                return await ExecuteAsync(response.Content.ReadAsAsync<T>);
-            }
+                if (response.IsSuccessStatusCode) {
+                    return await response.Content.ReadAsAsync<T>();
+                }
 
-            throw new Exception($"Error sending data to API: {response.ReasonPhrase}");
+                throw new Exception($"Error sending data to API: {response.ReasonPhrase}");
+            });
         }
 
         /// <summary>
@@ -361,13 +403,15 @@ namespace XStudio.App.Helper {
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<T> SendResponseAsync<T>(HttpRequestMessage request, HttpCompletionOption completionOption) {
-            HttpResponseMessage response = await httpClient.SendAsync(request, completionOption);
+            return await ExecuteAsync(async () => {
+                HttpResponseMessage response = await httpClient.SendAsync(request, completionOption);
 
-            if (response.IsSuccessStatusCode) {
-                return await ExecuteAsync(response.Content.ReadAsAsync<T>);
-            }
+                if (response.IsSuccessStatusCode) {
+                    return await response.Content.ReadAsAsync<T>();
+                }
 
-            throw new Exception($"Error sending data to API: {response.ReasonPhrase}");
+                throw new Exception($"Error sending data to API: {response.ReasonPhrase}");
+            });
         }
 
         /// <summary>
@@ -380,12 +424,14 @@ namespace XStudio.App.Helper {
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<T> SendResponseAsync<T>(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationToken cancellationToken) {
-            HttpResponseMessage response = await httpClient.SendAsync(request, completionOption, cancellationToken);
-            if (response.IsSuccessStatusCode) {
-                return await ExecuteAsync(response.Content.ReadAsAsync<T>);
-            }
+            return await ExecuteAsync(async () => {
+                HttpResponseMessage response = await httpClient.SendAsync(request, completionOption, cancellationToken);
+                if (response.IsSuccessStatusCode) {
+                    return await response.Content.ReadAsAsync<T>();
+                }
 
-            throw new Exception($"Error sending data to API: {response.ReasonPhrase}");
+                throw new Exception($"Error sending data to API: {response.ReasonPhrase}");
+            });
         }
     }
 }
