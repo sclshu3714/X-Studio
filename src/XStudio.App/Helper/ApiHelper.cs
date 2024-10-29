@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using Microsoft.AspNet.SignalR.Client.Http;
 using XStudio.App.Models.Users;
 using XStudio.Users;
+using Serilog;
 
 namespace XStudio.App.Helper {
     public class ApiHelper {
@@ -81,9 +82,9 @@ namespace XStudio.App.Helper {
             return result;
         }
 
-        public async Task<T> ExecuteAsync<T>(Func<Task<T>> func) {
+        public async Task<T?> ExecuteAsync<T>(Func<Task<T>> func) {
             try {
-                if (!IsAuthorization) { 
+                if (!IsAuthorization) {
                     // 未授权，尝试获取token
                     throw new InvalidOperationException("Authorization is required.");
                 }
@@ -93,17 +94,26 @@ namespace XStudio.App.Helper {
             catch (HttpRequestException e) {
                 // 处理请求异常
                 Console.WriteLine($"请求错误: {e.Message}");
-                throw new HttpRequestException($"{e.Message}", e); // 可重新抛出异常或进行其他处理
+                Log.Error(e.Message, e);
+                return default;
+                //throw new HttpRequestException($"{e.Message}", e); // 可重新抛出异常或进行其他处理
             }
             catch (InvalidOperationException e) {
                 // 处理无效操作异常，例如没有正确的serialization设置
                 Console.WriteLine($"无效操作错误: {e.Message}");
-                throw new InvalidOperationException($"{e.Message}", e); // 可重新抛出异常或进行其他处理
+                Log.Error(e.Message, e);
+                return default;
+                //throw new InvalidOperationException($"{e.Message}", e); // 可重新抛出异常或进行其他处理
             }
             catch (Exception e) {
                 // 处理其他未知异常
                 Console.WriteLine($"发生错误: {e.Message}");
-                throw new InvalidOperationException($"{e.Message}", e); // 可重新抛出异常或进行其他处理
+                Log.Error(e.Message, e);
+                return default;
+                //throw new InvalidOperationException($"{e.Message}", e); // 可重新抛出异常或进行其他处理
+            }
+            finally { 
+                
             }
         }
 
@@ -142,8 +152,8 @@ namespace XStudio.App.Helper {
                 if (response.IsSuccessStatusCode) {
                     return await ReadAsAsync<T>(response.Content);
                 }
-
-                throw new Exception($"Error retrieving data from API: {response.ReasonPhrase}");
+                return default;
+                // throw new Exception($"Error retrieving data from API: {response.ReasonPhrase}");
             });
         }
 

@@ -19,7 +19,6 @@ namespace XStudio.App.ViewModel.Module {
         private bool _isLoading = false;
 
         public TimePeriodPageViewModel(DataService dataService,string type) {
-            IsLoading = true;
             _dataService = dataService;
             _type = type;
             DataList = dataService.getTimePeriodPage(this);
@@ -29,16 +28,16 @@ namespace XStudio.App.ViewModel.Module {
             UpCommand = new DelegateCommand<TimePeriodViewModel>(MoveUp);
             DownCommand = new DelegateCommand<TimePeriodViewModel>(MoveDown);
             DeleteCommand = new DelegateCommand<TimePeriodViewModel>(RemoveTimePeriod);
-            LoadData();
-            IsLoading = false;
         }
 
-        private async void LoadData() {
+        public async Task LoadDataAsync() {
+            IsLoading = true;
             await Task.Delay(10 * 1000);
             var data = await _dataService.GetListAsync(new Abp.Application.Services.Dto.PagedAndSortedResultRequestDto() { MaxResultCount = 100, SkipCount = 0, Sorting = "Order" });
             if (data != null && data.Items.Any()) {
                 TimePeriods.AddRange(data.Items);
             }
+            IsLoading = false;
         }
 
         /// <summary>

@@ -22,9 +22,14 @@ namespace XStudio.App.Views.Module {
 
         private TimePeriodPageViewModel _timePeriodViewModel;
         public TimePeriodPage(TimePeriodPageViewModel timePeriodViewModel) {
-            InitializeComponent();
             _timePeriodViewModel = timePeriodViewModel;
+            InitializeComponent();
             DataContext = _timePeriodViewModel;
+            this.Loaded += new RoutedEventHandler(InitLoaded);
+        }
+
+        private async void InitLoaded(object sender, RoutedEventArgs e) {
+           await _timePeriodViewModel.LoadDataAsync();
         }
     }
 }

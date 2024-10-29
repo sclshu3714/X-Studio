@@ -14,8 +14,11 @@
     <hc:TransitioningContentControl>
         <Grid>
             <hc:UniformSpacingPanel Orientation="Vertical" Spacing="3">
-                <hc:UniformSpacingPanel ChildWrapping="Wrap" Spacing="32">
-                    <hc:SimplePanel HorizontalAlignment="Left" VerticalAlignment="Center">
+                <hc:UniformSpacingPanel ChildWrapping="Wrap"
+                                        Spacing="32"
+                                        Background="White">
+                    <hc:SimplePanel HorizontalAlignment="Left"
+                                    VerticalAlignment="Center">
                         <Rectangle
                             Height="30"
                             Margin="3"
@@ -45,7 +48,9 @@
                         </hc:ButtonGroup>
                     </hc:SimplePanel>
                 </hc:UniformSpacingPanel>
-                <hc:UniformSpacingPanel ChildWrapping="Wrap" Spacing="32">
+                <hc:UniformSpacingPanel ChildWrapping="Wrap"
+                                        Spacing="32"
+                                        Background="White">
                     <DataGrid
                         x:Name="dataTimePeriod"
                         HorizontalAlignment="Center"
@@ -110,14 +115,14 @@
             <hc:SimplePanel
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
-                Panel.ZIndex="1"
-                Background="DimGray"
-                Opacity="0.3"
+                Panel.ZIndex="100"
+                Background="White"
+                Opacity="0.8"
                 Visibility="{Binding IsLoading, Converter={StaticResource Boolean2VisibilityConverter}}">
                 <hc:LoadingCircle
                     x:Name="theLoading"
-                    Width="80"
-                    Height="80"
+                    Width="50"
+                    Height="50"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     DotBorderThickness="20"
