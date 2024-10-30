@@ -70,7 +70,7 @@
                         AutoGenerateColumns="False"
                         CanUserAddRows="False"
                         ItemsSource="{Binding TimePeriods}"
-                        MinRowHeight="35">
+                        MinRowHeight="30" ColumnHeaderHeight="30">
                         <DataGrid.Columns>
                             <!--  示例数据列  -->
                             <DataGridTextColumn

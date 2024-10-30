@@ -107,42 +107,62 @@
                         VerticalAlignment="Center"
                         Source="pack://application:,,,/XStudio.App;component/Resources/Img/DevOps/DevOps-Pipelines.png"
                         Stretch="Uniform" />
-                    <hc:ComboBox
-                        x:Name="NameTextBox"
-                        MinWidth="250"
-                        MinHeight="40"
-                        Margin="0,4,0,0"
-                        hc:InfoElement.Necessary="True"
-                        hc:InfoElement.Placeholder="{ex:Lang Key={x:Static langs:LangKeys.LoginUserContent}}"
-                        hc:InfoElement.Title="{ex:Lang Key={x:Static langs:LangKeys.UserName}}"
-                        hc:InfoElement.TitlePlacement="Top"
-                        hc:InfoElement.TitleWidth="250"
-                        DisplayMemberPath="UserNameOrEmailAddress"
-                        IsEditable="True"
-                        ItemsSource="{Binding DefaultSelectList}"
-                        PreviewTextInput="NameTextBox_PreviewTextInput"
-                        SelectedValuePath="Index"
-                        SelectionChanged="NameTextBox_SelectionChanged"
-                        Style="{StaticResource ComboBoxExtend}"
-                        Text="{Binding UserNameOrEmailAddress, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, Mode=TwoWay}" />
-                    <TextBlock Foreground="Red" Text="{Binding ElementName=NameTextBox, Path=(Validation.Errors)[0].ErrorContent}" />
-                    <hc:PasswordBox
-                        x:Name="CodeTextBox"
-                        MinWidth="250"
-                        MinHeight="40"
-                        Margin="0,4,0,0"
-                        hc:InfoElement.IsReadOnly="True"
-                        hc:InfoElement.Necessary="True"
-                        hc:InfoElement.Placeholder="{ex:Lang Key={x:Static langs:LangKeys.LoginPasswordContent}}"
-                        hc:InfoElement.Title="{ex:Lang Key={x:Static langs:LangKeys.Password}}"
-                        hc:InfoElement.TitlePlacement="Top"
-                        hc:InfoElement.TitleWidth="250"
-                        helper:PasswordBoxHelper.BindPassword="{Binding Password, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True, Mode=TwoWay}"
-                        Foreground="Black"
-                        ShowEyeButton="True" />
-                    <TextBlock Foreground="Red" Text="{Binding ElementName=CodeTextBox, Path=(Validation.Errors)[0].ErrorContent}" />
+                    <hc:ComboBox x:Name="NameTextBox"
+                                 MinWidth="250"
+                                 MinHeight="40"
+                                 Margin="0,4,0,0"
+                                 hc:InfoElement.Necessary="True"
+                                 hc:InfoElement.Placeholder="{ex:Lang Key={x:Static langs:LangKeys.LoginUserContent}}"
+                                 hc:InfoElement.Title="{ex:Lang Key={x:Static langs:LangKeys.UserName}}"
+                                 hc:InfoElement.TitlePlacement="Top"
+                                 hc:InfoElement.TitleWidth="250"
+                                 DisplayMemberPath="UserNameOrEmailAddress"
+                                 IsEditable="True"
+                                 ItemsSource="{Binding DefaultSelectList}"
+                                 PreviewTextInput="NameTextBox_PreviewTextInput"
+                                 SelectedValuePath="Index"
+                                 SelectionChanged="NameTextBox_SelectionChanged"
+                                 Style="{StaticResource ComboBoxExtend}">
+                        <hc:ComboBox.Text>
+                            <Binding Path="UserNameOrEmailAddress" 
+                                     UpdateSourceTrigger="PropertyChanged"
+                                     ValidatesOnDataErrors="True"
+                                     NotifyOnValidationError="True"
+                                     Mode="TwoWay">
+                                <Binding.ValidationRules>
+                                    <data:CompositeValidationRule Type="UserName" MinLength="6" MaxLength="16" />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </hc:ComboBox.Text>
+                    </hc:ComboBox>
+                    <hc:PasswordBox x:Name="CodeTextBox"
+                                    MinWidth="250"
+                                    MinHeight="40"
+                                    Margin="0,16,0,0"
+                                    hc:InfoElement.IsReadOnly="True"
+                                    hc:InfoElement.Necessary="True"
+                                    hc:InfoElement.Placeholder="{ex:Lang Key={x:Static langs:LangKeys.LoginPasswordContent}}"
+                                    hc:InfoElement.Title="{ex:Lang Key={x:Static langs:LangKeys.Password}}"
+                                    hc:InfoElement.TitlePlacement="Top"
+                                    hc:InfoElement.TitleWidth="250"
+                                    Foreground="Black"
+                                    ShowEyeButton="True">
+                        <helper:PasswordBoxHelper.BindPassword>
+                            <Binding Path="Password"
+                                     UpdateSourceTrigger="PropertyChanged"
+                                     ValidatesOnDataErrors="True"
+                                     NotifyOnValidationError="True"
+                                     Mode="TwoWay">
+                                <Binding.ValidationRules>
+                                    <data:CompositeValidationRule Type="Password"
+                                                                  MinLength="6"
+                                                                  MaxLength="16" />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </helper:PasswordBoxHelper.BindPassword>
+                    </hc:PasswordBox>
                     <CheckBox
-                        Margin="0,4,0,0"
+                        Margin="0,16,0,0"
                         Content="{ex:Lang Key={x:Static langs:LangKeys.CheckBox}}"
                         IsChecked="{Binding RememberMe}" />
                     <ToggleButton
