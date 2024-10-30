@@ -201,12 +201,12 @@ public partial class App : PrismApplication {
     #region demo
     private static Mutex? AppMutex = null;
     internal void UpdateSkin(SkinType skin) {
-        var skins0 = Resources.MergedDictionaries[0];
+        var skins0 = Resources.MergedDictionaries[1];
         skins0.MergedDictionaries.Clear();
         skins0.MergedDictionaries.Add(XStudioResourceHelper.GetSkin(skin));
         skins0.MergedDictionaries.Add(XStudioResourceHelper.GetSkin(typeof(App).Assembly, "Resources/Themes", skin));
 
-        var skins1 = Resources.MergedDictionaries[1];
+        var skins1 = Resources.MergedDictionaries[2];
         skins1.MergedDictionaries.Clear();
         skins1.MergedDictionaries.Add(new ResourceDictionary {
             Source = new Uri("pack://application:,,,/HandyControl;component/Themes/Theme.xaml")
