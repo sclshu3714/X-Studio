@@ -209,7 +209,7 @@ public partial class App : PrismApplication {
         var skins1 = Resources.MergedDictionaries[1];
         skins1.MergedDictionaries.Clear();
         skins1.MergedDictionaries.Add(new ResourceDictionary {
-            Source = new Uri("pack://application:,,,/XStudio.App;component/Resources/Themes/Theme.xaml")
+            Source = new Uri("pack://application:,,,/HandyControl;component/Themes/Theme.xaml")
         });
         skins1.MergedDictionaries.Add(new ResourceDictionary {
             Source = new Uri("pack://application:,,,/XStudio.App;component/Resources/Themes/Theme.xaml")
