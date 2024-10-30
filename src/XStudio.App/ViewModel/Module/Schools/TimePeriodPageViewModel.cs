@@ -16,13 +16,14 @@ namespace XStudio.App.ViewModel.Module {
         private readonly DataService _dataService;
         private string _type;
         private ObservableCollection<TimePeriodViewModel> _timePeriods;
-        private bool _isLoading = false;
+        
 
         public TimePeriodPageViewModel(DataService dataService,string type) {
             _dataService = dataService;
             _type = type;
             DataList = dataService.getTimePeriodPage(this);
             _timePeriods = new ObservableCollection<TimePeriodViewModel>();
+            LoadCommand = new DelegateCommand(async () => await LoadDataAsync());
             SaveCommand = new DelegateCommand<TimePeriodPageViewModel>(SaveTimePeriod);
             AddCommand = new DelegateCommand(AddTimePeriod);
             UpCommand = new DelegateCommand<TimePeriodViewModel>(MoveUp);
@@ -32,7 +33,7 @@ namespace XStudio.App.ViewModel.Module {
 
         public async Task LoadDataAsync() {
             IsLoading = true;
-            await Task.Delay(10 * 1000);
+            TimePeriods.Clear();
             var data = await _dataService.GetListAsync(new Abp.Application.Services.Dto.PagedAndSortedResultRequestDto() { MaxResultCount = 100, SkipCount = 0, Sorting = "Order" });
             if (data != null && data.Items.Any()) {
                 TimePeriods.AddRange(data.Items);
@@ -40,13 +41,7 @@ namespace XStudio.App.ViewModel.Module {
             IsLoading = false;
         }
 
-        /// <summary>
-        /// 是否正在加载数据
-        /// </summary>
-        public bool IsLoading {
-            get => _isLoading;
-            set => SetProperty(ref _isLoading, value);
-        }
+        
 
         public string @Type {
             get => _type;
@@ -59,6 +54,8 @@ namespace XStudio.App.ViewModel.Module {
 
         #region Commands
         public DelegateCommand<TimePeriodPageViewModel> SaveCommand { get; private set; }
+
+        public DelegateCommand LoadCommand { get; private set; }
         public DelegateCommand AddCommand { get; private set; }
         public DelegateCommand<TimePeriodViewModel> UpCommand { get; private set; }
         public DelegateCommand<TimePeriodViewModel> DownCommand { get; private set; }

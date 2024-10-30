@@ -28,6 +28,7 @@ namespace XStudio.App.Helper {
             httpClient.BaseAddress = new Uri(baseAddress);
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            httpClient.Timeout = new TimeSpan(0, 0, 30);
         }
 
         public void SetAuthorizationHeader(string? accessToken) {

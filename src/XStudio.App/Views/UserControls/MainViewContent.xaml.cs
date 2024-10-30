@@ -18,6 +18,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using XStudio.App.Models.Data;
 using XStudio.App.ViewModel;
+using ICSharpCode.AvalonEdit;
+using XStudio.App.Tools;
 
 namespace XStudio.App.Views.UserControls
 {
@@ -26,29 +28,30 @@ namespace XStudio.App.Views.UserControls
     /// </summary>
     public partial class MainViewContent : UserControl
     {
-        private bool _isFull;
+        private bool _isFull = false;
 
         private string? _currentDemoKey;
 
         private bool _drawerCodeUsed;
 
-        //private Dictionary<string, TextEditor> _textEditor;
+        private Dictionary<string, TextEditor> _textEditor;
         public MainViewContent()
         {
             InitializeComponent();
 
-            //Messenger.Default.Register<bool>(this, MessageToken.FullSwitch, FullSwitch);
-            //Messenger.Default.Register<SkinType>(this, MessageToken.SkinUpdated, SkinUpdated);
+            WeakReferenceMessenger.Default.Register<object,string>(this, MessageToken.FullSwitch, FullSwitch);
+            WeakReferenceMessenger.Default.Register<object, string>(this, MessageToken.SkinUpdated, SkinUpdated);
         }
 
-        private void FullSwitch(bool isFull)
+        private void FullSwitch(object sender, object message)
         {
-            if (_isFull == isFull)
+            bool IsFull   = sender as bool? ?? false;
+            if (_isFull == IsFull)
             {
                 return;
             }
 
-            _isFull = isFull;
+            _isFull = IsFull;
 
             if (_isFull)
             {
@@ -74,68 +77,66 @@ namespace XStudio.App.Views.UserControls
             }
         }
 
-        private void SkinUpdated(SkinType skinType)
+        private void SkinUpdated(object sender, object message)
         {
+            SkinType skinType = message as SkinType? ?? SkinType.Default;
             if (!_drawerCodeUsed)
             {
                 return;
             }
 
-            //_textEditor[ConstString.Xaml].SyntaxHighlighting = HighlightingProvider.GetDefinition(skinType, ConstString.Xml);
-            //_textEditor[ConstString.Cs].SyntaxHighlighting = HighlightingProvider.GetDefinition(skinType, ConstString.Cs);
-            //_textEditor[ConstString.Vm].SyntaxHighlighting = HighlightingProvider.GetDefinition(skinType, ConstString.Cs);
+            _textEditor[ConstString.Xaml].SyntaxHighlighting = HighlightingProvider.GetDefinition(skinType, ConstString.Xml);
+            _textEditor[ConstString.Cs].SyntaxHighlighting = HighlightingProvider.GetDefinition(skinType, ConstString.Cs);
+            _textEditor[ConstString.Vm].SyntaxHighlighting = HighlightingProvider.GetDefinition(skinType, ConstString.Cs);
         }
 
         private void InitTextEditor()
         {
-            //HighlightingProvider.Register(SkinType.Default, HighlightingProvider.Default);
-            //HighlightingProvider.Register(SkinType.Dark, new HighlightingProviderDark());
-            //HighlightingProvider.Register(SkinType.Violet, HighlightingProvider.Default);
+            HighlightingProvider.Register(SkinType.Default, HighlightingProvider.Default);
+            HighlightingProvider.Register(SkinType.Dark, new HighlightingProviderDark());
+            HighlightingProvider.Register(SkinType.Violet, HighlightingProvider.Default);
 
             var textEditorCustomStyle = ResourceHelper.GetResource<Style>("TextEditorCustom");
-            var skinType = GlobalData.Config?.Skin;
+            if (GlobalData.Config != null) {
+                var skinType = GlobalData.Config.Skin;
+                _textEditor = new Dictionary<string, TextEditor> {
+                    [ConstString.Xaml] = new() {
+                        Style = textEditorCustomStyle,
+                        SyntaxHighlighting = HighlightingProvider.GetDefinition(skinType, ConstString.Xml)
+                    },
+                    [ConstString.Cs] = new() {
+                        Style = textEditorCustomStyle,
+                        SyntaxHighlighting = HighlightingProvider.GetDefinition(skinType, ConstString.Cs)
+                    },
+                    [ConstString.Vm] = new() {
+                        Style = textEditorCustomStyle,
+                        SyntaxHighlighting = HighlightingProvider.GetDefinition(skinType, ConstString.Cs)
+                    }
+                };
 
-            //_textEditor = new Dictionary<string, TextEditor>
-            //{
-            //    [ConstString.Xaml] = new()
-            //    {
-            //        Style = textEditorCustomStyle,
-            //        SyntaxHighlighting = HighlightingProvider.GetDefinition(skinType, ConstString.Xml)
-            //    },
-            //    [ConstString.Cs] = new()
-            //    {
-            //        Style = textEditorCustomStyle,
-            //        SyntaxHighlighting = HighlightingProvider.GetDefinition(skinType, ConstString.Cs)
-            //    },
-            //    [ConstString.Vm] = new()
-            //    {
-            //        Style = textEditorCustomStyle,
-            //        SyntaxHighlighting = HighlightingProvider.GetDefinition(skinType, ConstString.Cs)
-            //    }
-            //};
-
-            //BorderCode.Child = new TabControl
-            //{
-            //    Style = ResourceHelper.GetResource<Style>("TabControl.PreviewCode"),
-            //    Items =
-            //{
-            //    new TabItem
-            //    {
-            //        Header = ConstString.Xaml,
-            //        //Content = _textEditor[ConstString.Xaml]
-            //    },
-            //    new TabItem
-            //    {
-            //        Header = ConstString.Cs,
-            //        //Content = _textEditor[ConstString.Cs]
-            //    },
-            //    new TabItem
-            //    {
-            //        Header = ConstString.Vm,
-            //        //Content = _textEditor[ConstString.Vm]
-            //    }
-            //}
-            //};
+                // BorderCode.Child = new TabControl
+                //{
+                //    Style = ResourceHelper.GetResource<Style>("TabControl.PreviewCode"),
+                //    Items =
+                //{
+                //    new TabItem
+                //    {
+                //        Header = ConstString.Xaml,
+                //        //Content = _textEditor[ConstString.Xaml]
+                //    },
+                //    new TabItem
+                //    {
+                //        Header = ConstString.Cs,
+                //        //Content = _textEditor[ConstString.Cs]
+                //    },
+                //    new TabItem
+                //    {
+                //        Header = ConstString.Vm,
+                //        //Content = _textEditor[ConstString.Vm]
+                //    }
+                //}
+                //};
+            }
         }
 
         private void UpdateTextEditor()

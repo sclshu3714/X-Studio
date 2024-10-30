@@ -43,8 +43,7 @@ namespace XStudio.App.Views.UserControls
 
                 ConfigHelper.Instance.SetLang(langName);
                 XStudio.App.Properties.Langs.LangProvider.Culture = new CultureInfo(langName);
-                //Messenger.Default.Send<object>(null, MessageToken.LangUpdated);
-
+                WeakReferenceMessenger.Default.Send<object, string>("", MessageToken.LangUpdated);
                 GlobalData.Config.Lang = langName;
                 GlobalData.Save();
             }
@@ -67,8 +66,8 @@ namespace XStudio.App.Views.UserControls
 
                 GlobalData.Config.Skin = skinType;
                 GlobalData.Save();
-                //((App)Application.Current).UpdateSkin(skinType);
-                //Messenger.Default.Send(skinType, MessageToken.SkinUpdated);
+                ((App)Application.Current).UpdateSkin(skinType);
+                WeakReferenceMessenger.Default.Send<object,string>(skinType, MessageToken.SkinUpdated);
             }
         }
 

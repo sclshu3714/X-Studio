@@ -14,11 +14,11 @@
     <hc:TransitioningContentControl>
         <Grid>
             <hc:UniformSpacingPanel Orientation="Vertical" Spacing="3">
-                <hc:UniformSpacingPanel ChildWrapping="Wrap"
-                                        Spacing="32"
-                                        Background="White">
-                    <hc:SimplePanel HorizontalAlignment="Left"
-                                    VerticalAlignment="Center">
+                <hc:UniformSpacingPanel
+                    Background="White"
+                    ChildWrapping="Wrap"
+                    Spacing="32">
+                    <hc:SimplePanel HorizontalAlignment="Left" VerticalAlignment="Center">
                         <Rectangle
                             Height="30"
                             Margin="3"
@@ -27,7 +27,10 @@
                             RadiusY="4"
                             Stroke="{DynamicResource Brush.Effects}"
                             StrokeDashArray="2,2" />
-                        <hc:ButtonGroup Margin="5,0,0,0" VerticalAlignment="Center">
+                        <hc:ButtonGroup
+                            Margin="5,0,0,0"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
                             <Button
                                 Margin="0"
                                 hc:IconElement.Geometry="{StaticResource SaveGeometry}"
@@ -45,12 +48,21 @@
                                 Command="{Binding AddCommand}"
                                 Content="添 加"
                                 Style="{StaticResource ButtonBaseStyle}" />
+                            <Button
+                                Margin="0"
+                                hc:IconElement.Geometry="{StaticResource PageModeGeometry}"
+                                hc:IconElement.Height="12"
+                                hc:IconElement.Width="12"
+                                Command="{Binding LoadCommand}"
+                                Content="刷 新"
+                                Style="{StaticResource ButtonBaseStyle}" />
                         </hc:ButtonGroup>
                     </hc:SimplePanel>
                 </hc:UniformSpacingPanel>
-                <hc:UniformSpacingPanel ChildWrapping="Wrap"
-                                        Spacing="32"
-                                        Background="White">
+                <hc:UniformSpacingPanel
+                    Background="White"
+                    ChildWrapping="Wrap"
+                    Spacing="32">
                     <DataGrid
                         x:Name="dataTimePeriod"
                         HorizontalAlignment="Center"

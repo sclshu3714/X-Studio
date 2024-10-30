@@ -48,7 +48,7 @@
                             FontSize="20"
                             FontWeight="Bold"
                             Mark="{Binding ContentTitle}"
-                            MarkBrush="#0F000000"
+                            MarkBrush="#0FD9104B"
                             MarkMargin="3,0" />
                         <TextBlock
                             Foreground="White"

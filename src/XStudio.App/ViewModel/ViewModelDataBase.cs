@@ -25,8 +25,17 @@ namespace XStudio.App.ViewModel
 
     public class ViewModelBase : ObservableObject
     {
-        private IMessenger? _messengerInstance;
 
+        private IMessenger? _messengerInstance;
+        private bool _isLoading = false;
+
+        /// <summary>
+        /// 是否正在加载数据
+        /// </summary>
+        public bool IsLoading {
+            get => _isLoading;
+            set => SetProperty(ref _isLoading, value);
+        }
         //
         // 摘要:
         //     Gets a value indicating whether the control is in design mode (running under
