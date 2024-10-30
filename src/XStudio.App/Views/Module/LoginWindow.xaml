@@ -130,7 +130,7 @@
                                      NotifyOnValidationError="True"
                                      Mode="TwoWay">
                                 <Binding.ValidationRules>
-                                    <data:CompositeValidationRule Type="UserName" MinLength="6" MaxLength="16" />
+                                    <data:CompositeValidationRule Type="UserName" MinLength="5" MaxLength="16" />
                                 </Binding.ValidationRules>
                             </Binding>
                         </hc:ComboBox.Text>
