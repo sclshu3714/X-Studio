@@ -203,8 +203,8 @@ public partial class App : PrismApplication {
     internal void UpdateSkin(SkinType skin) {
         var skins0 = Resources.MergedDictionaries[0];
         skins0.MergedDictionaries.Clear();
-        skins0.MergedDictionaries.Add(ResourceHelper.GetSkin(skin));
-        skins0.MergedDictionaries.Add(ResourceHelper.GetSkin(typeof(App).Assembly, "Resources/Themes", skin));
+        skins0.MergedDictionaries.Add(XStudioResourceHelper.GetSkin(skin));
+        skins0.MergedDictionaries.Add(XStudioResourceHelper.GetSkin(typeof(App).Assembly, "Resources/Themes", skin));
 
         var skins1 = Resources.MergedDictionaries[1];
         skins1.MergedDictionaries.Clear();
