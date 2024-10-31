@@ -13,6 +13,9 @@ namespace XStudio.App.ViewModel.Module.Schools {
         private string _name = string.Empty;
 
         private List<string> defaultSelectList = new List<string>() { "早晨", "上午", "中午", "下午", "晚上" };
+        private string _period;
+        private string _periodCode;
+
         /// <summary>
         /// 序号
         /// </summary>
@@ -24,7 +27,7 @@ namespace XStudio.App.ViewModel.Module.Schools {
         }
 
         /// <summary>
-        /// 时段编号
+        /// 节次编号
         /// </summary>
         [Description("编码")]
         [JsonProperty("code")]
@@ -34,7 +37,27 @@ namespace XStudio.App.ViewModel.Module.Schools {
         }
 
         /// <summary>
-        /// 学校名称
+        /// 时段编码
+        /// </summary>
+        [Description("名称")]
+        [JsonProperty("periodCode")]
+        public string PeriodCode {
+            get => _periodCode;
+            set => SetProperty(ref _periodCode, value);
+        }
+
+        /// <summary>
+        /// 时段
+        /// </summary>
+        [Description("时段")]
+        [JsonProperty("period")]
+        public string Period {
+            get => _period;
+            set => SetProperty(ref _period, value);
+        }
+
+        /// <summary>
+        /// 节次名称
         /// </summary>
         [Description("名称")]
         [JsonProperty("name")]
