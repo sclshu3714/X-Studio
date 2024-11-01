@@ -1,14 +1,14 @@
-﻿<Page x:Class="XStudio.App.Views.Module.TimePeriodPage"
+﻿<Page x:Class="XStudio.App.Views.Module.Schools.SectionPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:hc="https://handyorg.github.io/handycontrol"
-      xmlns:local="clr-namespace:XStudio.App.Views.Module"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      Title="TimePeriodPage"
-      d:DesignHeight="450"
+      xmlns:local="clr-namespace:XStudio.App.Views.Module.Schools"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" 
       d:DesignWidth="800"
-      mc:Ignorable="d">
+      Title="SectionPage">
     <hc:TransitioningContentControl>
         <Grid>
             <hc:UniformSpacingPanel Orientation="Vertical"
@@ -61,19 +61,48 @@
                               HorizontalContentAlignment="Center"
                               AutoGenerateColumns="False"
                               CanUserAddRows="False"
-                              ItemsSource="{Binding TimePeriods}"
+                              ItemsSource="{Binding Sections}"
                               MinRowHeight="30"
                               ColumnHeaderHeight="30">
                         <DataGrid.Columns>
                             <!--  示例数据列  -->
                             <DataGridTextColumn Width="*"
                                                 Binding="{Binding Name}"
-                                                Header="名称" />
+                                                Header="时 段" />
                             <!--  不可编辑  -->
                             <DataGridTextColumn Width="*"
                                                 Binding="{Binding Code}"
-                                                Header="编码"
+                                                Header="节 次"
                                                 IsReadOnly="True" />
+                            <DataGridTextColumn Width="*"
+                                                Binding="{Binding Code}"
+                                                Header="周 一"
+                                                IsReadOnly="True" />
+                            <DataGridTextColumn Width="*"
+                                                Binding="{Binding Code}"
+                                                Header="周 二"
+                                                IsReadOnly="True" />
+                            <DataGridTextColumn Width="*"
+                                                Binding="{Binding Code}"
+                                                Header="周 三"
+                                                IsReadOnly="True" />
+                            <DataGridTextColumn Width="*"
+                                                Binding="{Binding Code}"
+                                                Header="周 四"
+                                                IsReadOnly="True" />
+                            <DataGridTextColumn Width="*"
+                                                Binding="{Binding Code}"
+                                                Header="周 五"
+                                                IsReadOnly="True" />
+                            <DataGridTextColumn Width="*"
+                                                Binding="{Binding Code}"
+                                                Header="周 六"
+                                                IsReadOnly="True" />
+                            <DataGridTextColumn Width="*"
+                                                Binding="{Binding Code}"
+                                                Header="周 日"
+                                                IsReadOnly="True" />
+                            
                             <!--  操作列  -->
                             <DataGridTemplateColumn Width="Auto"
                                                     MinWidth="160"

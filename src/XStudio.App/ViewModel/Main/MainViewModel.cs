@@ -19,6 +19,7 @@ using XStudio.App.Models.Data;
 using XStudio.App.Service;
 using XStudio.App.ViewModel.Home;
 using XStudio.App.ViewModel.Module;
+using XStudio.App.ViewModel.Module.Schools;
 using XStudio.App.Views.Module;
 using XStudio.App.Views.UserControls;
 
@@ -288,6 +289,9 @@ namespace XStudio.App.ViewModel.Main
                 switch (theWorkspaceItem.Name) {
                     case "TimePeriod":
                         thePage = new TimePeriodPageViewModel(_dataService, theWorkspaceItem.Name);
+                        break;
+                    case "Section":
+                        thePage = new SectionPageViewModel(_dataService, theWorkspaceItem.Name);
                         break;
                     default:
                         break;

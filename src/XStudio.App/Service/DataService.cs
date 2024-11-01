@@ -2,6 +2,7 @@
 using AutoMapper;
 using HandyControl.Data;
 using HandyControl.Tools;
+using Microsoft.AspNet.SignalR.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -25,8 +26,10 @@ using XStudio.App.Models.Users;
 using XStudio.App.ViewModel.Home;
 using XStudio.App.ViewModel.Main;
 using XStudio.App.ViewModel.Module;
+using XStudio.App.ViewModel.Module.Schools;
 using XStudio.App.ViewModel.Users;
 using XStudio.App.Views.Module;
+using XStudio.App.Views.Module.Schools;
 using XStudio.App.Views.UserControls;
 using XStudio.Users;
 
@@ -261,15 +264,15 @@ public class DataService : ITransientDependency
         };
     }
 
-    public ObservableCollection<Page> getTimePeriodPage(ViewModel.Module.TimePeriodPageViewModel timePeriodViewModel) {
+    #endregion
+
+    #region 模块-时段
+    public ObservableCollection<Page> getTimePeriodPage(TimePeriodPageViewModel timePeriodViewModel) {
         ObservableCollection<Page> pages = new ObservableCollection<Page>();
-        pages.Add(new TimePeriodPage(timePeriodViewModel) {  Name=timePeriodViewModel.Type});
+        pages.Add(new TimePeriodPage(timePeriodViewModel) { Name = timePeriodViewModel.Type });
         return pages;
     }
 
-    #endregion
-
-    #region 模块相关
     public async Task<TimePeriodViewModel?> CreateAsync(TimePeriodViewModel input) {
         TimePeriodViewModel? timePeriod = await apiHelper.PostAsync("api/xstudio/v1/TimePeriod/add", input);
         return timePeriod;
@@ -301,6 +304,43 @@ public class DataService : ITransientDependency
     public async Task<TimePeriodViewModel?> UpdateAsync(Guid id, TimePeriodViewModel input) {
         TimePeriodViewModel?  timePeriod = await apiHelper.PutAsync($"api/xstudio/v1/TimePeriod/update", input);
         return timePeriod;
+    }
+
+    #endregion
+
+    #region 模块-节次
+    public ObservableCollection<Page> getSectionPage(SectionPageViewModel sectionPageViewModel) {
+        ObservableCollection<Page> pages = new ObservableCollection<Page>();
+        pages.Add(new SectionPage(sectionPageViewModel) { Name = sectionPageViewModel.Type });
+        return pages;
+    }
+
+    public async Task<SectionViewModel?> CreateSectionAsync(SectionViewModel input) {
+        return await apiHelper.PostAsync("api/xstudio/v1/Section/add", input);
+    }
+
+    public async Task<List<SectionViewModel>?> InsertManySectionAsync(List<SectionViewModel> inputs) {
+        return await apiHelper.PostManyAsync("api/xstudio/v1/Section/adds", inputs);
+    }
+    public async Task DeleteSectionAsync(Guid id) {
+        await apiHelper.DeleteAsync<string>($"api/xstudio/v1/Section/delete/{id}");
+    }
+
+    public async Task DeleteManySectionAsync(List<Guid> ids) {
+        await apiHelper.DeleteManyAsync<string>($"api/xstudio/v1/Section/deletes", ids);
+        await Task.CompletedTask;
+    }
+
+    public async Task<SectionViewModel?> GetSectionAsync(Guid id) {
+        return await apiHelper.GetAsync<SectionViewModel>($"api/xstudio/v1/Section/{id}"); ;
+    }
+
+    public async Task<PagedResultDto<SectionViewModel>?> GetSectionListAsync(PagedAndSortedResultRequestDto input) {
+        return await apiHelper.GetListAsync<PagedResultDto<SectionViewModel>>($"/api/xstudio/v1/Section/list", input);
+    }
+
+    public async Task<SectionViewModel?> UpdateSectionAsync(Guid id, SectionViewModel input) {
+        return await apiHelper.PutAsync($"api/xstudio/v1/Section/update", input);
     }
     #endregion
 }
