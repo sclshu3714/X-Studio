@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using XStudio.SchoolSchedule;
 using XStudio.SchoolSchedule.Rules;
 
-namespace XStudio.School.Timetable.Models
-{
+namespace XStudio.School.Timetable.Models {
     public class TimetableRow : BindableBase {
         private string timeSlot;
         private int period;
@@ -22,10 +22,38 @@ namespace XStudio.School.Timetable.Models
         private TimetableCell friday;
         private TimetableCell sunday;
 
+        public TimetableCell this[DayOfWeek day] {
+            get {
+                switch (day) {
+                    case DayOfWeek.Monday: return Monday;
+                    case DayOfWeek.Tuesday: return Tuesday;
+                    case DayOfWeek.Wednesday: return Wednesday;
+                    case DayOfWeek.Thursday: return Thursday;
+                    case DayOfWeek.Friday: return Friday;
+                    case DayOfWeek.Saturday: return Saturday;
+                    default: return Sunday;
+                }
+            }
+        }
+
+        public TimetableCell this[int day] {
+            get {
+                switch ((DayOfWeek)day) {
+                    case DayOfWeek.Monday: return Monday;
+                    case DayOfWeek.Tuesday: return Tuesday;
+                    case DayOfWeek.Wednesday: return Wednesday;
+                    case DayOfWeek.Thursday: return Thursday;
+                    case DayOfWeek.Friday: return Friday;
+                    case DayOfWeek.Saturday: return Saturday;
+                    default: return Sunday;
+                }
+            }
+        }
+
         /// <summary>
         /// 时段
         /// </summary>
-        public string TimeSlot  {
+        public string TimeSlot {
             get => timeSlot;
             set => SetProperty(ref timeSlot, value);
         }
@@ -33,7 +61,7 @@ namespace XStudio.School.Timetable.Models
         /// <summary>
         /// 节次
         /// </summary>
-        public int Period { 
+        public int Period {
             get => period;
             set => SetProperty(ref period, value);
         }
@@ -45,7 +73,7 @@ namespace XStudio.School.Timetable.Models
         /// <summary>
         /// 单元格集合
         /// </summary>
-        public ObservableCollection<TimetableCell> Cells { 
+        public ObservableCollection<TimetableCell> Cells {
             get => cells;
             set => SetProperty(ref cells, value);
         }
@@ -64,13 +92,13 @@ namespace XStudio.School.Timetable.Models
         }
 
         public TimetableCell Wednesday {
-            get=>webnesday;
-            set=>SetProperty(ref webnesday, value);
+            get => webnesday;
+            set => SetProperty(ref webnesday, value);
         }
 
-        public TimetableCell Thursday { 
-            get=>thursday;
-            set=>SetProperty(ref thursday, value);
+        public TimetableCell Thursday {
+            get => thursday;
+            set => SetProperty(ref thursday, value);
         }
 
         public TimetableCell Friday {
@@ -100,12 +128,12 @@ namespace XStudio.School.Timetable.Models
         private int rowSpan = 1;
         private int colSpan = 1;
 
-        public TimetableRow Row { 
+        public TimetableRow Row {
             get => row;
             set => SetProperty(ref row, value);
         }
-        
-        public int Column { 
+
+        public int Column {
             get => column;
             set => SetProperty(ref column, value);
         }
@@ -113,12 +141,12 @@ namespace XStudio.School.Timetable.Models
             get => day;
             set => SetProperty(ref day, value);
         }
-        public string Content { 
+        public string Content {
             get => content;
             set => SetProperty(ref content, value);
         }
-        public Brush Foreground { 
-            get =>foreground; 
+        public Brush Foreground {
+            get => foreground;
             set => SetProperty(ref foreground, value);
         }
         public Brush Background {
@@ -126,10 +154,10 @@ namespace XStudio.School.Timetable.Models
             set => SetProperty(ref background, value);
         }
         public bool IsMerged {
-            get =>merged;
+            get => merged;
             set => SetProperty(ref merged, value);
         }
-        public int RowSpan { 
+        public int RowSpan {
             get => rowSpan;
             set => SetProperty(ref rowSpan, value);
         }

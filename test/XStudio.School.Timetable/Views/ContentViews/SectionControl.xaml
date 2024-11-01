@@ -9,6 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:viewmodels="clr-namespace:XStudio.School.Timetable.ViewModels"
+    xmlns:views="clr-namespace:XStudio.School.Timetable.Views"
     d:DesignHeight="600"
     d:DesignWidth="900"
     prism:ViewModelLocator.AutoWireViewModel="True"
@@ -192,7 +193,7 @@
                 Content="生 成"
                 Style="{StaticResource MahApps.Styles.Button}" />
         </ToolBar>
-        <DataGrid
+        <views:MergableDataGrid
             x:Name="CourseDataGrid"
             HorizontalContentAlignment="Center"
             VerticalContentAlignment="Center"
@@ -262,9 +263,34 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Text="{Binding PeriodName}"
+                                TextAlignment="Center"
+                                TextWrapping="Wrap" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn
+                    Width="*"
+                    CellStyle="{StaticResource theSundayCellStyle}"
+                    Header="周日">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
-                                Text="{Binding PeriodName}"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                AllowDrop="True"
+                                Background="{Binding Sunday.Background}"
+                                BorderThickness="0"
+                                Cursor="Hand"
+                                Foreground="{Binding Sunday.Foreground}"
+                                IsReadOnly="True"
+                                PreviewMouseLeftButtonDown="TextBlock_PreviewMouseLeftButtonDown"
+                                Tag="{Binding Sunday, Mode=TwoWay}"
+                                Text="{Binding Sunday.Content, Mode=TwoWay}"
                                 TextAlignment="Center"
                                 TextWrapping="Wrap" />
                         </DataTemplate>
@@ -421,32 +447,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn
-                    Width="*"
-                    CellStyle="{StaticResource theSundayCellStyle}"
-                    Header="周日">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBox
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch"
-                                HorizontalContentAlignment="Center"
-                                VerticalContentAlignment="Center"
-                                AllowDrop="True"
-                                Background="{Binding Sunday.Background}"
-                                BorderThickness="0"
-                                Cursor="Hand"
-                                Foreground="{Binding Sunday.Foreground}"
-                                IsReadOnly="True"
-                                PreviewMouseLeftButtonDown="TextBlock_PreviewMouseLeftButtonDown"
-                                Tag="{Binding Sunday, Mode=TwoWay}"
-                                Text="{Binding Sunday.Content, Mode=TwoWay}"
-                                TextAlignment="Center"
-                                TextWrapping="Wrap" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
             </DataGrid.Columns>
-        </DataGrid>
+        </views:MergableDataGrid>
     </DockPanel>
 </UserControl>
