@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,18 +11,18 @@ namespace XStudio.Schools.Places {
     /// <summary>
     /// 房间用途表
     /// </summary>
-    [DbDescription("房间用途")]
+    [Description("房间用途")]
     public class RoomUsage : AuditedAggregateRoot<Guid> {
         /// <summary>
         /// 用途序号
         /// </summary>
-        [DbDescription("序号")]
+        [Description("序号")]
         public int Order { get; set; } = 0;
 
         /// <summary>
         /// 用途编号
         /// </summary>
-        [DbDescription("编码")]
+        [Description("编码")]
         public string Code { get; set; } = string.Empty;
 
         /// <summary>
@@ -40,13 +41,13 @@ namespace XStudio.Schools.Places {
         /// 化学实验室
         /// 演播室
         /// </example>
-        [DbDescription("名称")]
+        [Description("名称")]
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// "数据有效标识：A 正常 | E 异常 | S 停用 | D 删除
         /// </summary>
-        [DbDescription("数据有效标识")]
+        [Description("数据有效标识")]
         public ValidStateType ValidState { get; set; } = ValidStateType.A;
     }
 }

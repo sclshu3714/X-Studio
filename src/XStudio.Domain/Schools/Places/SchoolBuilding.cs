@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ using XStudio.Common;
 
 namespace XStudio.Schools.Places
 {
-    [DbDescription("楼栋")]
+    [Description("楼栋")]
     public class SchoolBuilding : AuditedAggregateRoot<Guid>
     {
 
@@ -26,19 +27,19 @@ namespace XStudio.Schools.Places
         /// <summary>
         /// 序号
         /// </summary>
-        [DbDescription("序号")]
+        [Description("序号")]
         public long Order { get; set; } = 0;
 
         /// <summary>
         /// 学校编号
         /// </summary>
-        [DbDescription("编码")]
+        [Description("编码")]
         public string Code { get; set; } = string.Empty;
 
         /// <summary>
         /// 学校名称
         /// </summary>
-        [DbDescription("名称")]
+        [Description("名称")]
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
@@ -60,7 +61,7 @@ namespace XStudio.Schools.Places
         /// "数据有效标识：A 正常 | E 异常 | S 停用 | D 删除
         /// </summary>
 
-        [DbDescription("数据有效标识")]
+        [Description("数据有效标识")]
         public ValidStateType ValidState { get; set; } = ValidStateType.A;
     }
 }

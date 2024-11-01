@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -10,14 +11,14 @@ using XStudio.Common;
 
 namespace XStudio.Projects
 {
-    [DbDescription("项目表")]
+    [Description("项目表")]
     public class Project : AuditedAggregateRoot<Guid>
     {
         public Project() { }
         /// <summary>
         /// 课件名称
         /// </summary>
-        [DbDescription("项目名称")]
+        [Description("项目名称")]
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
@@ -44,7 +45,7 @@ namespace XStudio.Projects
         /// "数据有效标识：A 正常 | E 异常 | S 停用 | D 删除
         /// </summary>
 
-        [DbDescription("数据有效标识")]
+        [Description("数据有效标识")]
         public ValidStateType ValidState { get; set; } = ValidStateType.A;
     }
 }

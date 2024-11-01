@@ -23,6 +23,7 @@ using XStudio.Schools.Places;
 using System.Drawing;
 using System.Reflection.Emit;
 using XStudio.Schools.Timetable;
+using System.ComponentModel;
 
 namespace XStudio.EntityFrameworkCore;
 
@@ -313,12 +314,13 @@ public class XStudioDbContext :
         foreach (var property in properties)
         {
             // 获取属性上的CommentAttribute
-            var commentAttribute = property.GetCustomAttributes(typeof(DbDescriptionAttribute), false)
-                                            .FirstOrDefault() as DbDescriptionAttribute;
+            var commentAttribute = property.GetCustomAttributes(typeof(DescriptionAttribute), false)
+                                            .FirstOrDefault() as DescriptionAttribute;
             if (commentAttribute != null)
             {
                 // 为每个属性添加注释
-                builder.Property(property.Name).HasComment(commentAttribute.DbDescription);
+                builder.Property(property.Name)
+                       .HasComment(commentAttribute.Description);
             }
         }
     }

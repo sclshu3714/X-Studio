@@ -28,14 +28,68 @@
                 Margin="16,16,16,16"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
                 <Border
                     Name="BorderEffect"
                     Grid.RowSpan="2"
                     Background="{DynamicResource RegionBrush}"
                     CornerRadius="10"
                     Effect="{StaticResource EffectShadow4}" />
+                <Border
+                    Name="BorderTitle"
+                    Grid.Row="0"
+                    Height="32"
+                    Background="{DynamicResource TitleBrush}"
+                    CornerRadius="10,10,0,0"
+                    Style="{StaticResource BorderClip}">
+                    <hc:SimplePanel>
+                        <hc:Watermark
+                            FontSize="20"
+                            FontWeight="Bold"
+                            Mark="{Binding ContentTitle}"
+                            MarkBrush="#0FD9104B"
+                            MarkMargin="3,0" />
+                        <TextBlock
+                            Foreground="White"
+                            Style="{StaticResource TextBlockDefault}"
+                            Text="{Binding ContentTitle}" />
+                        <ToggleButton
+                            Margin="0,0,6,0"
+                            Padding="5"
+                            HorizontalAlignment="Right"
+                            hc:IconElement.Geometry="{StaticResource CodeGeometry}"
+                            Foreground="{DynamicResource TextIconBrush}"
+                            IsChecked="{Binding IsCodeOpened}"
+                            Style="{StaticResource ToggleButtonIconTransparent}" />
+                        <Button
+                            Width="30"
+                            Height="26"
+                            Margin="6,0,0,0"
+                            Padding="5"
+                            HorizontalAlignment="Left"
+                            hc:IconElement.Geometry="{StaticResource DocumentGeometry}"
+                            Command="{Binding OpenDocCmd}"
+                            Foreground="{DynamicResource TextIconBrush}"
+                            Style="{StaticResource ButtonIcon}" />
+                        <hc:Drawer
+                            Name="DrawerCode"
+                            IsOpen="{Binding IsCodeOpened}"
+                            Opened="DrawerCode_OnOpened">
+                            <Border
+                                Name="BorderCode"
+                                Width="800"
+                                Margin="16,16,0,16"
+                                Background="{DynamicResource RegionBrush}"
+                                CornerRadius="10,0,0,10"
+                                Style="{StaticResource BorderClip}" />
+                        </hc:Drawer>
+                    </hc:SimplePanel>
+                </Border>
                 <hc:TabControl
-                    Grid.Row="2"
+                    Grid.Row="1"
                     Margin="3,3,3,3"
                     Background="Transparent"
                     BorderBrush="Transparent"
@@ -45,7 +99,8 @@
                     ItemsSource="{Binding DisplayAreaInfoCollection}"
                     OverflowMenuDisplayMemberPath="Header"
                     SelectedIndex="{Binding DisplayAreaSelectedIndex}"
-                    ShowCloseButton="False">
+                    ShowCloseButton="False"
+                    TabStripPlacement="Bottom">
                     <TabControl.ItemTemplate>
                         <DataTemplate>
                             <TextBlock

@@ -21,16 +21,6 @@ namespace XStudio.Schools.Timetable {
         /// 学校名称
         /// </summary>
         public string Name { get; set; } = string.Empty;
-
-        ///// <summary>
-        ///// 学段
-        ///// </summary>
-        //public string Period { get; set; } = string.Empty;
-
-        ///// <summary>
-        ///// 年级Learning period
-        ///// </summary>
-        //public string Grade { get; set; } = string.Empty;
     }
 
     public class UpdateTimePeriodDto : AuditedEntityDto<Guid> {
@@ -59,5 +49,9 @@ namespace XStudio.Schools.Timetable {
         /// 学校名称
         /// </summary>
         public string Name { get; set; } = string.Empty;
+        /// <summary>
+        /// 学段(幼儿园、学前班、小学、初中、高中、大学、研究生、博士生、其他)
+        /// </summary>
+        public EducationLevel Period { get; set; } = EducationLevel.Other;
     }
 }

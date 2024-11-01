@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -17,42 +18,30 @@ using XStudio.Common;
  */
 
 namespace XStudio.Schools.Timetable {
-    [DbDescription("时段")]
+    [Description("时段")]
     public class TimePeriod : AuditedAggregateRoot<Guid> {
         /// <summary>
         /// 序号
         /// </summary>
-        [DbDescription("序号")]
+        [Description("序号")]
         public int Order { get; set; } = 0;
 
         /// <summary>
         /// 学校编号
         /// </summary>
-        [DbDescription("编码")]
+        [Description("编码")]
         public string Code { get; set; } = string.Empty;
 
         /// <summary>
         /// 学校名称
         /// </summary>
-        [DbDescription("名称")]
+        [Description("名称")]
         public string Name { get; set; } = string.Empty;
-
-        ///// <summary>
-        ///// 学段
-        ///// </summary>
-        //[DbDescription("学段")]
-        //public string Period { get; set; } = string.Empty;
-
-        ///// <summary>
-        ///// 年级Learning period
-        ///// </summary>
-        //[DbDescription("年级")]
-        //public string Grade { get; set; } = string.Empty;
 
         /// <summary>
         /// "数据有效标识：A 正常 | E 异常 | S 停用 | D 删除
         /// </summary>
-        [DbDescription("数据有效标识")]
+        [Description("数据有效标识")]
         public ValidStateType ValidState { get; set; } = ValidStateType.A;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace XStudio.Schools.Timetable
         /// <summary>
         /// 需要,主要用于排序
         /// </summary>
-        [DbDescription("序号")]
+        [Description("序号")]
         public int Order { get; set; } = 0;
 
         /// <summary>
@@ -26,7 +27,7 @@ namespace XStudio.Schools.Timetable
         /// <example>
         /// Section1
         /// </example>
-        [DbDescription("编码")]
+        [Description("编码")]
         public string Code { get; set; } = string.Empty;
 
         /// <summary>
@@ -35,20 +36,20 @@ namespace XStudio.Schools.Timetable
         /// <example>
         /// 第一节
         /// </example>
-        [DbDescription("名称")]
+        [Description("名称")]
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// 是否是授课|非授课,默认为true,当设置为false时指非授课
         /// </summary>
-        [DbDescription("是否是授课")]
+        [Description("是否是授课")]
         public bool IsTeaching { get; set; } = true;
 
         /// <summary>
         /// 是否是自习|非授课,默认为false,当设置为true时是自习
         /// 当IsTeaching = true时及授课时才验证是否是自习
         /// </summary>
-        [DbDescription("是否是自习")]
+        [Description("是否是自习")]
         [SelfStudyIfTeaching]
         public bool IsSelfStudy { get; set; } = false;
 
@@ -56,39 +57,39 @@ namespace XStudio.Schools.Timetable
         /// 是否是通栏,默认为false,当设置为true时,该节次将贯穿所有选择的天
         /// 当IsTeaching = false时及非授课时才验证通栏
         /// </summary>
-        [DbDescription("是否是通栏")]
+        [Description("是否是通栏")]
         [BannerIfTeaching]
         public bool IsBanner {  get; set; } = false;
 
         /// <summary>
         /// 节次开始时间
         /// </summary>
-        [DbDescription("节次开始时间")]
+        [Description("节次开始时间")]
         public TimeSpan? StartTime { get; set; }
 
         /// <summary>
         /// 节次结束时间
         /// </summary>
-        [DbDescription("节次结束时间")]
+        [Description("节次结束时间")]
         public TimeSpan? EndTime { get; set; }
 
         /// <summary>
         /// "数据有效标识：A 正常 | E 异常 | S 停用 | D 删除
         /// </summary>
 
-        [DbDescription("数据有效标识")]
+        [Description("数据有效标识")]
         public ValidStateType ValidState { get; set; } = ValidStateType.A;
 
         /// <summary>
         /// 时段编码
         /// </summary>
-        [DbDescription("时段编码")]
+        [Description("时段编码")]
         public string PeriodCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 节次编码
         /// </summary>
-        [DbDescription("节次编码")]
+        [Description("节次编码")]
         public string ScheduleCode { get; set; } = string.Empty;
 
         /// <summary>

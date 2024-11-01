@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ using XStudio.Common;
 
 namespace XStudio.Schools.Places
 {
-    [DbDescription("学校")]
+    [Description("学校")]
     public class School : AuditedAggregateRoot<Guid>
     {
         public School() { }
@@ -16,37 +17,37 @@ namespace XStudio.Schools.Places
         /// <summary>
         /// 学校编号
         /// </summary>
-        [DbDescription("编码")]
+        [Description("编码")]
         public string Code { get; set; } = string.Empty;
 
         /// <summary>
         /// 学校名称
         /// </summary>
-        [DbDescription("名称")]
+        [Description("名称")]
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// 促销口号，宣传语
         /// </summary>
-        [DbDescription("宣传语")]
+        [Description("宣传语")]
         public string PromotionSlogan { get; set; } = string.Empty;
 
         /// <summary>
         /// 学校简介
         /// </summary>
-        [DbDescription("简介")]
+        [Description("简介")]
         public string Description { get; set; } = string.Empty;
 
         /// <summary>
         /// 校徽
         /// </summary>
-        [DbDescription("校徽")]
+        [Description("校徽")]
         public string Badge { get; set; } = string.Empty;
 
         /// <summary>
         /// 校址
         /// </summary>
-        [DbDescription("校址")]
+        [Description("校址")]
         public string Address { get; set; } = string.Empty;
 
         /// <summary>
@@ -58,7 +59,7 @@ namespace XStudio.Schools.Places
         /// "数据有效标识：A 正常 | E 异常 | S 停用 | D 删除
         /// </summary>
 
-        [DbDescription("数据有效标识")]
+        [Description("数据有效标识")]
         public ValidStateType ValidState { get; set; } = ValidStateType.A;
     }
 }

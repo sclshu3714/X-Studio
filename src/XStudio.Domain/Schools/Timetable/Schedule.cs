@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -9,44 +10,68 @@ using XStudio.Common;
 
 namespace XStudio.Schools.Timetable
 {
-    [DbDescription("节次方案表")]
+    [Description("节次方案表")]
     public class Schedule : AuditedAggregateRoot<Guid>
     {
-        [DbDescription("序号")]
+        [Description("序号")]
         //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Order { get; set; } = 0;
         /// <summary>
         /// 节次表编号，主要用于快速识别和查询
         /// </summary>
-        [DbDescription("编号")]
+        [Description("编号")]
         public string Code { get; set; } = string.Empty;
 
         /// <summary>
         /// 节次表名称
         /// </summary>
-        [DbDescription("节次方案名称")]
+        [Description("节次方案名称")]
         public string Name { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 学段(幼儿园、学前班、小学、初中、高中、大学、研究生、博士生、其他)
+        /// </summary>
+        [Description("学段")]
+        public EducationLevel Period { get; set; } = EducationLevel.Other;
+
+        /// <summary>
+        /// 年级 - 幼儿园（大班、小班）；小学（一年级、二年级、三年级、四年级,五年级）；初中（六年级、七年级、八年级、九年级）；高中（高一、高二、高三）；大学（大一、大二、大三、大四）；研究生（硕士研究生、博士研究生）；博士生（博士一、博士二、博士三）；其他
+        /// </summary>
+        [Description("年级")]
+        public string Grade { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 学年(2024-2025)
+        /// </summary>
+        [Description("学年")]
+        public string SchoolYear { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 学期(上学期/下学期、第一学期/第二学期)
+        /// </summary>
+        [Description("学期")]
+        public string Semester { get; set; } = string.Empty;
+
 
         /// <summary>
         /// 默认周一 - 周日,当然也可以控制周日 - 周六,周六 - 周五等
         /// </summary>
-        [DbDescription("布局节次表")]
-        public List<DayOfWeek> LayoutOfWeek { get; set; } = new List<DayOfWeek>() { 
+        [Description("布局节次表")]
+        public List<DayOfWeek> LayoutOfWeek { get; set; } = new List<DayOfWeek>() {
              DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday,
              DayOfWeek.Friday, DayOfWeek.Saturday,DayOfWeek.Sunday
         };
 
         /// <summary>
-        /// "数据有效标识：A 正常 | E 异常 | S 停用 | D 删除
-        /// </summary>
-
-        [DbDescription("数据有效标识")]
-        public ValidStateType ValidState { get; set; } = ValidStateType.A;
-
-
-        /// <summary>
         /// 包含的节信息
         /// </summary>
         public virtual ICollection<Section> Sections { get; set; } = new List<Section>();
+
+        /// <summary>
+        /// "数据有效标识：A 正常 | E 异常 | S 停用 | D 删除
+        /// </summary>
+
+        [Description("数据有效标识")]
+        public ValidStateType ValidState { get; set; } = ValidStateType.A;
     }
 }
