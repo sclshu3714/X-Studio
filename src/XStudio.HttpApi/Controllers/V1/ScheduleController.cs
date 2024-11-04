@@ -25,82 +25,42 @@ namespace XStudio.Controllers.V1 {
 
         [HttpPost("add")]
         public async Task<ActionResult<ScheduleDto>> CreateAsync(CreateScheduleDto input) {
-            AbpUnitOfWorkOptions options = new AbpUnitOfWorkOptions();
-            using (var uow = UnitOfWorkManager.Begin(options)) {
-                try {
-                    ScheduleDto scheduleDto = await _ScheduleService.CreateAsync(input);
-                    return new OkObjectResult(scheduleDto);
-                }
-                catch (Exception ex) {
-                    uow.Dispose();// // 这里不需要显式回滚，因为ABP会在捕获到异常时自动回滚  // Rollback the transaction if an exception occurs
-                    Log.Error(ex, ex.Message);
-                    return new BadRequestObjectResult(new { Message = "添加失败", Details = ex.Message });
-                }
-            }
+            ScheduleDto scheduleDto = await _ScheduleService.CreateAsync(input);
+            return new OkObjectResult(scheduleDto);
         }
 
         [HttpPost("adds")]
-        public async Task<List<ScheduleDto>> InsertManyAsync(List<CreateScheduleDto> inputs) {
-            AbpUnitOfWorkOptions options = new AbpUnitOfWorkOptions();
-            //using (var uow = UnitOfWorkManager.Begin(options)) {
-            //    try {
-            //        List<PagedResultDto<ScheduleDto>> entities = await _ScheduleService.GetListAsync();
-            //        await _ScheduleService.DeleteManyAsync(entities);
-            //        entities = ObjectMapper.Map<List<CreateScheduleDto>, List<TimePeriod>>(inputs);
-            //        await _ScheduleService(entities, autoSave: true);
-            //        return ObjectMapper.Map<List<TimePeriod>, List<ScheduleDto>>(entities);
-            //    }
-            //    catch (Exception ex) {
-            //        //await uow.RollbackAsync();//手动回滚
-            //        uow.Dispose();// // 这里不需要显式回滚，因为ABP会在捕获到异常时自动回滚  // Rollback the transaction if an exception occurs
-            //        throw new DbUpdateException("插入失败，已经回滚", ex);
-            //    }
-            //}
-            return null;
+        public async Task<ActionResult<List<ScheduleDto>>> InsertManyAsync(List<CreateScheduleDto> inputs) {
+            List<ScheduleDto> schedules = await _ScheduleService.InsertManyAsync(inputs);
+            return new OkObjectResult(schedules);
         }
 
-        //[HttpDelete("delete/{id}")]
-        //public override Task DeleteAsync(Guid id) {
-        //    return base.DeleteAsync(id);
-        //}
+        [HttpDelete("delete/{id}")]
+        public async Task DeleteAsync(Guid id) {
+            await _ScheduleService.DeleteAsync(id);
+        }
 
-        //[HttpDelete("deletes")]
-        //public async Task DeleteManyAsync(List<Guid> ids) {
-        //    List<TimePeriod> schools = await (await Repository.GetQueryableAsync())
-        //                                 .Where(x => ids.Contains(x.Id))
-        //                                 .ToListAsync();
-        //    schools.ForEach(s => { s.ValidState = Common.ValidStateType.D; });
-        //    await Repository.DeleteManyAsync(schools);
-        //}
+        [HttpDelete("deletes")]
+        public async Task DeleteManyAsync(List<Guid> ids) {
+            await _ScheduleService.DeleteManyAsync(ids);
+        }
 
-        //[HttpGet("{id}")]
-        //public override async Task<TimePeriodDto> GetAsync(Guid id) {
-        //    return await base.GetAsync(id);
-        //}
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ScheduleDto>> GetAsync(Guid id) {
+            ScheduleDto scheduleDto = await _ScheduleService.GetAsync(id);
+            return new OkObjectResult(scheduleDto);
+        }
 
-        //[HttpPost("list")]
-        //public override async Task<PagedResultDto<TimePeriodDto>> GetListAsync(PagedAndSortedResultRequestDto input) {
-        //    return await base.GetListAsync(input);
-        //}
+        [HttpPost("list")]
+        public async Task<ActionResult<PagedResultDto<ScheduleDto>>> GetListAsync(PagedAndSortedResultRequestDto input) {
+            PagedResultDto<ScheduleDto> scheduleDto = await _ScheduleService.GetListAsync(input);
+            return new OkObjectResult(scheduleDto);
+        }
 
-        //[HttpPut("update")]
-        //public override async Task<TimePeriodDto> UpdateAsync(Guid id, UpdateTimePeriodDto input) {
-        //    //return await base.UpdateAsync(id, input);
-        //    AbpUnitOfWorkOptions options = new AbpUnitOfWorkOptions();
-        //    using (var uow = UnitOfWorkManager.Begin(options)) {
-        //        try {
-        //            var timePeriod = await Repository.GetAsync(id);
-        //            ObjectMapper.Map(input, timePeriod); // Update project with input data
-        //            await Repository.UpdateAsync(timePeriod);
-        //            await uow.CompleteAsync(); // Commit the transaction if everything is successful
-        //            return ObjectMapper.Map<TimePeriod, TimePeriodDto>(timePeriod);
-        //        }
-        //        catch (Exception ex) {
-        //            //await uow.RollbackAsync();//手动回滚
-        //            uow.Dispose();// // 这里不需要显式回滚，因为ABP会在捕获到异常时自动回滚  // Rollback the transaction if an exception occurs
-        //            throw new DbUpdateException("更新失败，已经回滚", ex);
-        //        }
-        //    }
-        //}
+        [HttpPut("update")]
+        public async Task<ActionResult<ScheduleDto>> UpdateAsync(Guid id, UpdateScheduleDto input) {
+            ScheduleDto scheduleDto = await _ScheduleService.UpdateAsync(id, input);
+            return new OkObjectResult(scheduleDto);
+        }
     }
 }

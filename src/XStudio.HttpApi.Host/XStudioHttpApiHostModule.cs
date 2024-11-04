@@ -82,6 +82,7 @@ using Polly;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Volo.Abp.BackgroundWorkers;
 using Volo.Abp.EventBus.Distributed;
+using XStudio.Models;
 
 namespace XStudio;
 
@@ -270,6 +271,8 @@ public class XStudioHttpApiHostModule : AbpModule {
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration) {
+        context.Services.TryAddSingleton<HttpApiHelper>();
+
         EncrypterHelper.EncryptionKey = configuration.GetSection("StringEncryption:DefaultPassPhrase").Value ?? "xstudio_encryptionkey";
         // 禁用自动验证
         Configure<AbpAntiForgeryOptions>(options => {

@@ -12,5 +12,20 @@
             <returns>项目信息</returns>
             <exception cref="T:Volo.Abp.Domain.Entities.EntityNotFoundException">没有查询到项目信息</exception>
         </member>
+        <member name="M:XStudio.Timetable.ScheduleService.InsertManyAsync(System.Collections.Generic.List{XStudio.Schools.Timetable.CreateScheduleDto})">
+            <summary>
+            批量插入
+            </summary>
+            <param name="inputs"></param>
+            <returns></returns>
+            <exception cref="T:Microsoft.EntityFrameworkCore.DbUpdateException"></exception>
+        </member>
+        <member name="M:XStudio.Timetable.ScheduleService.DeleteManyAsync(System.Collections.Generic.List{System.Guid})">
+            <summary>
+            批量删除
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
     </members>
 </doc>
