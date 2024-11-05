@@ -20,5 +20,9 @@ namespace XStudio.Users
 
         [JsonProperty("rememberMe", NullValueHandling = NullValueHandling.Ignore)]
         public bool? RememberMe { get; set; }
+
+        public string ClientId { get; set; } = "XStudio";
+
+        public string Scope { get; set; } = "XStudio";
     }
 }

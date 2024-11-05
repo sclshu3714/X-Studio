@@ -172,7 +172,7 @@ public class XStudioHttpApiHostModule : AbpModule {
         ConfigureRedis(context, configuration);
         ConfigureAuthentication(context, configuration);
         ConfigureBundles();
-        ConfigureUrls(configuration);
+        ConfigureUrls(context, configuration);
         ConfigureConventionalControllers();
         ConfigureVirtualFileSystem(context);
         ConfigureCors(context, configuration);
@@ -271,8 +271,6 @@ public class XStudioHttpApiHostModule : AbpModule {
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration) {
-        context.Services.TryAddSingleton<HttpApiHelper>();
-
         EncrypterHelper.EncryptionKey = configuration.GetSection("StringEncryption:DefaultPassPhrase").Value ?? "xstudio_encryptionkey";
         // 禁用自动验证
         Configure<AbpAntiForgeryOptions>(options => {
@@ -363,7 +361,9 @@ public class XStudioHttpApiHostModule : AbpModule {
         });
     }
 
-    private void ConfigureUrls(IConfiguration configuration) {
+    private void ConfigureUrls(ServiceConfigurationContext context,IConfiguration configuration) {
+        context.Services.TryAddSingleton<HttpApiHelper>();
+        context.Services.AddHttpContextAccessor();
         Configure<AppUrlOptions>(options => {
             options.Applications["MVC"].RootUrl = configuration["App:SelfUrl"];
             options.RedirectAllowedUrls.AddRange(configuration["App:RedirectAllowedUrls"]?.Split(',') ?? Array.Empty<string>());

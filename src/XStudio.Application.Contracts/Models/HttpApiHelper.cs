@@ -17,20 +17,19 @@ using XStudio.Models.Requests;
 namespace XStudio.Models {
     public class HttpApiHelper {
         private static readonly HttpClient httpClient = new HttpClient();
-
         public bool IsAuthorization { get; private set; } = false;
 
-        public HttpApiHelper(string? baseAddress) {
-            if (baseAddress == null) {
-                throw new ArgumentException("Base address cannot be null.");
-            }
-            if (string.IsNullOrEmpty(baseAddress)) {
-                baseAddress = "http://localhost:5000";
-            }
-            httpClient.BaseAddress = new Uri(baseAddress);
+        public HttpApiHelper() {
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             httpClient.Timeout = new TimeSpan(0, 0, 30);
+        }
+
+        public void SetBaseAddress(string baseAddress) {
+            if (baseAddress == null) {
+                throw new ArgumentException("Base address cannot be null.");
+            }
+            httpClient.BaseAddress = new Uri(baseAddress);
         }
 
         public void SetAuthorizationHeader(string? accessToken) {
