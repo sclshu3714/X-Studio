@@ -90,7 +90,6 @@ namespace XStudio.Users
                 Password = loginDto.Password,
                 GrantType = "password",
             };
-
             _httpApiHelper.SetBaseAddress(requestUrl); // 设置请求地址
             TokenRes? tokenRes = await _httpApiHelper.TokenAsync("connect/token", request);
             if (tokenRes == null) { 

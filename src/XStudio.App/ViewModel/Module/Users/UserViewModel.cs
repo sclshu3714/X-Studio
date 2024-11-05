@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp.Data;
 using XStudio.App.ViewModel.Module.Users;
 using XStudio.Users;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
@@ -22,8 +23,11 @@ namespace XStudio.App.ViewModel.Users {
         private bool _emailConfirmed = false;
         private bool _isActive = false;
         private TokenViewModel _tokenViewModel = new TokenViewModel();
+        private ExtraPropertyDictionary _extraProperties;
 
-        public UserViewModel() { }
+        public UserViewModel() {
+            _extraProperties = new ExtraPropertyDictionary();
+        }
 
         public void SetUser(UserViewModel user) {
             TenantId = user.TenantId;
@@ -227,6 +231,12 @@ namespace XStudio.App.ViewModel.Users {
         public TokenViewModel TokenResponse {
             get => _tokenViewModel;
             internal set => SetProperty(ref _tokenViewModel, value);
+        }
+
+
+        public ExtraPropertyDictionary ExtraProperties { 
+            get => _extraProperties;
+            set=> SetProperty(ref _extraProperties, value);
         }
     }
 }

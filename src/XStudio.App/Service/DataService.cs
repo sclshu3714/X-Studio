@@ -67,9 +67,22 @@ public class DataService : ITransientDependency
             GrantType = "password",
         };
         UserViewModel? user = await apiHelper.LoginAsync<UserViewModel>("api/xstudio/v1/login", input);
-        //var content = new StringContent(JsonConvert.SerializeObject(ids), Encoding.UTF8, "application/x-www-form-urlencoded");
-        TokenResponse? tokenResponse = await apiHelper.TokenAsync("connect/token", request);
-        if (user != null && tokenResponse != null) {
+        TokenResponse? tokenResponse = null;
+        if (user != null && user.ExtraProperties.ContainsKey("AccessToken")) {
+            tokenResponse = await apiHelper.TokenAsync("connect/token", request);
+        }
+        else if(user != null &&
+                user.ExtraProperties.ContainsKey("AccessToken") &&
+                user.ExtraProperties.ContainsKey("RefreshToken") && 
+                user.ExtraProperties.ContainsKey("TokenType") && 
+                user.ExtraProperties.ContainsKey("ExpiresIn")) {
+            tokenResponse = new TokenResponse();
+            tokenResponse.AccessToken = user.ExtraProperties["AccessToken"]?.ToString() ?? string.Empty;
+            tokenResponse.RefreshToken = user.ExtraProperties["RefreshToken"]?.ToString() ?? string.Empty;
+            tokenResponse.TokenType = user.ExtraProperties["TokenType"]?.ToString() ?? string.Empty;
+            tokenResponse.ExpiresIn = (long?)user.ExtraProperties["ExpiresIn"] ?? 0;
+        }
+        if (user != null && tokenResponse != null && !string.IsNullOrEmpty(tokenResponse.AccessToken)) {
             user.TokenResponse.SetTokenResponse(tokenResponse);
             apiHelper.SetAuthorizationHeader(tokenResponse.AccessToken);
         }
