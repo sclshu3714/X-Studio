@@ -72,15 +72,15 @@ public class DataService : ITransientDependency
             tokenResponse = await apiHelper.TokenAsync("connect/token", request);
         }
         else if(user != null &&
-                user.ExtraProperties.ContainsKey("AccessToken") &&
-                user.ExtraProperties.ContainsKey("RefreshToken") && 
-                user.ExtraProperties.ContainsKey("TokenType") && 
-                user.ExtraProperties.ContainsKey("ExpiresIn")) {
+                user.ExtraProperties.ContainsKey("accessToken") &&
+                user.ExtraProperties.ContainsKey("refreshToken") && 
+                user.ExtraProperties.ContainsKey("tokenType") && 
+                user.ExtraProperties.ContainsKey("expiresIn")) {
             tokenResponse = new TokenResponse();
-            tokenResponse.AccessToken = user.ExtraProperties["AccessToken"]?.ToString() ?? string.Empty;
-            tokenResponse.RefreshToken = user.ExtraProperties["RefreshToken"]?.ToString() ?? string.Empty;
-            tokenResponse.TokenType = user.ExtraProperties["TokenType"]?.ToString() ?? string.Empty;
-            tokenResponse.ExpiresIn = (long?)user.ExtraProperties["ExpiresIn"] ?? 0;
+            tokenResponse.AccessToken = user.ExtraProperties["accessToken"]?.ToString() ?? string.Empty;
+            tokenResponse.RefreshToken = user.ExtraProperties["refreshToken"]?.ToString() ?? string.Empty;
+            tokenResponse.TokenType = user.ExtraProperties["tokenType"]?.ToString() ?? string.Empty;
+            tokenResponse.ExpiresIn = (long?)user.ExtraProperties["expiresIn"] ?? 0;
         }
         if (user != null && tokenResponse != null && !string.IsNullOrEmpty(tokenResponse.AccessToken)) {
             user.TokenResponse.SetTokenResponse(tokenResponse);

@@ -93,5 +93,41 @@
             <param name="configuration"></param>
             <exception cref="T:System.NotImplementedException"></exception>
         </member>
+        <member name="M:XStudio.XStudioHttpApiHostModule.PreConfigureRouting(Volo.Abp.Modularity.ServiceConfigurationContext)">
+            <summary>
+            配置路由
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:XStudio.XStudioHttpApiHostModule.PreConfigureNewtonsoftJson(Volo.Abp.Modularity.ServiceConfigurationContext)">
+            <summary>
+            配置Newtonsoft格式化
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:XStudio.XStudioHttpApiHostModule.ConfigureAbpApiVersioning(Volo.Abp.Modularity.ServiceConfigurationContext)">
+            <summary>
+            配置ApiVersioning
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:XStudio.XStudioHttpApiHostModule.ConfigureBundles">
+            <summary>
+            配置Bundles
+            </summary>
+        </member>
+        <member name="M:XStudio.XStudioHttpApiHostModule.ConfigureUrls(Volo.Abp.Modularity.ServiceConfigurationContext,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            配置Url
+            </summary>
+            <param name="context"></param>
+            <param name="configuration"></param>
+        </member>
+        <member name="M:XStudio.XStudioHttpApiHostModule.ConfigureVirtualFileSystem(Volo.Abp.Modularity.ServiceConfigurationContext)">
+            <summary>
+            配置虚拟文件系统
+            </summary>
+            <param name="context"></param>
+        </member>
     </members>
 </doc>

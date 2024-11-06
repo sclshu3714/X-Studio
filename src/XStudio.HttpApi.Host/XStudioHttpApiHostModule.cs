@@ -105,9 +105,12 @@ namespace XStudio;
 )]
 public class XStudioHttpApiHostModule : AbpModule {
     public override void PreConfigureServices(ServiceConfigurationContext context) {
-
+        var configuration = context.Services.GetConfiguration();
+        PreConfigureRouting(context);
+        PreConfigureNewtonsoftJson(context);
         PreConfigureEnvironment(context);
         PreConfigureCertificate(context);
+        PreConfigureNacos(context, configuration);
     }
 
     private void PreConfigureCertificate(ServiceConfigurationContext context) {
@@ -166,8 +169,7 @@ public class XStudioHttpApiHostModule : AbpModule {
         var configuration = context.Services.GetConfiguration();
         var hostingEnvironment = context.Services.GetHostingEnvironment();
 
-        ConfigureNewtonsoftJson(context);
-        ConfigureNacos(context, configuration);
+        
         ConfigureKafka(context, configuration);
         ConfigureRedis(context, configuration);
         ConfigureAuthentication(context, configuration);
@@ -183,7 +185,7 @@ public class XStudioHttpApiHostModule : AbpModule {
     }
 
     #region 配置设置
-    private void ConfigureNacos(ServiceConfigurationContext context, IConfiguration configuration) {
+    private void PreConfigureNacos(ServiceConfigurationContext context, IConfiguration configuration) {
         context.Services.AddNacosAspNet(configuration, "Nacos");
         context.Services.AddNacosV2Config(configuration);
         //制作全局参数变量,方便使用,也可以直接使用IConfiguration,无需使用GlobalConfig.Default.NacosConfig
@@ -204,6 +206,9 @@ public class XStudioHttpApiHostModule : AbpModule {
         });
     }
     private void ConfigureKafka(ServiceConfigurationContext context, IConfiguration configuration) {
+        if (configuration["Kafka"] == null || configuration["Kafka.IsEnabled"] == "false") { 
+            return;
+        }
         //配置连接
         var kafkaOptions = new AbpKafkaOptions();
         configuration.GetSection("Kafka:Connections").Bind(kafkaOptions.Connections);
@@ -257,9 +262,6 @@ public class XStudioHttpApiHostModule : AbpModule {
                 options.Configuration = configuration["Redis:Configuration"];
                 //options.InstanceName = configuration["Redis:InstanceName"];
             });
-        }
-        else {
-            context.Services.RemoveAll<RedisCacheOptions>();
         }
     }
     private void ConfigureBackgroundJobs(ServiceConfigurationContext context) {
@@ -315,7 +317,21 @@ public class XStudioHttpApiHostModule : AbpModule {
         });
     }
 
-    private void ConfigureNewtonsoftJson(ServiceConfigurationContext context) {
+    /// <summary>
+    /// 配置路由
+    /// </summary>
+    /// <param name="context"></param>
+    private void PreConfigureRouting(ServiceConfigurationContext context) {
+        context.Services.AddRouting(options => {
+            options.ConstraintMap.Add("camelCase", typeof(CamelCaseRouteConstraint));
+        });
+    }
+
+    /// <summary>
+    /// 配置Newtonsoft格式化
+    /// </summary>
+    /// <param name="context"></param>
+    private void PreConfigureNewtonsoftJson(ServiceConfigurationContext context) {
         context.Services.AddControllersWithViews().AddNewtonsoftJson(options => {
             //修改属性名称的序列化方式，首字母小写
             options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
@@ -329,6 +345,10 @@ public class XStudioHttpApiHostModule : AbpModule {
         });
     }
 
+    /// <summary>
+    /// 配置ApiVersioning
+    /// </summary>
+    /// <param name="context"></param>
     private void ConfigureAbpApiVersioning(ServiceConfigurationContext context) {
         context.Services.AddAbpApiVersioning(options => {
             options.ReportApiVersions = true;
@@ -350,6 +370,9 @@ public class XStudioHttpApiHostModule : AbpModule {
         });
     }
 
+    /// <summary>
+    /// 配置Bundles
+    /// </summary>
     private void ConfigureBundles() {
         Configure<AbpBundlingOptions>(options => {
             options.StyleBundles.Configure(
@@ -361,8 +384,13 @@ public class XStudioHttpApiHostModule : AbpModule {
         });
     }
 
+    /// <summary>
+    /// 配置Url
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="configuration"></param>
     private void ConfigureUrls(ServiceConfigurationContext context,IConfiguration configuration) {
-        context.Services.TryAddSingleton<HttpApiHelper>();
+        context.Services.AddTransient<HttpApiHelper>();
         context.Services.AddHttpContextAccessor();
         Configure<AppUrlOptions>(options => {
             options.Applications["MVC"].RootUrl = configuration["App:SelfUrl"];
@@ -373,6 +401,10 @@ public class XStudioHttpApiHostModule : AbpModule {
         });
     }
 
+    /// <summary>
+    /// 配置虚拟文件系统
+    /// </summary>
+    /// <param name="context"></param>
     private void ConfigureVirtualFileSystem(ServiceConfigurationContext context) {
         var hostingEnvironment = context.Services.GetHostingEnvironment();
         if (hostingEnvironment.IsDevelopment()) {
@@ -433,7 +465,7 @@ public class XStudioHttpApiHostModule : AbpModule {
 
     #endregion
 
-    public override async void OnApplicationInitialization(ApplicationInitializationContext context) {
+    public override void OnApplicationInitialization(ApplicationInitializationContext context) {
         var app = context.GetApplicationBuilder();
         var env = context.GetEnvironment();
 
@@ -443,14 +475,6 @@ public class XStudioHttpApiHostModule : AbpModule {
 
         //nacos 监听配置文件
         app.UseNacosConfigListener(context.ServiceProvider.GetRequiredService<IConfiguration>());
-
-        if (GlobalConfig.Default.NacosConfig?.Kafka?.IsEnabled == false) {
-            //context.ServiceProvider.GetRequiredService<KafkaMessageConsumer>()?.Dispose();
-            //context.ServiceProvider.GetRequiredService<IConsumerPool>()?.Dispose();
-            //context.ServiceProvider.GetRequiredService<IProducerPool>()?.Dispose();
-            await context.ServiceProvider.GetRequiredService<OutboxSenderManager>().StopAsync();
-            await context.ServiceProvider.GetRequiredService<InboxProcessManager>().StopAsync();
-        }
 
         app.UseAbpRequestLocalization();
 

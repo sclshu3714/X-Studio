@@ -43,7 +43,7 @@ namespace XStudio.App.Helper {
 
         public async Task<T?> LoginAsync<T>(string endpoint, LoginInfo data) {
             HttpResponseMessage response = await httpClient.PostAsJsonAsync(endpoint, data);
-            response.EnsureSuccessStatusCode();
+            //response.EnsureSuccessStatusCode();
             if (response.IsSuccessStatusCode) {
                 return await ReadAsAsync<T>(response.Content);
             }

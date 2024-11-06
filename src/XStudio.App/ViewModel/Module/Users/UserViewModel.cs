@@ -51,12 +51,8 @@ namespace XStudio.App.ViewModel.Users {
             ShouldChangePasswordOnNextLogin = user.ShouldChangePasswordOnNextLogin;
             EntityVersion = user.EntityVersion;
             LastPasswordChangeTime = user.LastPasswordChangeTime;
-            Roles = user.Roles;
-            Claims = user.Claims;
-            Logins = user.Logins;
-            Tokens = user.Tokens;
-            OrganizationUnits = user.OrganizationUnits;
             TokenResponse = user.TokenResponse;
+            ExtraProperties = user.ExtraProperties;
         }
         public virtual Guid? TenantId {
             get => _tenantId;
@@ -197,33 +193,6 @@ namespace XStudio.App.ViewModel.Users {
         /// Gets or sets the last password change time for the user.
         /// </summary>
         public virtual DateTimeOffset? LastPasswordChangeTime { get; protected set; } = null;
-
-        //TODO: Can we make collections readonly collection, which will provide encapsulation. But... can work for all ORMs?
-
-        /// <summary>
-        /// Navigation property for the roles this user belongs to.
-        /// </summary>
-        public virtual ICollection<object> Roles { get; protected set; } = new List<object>();
-
-        /// <summary>
-        /// Navigation property for the claims this user possesses.
-        /// </summary>
-        public virtual ICollection<object> Claims { get; protected set; } = new List<object>();
-
-        /// <summary>
-        /// Navigation property for this users login accounts.
-        /// </summary>
-        public virtual ICollection<object> Logins { get; protected set; } = new List<object>();
-
-        /// <summary>
-        /// Navigation property for this users tokens.
-        /// </summary>
-        public virtual ICollection<object> Tokens { get; protected set; } = new List<object>();
-
-        /// <summary>
-        /// Navigation property for this organization units.
-        /// </summary>
-        public virtual ICollection<object> OrganizationUnits { get; protected set; } = new List<object>();
 
         /// <summary>
         /// token

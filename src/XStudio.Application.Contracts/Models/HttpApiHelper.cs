@@ -16,33 +16,132 @@ using XStudio.Models.Requests;
 
 namespace XStudio.Models {
     public class HttpApiHelper {
-        private static readonly HttpClient httpClient = new HttpClient();
+        private static HttpClient? httpClient = null;
+        private static string? _accessToken = null;
         public bool IsAuthorization { get; private set; } = false;
 
         public HttpApiHelper() {
-            httpClient.DefaultRequestHeaders.Accept.Clear();
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            httpClient.Timeout = new TimeSpan(0, 0, 30);
+            //httpClient.DefaultRequestHeaders.Accept.Clear();
+            //httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            //httpClient.Timeout = new TimeSpan(0, 0, 30);
         }
 
-        public void SetBaseAddress(string baseAddress) {
+        public async Task ChangeBaseAddress(string baseAddress, int timeout = 30) {
             if (baseAddress == null) {
                 throw new ArgumentException("Base address cannot be null.");
             }
-            httpClient.BaseAddress = new Uri(baseAddress);
+            Uri uri;
+            try {
+                uri = new Uri(baseAddress);
+            }
+            catch (UriFormatException ex) {
+                throw new ArgumentException("Base address is not a valid URI.", ex);
+            }
+            if (httpClient == null || httpClient.BaseAddress == null ||!httpClient.BaseAddress.Equals(uri)) {
+                if (httpClient != null) {
+                    httpClient.Dispose();
+                    await Task.Delay(50);
+                }
+                httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Accept.Clear();
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                httpClient.Timeout = TimeSpan.FromSeconds(timeout);
+                httpClient.BaseAddress = uri;
+                if (IsAuthorization) {
+                    SetAuthorizationHeader(_accessToken);
+                }
+            }
+        }
+        /// <summary>
+        /// 清除头部信息
+        /// </summary>
+        /// <exception cref="InvalidOperationException"></exception>
+        public void ClearefaultRequestHeaders() {
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
+            httpClient.DefaultRequestHeaders.Clear();
         }
 
+        /// <summary>
+        /// 添加头部信息
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <exception cref="InvalidOperationException"></exception>
+        public void AddDefaultRequestHeader(string name, string? value) {
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
+            httpClient.DefaultRequestHeaders.TryAddWithoutValidation(name, value);
+        }
+
+        /// <summary>
+        /// 添加头部信息
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="values"></param>
+        /// <exception cref="InvalidOperationException"></exception>
+        public void AddDefaultRequestHeader(string name, IEnumerable<string?> values) {
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
+            httpClient.DefaultRequestHeaders.TryAddWithoutValidation(name, values);
+        }
+
+        /// <summary>
+        /// 添加头部信息
+        /// </summary>
+        /// <param name="headers"></param>
+        /// <exception cref="InvalidOperationException"></exception>
+        public void AddDefaultRequestHeaders(Dictionary<string, string?> headers) {
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
+            foreach (var header in headers) {
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value);
+            }
+        }
+
+        /// <summary>
+        /// 添加头部信息
+        /// </summary>
+        /// <param name="headers"></param>
+        /// <exception cref="InvalidOperationException"></exception>
+        public void AddDefaultRequestHeaders(Dictionary<string, IEnumerable<string?>> headers) {
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
+            foreach (var header in headers) {
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value);
+            }
+        }
+
+        /// <summary>
+        /// 设置授权头部信息
+        /// </summary>
+        /// <param name="accessToken"></param>
+        /// <exception cref="InvalidOperationException"></exception>
         public void SetAuthorizationHeader(string? accessToken) {
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
             if (string.IsNullOrEmpty(accessToken)) {
                 IsAuthorization = false;
                 httpClient.DefaultRequestHeaders.Authorization = null;
                 return;
             }
             IsAuthorization = true;
+            _accessToken = accessToken;
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
         }
 
+        
+
         public async Task<T?> LoginAsync<T>(string endpoint, UserData data) {
+            if (httpClient == null) { 
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
             HttpResponseMessage response = await httpClient.PostAsJsonAsync(endpoint, data);
             response.EnsureSuccessStatusCode();
             if (response.IsSuccessStatusCode) {
@@ -55,6 +154,9 @@ namespace XStudio.Models {
 
 
         public async Task<TokenRes?> TokenAsync(string endpoint, TokenReq data) {
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
             var content = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("grant_type", data.GrantType),
@@ -127,6 +229,9 @@ namespace XStudio.Models {
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<T?> GetAsync<T>(string endpoint) {
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
             return await ExecuteAsync(async () => {
                 HttpResponseMessage response = await httpClient.GetAsync(endpoint);
                 response.EnsureSuccessStatusCode();
@@ -147,6 +252,9 @@ namespace XStudio.Models {
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<T?> GetListAsync<T>(string endpoint, PagedAndSortedResultRequestDto input) {
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
             return await ExecuteAsync(async () => {
                 var content = new StringContent(JsonConvert.SerializeObject(input), Encoding.UTF8, "application/json");
                 HttpResponseMessage response = await httpClient.PostAsync(endpoint, content);
@@ -168,6 +276,9 @@ namespace XStudio.Models {
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<T?> PostAsync<T>(string endpoint, T data) {
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
             return await ExecuteAsync(async () => {
                 HttpResponseMessage response = await httpClient.PostAsJsonAsync(endpoint, data);
                 response.EnsureSuccessStatusCode();
@@ -187,9 +298,12 @@ namespace XStudio.Models {
         /// <param name="data"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task<T?> PostManyAsync<T>(string endpoint, T data) {
+        public async Task<T?> PostManyAsync<T>(string endpoint, T data, string mediaType = "application/json") {
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
             return await ExecuteAsync(async () => {
-                var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, mediaType);
                 // 发送 DELETE 请求并包含请求体
                 HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, endpoint) {
                     Content = content
@@ -213,6 +327,9 @@ namespace XStudio.Models {
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<T?> PutAsync<T>(string endpoint, T data) {
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
             return await ExecuteAsync(async () => {
                 HttpResponseMessage response = await httpClient.PutAsJsonAsync(endpoint, data);
                 response.EnsureSuccessStatusCode();
@@ -231,6 +348,9 @@ namespace XStudio.Models {
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<T?> DeleteAsync<T>(string endpoint) {
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
             return await ExecuteAsync(async () => {
                 HttpResponseMessage response = await httpClient.DeleteAsync(endpoint);
                 response.EnsureSuccessStatusCode();
@@ -249,9 +369,12 @@ namespace XStudio.Models {
         /// <param name="ids"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task<T?> DeleteManyAsync<T>(string endpoint, List<Guid> ids) {
+        public async Task<T?> DeleteManyAsync<T>(string endpoint, List<Guid> ids, string mediaType = "application/json") {
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
             return await ExecuteAsync(async () => {
-                var content = new StringContent(JsonConvert.SerializeObject(ids), Encoding.UTF8, "application/json");
+                var content = new StringContent(JsonConvert.SerializeObject(ids), Encoding.UTF8, mediaType);
                 // 发送 DELETE 请求并包含请求体
                 HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Delete, endpoint) {
                     Content = content
@@ -273,6 +396,9 @@ namespace XStudio.Models {
         /// <returns></returns>
         public async Task<HttpResponseMessage?> SendAsync(HttpRequestMessage request) {
 
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
             return await ExecuteAsync(async () => await httpClient.SendAsync(request));
         }
 
@@ -282,6 +408,9 @@ namespace XStudio.Models {
         /// <param name="endpoint"></param>
         /// <returns></returns>
         public async Task<HttpResponseMessage?> GetResponseAsync(string endpoint) {
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
             return await ExecuteAsync(async () => await httpClient.GetAsync(endpoint));
         }
 
@@ -292,6 +421,9 @@ namespace XStudio.Models {
         /// <param name="content"></param>
         /// <returns></returns>
         public async Task<HttpResponseMessage?> PostResponseAsync(string endpoint, HttpContent content) {
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
             return await ExecuteAsync(async () => await httpClient.PostAsync(endpoint, content));
         }
 
@@ -302,6 +434,9 @@ namespace XStudio.Models {
         /// <param name="content"></param>
         /// <returns></returns>
         public async Task<HttpResponseMessage?> PutResponseAsync(string endpoint, HttpContent content) {
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
             return await ExecuteAsync(async () => await httpClient.PutAsync(endpoint, content));
         }
 
@@ -311,6 +446,9 @@ namespace XStudio.Models {
         /// <param name="endpoint"></param>
         /// <returns></returns>
         public async Task<HttpResponseMessage?> DeleteResponseAsync(string endpoint) {
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
             return await ExecuteAsync(async () => await httpClient.DeleteAsync(endpoint));
         }
 
@@ -320,6 +458,9 @@ namespace XStudio.Models {
         /// <param name="request"></param>
         /// <returns></returns>
         public async Task<HttpResponseMessage?> SendResponseAsync(HttpRequestMessage request) {
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
             return await ExecuteAsync(async () => await httpClient.SendAsync(request));
         }
 
@@ -331,6 +472,9 @@ namespace XStudio.Models {
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<T?> GetResponseAsync<T>(string endpoint) {
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
             return await ExecuteAsync(async () => {
                 HttpResponseMessage response = await httpClient.GetAsync(endpoint);
                 response.EnsureSuccessStatusCode();
@@ -351,6 +495,9 @@ namespace XStudio.Models {
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<T?> PostResponseAsync<T>(string endpoint, HttpContent content) {
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
             return await ExecuteAsync(async () => {
                 HttpResponseMessage response = await httpClient.PostAsync(endpoint, content);
                 response.EnsureSuccessStatusCode();
@@ -371,6 +518,9 @@ namespace XStudio.Models {
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<T?> PutResponseAsync<T>(string endpoint, HttpContent content) {
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
             return await ExecuteAsync(async () => {
                 HttpResponseMessage response = await httpClient.PutAsync(endpoint, content);
                 response.EnsureSuccessStatusCode();
@@ -390,6 +540,9 @@ namespace XStudio.Models {
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<T?> DeleteResponseAsync<T>(string endpoint) {
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
             return await ExecuteAsync(async () => {
                 HttpResponseMessage response = await httpClient.DeleteAsync(endpoint);
                 response.EnsureSuccessStatusCode();
@@ -409,6 +562,9 @@ namespace XStudio.Models {
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<T?> SendResponseAsync<T>(HttpRequestMessage request) {
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
             return await ExecuteAsync(async () => {
                 HttpResponseMessage response = await httpClient.SendAsync(request);
                 response.EnsureSuccessStatusCode();
@@ -429,6 +585,9 @@ namespace XStudio.Models {
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<T?> SendResponseAsync<T>(HttpRequestMessage request, HttpCompletionOption completionOption) {
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
             return await ExecuteAsync(async () => {
                 HttpResponseMessage response = await httpClient.SendAsync(request, completionOption);
                 response.EnsureSuccessStatusCode();
@@ -450,6 +609,10 @@ namespace XStudio.Models {
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<T?> SendResponseAsync<T>(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationToken cancellationToken) {
+
+            if (httpClient == null) {
+                throw new InvalidOperationException("HttpClient is not initialized.");
+            }
             return await ExecuteAsync(async () => {
                 HttpResponseMessage response = await httpClient.SendAsync(request, completionOption, cancellationToken);
                 response.EnsureSuccessStatusCode();

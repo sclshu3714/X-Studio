@@ -27,5 +27,11 @@
             <param name="ids"></param>
             <returns></returns>
         </member>
+        <member name="M:XStudio.Users.LoginAppService.GetRequestUrl">
+            <summary>
+            获取当前请求的Host
+            </summary>
+            <returns></returns>
+        </member>
     </members>
 </doc>

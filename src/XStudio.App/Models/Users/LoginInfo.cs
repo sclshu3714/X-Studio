@@ -13,10 +13,13 @@ namespace XStudio.App.Models.Users {
         [JsonProperty("password")]
         public string Password { get; set; } = string.Empty;
 
-        [JsonProperty("rememberMe")]
-        public bool RememberMe { get; set; } = false;
+        [JsonProperty("rememberMe", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? RememberMe { get; set; }
 
-        [JsonProperty("returnUrl")]
-        public string ClientId { get; set; } = "XStuido";
+        [JsonProperty("clientId", DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
+        public string ClientId { get; set; } = "XStudio_App";
+
+        [JsonProperty("scope", DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
+        public string Scope { get; set; } = "XStudio";
     }
 }
