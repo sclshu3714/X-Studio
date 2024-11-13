@@ -24,12 +24,13 @@ namespace XStudio.App.Views.Module.Schools {
         public SectionPage(SectionPageViewModel sectionPageViewModel) {
             _SectionPageViewModel = sectionPageViewModel;
             InitializeComponent();
-            DataContext = _SectionPageViewModel;
             this.Loaded += new RoutedEventHandler(InitLoaded);
         }
 
         private async void InitLoaded(object sender, RoutedEventArgs e) {
             await _SectionPageViewModel.LoadDataAsync();
+            // 动态构建列
+            DataContext = _SectionPageViewModel;
         }
     }
 }

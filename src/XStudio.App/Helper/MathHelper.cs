@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace XStudio.App.Helper
 {
@@ -19,5 +20,7 @@ namespace XStudio.App.Helper
         public static bool IsVerySmall(double value) => Math.Abs(value) < 1E-06;
 
         public static bool GreaterThan(double value1, double value2) => value1 > value2 && !AreClose(value1, value2);
+
+        public static string GenerateCode(this int code, int length) => $"{code}".PadLeft(length, '0');
     }
 }

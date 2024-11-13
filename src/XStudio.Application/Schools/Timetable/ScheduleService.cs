@@ -12,9 +12,9 @@ using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Uow;
 using XStudio.Permissions;
-using XStudio.Schools.Timetable;
 
-namespace XStudio.Timetable {
+namespace XStudio.Schools.Timetable
+{
     [Authorize(Policy = XStudioPermissions.TimePeriods.Default)]
     [RemoteService(false)]
     public class ScheduleService
@@ -26,9 +26,10 @@ namespace XStudio.Timetable {
         CreateScheduleDto,
         UpdateScheduleDto>, //Used to create/update a book
         IScheduleService //implement the IBookAppService
-                        {
-        public ScheduleService(IRepository<Schedule, Guid> repository) 
-            : base(repository) {
+    {
+        public ScheduleService(IRepository<Schedule, Guid> repository)
+            : base(repository)
+        {
         }
 
         /// <summary>
@@ -37,20 +38,24 @@ namespace XStudio.Timetable {
         /// <param name="inputs"></param>
         /// <returns></returns>
         /// <exception cref="DbUpdateException"></exception>
-        public async Task<List<ScheduleDto>> InsertManyAsync(List<CreateScheduleDto> inputs) {
+        public async Task<List<ScheduleDto>> InsertManyAsync(List<CreateScheduleDto> inputs)
+        {
             //var entities = ObjectMapper.Map<List<CreateTimePeriodDto>, List<TimePeriod>>(inputs);
             //await Repository.InsertManyAsync(entities, autoSave: true);
             //return ObjectMapper.Map<List<TimePeriod>, List<TimePeriodDto>>(entities);
             AbpUnitOfWorkOptions options = new AbpUnitOfWorkOptions();
-            using (var uow = UnitOfWorkManager.Begin(options)) {
-                try {
+            using (var uow = UnitOfWorkManager.Begin(options))
+            {
+                try
+                {
                     List<Schedule> entities = await Repository.GetListAsync();
                     await Repository.DeleteManyAsync(entities);
                     entities = ObjectMapper.Map<List<CreateScheduleDto>, List<Schedule>>(inputs);
                     await Repository.InsertManyAsync(entities, autoSave: true);
                     return ObjectMapper.Map<List<Schedule>, List<ScheduleDto>>(entities);
                 }
-                catch (Exception ex) {
+                catch (Exception ex)
+                {
                     //await uow.RollbackAsync();//手动回滚
                     uow.Dispose();// // 这里不需要显式回滚，因为ABP会在捕获到异常时自动回滚  // Rollback the transaction if an exception occurs
                     throw new DbUpdateException("插入失败，已经回滚", ex);
@@ -63,7 +68,8 @@ namespace XStudio.Timetable {
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public async Task<bool> DeleteManyAsync(List<Guid> ids) {
+        public async Task<bool> DeleteManyAsync(List<Guid> ids)
+        {
             List<Schedule> schools = await (await Repository.GetQueryableAsync())
                                          .Where(x => ids.Contains(x.Id))
                                          .ToListAsync();

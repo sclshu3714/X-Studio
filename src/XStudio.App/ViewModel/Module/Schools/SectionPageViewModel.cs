@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using XStudio.App.Helper;
 using XStudio.App.Service;
 
 namespace XStudio.App.ViewModel.Module.Schools {
@@ -59,12 +60,8 @@ namespace XStudio.App.ViewModel.Module.Schools {
         public DelegateCommand<SectionViewModel> DeleteCommand { get; private set; }
 
         private async void AddSection() {
-            //var dialog = new TimePeriodWindow();
-            //dialog.Owner = System.Windows.Application.Current.MainWindow;
-            //dialog.SetOrder(TimePeriods.Any() ? TimePeriods.Max(x => x.Order) + 1 : 0);
-            //if (dialog.ShowDialog() == true) {
-            //    TimePeriods.Add(dialog.TimePeriodModel);
-            //}
+            int order = Sections.Any() ? Sections.Max(x => x.Order) + 1 : 0;
+            Sections.Add(new SectionViewModel() { Order = order, Code = order.GenerateCode(6) });
             await Task.CompletedTask;
         }
 

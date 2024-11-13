@@ -13,8 +13,8 @@ namespace XStudio.App.ViewModel.Module.Schools {
         private string _name = string.Empty;
 
         private List<string> defaultSelectList = new List<string>() { "早晨", "上午", "中午", "下午", "晚上" };
-        private string _period;
-        private string _periodCode;
+        private string _period = string.Empty;
+        private string _periodCode = string.Empty;
 
         /// <summary>
         /// 序号
