@@ -291,7 +291,7 @@ namespace XStudio.App.ViewModel.Main
                         thePage = new TimePeriodPageViewModel(_dataService, theWorkspaceItem.Name);
                         break;
                     case "Section":
-                        thePage = new SectionPageViewModel(_dataService, theWorkspaceItem.Name);
+                        thePage = new ScheduleSectionPageViewModel(_dataService, theWorkspaceItem.Name);
                         break;
                     default:
                         break;

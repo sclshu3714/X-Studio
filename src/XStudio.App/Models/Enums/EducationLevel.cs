@@ -7,26 +7,43 @@ using System.Threading.Tasks;
 
 namespace XStudio.App.Models.Enums {
     public enum EducationLevel {
+        
         /// <summary>
         /// 幼儿园
         /// </summary>
         [Description("幼儿园")]
         PreSchool = 0,       // 幼儿园  
+        
         /// <summary>
         /// 学前班
         /// </summary>
         [Description("学前班")]
         Kindergarten,    // 学前班（在某些地区，幼儿园和学前班可能被视为同一阶段，这里为了区分而分开）  
+        
         /// <summary>
         /// 小学
         /// </summary>
-        [Description("小学")]
-        PrimarySchool,   // 小学  
+        [Description("54制小学")]
+        PrimarySchool5,   // 小学
+
+        /// <summary>
+        /// 小学
+        /// </summary>
+        [Description("63制小学")]
+        PrimarySchool6,   // 小学 
+
         /// <summary>
         /// 初中
         /// </summary>
-        [Description("初中")]
-        MiddleSchool,    // 初中  
+        [Description("54制初中")]
+        MiddleSchool4,    // 初中  
+
+        /// <summary>
+        /// 初中
+        /// </summary>
+        [Description("63制初中")]
+        MiddleSchool3,    // 初中  
+        
         /// <summary>
         /// 高中
         /// </summary>

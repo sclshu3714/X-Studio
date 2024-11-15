@@ -321,13 +321,50 @@ public class DataService : ITransientDependency
 
     #endregion
 
+
+    #region 模块-节次方案
     #region 模块-节次
-    public ObservableCollection<Page> getSectionPage(SectionPageViewModel sectionPageViewModel) {
+
+
+    public ObservableCollection<Page> getSchedulePage(ScheduleSectionPageViewModel sectionPageViewModel) {
         ObservableCollection<Page> pages = new ObservableCollection<Page>();
-        pages.Add(new SectionPage(sectionPageViewModel) { Name = sectionPageViewModel.Type });
+        pages.Add(new ScheduleSectionPage(sectionPageViewModel) { Name = sectionPageViewModel.Type });
         return pages;
     }
 
+
+    public async Task<ScheduleViewModel?> CreateScheduleAsync(ScheduleViewModel input) {
+        return await apiHelper.PostAsync("api/xstudio/v1/Schedule/add", input);
+    }
+
+    public async Task<List<ScheduleViewModel>?> InsertManyScheduleAsync(List<ScheduleViewModel> inputs) {
+        return await apiHelper.PostManyAsync("api/xstudio/v1/Schedule/adds", inputs);
+    }
+    public async Task DeleteScheduleAsync(Guid id) {
+        await apiHelper.DeleteAsync<string>($"api/xstudio/v1/Schedule/delete/{id}");
+    }
+
+    public async Task DeleteManyScheduleAsync(List<Guid> ids) {
+        await apiHelper.DeleteManyAsync<string>($"api/xstudio/v1/Schedule/deletes", ids);
+        await Task.CompletedTask;
+    }
+
+    public async Task<ScheduleViewModel?> GetScheduleAsync(Guid id) {
+        return await apiHelper.GetAsync<ScheduleViewModel>($"api/xstudio/v1/Schedule/{id}"); ;
+    }
+
+    public async Task<PagedResultDto<ScheduleViewModel>?> GetScheduleListAsync(PagedAndSortedResultRequestDto input) {
+        return await apiHelper.GetListAsync<PagedResultDto<ScheduleViewModel>>($"/api/xstudio/v1/Schedule/list", input);
+    }
+
+    public async Task<ScheduleViewModel?> UpdateScheduleAsync(Guid id, ScheduleViewModel input) {
+        return await apiHelper.PutAsync($"api/xstudio/v1/Schedule/update", input);
+    }
+
+    #endregion
+    #endregion
+
+    #region 模块-节次
     public async Task<SectionViewModel?> CreateSectionAsync(SectionViewModel input) {
         return await apiHelper.PostAsync("api/xstudio/v1/Section/add", input);
     }
@@ -348,12 +385,14 @@ public class DataService : ITransientDependency
         return await apiHelper.GetAsync<SectionViewModel>($"api/xstudio/v1/Section/{id}"); ;
     }
 
-    public async Task<PagedResultDto<SectionViewModel>?> GetSectionListAsync(PagedAndSortedResultRequestDto input) {
+    public async Task<PagedResultDto<SectionViewModel>?> GetSectionListAsync(string scheduleCode, PagedAndSortedResultRequestDto input) {
         return await apiHelper.GetListAsync<PagedResultDto<SectionViewModel>>($"/api/xstudio/v1/Section/list", input);
     }
 
     public async Task<SectionViewModel?> UpdateSectionAsync(Guid id, SectionViewModel input) {
         return await apiHelper.PutAsync($"api/xstudio/v1/Section/update", input);
     }
+
+    
     #endregion
 }

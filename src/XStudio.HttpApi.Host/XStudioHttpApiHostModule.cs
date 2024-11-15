@@ -83,6 +83,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Volo.Abp.BackgroundWorkers;
 using Volo.Abp.EventBus.Distributed;
 using XStudio.Models;
+using Nacos.V2.Naming;
 
 namespace XStudio;
 
@@ -188,6 +189,8 @@ public class XStudioHttpApiHostModule : AbpModule {
     private void PreConfigureNacos(ServiceConfigurationContext context, IConfiguration configuration) {
         context.Services.AddNacosAspNet(configuration, "Nacos");
         context.Services.AddNacosV2Config(configuration);
+        // 启用Nacos服务发现
+        context.Services.TryAddSingleton<INacosNamingService, NacosNamingService>();
         //制作全局参数变量,方便使用,也可以直接使用IConfiguration,无需使用GlobalConfig.Default.NacosConfig
         if (GlobalConfig.Default.NacosConfig == null) {
             GlobalConfig.Default.NacosConfig = new GlobalNacosConfig();

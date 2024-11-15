@@ -133,7 +133,9 @@ namespace XStudio.Controllers
             {
                 AbsoluteExpiration = DateTimeOffset.UtcNow.AddMinutes(3)
             };
-            await _distributedCache.SetAsync(key, value.ToJson(), options);
+            if (value?.ToJson() is string strValue) {
+                await _distributedCache.SetAsync(key, strValue, options);
+            }
         }
 
         [HttpGet("getCache")]

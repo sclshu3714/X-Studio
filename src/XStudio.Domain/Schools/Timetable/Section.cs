@@ -93,7 +93,7 @@ namespace XStudio.Schools.Timetable
         public string ScheduleCode { get; set; } = string.Empty;
 
         /// <summary>
-        /// 时段
+        /// 时段(导航属性)
         /// </summary>
         /// <example>
         /// Morning
@@ -101,7 +101,7 @@ namespace XStudio.Schools.Timetable
         public virtual TimePeriod? Period { get; set; }
 
         /// <summary>
-        /// 节次方案
+        /// 节次方案(导航属性)
         /// </summary>
         public virtual Schedule? @Schedule { get; set; }
     }

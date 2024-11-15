@@ -19,16 +19,16 @@ namespace XStudio.App.Views.Module.Schools {
     /// <summary>
     /// SectionPage.xaml 的交互逻辑
     /// </summary>
-    public partial class SectionPage : Page {
-        private SectionPageViewModel _SectionPageViewModel;
-        public SectionPage(SectionPageViewModel sectionPageViewModel) {
+    public partial class ScheduleSectionPage : Page {
+        private ScheduleSectionPageViewModel _SectionPageViewModel;
+        public ScheduleSectionPage(ScheduleSectionPageViewModel sectionPageViewModel) {
             _SectionPageViewModel = sectionPageViewModel;
             InitializeComponent();
             this.Loaded += new RoutedEventHandler(InitLoaded);
         }
 
         private async void InitLoaded(object sender, RoutedEventArgs e) {
-            await _SectionPageViewModel.LoadDataAsync();
+            await _SectionPageViewModel.LoadScheduleDataAsync();
             // 动态构建列
             DataContext = _SectionPageViewModel;
         }

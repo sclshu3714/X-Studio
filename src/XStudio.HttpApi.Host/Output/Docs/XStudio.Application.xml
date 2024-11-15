@@ -12,7 +12,23 @@
             <returns>项目信息</returns>
             <exception cref="T:Volo.Abp.Domain.Entities.EntityNotFoundException">没有查询到项目信息</exception>
         </member>
-        <member name="M:XStudio.Timetable.ScheduleService.InsertManyAsync(System.Collections.Generic.List{XStudio.Schools.Timetable.CreateScheduleDto})">
+        <member name="T:XStudio.Schools.Timetable.ScheduleAggregateService">
+            <summary>
+            课表聚合服务
+                1、学校
+                2、年级
+                3、班级
+                4、课表
+                    4.1、节次
+                    4.2、教师
+                    4.3、课程
+                    4.4、周次
+                    4.5、节数
+                    4.6、上课时间
+                    4.7、上课地点
+            </summary>
+        </member>
+        <member name="M:XStudio.Schools.Timetable.ScheduleService.InsertManyAsync(System.Collections.Generic.List{XStudio.Schools.Timetable.CreateScheduleDto})">
             <summary>
             批量插入
             </summary>
@@ -20,7 +36,7 @@
             <returns></returns>
             <exception cref="T:Microsoft.EntityFrameworkCore.DbUpdateException"></exception>
         </member>
-        <member name="M:XStudio.Timetable.ScheduleService.DeleteManyAsync(System.Collections.Generic.List{System.Guid})">
+        <member name="M:XStudio.Schools.Timetable.ScheduleService.DeleteManyAsync(System.Collections.Generic.List{System.Guid})">
             <summary>
             批量删除
             </summary>
