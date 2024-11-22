@@ -1,6 +1,6 @@
 ﻿using MahApps.Metro.Controls;
 using Prism.Ioc;
-using Prism.Navigation.Regions;
+using Prism.Regions;
 using System.Windows;
 
 namespace XStudio.School.Timetable.Views {

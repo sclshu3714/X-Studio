@@ -1,4 +1,4 @@
-﻿using DryIoc.ImTools;
+﻿using ImTools;
 using MahApps.Metro.Controls.Dialogs;
 using Newtonsoft.Json;
 using Prism.Commands;
