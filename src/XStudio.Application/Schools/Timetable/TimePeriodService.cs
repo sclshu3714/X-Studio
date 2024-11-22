@@ -20,11 +20,12 @@ using XStudio.Schools.Places;
 namespace XStudio.Schools.Timetable
 {
 
-    [Route("api/xstudio/v{version:apiVersion}/[controller]")]
-    [ApiVersion(1.0)]
-    [ApiController]
-    [RemoteService(true)]
+    //[Route("api/xstudio/v{version:apiVersion}/[controller]")]
+    //[ApiVersion(1.0)]
+    //[ApiController]
+    //[RemoteService(true)]
     [Authorize(Policy = XStudioPermissions.TimePeriods.Default)]
+    [RemoteService(false)]
     public class TimePeriodService :
         CrudAppService<
         TimePeriod, //The Book entity
@@ -41,7 +42,7 @@ namespace XStudio.Schools.Timetable
 
         }
 
-        [HttpPost("add")]
+        //[HttpPost("add")]
         public override async Task<TimePeriodDto> CreateAsync(CreateTimePeriodDto input)
         {
             //return await base.CreateAsync(input);
@@ -61,7 +62,7 @@ namespace XStudio.Schools.Timetable
             }
         }
 
-        [HttpPost("adds")]
+        //[HttpPost("adds")]
         public async Task<List<TimePeriodDto>> InsertManyAsync(List<CreateTimePeriodDto> inputs)
         {
             //var entities = ObjectMapper.Map<List<CreateTimePeriodDto>, List<TimePeriod>>(inputs);
@@ -87,13 +88,13 @@ namespace XStudio.Schools.Timetable
             }
         }
 
-        [HttpDelete("delete/{id}")]
+        //[HttpDelete("delete/{id}")]
         public override Task DeleteAsync(Guid id)
         {
             return base.DeleteAsync(id);
         }
 
-        [HttpDelete("deletes")]
+        //[HttpDelete("deletes")]
         public async Task DeleteManyAsync(List<Guid> ids)
         {
             List<TimePeriod> schools = await (await Repository.GetQueryableAsync())
@@ -103,19 +104,19 @@ namespace XStudio.Schools.Timetable
             await Repository.DeleteManyAsync(schools);
         }
 
-        [HttpGet("{id}")]
+        //[HttpGet("{id}")]
         public override async Task<TimePeriodDto> GetAsync(Guid id)
         {
             return await base.GetAsync(id);
         }
 
-        [HttpPost("list")]
+        //[HttpPost("list")]
         public override async Task<PagedResultDto<TimePeriodDto>> GetListAsync(PagedAndSortedResultRequestDto input)
         {
             return await base.GetListAsync(input);
         }
 
-        [HttpPut("update")]
+        //[HttpPut("update")]
         public override async Task<TimePeriodDto> UpdateAsync(Guid id, UpdateTimePeriodDto input)
         {
             //return await base.UpdateAsync(id, input);

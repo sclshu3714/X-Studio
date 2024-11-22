@@ -15,6 +15,7 @@ namespace XStudio.Schools.Timetable {
         CreateTimePeriodDto,
         UpdateTimePeriodDto> //Used to create/update a book
     {
-
+        public Task<List<TimePeriodDto>> InsertManyAsync(List<CreateTimePeriodDto> inputs);
+        public Task DeleteManyAsync(List<Guid> ids);
     }
 }
