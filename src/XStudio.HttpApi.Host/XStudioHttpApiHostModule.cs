@@ -101,8 +101,8 @@ namespace XStudio;
     typeof(AbpAspNetCoreSerilogModule),                 // Serilog
     typeof(AbpSwashbuckleModule),                       // Swashbuckle
     typeof(AbpAspNetCoreSignalRModule),                 // SignalR
-    typeof(AbpCachingStackExchangeRedisModule),         // Redis
-    typeof(AbpEventBusKafkaModule)                      // Kafka
+    typeof(AbpCachingStackExchangeRedisModule)         // Redis
+    //typeof(AbpEventBusKafkaModule)                      // Kafka
 )]
 public class XStudioHttpApiHostModule : AbpModule {
     public override void PreConfigureServices(ServiceConfigurationContext context) {
@@ -128,7 +128,6 @@ public class XStudioHttpApiHostModule : AbpModule {
         //    PreConfigure<AbpOpenIddictAspNetCoreOptions>(options => {
         //        options.AddDevelopmentEncryptionAndSigningCertificate = false;
         //    });
-
         //    PreConfigure<OpenIddictServerBuilder>(serverBuilder => {
         //        string fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "openiddict.pfx");
         //        serverBuilder.AddProductionEncryptionAndSigningCertificate(fileName, "123456");
@@ -137,6 +136,11 @@ public class XStudioHttpApiHostModule : AbpModule {
     }
 
     private void PreConfigureEnvironment(ServiceConfigurationContext context) {
+        // 根据环境加载不同的配置文件
+        var builder = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile($"appsettings.json", optional: false, reloadOnChange: true);
+#if DEBUG
         var configuration = context.Services.GetConfiguration();
         // 检查环境变量是否已设置，如果没有，则设置为开发环境
         var environment = configuration["App:Environment"]; // Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
@@ -151,11 +155,6 @@ public class XStudioHttpApiHostModule : AbpModule {
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", environment);
         }
 
-        // 根据环境加载不同的配置文件
-        var builder = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile($"appsettings.json", optional: false, reloadOnChange: true);
-
         // 加载补充配置文件
         if (File.Exists($"appsettings.{environment}.json")) {
             builder.AddJsonFile($"appsettings.{environment}.json", optional: true, true);
@@ -163,7 +162,21 @@ public class XStudioHttpApiHostModule : AbpModule {
         else {
             Log.Warning($"没有检查到配置文件:appsettings.{environment}.json; 告知：全部配置默认在appsettings.json中");
         }
+#endif
         builder.AddEnvironmentVariables();
+    }
+
+    private void PreConfigureNacos(ServiceConfigurationContext context, IConfiguration configuration) {
+        context.Services.AddNacosAspNet(configuration, "Nacos");
+        context.Services.AddNacosV2Config(configuration);
+        // 启用Nacos服务发现
+        context.Services.TryAddSingleton<INacosNamingService, NacosNamingService>();
+        //制作全局参数变量,方便使用,也可以直接使用IConfiguration,无需使用GlobalConfig.Default.NacosConfig
+        if (GlobalConfig.Default.NacosConfig == null) {
+            GlobalConfig.Default.NacosConfig = new GlobalNacosConfig();
+            configuration.Bind(GlobalConfig.Default.NacosConfig);
+            context.Services.AddSingleton(GlobalConfig.Default.NacosConfig);
+        }
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context) {
@@ -186,18 +199,7 @@ public class XStudioHttpApiHostModule : AbpModule {
     }
 
     #region 配置设置
-    private void PreConfigureNacos(ServiceConfigurationContext context, IConfiguration configuration) {
-        context.Services.AddNacosAspNet(configuration, "Nacos");
-        context.Services.AddNacosV2Config(configuration);
-        // 启用Nacos服务发现
-        context.Services.TryAddSingleton<INacosNamingService, NacosNamingService>();
-        //制作全局参数变量,方便使用,也可以直接使用IConfiguration,无需使用GlobalConfig.Default.NacosConfig
-        if (GlobalConfig.Default.NacosConfig == null) {
-            GlobalConfig.Default.NacosConfig = new GlobalNacosConfig();
-            configuration.Bind(GlobalConfig.Default.NacosConfig);
-            context.Services.AddSingleton(GlobalConfig.Default.NacosConfig);
-        }
-    }
+    
 
     private void ConfigureSerilog(ServiceConfigurationContext context, IConfiguration configuration) {
         // 将 Serilog 注册到 DI 容器
