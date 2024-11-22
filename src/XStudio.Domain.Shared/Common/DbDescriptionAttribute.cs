@@ -14,10 +14,10 @@ namespace XStudio.Common
         /// <summary>
         /// 注释内容
         /// </summary>
-        public string Description { get; set; }
-        public CustomDescriptionAttribute(string Description)
+        public string? Description { get; set; }
+        public CustomDescriptionAttribute(string description)
         {
-            Description = Description;
+            Description = description;
         }
     }
 }

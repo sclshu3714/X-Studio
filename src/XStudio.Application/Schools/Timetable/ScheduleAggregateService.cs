@@ -27,9 +27,17 @@ namespace XStudio.Schools.Timetable {
     public class ScheduleAggregateService : ApplicationService {
         private readonly ILogger<LoginAppService> _logger;
         private readonly IRepository<Schedule, Guid> _repository;
-        public ScheduleAggregateService(IRepository<Schedule, Guid> repository) {
+        private readonly IRepository<Section, Guid> _sectionRepository;
+        public ScheduleAggregateService(IRepository<Schedule, Guid> repository, IRepository<Section, Guid> sectionRepository) {
             _logger = NullLogger<LoginAppService>.Instance;
             _repository = repository;
+            _sectionRepository = sectionRepository;
+        }
+
+        public async Task<Schedule> GetSchedulesAsync(string scheduleCode) {
+            Schedule schedule = await _repository.GetAsync(x => x.Code == scheduleCode);
+            schedule.Sections = await _sectionRepository.GetListAsync(x => x.ScheduleCode == scheduleCode);
+            return schedule;
         }
     }
 }
