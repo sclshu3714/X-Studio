@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<Import Project="..\..\common.props" />
 
@@ -6,6 +6,14 @@
 		<TargetFramework>net9.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<RootNamespace>XStudio</RootNamespace>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <NoWarn>$(NoWarn);CS1591;CS0436;CS8618</NoWarn>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <NoWarn>$(NoWarn);CS1591;CS0436;CS8618</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -17,10 +25,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.0" />
 		<ProjectReference Include="..\XStudio.Domain\XStudio.Domain.csproj" />
 		<PackageReference Include="DM.Microsoft.EntityFrameworkCore" Version="8.0.0.28188" />
 		<PackageReference Include="ShardingCore" Version="7.8.1.22" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.0" />
+		<PackageReference Include="Volo.Abp.EntityFrameworkCore.MySQL" Version="9.0.0" />
 		<PackageReference Include="Volo.Abp.PermissionManagement.EntityFrameworkCore" Version="9.0.0" />
 		<PackageReference Include="Volo.Abp.SettingManagement.EntityFrameworkCore" Version="9.0.0" />
 		<PackageReference Include="Volo.Abp.Identity.EntityFrameworkCore" Version="9.0.0" />
@@ -29,7 +38,6 @@
 		<PackageReference Include="Volo.Abp.TenantManagement.EntityFrameworkCore" Version="9.0.0" />
 		<PackageReference Include="Volo.Abp.FeatureManagement.EntityFrameworkCore" Version="9.0.0" />
 		<PackageReference Include="Volo.Abp.OpenIddict.EntityFrameworkCore" Version="9.0.0" />
-		<PackageReference Include="Volo.Abp.EntityFrameworkCore.MySQL" Version="9.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

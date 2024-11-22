@@ -258,7 +258,9 @@ namespace XStudio.Common.Redis
             RedisChannel theChannel = RedisChannel.Literal(channelFrom);
             sub.Subscribe(theChannel, (channel, message) =>
             {
-                Console.WriteLine((string)message);
+                if (!message.HasValue)
+                    return;
+                Console.WriteLine(message.ToString());
             });
         }
         #endregion
