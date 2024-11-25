@@ -26,7 +26,7 @@ public class XStudioDbContextFactory : IDesignTimeDbContextFactory<XStudioDbCont
         if (!GlobalConfig.Default.NacosConfig.Databases.Any()) {
             configuration.Bind(GlobalConfig.Default.NacosConfig);
         }
-        DatabaseInfo? info = GlobalConfig.Default.NacosConfig?.Databases?.Find(db => db.ConnectionName == "Default");
+        DatabaseInfo? info = GlobalConfig.Default.NacosConfig?.Databases?.Find(db => db.IsEnabled);
         if (GlobalConfig.Default.NacosConfig == null || info == null)
         {
             throw new InvalidOperationException($"数据库连接失败，没有检测到连接地址, 配置内容：{GlobalConfig.Default.NacosConfig?.ToJson()}");

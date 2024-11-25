@@ -14,7 +14,8 @@ namespace XStudio.Common.Nacos
 {
     public static class NacosConfigListenerExtensions
     {
-        public static IApplicationBuilder UseNacosConfigListener(this IApplicationBuilder app, Microsoft.Extensions.Configuration.IConfiguration configuration) {
+        public static IApplicationBuilder UseNacosConfigListener(this IApplicationBuilder app, 
+            Microsoft.Extensions.Configuration.IConfiguration configuration) {
             IHostApplicationLifetime appLifetime = app.ApplicationServices.GetRequiredService<IHostApplicationLifetime>();
             INacosConfigService ncsvc = app.ApplicationServices.GetRequiredService<INacosConfigService>();
             NacosConfigListener _configListen = new NacosConfigListener(appLifetime);

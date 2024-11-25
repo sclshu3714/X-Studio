@@ -94,6 +94,7 @@ namespace XStudio.Common.Nacos
     /// </summary>
     public class DatabaseInfo
     {
+        public bool IsEnabled { get; set; } = false;
         /// <summary>
         /// 连接名称
         /// </summary>

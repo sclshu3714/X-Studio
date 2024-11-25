@@ -84,6 +84,8 @@ using Volo.Abp.BackgroundWorkers;
 using Volo.Abp.EventBus.Distributed;
 using XStudio.Models;
 using Nacos.V2.Naming;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace XStudio;
 
@@ -167,11 +169,13 @@ public class XStudioHttpApiHostModule : AbpModule {
     }
 
     private void PreConfigureNacos(ServiceConfigurationContext context, IConfiguration configuration) {
-        context.Services.AddNacosAspNet(configuration, "Nacos");
-        context.Services.AddNacosV2Config(configuration);
+        if (configuration.GetValue<bool>("Nacos:IsEnabled")) {
+            context.Services.AddNacosAspNet(configuration, "Nacos");
+            context.Services.AddNacosV2Config(configuration);
+        }
         // 启用Nacos服务发现
         context.Services.TryAddSingleton<INacosNamingService, NacosNamingService>();
-        //制作全局参数变量,方便使用,也可以直接使用IConfiguration,无需使用GlobalConfig.Default.NacosConfig
+        // 制作全局参数变量,方便使用,也可以直接使用IConfiguration,无需使用GlobalConfig.Default.NacosConfig
         if (GlobalConfig.Default.NacosConfig == null) {
             GlobalConfig.Default.NacosConfig = new GlobalNacosConfig();
             configuration.Bind(GlobalConfig.Default.NacosConfig);
@@ -479,8 +483,10 @@ public class XStudioHttpApiHostModule : AbpModule {
         }
 
         //nacos 监听配置文件
-        app.UseNacosConfigListener(context.ServiceProvider.GetRequiredService<IConfiguration>());
-
+        IConfiguration configuration = context.ServiceProvider.GetRequiredService<IConfiguration>();
+        if (configuration.GetValue<bool>("Nacos:IsEnabled")) {
+            app.UseNacosConfigListener(configuration);
+        }
         app.UseAbpRequestLocalization();
 
         if (!env.IsDevelopment()) {
@@ -520,7 +526,6 @@ public class XStudioHttpApiHostModule : AbpModule {
                         c.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
                     }
                 });
-                IConfiguration configuration = context.ServiceProvider.GetRequiredService<IConfiguration>();
                 c.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
                 c.OAuthScopes("XStudio");
             }
