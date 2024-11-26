@@ -51,43 +51,42 @@ public class XStudioDbContext :
      */
 
     //Identity
-    public DbSet<IdentityUser> Users { get; set; }
-    public DbSet<IdentityRole> Roles { get; set; }
-    public DbSet<IdentityClaimType> ClaimTypes { get; set; }
-    public DbSet<OrganizationUnit> OrganizationUnits { get; set; }
-    public DbSet<IdentitySecurityLog> SecurityLogs { get; set; }
-    public DbSet<IdentityLinkUser> LinkUsers { get; set; }
-    public DbSet<IdentityUserDelegation> UserDelegations { get; set; }
-    public DbSet<IdentitySession> Sessions { get; set; }
+    public DbSet<IdentityUser>? Users { get; set; }
+    public DbSet<IdentityRole>? Roles { get; set; }
+    public DbSet<IdentityClaimType>? ClaimTypes { get; set; }
+    public DbSet<OrganizationUnit>? OrganizationUnits { get; set; }
+    public DbSet<IdentitySecurityLog>? SecurityLogs { get; set; }
+    public DbSet<IdentityLinkUser>? LinkUsers { get; set; }
+    public DbSet<IdentityUserDelegation>? UserDelegations { get; set; }
+    public DbSet<IdentitySession>? Sessions { get; set; }
     // Tenant Management
-    public DbSet<Tenant> Tenants { get; set; }
-    public DbSet<TenantConnectionString> TenantConnectionStrings { get; set; }
+    public DbSet<Tenant>? Tenants { get; set; }
+    public DbSet<TenantConnectionString>? TenantConnectionStrings { get; set; }
 
     #endregion
 
     #region Self DB
-    public DbSet<Project> Projects { get; set; }
+    public DbSet<Project>? Projects { get; set; }
     #endregion
 
     #region 学校场所
-    public DbSet<School> Schools { get; set; }
-    public DbSet<SchoolCampus> SchoolCampuses { get; set; }
-    public DbSet<SchoolBuilding> SchoolBuildings { get; set; }
-    public DbSet<BuildingFloor> BuildingFloors { get; set; }
-    public DbSet<Classroom> Classrooms { get; set; }
-    public DbSet<RoomUsage> RoomUsages { get; set; }
+    public DbSet<School>? Schools { get; set; }
+    public DbSet<SchoolCampus>? SchoolCampuses { get; set; }
+    public DbSet<SchoolBuilding>? SchoolBuildings { get; set; }
+    public DbSet<BuildingFloor>? BuildingFloors { get; set; }
+    public DbSet<Classroom>? Classrooms { get; set; }
+    public DbSet<RoomUsage>? RoomUsages { get; set; }
     #endregion
 
     #region 课表
-    public DbSet<Schedule> Schedules { get; set; }
-    public DbSet<TimePeriod> TimePeriods { get; set; }
-    public DbSet<Section> Sections { get; set; }
-    public DbSet<Course> Courses { get; set; }
+    public DbSet<Schedule>? Schedules { get; set; }
+    public DbSet<TimePeriod>? TimePeriods { get; set; }
+    public DbSet<Section>? Sections { get; set; }
+    public DbSet<Course>? Courses { get; set; }
     #endregion
     public XStudioDbContext(DbContextOptions<XStudioDbContext> options)
         : base(options)
     {
-       
     }
 
     protected override void OnModelCreating(ModelBuilder builder)

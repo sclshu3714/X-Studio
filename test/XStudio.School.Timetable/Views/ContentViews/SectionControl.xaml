@@ -193,7 +193,7 @@
                 Content="生 成"
                 Style="{StaticResource MahApps.Styles.Button}" />
         </ToolBar>
-        <views:MergableDataGrid
+        <DataGrid
             x:Name="CourseDataGrid"
             HorizontalContentAlignment="Center"
             VerticalContentAlignment="Center"
@@ -217,32 +217,32 @@
                 <Style x:Key="theMondayCellStyle" TargetType="DataGridCell">
                     <Setter Property="HorizontalContentAlignment" Value="Center" />
                     <Setter Property="VerticalContentAlignment" Value="Center" />
-                    <Setter Property="Foreground" Value="{Binding MondayForeground}" />
-                    <Setter Property="Background" Value="{Binding MondayBackground}" />
+                    <!--<Setter Property="Foreground" Value="{Binding MondayForeground}" />
+                    <Setter Property="Background" Value="{Binding MondayBackground}" />-->
                 </Style>
                 <Style x:Key="theTuesdayCellStyle" TargetType="DataGridCell">
-                    <Setter Property="Foreground" Value="{Binding TuesdayForeground}" />
-                    <Setter Property="Background" Value="{Binding TuesdayBackground}" />
+                    <!--<Setter Property="Foreground" Value="{Binding TuesdayForeground}" />
+                    <Setter Property="Background" Value="{Binding TuesdayBackground}" />-->
                 </Style>
                 <Style x:Key="theWednesdayCellStyle" TargetType="DataGridCell">
-                    <Setter Property="Foreground" Value="{Binding WednesdayForeground}" />
-                    <Setter Property="Background" Value="{Binding WednesdayBackground}" />
+                    <!--<Setter Property="Foreground" Value="{Binding WednesdayForeground}" />
+                    <Setter Property="Background" Value="{Binding WednesdayBackground}" />-->
                 </Style>
                 <Style x:Key="theThursdayCellStyle" TargetType="DataGridCell">
-                    <Setter Property="Foreground" Value="{Binding ThursdayForeground}" />
-                    <Setter Property="Background" Value="{Binding ThursdayBackground}" />
+                    <!--<Setter Property="Foreground" Value="{Binding ThursdayForeground}" />
+                    <Setter Property="Background" Value="{Binding ThursdayBackground}" />-->
                 </Style>
                 <Style x:Key="theFridayCellStyle" TargetType="DataGridCell">
-                    <Setter Property="Foreground" Value="{Binding FridayForeground}" />
-                    <Setter Property="Background" Value="{Binding FridayBackground}" />
+                    <!--<Setter Property="Foreground" Value="{Binding FridayForeground}" />
+                    <Setter Property="Background" Value="{Binding FridayBackground}" />-->
                 </Style>
                 <Style x:Key="theSaturdayCellStyle" TargetType="DataGridCell">
-                    <Setter Property="Foreground" Value="{Binding SaturdayForeground}" />
-                    <Setter Property="Background" Value="{Binding SaturdayBackground}" />
+                    <!--<Setter Property="Foreground" Value="{Binding SaturdayForeground}" />
+                    <Setter Property="Background" Value="{Binding SaturdayBackground}" />-->
                 </Style>
                 <Style x:Key="theSundayCellStyle" TargetType="DataGridCell">
-                    <Setter Property="Foreground" Value="{Binding SundayForeground}" />
-                    <Setter Property="Background" Value="{Binding SundayBackground}" />
+                    <!--<Setter Property="Foreground" Value="{Binding SundayForeground}" />
+                    <Setter Property="Background" Value="{Binding SundayBackground}" />-->
                 </Style>
             </DataGrid.Resources>
             <DataGrid.Columns>
@@ -250,15 +250,16 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock
+                                Grid.RowSpan="{Binding RowSpan}"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
+                                AllowDrop="False"
                                 Text="{Binding TimeSlot}"
                                 TextAlignment="Center"
                                 TextWrapping="Wrap" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-
                 <DataGridTemplateColumn Width="*" Header="节次">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -448,6 +449,6 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
-        </views:MergableDataGrid>
+        </DataGrid>
     </DockPanel>
 </UserControl>

@@ -11,26 +11,5 @@
             <param name="paged"></param>
             <returns></returns>
         </member>
-        <member name="T:XStudio.Models.CommonResult`1">
-            <summary>
-            新基础请求结果返回类型
-            </summary>
-            <typeparam name="T"></typeparam>
-        </member>
-        <member name="M:XStudio.Models.CommonResult`1.Parse(System.String)">
-            <summary>
-            为JSON字符串转换将CommonResult
-            </summary>
-            <param name="json"></param>
-            <returns></returns>
-        </member>
-        <member name="M:XStudio.Models.CommonResult`1.DataAs``1(System.String)">
-            <summary>
-            将Data转换为指定类型,最多支持两层，1直接将Data转换为指定类型，2如果Data是JObject，则尝试从指定keyfield中获取值并转换为指定类型
-            </summary>
-            <typeparam name="U"></typeparam>
-            <param name="keyfield"></param>
-            <returns></returns>
-        </member>
     </members>
 </doc>

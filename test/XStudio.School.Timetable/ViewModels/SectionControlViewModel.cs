@@ -105,6 +105,7 @@ namespace XStudio.School.Timetable.ViewModels {
                         propertyDayInfo.SetValue(timetable, cell);
                     }
                 }
+                timetable.RowSpan = 3;
                 TimetableRows.Add(timetable);
             }
         }

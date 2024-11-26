@@ -132,8 +132,9 @@ namespace XStudio.School.Timetable.Views.ContentViews {
             if (targetCell.Day == draggedCell.Day && targetCell.Row.Period == draggedCell.Row.Period) {
                 return;
             }
-            if (targetSection.Contents.FirstOrDefault(x => x.Content.Type == RuleType.ConsecutiveClasses)?.Content is ConsecutiveClasses theConsecutiveClasses) {
-                // 目标位置有连堂课 不能交换
+            if (targetSection.Contents.FirstOrDefault(x => x.Content.Type == RuleType.ConsecutiveClasses)?.Content is ConsecutiveClasses theConsecutiveClasses ||
+                targetSection.Contents.FirstOrDefault(x => x.Content.Type == RuleType.CanOnlyArrange)?.Content is CanOnlyArrange theCanOnlyArrange) {
+                // 目标位置有连堂课/只能排时 不能交换
                 return;
             }
             // 特殊处理连堂课

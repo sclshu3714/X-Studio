@@ -14,27 +14,29 @@ public class XStudioApplicationAutoMapperProfile : Profile
          * into multiple profile classes for a better organization. */
 
         // 时段
-        CreateMap<TimePeriodDto, TimePeriod>();
-        CreateMap<UpdateTimePeriodDto, TimePeriod>();
-        CreateMap<CreateTimePeriodDto, TimePeriod>();
-        CreateMap<TimePeriod, TimePeriodDto>();
-        CreateMap<TimePeriod, UpdateTimePeriodDto>();
-        CreateMap<TimePeriod, CreateTimePeriodDto>();
+        CreateMap<TimePeriodDto, TimePeriod>().ReverseMap();
+        CreateMap<UpdateTimePeriodDto, TimePeriod>().ReverseMap();
+        CreateMap<CreateTimePeriodDto, TimePeriod>().ReverseMap();
 
         // 项目
-        CreateMap<Project, ProjectDto>();
-        CreateMap<CreateUpdateProjectDto, Project>();
+        CreateMap<Project, ProjectDto>().ReverseMap();
+        CreateMap<CreateUpdateProjectDto, Project>().ReverseMap();
         // 学校场所
-        CreateMap<School, SchoolDto>();
-        CreateMap<SchoolCampus, SchoolCampusDto>();
-        CreateMap<SchoolBuilding, SchoolBuildingDto>();
-        CreateMap<BuildingFloor, BuildingFloorDto>();
-        CreateMap<Classroom, ClassroomDto>();
+        CreateMap<School, SchoolDto>().ReverseMap();
+        CreateMap<SchoolCampus, SchoolCampusDto>().ReverseMap();
+        CreateMap<SchoolBuilding, SchoolBuildingDto>().ReverseMap();
+        CreateMap<BuildingFloor, BuildingFloorDto>().ReverseMap();
+        CreateMap<Classroom, ClassroomDto>().ReverseMap();
 
-        CreateMap<CreateOrUpdateSchoolDto, School>();
-        CreateMap<UpdateSchoolCampusDto, SchoolCampus>();
-        CreateMap<UpdateSchoolBuildingDto, SchoolBuilding>();
-        CreateMap<UpdateBuildingFloorDto, BuildingFloor>();
-        CreateMap<UpdateClassroomDto, Classroom>();
+        CreateMap<CreateOrUpdateSchoolDto, School>().ReverseMap();
+        CreateMap<UpdateSchoolCampusDto, SchoolCampus>().ReverseMap();
+        CreateMap<UpdateSchoolBuildingDto, SchoolBuilding>().ReverseMap();
+        CreateMap<UpdateBuildingFloorDto, BuildingFloor>().ReverseMap();
+        CreateMap<UpdateClassroomDto, Classroom>().ReverseMap();
+
+        // 节次方案
+        CreateMap<Schedule, ScheduleDto>().ReverseMap();
+        CreateMap<Schedule, UpdateScheduleDto>().ReverseMap();
+        CreateMap<Schedule, CreateScheduleDto>().ReverseMap();
     }
 }

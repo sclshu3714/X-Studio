@@ -9,6 +9,7 @@ using Volo.Abp.Application.Dtos;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Uow;
+using XStudio.Models;
 using XStudio.Schools.Timetable;
 
 namespace XStudio.Controllers.V1 {
@@ -24,19 +25,21 @@ namespace XStudio.Controllers.V1 {
         [HttpPost("add")]
         public async Task<ActionResult<TimePeriodDto>> CreateAsync(CreateTimePeriodDto input) {
             TimePeriodDto timePeriodDto = await _TimePeriodService.CreateAsync(input);
-            return new OkObjectResult(timePeriodDto);
+            return CommonResult<TimePeriodDto>.Success(timePeriodDto);
         }
 
         [HttpPost("adds")]
         public async Task<ActionResult<List<TimePeriodDto>>> InsertManyAsync(List<CreateTimePeriodDto> inputs) {
             List<TimePeriodDto> timePeriodDtos = await _TimePeriodService.InsertManyAsync(inputs);
-            return new OkObjectResult(timePeriodDtos);
+            return (timePeriodDtos != null && timePeriodDtos.Any()) ?
+                    CommonResult<List<TimePeriodDto>>.Success(timePeriodDtos) :
+                    CommonResult<List<TimePeriodDto>>.NoContent();
         }
 
         [HttpDelete("delete/{id}")]
         public async Task<ActionResult<bool>> DeleteAsync(Guid id) {
             await _TimePeriodService.DeleteAsync(id);
-            return new OkObjectResult(true);
+            return CommonResult<bool>.Success(true);
         }
 
         [HttpDelete("deletes")]
@@ -52,7 +55,10 @@ namespace XStudio.Controllers.V1 {
 
         [HttpPost("list")]
         public async Task<ActionResult<PagedResultDto<TimePeriodDto>>> GetListAsync(PagedAndSortedResultRequestDto input) {
-            return new OkObjectResult(await _TimePeriodService.GetListAsync(input));
+            PagedResultDto <TimePeriodDto> timePeriodDtos = await _TimePeriodService.GetListAsync(input);
+            return (timePeriodDtos != null && timePeriodDtos.Items.Any()) ?
+                    CommonResult<PagedResultDto<TimePeriodDto>>.Success(timePeriodDtos) :
+                    CommonResult<PagedResultDto<TimePeriodDto>>.NoContent();
         }
 
         [HttpPut("update")]

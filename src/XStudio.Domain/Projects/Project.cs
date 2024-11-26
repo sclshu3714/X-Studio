@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,7 @@ namespace XStudio.Projects
         /// 课件名称
         /// </summary>
         [Description("项目名称")]
+        [Column(Order = 1, TypeName = "nvarchar(200)")]
         public string Name { get; set; } = string.Empty;
 
         /// <summary>

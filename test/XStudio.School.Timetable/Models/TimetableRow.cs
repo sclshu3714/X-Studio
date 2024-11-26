@@ -13,6 +13,7 @@ namespace XStudio.School.Timetable.Models {
     public class TimetableRow : BindableBase {
         private string timeSlot;
         private int period;
+        private int rowSpan = 1;
         private ObservableCollection<TimetableCell> cells = new();
         private TimetableCell monday;
         private TimetableCell tuesday;
@@ -48,6 +49,11 @@ namespace XStudio.School.Timetable.Models {
                     default: return Sunday;
                 }
             }
+        }
+
+        public int RowSpan {
+            get => rowSpan;
+            set => SetProperty(ref rowSpan, value);
         }
 
         /// <summary>
