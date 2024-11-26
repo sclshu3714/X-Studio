@@ -256,3 +256,9 @@ src/XStudio.App.ConsoleApp/Logs/logs.txt
 /src/XStudio.HttpApi.Host/Logs
 /src/XStudio.HttpApi.Host/wwwroot/libs/malihu-custom-scrollbar-plugin/package-lock.json
 /src/XStudio.Web/wwwroot/libs/malihu-custom-scrollbar-plugin/package-lock.json
+
+
+# ABP Studio
+**/.abpstudio/
+*.abppkg
+*.abppkg
