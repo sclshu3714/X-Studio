@@ -26,4 +26,8 @@
     <ProjectReference Include="..\XStudio.Domain.Shared\XStudio.Domain.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Managers\" />
+  </ItemGroup>
+
 </Project>

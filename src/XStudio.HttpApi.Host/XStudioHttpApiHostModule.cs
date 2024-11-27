@@ -86,6 +86,7 @@ using XStudio.Models;
 using Nacos.V2.Naming;
 using System.Threading.Tasks;
 using System.Threading;
+using XStudio.Users;
 
 namespace XStudio;
 
@@ -104,7 +105,7 @@ namespace XStudio;
     typeof(AbpSwashbuckleModule),                       // Swashbuckle
     typeof(AbpAspNetCoreSignalRModule),                 // SignalR
     typeof(AbpCachingStackExchangeRedisModule)         // Redis
-    //typeof(AbpEventBusKafkaModule)                      // Kafka
+                                                       //typeof(AbpEventBusKafkaModule)                      // Kafka
 )]
 public class XStudioHttpApiHostModule : AbpModule {
     public override void PreConfigureServices(ServiceConfigurationContext context) {
@@ -114,6 +115,39 @@ public class XStudioHttpApiHostModule : AbpModule {
         PreConfigureEnvironment(context);
         PreConfigureCertificate(context);
         PreConfigureNacos(context, configuration);
+    }
+    #region 预配置设置
+    /// <summary>
+    /// 配置路由
+    /// </summary>
+    /// <param name="context"></param>
+    private void PreConfigureRouting(ServiceConfigurationContext context) {
+
+        // 将约定路由添加到路由配置中(将名称转换为小写)
+        context.Services.AddControllers(options => {
+            options.Conventions.Add(new XStudioControllerRouteConvention());
+        });
+        //context.Services.AddRouting(options => {
+        //    options.ConstraintMap.Add("camelCase", typeof(CamelCaseRouteConstraint));
+        //});
+    }
+
+    /// <summary>
+    /// 配置Newtonsoft格式化
+    /// </summary>
+    /// <param name="context"></param>
+    private void PreConfigureNewtonsoftJson(ServiceConfigurationContext context) {
+        context.Services.AddControllersWithViews().AddNewtonsoftJson(options => {
+            //修改属性名称的序列化方式，首字母小写
+            options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            options.SerializerSettings.MissingMemberHandling = MissingMemberHandling.Ignore;
+            options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            //修改时间的序列化方式
+            options.SerializerSettings.Converters.Add(new IsoDateTimeConverter() { DateTimeFormat = "yyyy-MM-dd HH:mm:ss" });
+            options.SerializerSettings.Converters.Add(new IpAddressConverter());
+            options.SerializerSettings.Converters.Add(new IpEndPointConverter());
+        });
     }
 
     private void PreConfigureCertificate(ServiceConfigurationContext context) {
@@ -183,11 +217,12 @@ public class XStudioHttpApiHostModule : AbpModule {
         }
     }
 
+    #endregion
     public override void ConfigureServices(ServiceConfigurationContext context) {
         var configuration = context.Services.GetConfiguration();
         var hostingEnvironment = context.Services.GetHostingEnvironment();
 
-        
+
         ConfigureKafka(context, configuration);
         ConfigureRedis(context, configuration);
         ConfigureAuthentication(context, configuration);
@@ -203,7 +238,7 @@ public class XStudioHttpApiHostModule : AbpModule {
     }
 
     #region 配置设置
-    
+
 
     private void ConfigureSerilog(ServiceConfigurationContext context, IConfiguration configuration) {
         // 将 Serilog 注册到 DI 容器
@@ -215,7 +250,7 @@ public class XStudioHttpApiHostModule : AbpModule {
         });
     }
     private void ConfigureKafka(ServiceConfigurationContext context, IConfiguration configuration) {
-        if (configuration["Kafka"] == null || configuration["Kafka.IsEnabled"] == "false") { 
+        if (configuration["Kafka"] == null || configuration["Kafka.IsEnabled"] == "false") {
             return;
         }
         //配置连接
@@ -299,7 +334,8 @@ public class XStudioHttpApiHostModule : AbpModule {
             Options.Filters.Add<CustomExceptionFilter>(); // 注册自定义异常过滤器
         });
 
-
+        // 注册JWT认证
+        // ConfigureJwtAuthentication(context, configuration);
 
         //默认的
         //context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
@@ -308,6 +344,83 @@ public class XStudioHttpApiHostModule : AbpModule {
         //    options.IsDynamicClaimsEnabled = true;
         //});
     }
+
+    private void ConfigureJwtAuthentication(ServiceConfigurationContext context, IConfiguration configuration) {
+        var jwtSection = configuration.GetSection("Jwt"); // 获取Jwt相关配置
+        var secretKey = jwtSection["SecretKey"];
+        if (string.IsNullOrEmpty(secretKey)) {
+            return;
+        }
+        context.Services.AddAuthentication(options => {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options => {
+            options.TokenValidationParameters = new TokenValidationParameters {
+                ClockSkew = TimeSpan.Zero,
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = jwtSection["Issuer"],
+                ValidAudience = jwtSection["Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+            };
+            options.Events = new JwtBearerEvents {
+                OnMessageReceived = context => {
+                    //优先Query中获取，再去cookies中获取
+                    var accessToken = context.Request.Query["access_token"];
+                    if (!string.IsNullOrEmpty(accessToken)) {
+                        context.Token = accessToken;
+                    }
+                    else {
+                        if (context.Request.Cookies.TryGetValue("Token", out var cookiesToken)) {
+                            context.Token = cookiesToken;
+                        }
+                    }
+
+                    return Task.CompletedTask;
+                }
+            };
+        })
+        .AddJwtBearer(TokenTypeConst.Refresh, options => {
+            var jwtSection = configuration.GetSection("RefreshJwt"); // 获取Jwt相关配置
+            var secretKey = jwtSection["SecretKey"];
+            if (string.IsNullOrEmpty(secretKey)) {
+                return;
+            }
+            options.TokenValidationParameters = new TokenValidationParameters {
+                ClockSkew = TimeSpan.Zero,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = jwtSection["Issuer"],
+                ValidAudience = jwtSection["Audience"],
+                IssuerSigningKey =
+                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+            };
+            options.Events = new JwtBearerEvents {
+                OnMessageReceived = context => {
+                    var refresh_token = context.Request.Headers["refresh_token"];
+                    if (!string.IsNullOrEmpty(refresh_token)) {
+                        context.Token = refresh_token;
+                        return Task.CompletedTask;
+                    }
+
+                    var refreshToken = context.Request.Query["refresh_token"];
+                    if (!string.IsNullOrEmpty(refreshToken)) {
+                        context.Token = refreshToken;
+                    }
+
+                    return Task.CompletedTask;
+                }
+            };
+        });
+        //.AddQQ(options => { configuration.GetSection("OAuth:QQ").Bind(options); })
+        //.AddGitee(options => { configuration.GetSection("OAuth:Gitee").Bind(options); });
+
+        //授权
+        context.Services.AddAuthorization();
+    }
+
 
     private void ConfigureRateLimit(ServiceConfigurationContext context, IConfiguration configuration) {
         // 限制配置
@@ -326,33 +439,7 @@ public class XStudioHttpApiHostModule : AbpModule {
         });
     }
 
-    /// <summary>
-    /// 配置路由
-    /// </summary>
-    /// <param name="context"></param>
-    private void PreConfigureRouting(ServiceConfigurationContext context) {
-        context.Services.AddRouting(options => {
-            options.ConstraintMap.Add("camelCase", typeof(CamelCaseRouteConstraint));
-        });
-    }
 
-    /// <summary>
-    /// 配置Newtonsoft格式化
-    /// </summary>
-    /// <param name="context"></param>
-    private void PreConfigureNewtonsoftJson(ServiceConfigurationContext context) {
-        context.Services.AddControllersWithViews().AddNewtonsoftJson(options => {
-            //修改属性名称的序列化方式，首字母小写
-            options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            options.SerializerSettings.MissingMemberHandling = MissingMemberHandling.Ignore;
-            options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-            options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            //修改时间的序列化方式
-            options.SerializerSettings.Converters.Add(new IsoDateTimeConverter() { DateTimeFormat = "yyyy-MM-dd HH:mm:ss" });
-            options.SerializerSettings.Converters.Add(new IpAddressConverter());
-            options.SerializerSettings.Converters.Add(new IpEndPointConverter());
-        });
-    }
 
     /// <summary>
     /// 配置ApiVersioning
@@ -398,7 +485,7 @@ public class XStudioHttpApiHostModule : AbpModule {
     /// </summary>
     /// <param name="context"></param>
     /// <param name="configuration"></param>
-    private void ConfigureUrls(ServiceConfigurationContext context,IConfiguration configuration) {
+    private void ConfigureUrls(ServiceConfigurationContext context, IConfiguration configuration) {
         context.Services.AddTransient<HttpApiHelper>();
         context.Services.AddHttpContextAccessor();
         Configure<AppUrlOptions>(options => {
@@ -439,7 +526,7 @@ public class XStudioHttpApiHostModule : AbpModule {
         Configure<AbpAspNetCoreMvcOptions>(options => {
             options.ConventionalControllers.Create(typeof(XStudioApplicationModule).Assembly, opts => {
                 // 指定后:https://localhost:44345/api/xstudio/project; 默认:https://localhost:44345/api/app/project
-                opts.RootPath = "xstudio";
+                opts.RootPath = "xstudio"; // 仅在自动生成控制器时生效
                 // opts.TypePredicate = type => { return true; }; //是否公开
             });
         });

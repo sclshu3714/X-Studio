@@ -30,10 +30,10 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace XStudio.Projects
 {
-    [Route("api/xstudio/v{version:apiVersion}/[controller]")]
-    [ApiVersion(1.0)]
-    [ApiController]
-    [RemoteService(true)]
+    //[Route("api/xstudio/v{version:apiVersion}/[controller]")]
+    //[ApiVersion(1.0)]
+    //[ApiController]
+    [RemoteService(false)]
     [Authorize(Policy = XStudioPermissions.Projects.Default)]
     public class ProjectService :
     CrudAppService<
@@ -70,7 +70,7 @@ namespace XStudio.Projects
         /// <param name="id">项目Id</param>
         /// <returns>项目信息</returns>
         /// <exception cref="EntityNotFoundException">没有查询到项目信息</exception>
-        [HttpGet("{id}")]
+        //[HttpGet("{id}")]
         [SwaggerOperation(Summary = "查询项目", Description = "返回指定Id的项目。", Tags = new[] { "项目" })]
         public override async Task<ProjectDto> GetAsync(Guid id)
         {
@@ -91,7 +91,7 @@ namespace XStudio.Projects
             return coursewareDto;
         }
 
-        [HttpPost("add")] 
+        //[HttpPost("add")] 
         public override async Task<ProjectDto> CreateAsync(CreateUpdateProjectDto input)
         {
             return await base.CreateAsync(input);
@@ -112,7 +112,7 @@ namespace XStudio.Projects
             }
         }
 
-        [HttpPut("update")]
+        //[HttpPut("update")]
         public override async Task<ProjectDto> UpdateAsync(Guid id, CreateUpdateProjectDto input)
         {
             AbpUnitOfWorkOptions options = new AbpUnitOfWorkOptions();
@@ -147,7 +147,7 @@ namespace XStudio.Projects
             ////return await base.UpdateAsync(id, input);
         }
 
-        [HttpPost("list")]
+        //[HttpPost("list")]
         public override async Task<PagedResultDto<ProjectDto>> GetListAsync(PagedAndSortedResultRequestDto input)
         {
             PagedResultDto<ProjectDto> ProjectDtos = await base.GetListAsync(input);

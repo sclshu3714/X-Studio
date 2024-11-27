@@ -24,10 +24,13 @@ using Microsoft.Extensions.Caching.Distributed;
 using Volo.Abp.EventBus.Distributed;
 using XStudio.Common.Kafka;
 using Volo.Abp.Uow;
+using Volo.Abp.Account;
+using Volo.Abp;
 
 namespace XStudio.Controllers
 {
-    [Route("api/xstudio/v{version:apiVersion}/[controller]")]
+    [Area("MyTest")]
+    [Route("api/xstudio/[controller]/v{version:apiVersion}")]
     [ApiVersion(2.0)]
     [ApiController]
     public class MyTestController : AbpController
@@ -64,20 +67,23 @@ namespace XStudio.Controllers
         }
 
 
-        [HttpPost("encrypt")]
+        [HttpPost]
+        [Route("encrypt")]
         public IActionResult Encrypt(EncryptDto plain)
         {
             return Ok(EncrypterHelper.Encrypt(plain.PlainText));
         }
 
-        [HttpPost("decrypt")]
+        [HttpPost]
+        [Route("decrypt")]
         public IActionResult Decrypt(DecryptDto encrypted)
         {
             return Ok(EncrypterHelper.Decrypt(encrypted.EncryptedText));
         }
 
         // GET api/values/test
-        [HttpGet("TestAsync")]
+        [HttpGet]
+        [Route("test")]
         public async Task<ActionResult<string>> TestAsync()
         {
             var instance = await _nnsvc.SelectOneHealthyInstance("XStudio", "DEFAULT_GROUP");
@@ -126,7 +132,8 @@ namespace XStudio.Controllers
             }
         }
 
-        [HttpPost("AddCache")]
+        [HttpPost]
+        [Route("addcache")]
         public async Task SetCacheAsync(string key, object value)
         {
             DistributedCacheEntryOptions options = new DistributedCacheEntryOptions()
@@ -138,14 +145,16 @@ namespace XStudio.Controllers
             }
         }
 
-        [HttpGet("getCache")]
+        [HttpGet]
+        [Route("getcache")]
         public async Task<object?> GetCacheAsync(string key)
         {
             object? obj = await _distributedCache.GetAsync(key);
             return obj;
         }
 
-        [HttpPost("sendKafka")]
+        [HttpPost]
+        [Route("sendkafka")]
         public async Task<ActionResult> SetKafkaAsync(string Topic, object value)
         {
             MessagePackage<object> package = new MessagePackage<object>(value)
@@ -158,7 +167,8 @@ namespace XStudio.Controllers
             return Ok(package);
         }
 
-        [HttpGet("getKafka")]
+        [HttpGet]
+        [Route("getkafka")]
         public async Task<ActionResult> GetKafkaAsync(string Topic)
         {
 

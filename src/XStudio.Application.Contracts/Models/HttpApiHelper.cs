@@ -161,7 +161,7 @@ namespace XStudio.Models {
             {
                 new KeyValuePair<string, string>("grant_type", data.GrantType),
                 new KeyValuePair<string, string>("client_id", data.ClientId),
-                //new KeyValuePair<string, string>("client_secret", _clientSecret),
+                // new KeyValuePair<string, string>("client_secret", _clientSecret),
                 new KeyValuePair<string, string>("scope", data.Scope),
                 new KeyValuePair<string, string>("username", data.UserName),
                 new KeyValuePair<string, string>("password", data.Password),

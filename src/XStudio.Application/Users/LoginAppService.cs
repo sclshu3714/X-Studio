@@ -20,33 +20,41 @@ using XStudio.Models;
 using static Volo.Abp.Identity.Settings.IdentitySettingNames;
 using XStudio.Models.Requests;
 using XStudio.Models.Responses;
+using XStudio.Tenants;
+using Volo.Abp;
+using Volo.Abp.EventBus.Local;
+using XStudio.Managers;
 
 namespace XStudio.Users {
-    [Route("api/xstudio/v{version:apiVersion}/[controller]")]
-    [ApiVersion(1.0)]
-    [ApiController]
-    public class LoginAppService : ApplicationService {
+    //[Route("api/xstudio/v{version:apiVersion}/[controller]")]
+    //[ApiVersion(1.0)]
+    //[ApiController]
+
+    [RemoteService(false)]
+    public class LoginAppService : ApplicationService, ILoginAppService {
         private readonly IdentityUserManager _userManager;
         private readonly SignInManager<Volo.Abp.Identity.IdentityUser> _signInManager;
         private readonly IConfiguration _configuration;
         private readonly ILogger<LoginAppService> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly HttpApiHelper _httpApiHelper;
-
+        private readonly IAccountManager _accountManager;
         public LoginAppService(IdentityUserManager userManager,
                                SignInManager<Volo.Abp.Identity.IdentityUser> signInManager,
                                IConfiguration configuration,
                                IHttpContextAccessor httpContextAccessor,
-                               HttpApiHelper httpApiHelper) {
+                               HttpApiHelper httpApiHelper,
+                               IAccountManager accountManager) {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
             _logger = NullLogger<LoginAppService>.Instance;
             _httpContextAccessor = httpContextAccessor;
             _httpApiHelper = httpApiHelper;
+            _accountManager = accountManager;
         }
 
-        [HttpPost]
+        //[HttpPost]
         public async Task<ActionResult<IdentityUserDto>> Login(LoginDto loginDto) {
             var user = await _userManager.FindByNameAsync(loginDto.UserNameOrEmailAddress);
             if (user == null) {
@@ -161,5 +169,45 @@ namespace XStudio.Users {
             }
             return "";
         }
+
+        #region jwt生成token
+        public async Task<IdentityUserDto> LoginV2(LoginDto loginDto) {
+            if (string.IsNullOrEmpty(loginDto.Password) || string.IsNullOrEmpty(loginDto.UserNameOrEmailAddress)) {
+                throw new UserFriendlyException("请输入合理数据！");
+            }
+
+            ////校验验证码
+            //ValidationImageCaptcha(input.Uuid, input.Code);
+
+            Volo.Abp.Identity.IdentityUser? user = null;
+            //校验
+            await _accountManager.LoginValidationAsync(loginDto.UserNameOrEmailAddress, loginDto.Password, x => user = x);
+
+            if (user == null) { 
+                throw new UserFriendlyException("用户名或密码错误！");
+            }
+
+            Volo.Abp.Identity.IdentityUser userInfo = null;
+            //获取token
+            var accessToken = await _accountManager.GetTokenByUserIdAsync(user.Id, (info) => userInfo = info);
+            var refreshToken = _accountManager.CreateRefreshToken(user.Id);
+
+            ////这里抛出一个登录的事件,也可以在全部流程走完，在应用层组装
+            //if (_httpContextAccessor.HttpContext is not null) {
+            //    var loginEntity = new LoginLogAggregateRoot().GetInfoByHttpContext(_httpContextAccessor.HttpContext);
+            //    var loginEto = loginEntity.Adapt<LoginEventArgs>();
+            //    loginEto.UserName = userInfo.User.UserName;
+            //    loginEto.UserId = userInfo.User.Id;
+            //    await LocalEventBus.PublishAsync(loginEto);
+            //}
+
+            IdentityUserDto identityUserDto = ObjectMapper.Map<Volo.Abp.Identity.IdentityUser, IdentityUserDto>(user);
+            identityUserDto.ExtraProperties.Add("AccessToken", accessToken);
+            //identityUserDto.ExtraProperties.Add("TokenType", tokenRes.TokenType);
+            //identityUserDto.ExtraProperties.Add("ExpiresIn", tokenRes.ExpiresIn);
+            identityUserDto.ExtraProperties.Add("RefreshToken", refreshToken);
+            return identityUserDto;
+        }
+        #endregion
     }
 }

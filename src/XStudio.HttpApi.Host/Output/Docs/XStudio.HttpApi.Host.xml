@@ -85,14 +85,6 @@
             <param name="operation">The operation to apply the filter to.</param>
             <param name="context">The current operation filter context.</param>
         </member>
-        <member name="M:XStudio.XStudioHttpApiHostModule.ConfigureRedis(Volo.Abp.Modularity.ServiceConfigurationContext,Microsoft.Extensions.Configuration.IConfiguration)">
-            <summary>
-            配置Redis
-            </summary>
-            <param name="context"></param>
-            <param name="configuration"></param>
-            <exception cref="T:System.NotImplementedException"></exception>
-        </member>
         <member name="M:XStudio.XStudioHttpApiHostModule.PreConfigureRouting(Volo.Abp.Modularity.ServiceConfigurationContext)">
             <summary>
             配置路由
@@ -104,6 +96,14 @@
             配置Newtonsoft格式化
             </summary>
             <param name="context"></param>
+        </member>
+        <member name="M:XStudio.XStudioHttpApiHostModule.ConfigureRedis(Volo.Abp.Modularity.ServiceConfigurationContext,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            配置Redis
+            </summary>
+            <param name="context"></param>
+            <param name="configuration"></param>
+            <exception cref="T:System.NotImplementedException"></exception>
         </member>
         <member name="M:XStudio.XStudioHttpApiHostModule.ConfigureAbpApiVersioning(Volo.Abp.Modularity.ServiceConfigurationContext)">
             <summary>

@@ -14,7 +14,7 @@ using XStudio.Projects;
 
 namespace XStudio.Controllers.V2
 {
-    [Route("api/xstudio/v{version:apiVersion}/[controller]")]
+    [Route("api/xstudio/[controller]/v{version:apiVersion}")]
     [ApiVersion(2.0)]
     [ApiController]
     public class ProjectController : AbpController

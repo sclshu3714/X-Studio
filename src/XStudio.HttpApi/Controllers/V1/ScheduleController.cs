@@ -14,7 +14,7 @@ using XStudio.Schools.Places;
 using XStudio.Schools.Timetable;
 
 namespace XStudio.Controllers.V1 {
-    [Route("api/xstudio/v{version:apiVersion}/[controller]")]
+    [Route("api/xstudio/[controller]/v{version:apiVersion}")]
     [ApiVersion(1.0)]
     [ApiController]
     public class ScheduleController : AbpController {
