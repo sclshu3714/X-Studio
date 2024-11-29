@@ -149,15 +149,18 @@ namespace XStudio.School.Timetable.Views.ContentViews {
                     targetCell1 = sectionControlViewModel.GetTimetableCell(targetCell.Day, targetCell.Row.Period + 1);
                     draggedSection1 = sectionControlViewModel.classSchedule[draggedCell.Day, draggedCell.Row.Period + 1];
                     targetSection1 = sectionControlViewModel.classSchedule[targetCell.Day, targetCell.Row.Period + 1];
+                    lectureContent.Periods = new List<int> { targetCell.Row.Period, targetCell.Row.Period + 1 };
                 }
                 else if (index == 1) { // 需要替换的节次 draggedSection.Period - 1, draggedSection.Period
                     draggedCell1 = sectionControlViewModel.GetTimetableCell(draggedCell.Day, draggedCell.Row.Period - 1);
                     targetCell1 = sectionControlViewModel.GetTimetableCell(targetCell.Day, targetCell.Row.Period - 1);
                     draggedSection1 = sectionControlViewModel.classSchedule[draggedCell.Day, draggedCell.Row.Period - 1];
                     targetSection1 = sectionControlViewModel.classSchedule[targetCell.Day, targetCell.Row.Period - 1];
-
+                    lectureContent.Periods = new List<int> { targetCell.Row.Period - 1, targetCell.Row.Period };
                 }
-                if (draggedSection1 == null || targetSection1 == null || targetSection1.IsMergeCell || targetSection1.LinkTo != null || targetSection1.Status != SectionStatus.Normal || targetSection1.Type != draggedSection1.Type) {
+                if (draggedSection1 == null || targetSection1 == null || targetSection1.IsMergeCell || 
+                    targetSection1.LinkTo != null || targetSection1.Status != SectionStatus.Normal || 
+                    targetSection1.Type != draggedSection1.Type) {
                     return;
                 }
                 await sectionControlViewModel.ExchangeTimetableCellAsync(draggedCell, targetCell);

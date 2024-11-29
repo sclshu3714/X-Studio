@@ -82,7 +82,7 @@ namespace XStudio.SchoolSchedule.Rules {
         /// <summary>
         /// 位置信息
         /// </summary>
-        public Tuple<DayOfWeek, int> Location;
+        public Tuple<DayOfWeek, int>? Location { get; set; }
 
         /// <summary>
         /// 获取属性的DescriptionAttribute注释
@@ -176,7 +176,7 @@ namespace XStudio.SchoolSchedule.Rules {
         /// </summary>
         [Description("交替轮询")]
         AlternatePolling = 6,
-        
+
         /// <summary>
         /// 合班[教师]
         /// </summary>
@@ -190,40 +190,54 @@ namespace XStudio.SchoolSchedule.Rules {
         CentralizedLessonPreparation = 8,
 
         /// <summary>
+        /// 互斥[教师]
+        ///     两个老师不能同时上课
+        /// </summary>
+        [Description("互斥")]
+        Mutex = 9,
+
+        /// <summary>
+        /// 同步[教师]
+        ///     两个老师必须同时上课
+        /// </summary>
+        [Description("同步")]
+        Sync = 10,
+
+        /// <summary>
         /// 无规则
         /// </summary>
         [Description("无规则")]
-        None = 9,
+        None = 11,
 
         /// <summary>
         /// 教案齐平[课程]
         /// </summary>
         [Description("教案齐平")]
-        LessonPlanAligned = 10,
+        LessonPlanAligned = 12,
 
         /// <summary>
         /// 课程不相邻[课程]
         /// </summary>
         [Description("课程不相邻")]
-        CoursesAreNotAdjacent = 11,
+        CoursesAreNotAdjacent = 13,
 
         /// <summary>
         /// 周内分散[课程、教师]
         /// </summary>
         [Description("周内分散")]
-        DisperseWithinTheWeek = 12,
+        DisperseWithinTheWeek = 14,
 
         /// <summary>
         /// 周内集中[教师]
         /// </summary>
         [Description("周内集中")]
-        ConcentrationWithinTheWeek = 13,
+        ConcentrationWithinTheWeek = 15,
 
         /// <summary>
         /// 未知
         /// </summary>
         [Description("未知")]
-        Unknown = 14,
+        Unknown = 16,
     }
 
     /// <summary>

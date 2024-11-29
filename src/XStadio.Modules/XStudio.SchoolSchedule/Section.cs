@@ -146,6 +146,19 @@ namespace XStudio.SchoolSchedule
         {
             Contents.Add(content);
         }
+
+        /// <summary>
+        /// 验证是否为正常节次
+        /// </summary>
+        /// <param name="regularClass"></param>
+        /// <returns></returns>
+        public bool IsValidPair(SectionType regularClass) {
+            return Status == SectionStatus.Normal &&
+                   LinkTo == null &&
+                   !IsMergeCell &&
+                   Type == regularClass &&
+                   !Contents.Any();
+        }
     }
 
     /// <summary>
@@ -154,6 +167,12 @@ namespace XStudio.SchoolSchedule
     /// </summary>
     public class SectionContent : IContent<IRule>
     {
+        /// <summary>
+        /// 内容
+        /// </summary>
+        /// <param name="index"> 内容序号 </param>
+        /// <param name="rule"> 规则 </param>
+        /// <param name="interval"> 周间隔 </param>
         public SectionContent(int index, IRule rule, int interval = 0)
         { 
             Content = rule;

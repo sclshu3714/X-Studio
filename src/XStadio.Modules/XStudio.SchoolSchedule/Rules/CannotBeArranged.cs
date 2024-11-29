@@ -3,9 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using XStudio.SchoolSchedule.Constraints;
 
 namespace XStudio.SchoolSchedule.Rules {
-    public class CannotBeArranged : IRule {
+
+    /// <summary>
+    /// 不能排
+    ///     指定位置(星期+节次)在指定班级(或者全部班级)内不能排指定的课程或者指定老师的课程
+    /// </summary>
+    public class CannotBeArranged : IRule, IConstraint {
         public CannotBeArranged(PriorityMode priority, RuleMode mode, ClassCourseRule classCourse, Tuple<DayOfWeek, int> location)
             : base(priority, mode, RuleType.CannotBeArranged) {
             Location = location;

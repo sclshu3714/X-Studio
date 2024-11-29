@@ -3,17 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using XStudio.SchoolSchedule.Constraints;
 
 namespace XStudio.SchoolSchedule.Rules {
 
     /// <summary>
-    /// 只能排
-    ///     指定位置(星期+节次)在指定班级(或者全部班级)内只能排指定的课程或者指定老师的课程
+    /// 集中备课
+    ///     在集中备课教研组内的老师不能排课，只能参加集中备课教学。
     /// </summary>
-    public class CanOnlyArrange : IRule, IConstraint {
-        public CanOnlyArrange(PriorityMode priority, RuleMode mode, ClassCourseRule classCourse, Tuple<DayOfWeek, int> location)
-            : base(priority, mode, RuleType.CanOnlyArrange) {
+    public class CentralizedLessonPreparation : IRule {
+        public CentralizedLessonPreparation(PriorityMode priority,
+                                            RuleMode mode,
+                                            ClassCourseRule classCourse,
+                                            Tuple<DayOfWeek, int> location)
+                                            : base(priority, mode, RuleType.CanOnlyArrange) {
             Location = location;
             ClassCourse = classCourse;
             Id = classCourse.Id;

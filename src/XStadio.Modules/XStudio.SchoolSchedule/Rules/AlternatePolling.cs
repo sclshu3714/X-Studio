@@ -11,6 +11,8 @@ namespace XStudio.SchoolSchedule.Rules {
     public class AlternatePolling : IRule {
         /// <summary>
         /// 课时,单周或者双周分别占classHour的一半
+        ///     多个课程在学期内按照顺序轮巡上课
+        ///     如：[游泳->篮球->乒乓球->足球]
         /// </summary>
         public AlternatePolling(PriorityMode priority, List<ClassCourseRule> rules, float classHour = 1) {
             ClassHour = classHour;

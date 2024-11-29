@@ -30,6 +30,7 @@ namespace XStudio.School.Timetable.ViewModels {
         public DelegateCommand<object> ReGenerateCommand { get; private set; }
 
         public ClassSchedule classSchedule { get; set; }
+        private AutomaticSchedulingAlgorithm algorithm = new AutomaticSchedulingAlgorithm();
 
         public ObservableCollection<DayOfWeek> LayoutOfWeek { get; set; } = new ObservableCollection<DayOfWeek>() {
              DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday,
@@ -315,8 +316,11 @@ namespace XStudio.School.Timetable.ViewModels {
             List<IRule> constraint = new();
             constraint.Add(new CanOnlyArrange(PriorityMode.Highest, RuleMode.Course, classCourses["语文"], Tuple.Create(DayOfWeek.Monday,3)));
             constraint.Add(new CanOnlyArrange(PriorityMode.Highest, RuleMode.Course, classCourses["数学"], Tuple.Create(DayOfWeek.Wednesday, 3)));
+            constraint.Add(new CannotBeArranged(PriorityMode.Highest, RuleMode.Course, classCourses["数学"], Tuple.Create(DayOfWeek.Thursday, 3)));
             NoAssignCourses = null;
-            AutoAssignCourses(classSchedule, rules, constraint, 0);
+            algorithm.StartAutoAssignCourses(classSchedule, rules, constraint);
+            NoAssignCourses = algorithm.NoAssignCourses;
+            //AutoAssignCourses(classSchedule, rules, constraint, 0);
             Console.Write(NoAssignCourses);
             //分解课时 
             /* 自动排课 - 默认校验:只校验班级课程课时，

@@ -293,7 +293,8 @@
                                 Tag="{Binding Sunday, Mode=TwoWay}"
                                 Text="{Binding Sunday.Content, Mode=TwoWay}"
                                 TextAlignment="Center"
-                                TextWrapping="Wrap" />
+                                TextWrapping="Wrap"
+                                ToolTip="{Binding Sunday.Content}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -319,7 +320,8 @@
                                 Tag="{Binding Monday, Mode=TwoWay}"
                                 Text="{Binding Monday.Content, Mode=TwoWay}"
                                 TextAlignment="Center"
-                                TextWrapping="Wrap" />
+                                TextWrapping="Wrap"
+                                ToolTip="{Binding Monday.Content}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -344,7 +346,8 @@
                                 Tag="{Binding Tuesday, Mode=TwoWay}"
                                 Text="{Binding Tuesday.Content, Mode=TwoWay}"
                                 TextAlignment="Center"
-                                TextWrapping="Wrap" />
+                                TextWrapping="Wrap"
+                                ToolTip="{Binding Tuesday.Content}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -369,7 +372,8 @@
                                 Tag="{Binding Wednesday, Mode=TwoWay}"
                                 Text="{Binding Wednesday.Content, Mode=TwoWay}"
                                 TextAlignment="Center"
-                                TextWrapping="Wrap" />
+                                TextWrapping="Wrap"
+                                ToolTip="{Binding Wednesday.Content}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -394,7 +398,8 @@
                                 Tag="{Binding Thursday, Mode=TwoWay}"
                                 Text="{Binding Thursday.Content, Mode=TwoWay}"
                                 TextAlignment="Center"
-                                TextWrapping="Wrap" />
+                                TextWrapping="Wrap"
+                                ToolTip="{Binding Thursday.Content}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -419,7 +424,8 @@
                                 Tag="{Binding Friday, Mode=TwoWay}"
                                 Text="{Binding Friday.Content, Mode=TwoWay}"
                                 TextAlignment="Center"
-                                TextWrapping="Wrap" />
+                                TextWrapping="Wrap"
+                                ToolTip="{Binding Friday.Content}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -444,7 +450,8 @@
                                 Tag="{Binding Saturday, Mode=TwoWay}"
                                 Text="{Binding Saturday.Content, Mode=TwoWay}"
                                 TextAlignment="Center"
-                                TextWrapping="Wrap" />
+                                TextWrapping="Wrap"
+                                ToolTip="{Binding Saturday.Content}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
