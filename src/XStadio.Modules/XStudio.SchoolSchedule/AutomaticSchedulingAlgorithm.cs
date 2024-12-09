@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +16,7 @@ namespace XStudio.SchoolSchedule {
         private Dictionary<string, List<string>> Conflicts = new Dictionary<string, List<string>>(); // 记录冲突
 
         public string? NoAssignCourses { get; set; } = null;
+        private readonly object sectionLock = new object(); // 定义一个锁对象
 
         /// <summary>
         /// 自动分配课程的函数
@@ -49,26 +52,23 @@ namespace XStudio.SchoolSchedule {
         /// <param name="constraint">约束</param>
         /// <param name="index">已分配课程的索引</param>
         /// <returns></returns>
-        private bool AutoAssignCourses(ClassSchedule classSchedule, List<IRule> courses, List<IRule>? constraint) {
-            NoAssignCourses = null;
-            while(courses.Any()) {
-                IRule rule = courses[0];
-                var section = classSchedule.GetAvailableSections(rule, SectionType.RegularClass);
-                if(section == null) {
-                    // 找不到合适的时段，尝试排除课}
-                    NoAssignCourses += rule.DisplayName + " ";
+        private bool AutoAssignCourses(ClassSchedule classSchedule,
+                                        List<IRule> courses,
+                                        List<IRule>? constraint) {
+            var noAssignCoursesList = new List<string>(); // 记录无法分配的课程
+            foreach(IRule rule in courses) {
+                // 获取可用节次
+                Section? section = classSchedule.GetAvailableSections(rule, SectionType.RegularClass);
+                // 验证是否可以分配到该节次
+                if(section != null && classSchedule.CanAssign(rule, section, constraint)) {
+                    // 该课可以分配，分配课程
+                    doAutoAssignCourses(classSchedule, rule, section);
                     continue;
                 }
-                if(classSchedule.CanAssign(rule, section, constraint)) {
-                    doAutoAssignCourses(classSchedule, rule, section);
-                }
-                else {
-                    // 该课无法分配，尝试排除课}
-                    NoAssignCourses += rule.DisplayName + " ";
-                }
-                courses.Remove(rule);// 安排完成后从列表中删除
-            }
-            return !string.IsNullOrEmpty(NoAssignCourses); // 该课程无法分配，返回失败
+                // 该课无法分配，添加到无法分配的课程列表
+                noAssignCoursesList.Add(rule.DisplayName);
+            };
+            return !noAssignCoursesList.Any(); // 该课程无法分配，返回失败 
         }
 
         /// <summary>

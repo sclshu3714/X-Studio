@@ -144,29 +144,34 @@ namespace XStudio.School.Timetable.Views.ContentViews {
                 TimetableCell targetCell1 = null;
                 Section draggedSection1 = null;
                 Section targetSection1 = null;
+                List<int> intPeriods = new List<int>();
                 if (index == 0) { // 需要替换的节次 draggedSection.Period, draggedSection.Period + 1
                     draggedCell1 = sectionControlViewModel.GetTimetableCell(draggedCell.Day, draggedCell.Row.Period + 1);
                     targetCell1 = sectionControlViewModel.GetTimetableCell(targetCell.Day, targetCell.Row.Period + 1);
                     draggedSection1 = sectionControlViewModel.classSchedule[draggedCell.Day, draggedCell.Row.Period + 1];
                     targetSection1 = sectionControlViewModel.classSchedule[targetCell.Day, targetCell.Row.Period + 1];
-                    lectureContent.Periods = new List<int> { targetCell.Row.Period, targetCell.Row.Period + 1 };
+                    intPeriods = new List<int> { targetCell.Row.Period, targetCell.Row.Period + 1 };
                 }
                 else if (index == 1) { // 需要替换的节次 draggedSection.Period - 1, draggedSection.Period
                     draggedCell1 = sectionControlViewModel.GetTimetableCell(draggedCell.Day, draggedCell.Row.Period - 1);
                     targetCell1 = sectionControlViewModel.GetTimetableCell(targetCell.Day, targetCell.Row.Period - 1);
                     draggedSection1 = sectionControlViewModel.classSchedule[draggedCell.Day, draggedCell.Row.Period - 1];
                     targetSection1 = sectionControlViewModel.classSchedule[targetCell.Day, targetCell.Row.Period - 1];
-                    lectureContent.Periods = new List<int> { targetCell.Row.Period - 1, targetCell.Row.Period };
+                    intPeriods = new List<int> { targetCell.Row.Period - 1, targetCell.Row.Period };
                 }
                 if (draggedSection1 == null || targetSection1 == null || targetSection1.IsMergeCell || 
                     targetSection1.LinkTo != null || targetSection1.Status != SectionStatus.Normal || 
                     targetSection1.Type != draggedSection1.Type) {
                     return;
                 }
-                await sectionControlViewModel.ExchangeTimetableCellAsync(draggedCell, targetCell);
-                await sectionControlViewModel.ExchangeTimetableCellAsync(draggedCell1, targetCell1);
-                await sectionControlViewModel.classSchedule.ExchangeSessionsAsync(draggedSection.Code, targetSection.Code);
-                await sectionControlViewModel.classSchedule.ExchangeSessionsAsync(draggedSection1.Code, targetSection1.Code);
+
+                Tuple<bool, string>  result = await sectionControlViewModel.classSchedule.ExchangeSessionsAsync(draggedSection.Code, targetSection.Code);
+                Tuple<bool, string>  result1 = await sectionControlViewModel.classSchedule.ExchangeSessionsAsync(draggedSection1.Code, targetSection1.Code);
+                if(result.Item1 && result1.Item1 &&
+                    await sectionControlViewModel.ExchangeTimetableCellAsync(draggedCell, targetCell) &&
+                    await sectionControlViewModel.ExchangeTimetableCellAsync(draggedCell1, targetCell1)) {
+                    lectureContent.Periods = new List<int>(intPeriods);
+                }
             }
             else {
                 // 交换数据

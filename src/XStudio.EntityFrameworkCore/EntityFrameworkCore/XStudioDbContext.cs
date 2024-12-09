@@ -131,8 +131,8 @@ public class XStudioDbContext :
             b.Property(x => x.Name).IsRequired().HasMaxLength(128);
             b.HasKey(x => x.Code);
             // 设置 Code 和 Name 为索引列
-            b.HasIndex(x => x.Code).HasDatabaseName("IX_TimePeriod_Code");
-            b.HasIndex(x => x.Name).HasDatabaseName("IX_TimePeriod_Name");
+            b.HasIndex(x => x.Code).HasDatabaseName("IX_Schools_Code");
+            b.HasIndex(x => x.Name).HasDatabaseName("IX_Schools_Name");
 
             //自动添加注释
             AddCommentsToProperties(b);
@@ -150,9 +150,9 @@ public class XStudioDbContext :
              .HasForeignKey(c => c.SchoolCode);
 
             // 设置 Code 和 Name 为索引列
-            b.HasIndex(x => x.Code).HasDatabaseName("IX_TimePeriod_Code");
-            b.HasIndex(x => x.Name).HasDatabaseName("IX_TimePeriod_Name");
-            b.HasIndex(x => x.SchoolCode).HasDatabaseName("IX_TimePeriod_SchoolCode");
+            b.HasIndex(x => x.Code).HasDatabaseName("IX_SchoolCampuses_Code");
+            b.HasIndex(x => x.Name).HasDatabaseName("IX_SchoolCampuses_Name");
+            b.HasIndex(x => x.SchoolCode).HasDatabaseName("IX_SchoolCampuses_SchoolCode");
 
             //自动添加注释
             AddCommentsToProperties(b);
@@ -170,10 +170,10 @@ public class XStudioDbContext :
              .WithMany(c => c.Buildings)
              .HasForeignKey(b => b.SchoolCampusCode);
             // 设置 Code 和 Name 为索引列
-            b.HasIndex(x => x.Code).HasDatabaseName("IX_TimePeriod_Code");
-            b.HasIndex(x => x.Name).HasDatabaseName("IX_TimePeriod_Name");
-            b.HasIndex(x => x.SchoolCode).HasDatabaseName("IX_TimePeriod_SchoolCode");
-            b.HasIndex(x => x.SchoolCampusCode).HasDatabaseName("IX_TimePeriod_SchoolCampusCode");
+            b.HasIndex(x => x.Code).HasDatabaseName("IX_SchoolBuildings_Code");
+            b.HasIndex(x => x.Name).HasDatabaseName("IX_SchoolBuildings_Name");
+            b.HasIndex(x => x.SchoolCode).HasDatabaseName("IX_SchoolBuildings_SchoolCode");
+            b.HasIndex(x => x.SchoolCampusCode).HasDatabaseName("IX_SchoolBuildings_SchoolCampusCode");
 
             //自动添加注释
             AddCommentsToProperties(b);
@@ -191,11 +191,11 @@ public class XStudioDbContext :
              .WithMany(b => b.Floors)
              .HasForeignKey(f => f.BuildingCode);
             // 设置 Code 和 Name 为索引列
-            b.HasIndex(x => x.Code).HasDatabaseName("IX_TimePeriod_Code");
-            b.HasIndex(x => x.Name).HasDatabaseName("IX_TimePeriod_Name");
-            b.HasIndex(x => x.SchoolCode).HasDatabaseName("IX_TimePeriod_SchoolCode");
-            b.HasIndex(x => x.SchoolCampusCode).HasDatabaseName("IX_TimePeriod_SchoolCampusCode");
-            b.HasIndex(x => x.BuildingCode).HasDatabaseName("IX_TimePeriod_BuildingCode");
+            b.HasIndex(x => x.Code).HasDatabaseName("IX_BuildingFloors_Code");
+            b.HasIndex(x => x.Name).HasDatabaseName("IX_BuildingFloors_Name");
+            b.HasIndex(x => x.SchoolCode).HasDatabaseName("IX_BuildingFloors_SchoolCode");
+            b.HasIndex(x => x.SchoolCampusCode).HasDatabaseName("IX_BuildingFloors_SchoolCampusCode");
+            b.HasIndex(x => x.BuildingCode).HasDatabaseName("IX_BuildingFloors_BuildingCode");
 
             //自动添加注释
             AddCommentsToProperties(b);
@@ -213,12 +213,12 @@ public class XStudioDbContext :
              .WithMany(f => f.Classrooms)
              .HasForeignKey(c => c.FloorCode);
             // 设置 Code 和 Name 为索引列
-            b.HasIndex(x => x.Code).HasDatabaseName("IX_TimePeriod_Code");
-            b.HasIndex(x => x.Name).HasDatabaseName("IX_TimePeriod_Name");
-            b.HasIndex(x => x.SchoolCode).HasDatabaseName("IX_TimePeriod_SchoolCode");
-            b.HasIndex(x => x.SchoolCampusCode).HasDatabaseName("IX_TimePeriod_SchoolCampusCode");
-            b.HasIndex(x => x.BuildingCode).HasDatabaseName("IX_TimePeriod_BuildingCode");
-            b.HasIndex(x => x.FloorCode).HasDatabaseName("IX_TimePeriod_FloorCode");
+            b.HasIndex(x => x.Code).HasDatabaseName("IX_Classrooms_Code");
+            b.HasIndex(x => x.Name).HasDatabaseName("IX_Classrooms_Name");
+            b.HasIndex(x => x.SchoolCode).HasDatabaseName("IX_Classrooms_SchoolCode");
+            b.HasIndex(x => x.SchoolCampusCode).HasDatabaseName("IX_Classrooms_SchoolCampusCode");
+            b.HasIndex(x => x.BuildingCode).HasDatabaseName("IX_Classrooms_BuildingCode");
+            b.HasIndex(x => x.FloorCode).HasDatabaseName("IX_Classrooms_FloorCode");
 
             //自动添加注释
             AddCommentsToProperties(b);
@@ -263,8 +263,8 @@ public class XStudioDbContext :
             b.Property(x => x.Name).IsRequired().HasMaxLength(128);
             b.HasKey(x => x.Code);
             // 设置 Code 和 Name 为索引列
-            b.HasIndex(x => x.Code).HasDatabaseName("IX_TimePeriod_Code");
-            b.HasIndex(x => x.Name).HasDatabaseName("IX_TimePeriod_Name");
+            b.HasIndex(x => x.Code).HasDatabaseName("IX_Schedule_Code").IsUnique(false);
+            b.HasIndex(x => x.Name).HasDatabaseName("IX_Schedule_Name").IsUnique(false);
 
             //自动添加注释
             AddCommentsToProperties(b);
@@ -281,9 +281,9 @@ public class XStudioDbContext :
              .WithMany(c => c.Sections)
              .HasForeignKey(b => b.ScheduleCode);
             // 设置 Code、 Name、 ScheduleCode为索引列
-            b.HasIndex(x => x.Code).HasDatabaseName("IX_TimePeriod_Code");
-            b.HasIndex(x => x.Name).HasDatabaseName("IX_TimePeriod_Name");
-            b.HasIndex(x => x.ScheduleCode).HasDatabaseName("IX_TimePeriod_ScheduleCode");
+            b.HasIndex(x => x.Code).HasDatabaseName("IX_Section_Code").IsUnique(false);
+            b.HasIndex(x => x.Name).HasDatabaseName("IX_Section_Name").IsUnique(false);
+            b.HasIndex(x => x.ScheduleCode).HasDatabaseName("IX_Section_ScheduleCode").IsUnique(false);
             //自动添加注释
             AddCommentsToProperties(b);
         });
@@ -296,8 +296,8 @@ public class XStudioDbContext :
             b.Property(x => x.Name).IsRequired().HasMaxLength(128);
             b.HasKey(x => x.Code);
             // 设置 Code 和 Name 为索引列
-            b.HasIndex(x => x.Code).HasDatabaseName("IX_TimePeriod_Code");
-            b.HasIndex(x => x.Name).HasDatabaseName("IX_TimePeriod_Name");
+            b.HasIndex(x => x.Code).HasDatabaseName("IX_Course_Code").IsUnique(false);
+            b.HasIndex(x => x.Name).HasDatabaseName("IX_Course_Name").IsUnique(false);
 
             //自动添加注释
             AddCommentsToProperties(b);

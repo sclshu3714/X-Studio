@@ -31,7 +31,7 @@ namespace XStudio.Controllers {
         [HttpPost("v{version:apiVersion}/login")]
         [ApiVersion(2.0)]
         public async Task<ActionResult<IdentityUserDto>> LoginV2(LoginDto loginDto) {
-            return await _loginAppService.Login(loginDto);
+            return await _loginAppService.LoginV2(loginDto);
         }
     }
 }

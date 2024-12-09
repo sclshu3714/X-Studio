@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp.DependencyInjection;
 
 namespace XStudio.Common.Comparers {
-    public class PinyinComparer : IComparer<string> {
+    public class PinyinComparer : IComparer<string>, ITransientDependency {
         public int Compare(string? x, string? y) {
             if (x == null && y == null) return 0;
             if (x == null) return -1; // null 排在前面

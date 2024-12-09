@@ -187,7 +187,7 @@ namespace XStudio.Users {
                 throw new UserFriendlyException("用户名或密码错误！");
             }
 
-            Volo.Abp.Identity.IdentityUser userInfo = null;
+            Volo.Abp.Identity.IdentityUser? userInfo = null;
             //获取token
             var accessToken = await _accountManager.GetTokenByUserIdAsync(user.Id, (info) => userInfo = info);
             var refreshToken = _accountManager.CreateRefreshToken(user.Id);
