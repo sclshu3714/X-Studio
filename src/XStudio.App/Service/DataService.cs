@@ -1,5 +1,4 @@
-﻿using Abp.Application.Services.Dto;
-using AutoMapper;
+﻿using AutoMapper;
 using HandyControl.Data;
 using HandyControl.Tools;
 using Microsoft.AspNet.SignalR.Client;
@@ -17,6 +16,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using Volo.Abp.Application.Dtos;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.ObjectMapping;
 using XStudio.App.Common;

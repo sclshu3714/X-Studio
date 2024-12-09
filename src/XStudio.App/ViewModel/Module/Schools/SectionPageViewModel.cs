@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using Volo.Abp.Application.Dtos;
 using XStudio.App.Helper;
 using XStudio.App.Service;
 using XStudio.App.Views.Module.Schools;
@@ -41,7 +42,7 @@ namespace XStudio.App.ViewModel.Module.Schools {
             
             IsLoading = true;
             _schedules.Clear();
-            var scheduleList = await _dataService.GetScheduleListAsync(new Abp.Application.Services.Dto.PagedAndSortedResultRequestDto() { MaxResultCount = 100, SkipCount = 0, Sorting = "Order" });
+            var scheduleList = await _dataService.GetScheduleListAsync(new PagedAndSortedResultRequestDto() { MaxResultCount = 100, SkipCount = 0, Sorting = "Order" });
             if (scheduleList != null && scheduleList.Items.Any()) {
                 _schedules.AddRange(scheduleList.Items);
             }
@@ -54,7 +55,7 @@ namespace XStudio.App.ViewModel.Module.Schools {
             }
             IsLoading = true;
             _sections.Clear();
-            var data = await _dataService.GetSectionListAsync(_selectedSchedule.Code, new Abp.Application.Services.Dto.PagedAndSortedResultRequestDto() { MaxResultCount = 100, SkipCount = 0, Sorting = "Order" });
+            var data = await _dataService.GetSectionListAsync(_selectedSchedule.Code, new PagedAndSortedResultRequestDto() { MaxResultCount = 100, SkipCount = 0, Sorting = "Order" });
             if (data != null && data.Items.Any()) {
                 _sections.AddRange(data.Items);
             }

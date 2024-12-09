@@ -1,28 +1,22 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
-using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
-using System.Threading;
-using System.Net;
-using XStudio.App.Models.Data;
-using Newtonsoft.Json;
-using Microsoft.AspNet.SignalR.Client.Http;
-using XStudio.App.Models.Users;
-using XStudio.Users;
-using Serilog;
 using Volo.Abp.Application.Dtos;
 
-namespace XStudio.App.Helper {
-    public class ApiHelper {
+namespace XStudio.Common.Helper {
+    public class HttpClientHelper {
         private static readonly HttpClient httpClient = new HttpClient();
 
         public bool IsAuthorization { get; private set; } = false;
 
-        public ApiHelper(string? baseAddress) {
-            if (baseAddress == null) {
+        public HttpClientHelper(string? baseAddress) {
+            if(baseAddress == null) {
                 throw new ArgumentException("Base address cannot be null.");
             }
             httpClient.BaseAddress = new Uri(baseAddress);
@@ -32,43 +26,13 @@ namespace XStudio.App.Helper {
         }
 
         public void SetAuthorizationHeader(string? accessToken) {
-            if (string.IsNullOrEmpty(accessToken)) {
+            if(string.IsNullOrEmpty(accessToken)) {
                 IsAuthorization = false;
                 httpClient.DefaultRequestHeaders.Authorization = null;
                 return;
             }
             IsAuthorization = true;
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-        }
-
-        public async Task<T?> LoginAsync<T>(string endpoint, LoginInfo data) {
-            HttpResponseMessage response = await httpClient.PostAsJsonAsync(endpoint, data);
-            //response.EnsureSuccessStatusCode();
-            if (response.IsSuccessStatusCode) {
-                return await ReadAsAsync<T>(response.Content);
-            }
-
-            throw new Exception($"Error posting data to API: {response.ReasonPhrase}");
-        }
-
-
-
-        public async Task<TokenResponse?> TokenAsync(string endpoint, TokenRequest data) {
-            var content = new FormUrlEncodedContent(new[]
-            {
-                new KeyValuePair<string, string>("grant_type", data.GrantType),
-                new KeyValuePair<string, string>("client_id", data.ClientId),
-                //new KeyValuePair<string, string>("client_secret", _clientSecret),
-                new KeyValuePair<string, string>("scope", data.Scope),
-                new KeyValuePair<string, string>("username", data.UserName),
-                new KeyValuePair<string, string>("password", data.Password),
-            });
-            HttpResponseMessage response = await httpClient.PostAsync(endpoint, content);
-            if (response.IsSuccessStatusCode) {
-                return await ReadAsAsync<TokenResponse>(response.Content);
-            }
-
-            throw new Exception($"Error posting data to API: {response.ReasonPhrase}");
         }
 
         /// <summary>
@@ -85,36 +49,36 @@ namespace XStudio.App.Helper {
 
         public async Task<T?> ExecuteAsync<T>(Func<Task<T>> func) {
             try {
-                if (!IsAuthorization) {
+                if(!IsAuthorization) {
                     // 未授权，尝试获取token
                     throw new InvalidOperationException("Authorization is required.");
                 }
                 // 尝试将内容读取为指定类型
                 return await func();
             }
-            catch (HttpRequestException e) {
+            catch(HttpRequestException e) {
                 // 处理请求异常
                 Console.WriteLine($"请求错误: {e.Message}");
                 Log.Error(e.Message, e);
                 return default;
                 //throw new HttpRequestException($"{e.Message}", e); // 可重新抛出异常或进行其他处理
             }
-            catch (InvalidOperationException e) {
+            catch(InvalidOperationException e) {
                 // 处理无效操作异常，例如没有正确的serialization设置
                 Console.WriteLine($"无效操作错误: {e.Message}");
                 Log.Error(e.Message, e);
                 return default;
                 //throw new InvalidOperationException($"{e.Message}", e); // 可重新抛出异常或进行其他处理
             }
-            catch (Exception e) {
+            catch(Exception e) {
                 // 处理其他未知异常
                 Console.WriteLine($"发生错误: {e.Message}");
                 Log.Error(e.Message, e);
                 return default;
                 //throw new InvalidOperationException($"{e.Message}", e); // 可重新抛出异常或进行其他处理
             }
-            finally { 
-                
+            finally {
+
             }
         }
 
@@ -129,7 +93,7 @@ namespace XStudio.App.Helper {
             return await ExecuteAsync(async () => {
                 HttpResponseMessage response = await httpClient.GetAsync(endpoint);
                 response.EnsureSuccessStatusCode();
-                if (response.IsSuccessStatusCode) {
+                if(response.IsSuccessStatusCode) {
                     return await ReadAsAsync<T>(response.Content);
                 }
 
@@ -149,8 +113,8 @@ namespace XStudio.App.Helper {
             return await ExecuteAsync(async () => {
                 var content = new StringContent(JsonConvert.SerializeObject(input), Encoding.UTF8, "application/json");
                 HttpResponseMessage response = await httpClient.PostAsync(endpoint, content);
-                
-                if (response.IsSuccessStatusCode) {
+
+                if(response.IsSuccessStatusCode) {
                     return await ReadAsAsync<T>(response.Content);
                 }
                 return default;
@@ -170,7 +134,7 @@ namespace XStudio.App.Helper {
             return await ExecuteAsync(async () => {
                 HttpResponseMessage response = await httpClient.PostAsJsonAsync(endpoint, data);
                 response.EnsureSuccessStatusCode();
-                if (response.IsSuccessStatusCode) {
+                if(response.IsSuccessStatusCode) {
                     return await ReadAsAsync<T>(response.Content);
                 }
 
@@ -195,7 +159,7 @@ namespace XStudio.App.Helper {
                 };
                 HttpResponseMessage response = await httpClient.SendAsync(request);
 
-                if (response.IsSuccessStatusCode) {
+                if(response.IsSuccessStatusCode) {
                     return await ReadAsAsync<T>(response.Content);
                 }
 
@@ -215,7 +179,7 @@ namespace XStudio.App.Helper {
             return await ExecuteAsync(async () => {
                 HttpResponseMessage response = await httpClient.PutAsJsonAsync(endpoint, data);
                 response.EnsureSuccessStatusCode();
-                if (response.IsSuccessStatusCode) {
+                if(response.IsSuccessStatusCode) {
                     return await ReadAsAsync<T>(response.Content);
                 }
 
@@ -233,7 +197,7 @@ namespace XStudio.App.Helper {
             return await ExecuteAsync(async () => {
                 HttpResponseMessage response = await httpClient.DeleteAsync(endpoint);
                 response.EnsureSuccessStatusCode();
-                if (response.IsSuccessStatusCode) {
+                if(response.IsSuccessStatusCode) {
                     return await ReadAsAsync<T>(response.Content);
                 }
 
@@ -257,7 +221,7 @@ namespace XStudio.App.Helper {
                 };
                 HttpResponseMessage response = await SendAsync(request);
                 response.EnsureSuccessStatusCode();
-                if (response.IsSuccessStatusCode) {
+                if(response.IsSuccessStatusCode) {
                     return await ReadAsAsync<T>(response.Content);
                 }
 
@@ -333,7 +297,7 @@ namespace XStudio.App.Helper {
             return await ExecuteAsync(async () => {
                 HttpResponseMessage response = await httpClient.GetAsync(endpoint);
                 response.EnsureSuccessStatusCode();
-                if (response.IsSuccessStatusCode) {
+                if(response.IsSuccessStatusCode) {
                     return await ReadAsAsync<T>(response.Content);
                 }
 
@@ -353,7 +317,7 @@ namespace XStudio.App.Helper {
             return await ExecuteAsync(async () => {
                 HttpResponseMessage response = await httpClient.PostAsync(endpoint, content);
                 response.EnsureSuccessStatusCode();
-                if (response.IsSuccessStatusCode) {
+                if(response.IsSuccessStatusCode) {
                     return await ReadAsAsync<T>(response.Content);
                 }
 
@@ -373,7 +337,7 @@ namespace XStudio.App.Helper {
             return await ExecuteAsync(async () => {
                 HttpResponseMessage response = await httpClient.PutAsync(endpoint, content);
                 response.EnsureSuccessStatusCode();
-                if (response.IsSuccessStatusCode) {
+                if(response.IsSuccessStatusCode) {
                     return await ReadAsAsync<T>(response.Content);
                 }
 
@@ -392,7 +356,7 @@ namespace XStudio.App.Helper {
             return await ExecuteAsync(async () => {
                 HttpResponseMessage response = await httpClient.DeleteAsync(endpoint);
                 response.EnsureSuccessStatusCode();
-                if (response.IsSuccessStatusCode) {
+                if(response.IsSuccessStatusCode) {
                     return await ReadAsAsync<T>(response.Content);
                 }
 
@@ -411,7 +375,7 @@ namespace XStudio.App.Helper {
             return await ExecuteAsync(async () => {
                 HttpResponseMessage response = await httpClient.SendAsync(request);
                 response.EnsureSuccessStatusCode();
-                if (response.IsSuccessStatusCode) {
+                if(response.IsSuccessStatusCode) {
                     return await ReadAsAsync<T>(response.Content);
                 }
 
@@ -431,7 +395,7 @@ namespace XStudio.App.Helper {
             return await ExecuteAsync(async () => {
                 HttpResponseMessage response = await httpClient.SendAsync(request, completionOption);
                 response.EnsureSuccessStatusCode();
-                if (response.IsSuccessStatusCode) {
+                if(response.IsSuccessStatusCode) {
                     return await ReadAsAsync<T>(response.Content);
                 }
 
@@ -452,7 +416,7 @@ namespace XStudio.App.Helper {
             return await ExecuteAsync(async () => {
                 HttpResponseMessage response = await httpClient.SendAsync(request, completionOption, cancellationToken);
                 response.EnsureSuccessStatusCode();
-                if (response.IsSuccessStatusCode) {
+                if(response.IsSuccessStatusCode) {
                     return await ReadAsAsync<T>(response.Content);
                 }
 

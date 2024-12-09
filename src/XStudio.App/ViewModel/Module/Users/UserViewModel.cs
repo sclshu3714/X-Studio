@@ -1,11 +1,11 @@
-﻿using Abp.Auditing;
-using Castle.Components.DictionaryAdapter;
+﻿using Castle.Components.DictionaryAdapter;
 using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp.Auditing;
 using Volo.Abp.Data;
 using XStudio.App.ViewModel.Module.Users;
 using XStudio.Users;

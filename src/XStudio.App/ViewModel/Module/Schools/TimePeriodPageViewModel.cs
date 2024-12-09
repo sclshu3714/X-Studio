@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using Volo.Abp.Application.Dtos;
 using XStudio.App.Models.Data;
 using XStudio.App.Service;
 using XStudio.App.Views.Module;
@@ -34,7 +35,7 @@ namespace XStudio.App.ViewModel.Module {
         public async Task LoadDataAsync() {
             IsLoading = true;
             TimePeriods.Clear();
-            var data = await _dataService.GetListAsync(new Abp.Application.Services.Dto.PagedAndSortedResultRequestDto() { MaxResultCount = 100, SkipCount = 0, Sorting = "Order" });
+            var data = await _dataService.GetListAsync(new PagedAndSortedResultRequestDto() { MaxResultCount = 100, SkipCount = 0, Sorting = "Order" });
             if (data != null && data.Items.Any()) {
                 TimePeriods.AddRange(data.Items);
             }

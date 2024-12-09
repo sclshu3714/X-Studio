@@ -29,7 +29,7 @@ namespace XStudio.Common.Clouds {
                     lock(locker) {
                         if(instance == null) {
                             instance = new TencentCloudClient();
-                            instance.InitCosXml();
+                            //instance.InitCosXml();
                         }
                     }
                 }
@@ -39,17 +39,12 @@ namespace XStudio.Common.Clouds {
         /// <summary>
         /// SecretId
         /// </summary>
-        public string AccessKey { get; set; } = "AKIDiz73lR0Tkuvp8Rel0FNMDtkPxOfsy33y";
+        public string AccessKey { get; set; } = string.Empty;
 
         /// <summary>
         /// SecretKey
         /// </summary>
-        public string SecretKey { get; set; } = "unXAczJYpy462vokZFqQ0TrBYxIYp6KU";
-
-        /// <summary>
-        /// APPID
-        /// </summary>
-        public string APPID { get; set; } = "2vY77hUGQL7vL16yVatHzw==";
+        public string SecretKey { get; set; } = string.Empty;
 
         /// <summary>
         /// COS服务地域
@@ -119,30 +114,16 @@ namespace XStudio.Common.Clouds {
         /// <summary>
         /// 初始化COS服务实例
         /// </summary>
-        public void InitCosXml() {
-            //EncrypterHelper.EncryptionKey = "AIC_TENCENT_CLOUD_COS_ENCRYPTION_KEY";
-            //var accessKeydemo = EncrypterHelper.Encrypt(AccessKey);
-            //var secretKeydemo = EncrypterHelper.Encrypt(SecretKey);
-            string? region = Environment.GetEnvironmentVariable("COS_REGION");
-            if(region == null) {
-                region = Region; // 使用默认值
-            }
-            else {
-                Region = region;
-            }
+        public void InitCosXml(string region, string tmpSecretId, string tmpSecretKey, string sessionToken, long startTime, long tmpExpiredTime, bool isEncrypt = false) {
             CosXmlConfig config = new CosXmlConfig.Builder()
                 .SetRegion(region) // 设置默认的地域, COS 地域的简称请参照 https://cloud.tencent.com/document/product/436/6224
                 .Build();
-            string? secretId = Environment.GetEnvironmentVariable("SECRET_ID"); // 云 API 密钥 SecretId, 获取 API 密钥请参照 https://console.cloud.tencent.com/cam/capi
-            string? secretKey = Environment.GetEnvironmentVariable("SECRET_KEY"); // 云 API 密钥 SecretKey, 获取 API 密钥请参照 https://console.cloud.tencent.com/cam/capi
-            if(secretId == null || secretKey == null) {
-                secretId = AccessKey;
-                secretKey = SecretKey;
+            if(isEncrypt) {
+                tmpSecretId = EncrypterHelper.Decrypt(tmpSecretId);
+                tmpSecretKey = EncrypterHelper.Decrypt(tmpSecretKey);
+                sessionToken = EncrypterHelper.Decrypt(sessionToken);
             }
-            secretId = EncrypterHelper.Decrypt(secretId);
-            secretKey = EncrypterHelper.Decrypt(secretKey);
-            long durationSecond = 600; //每次请求签名有效时长，单位为秒
-            QCloudCredentialProvider qCloudCredentialProvider = new DefaultQCloudCredentialProvider(secretId, secretKey, durationSecond);
+            QCloudCredentialProvider qCloudCredentialProvider = new DefaultSessionQCloudCredentialProvider(tmpSecretId, tmpSecretKey, startTime, tmpExpiredTime, sessionToken);
             this.cosXml = new CosXmlServer(config, qCloudCredentialProvider);
         }
 
@@ -153,8 +134,8 @@ namespace XStudio.Common.Clouds {
         public void CreateDir(string bucket, string dir) {
             try {
                 // 存储桶名称，此处填入格式必须为 bucketname-APPID, 其中 APPID 获取参考 https://console.cloud.tencent.com/developer
-                var AppId = EncrypterHelper.Decrypt(APPID);
-                bucket = $"{bucket}-{AppId}";// "examplebucket-1250000000";
+                // var AppId = EncrypterHelper.Decrypt(APPID);
+                // bucket = $"{bucket}-{AppId}";// "examplebucket-1250000000";
                 string cosPath = dir;// "dir/"; // 对象键
                 PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, cosPath, new byte[0]);
                 PutObjectResult? result = cosXml?.PutObject(putObjectRequest);
@@ -196,8 +177,8 @@ namespace XStudio.Common.Clouds {
                 TransferManager transferManager = new TransferManager(cosXml, transferConfig);
                 // 存储桶名称，此处填入格式必须为 BucketName-APPID, 其中 APPID 获取参考 https://console.cloud.tencent.com/developer
                 // string bucket = "examplebucket-1250000000";
-                var AppId = EncrypterHelper.Decrypt(APPID);
-                bucket = $"{bucket}-{AppId}";
+                // var AppId = EncrypterHelper.Decrypt(APPID);
+                // bucket = $"{bucket}-{AppId}";
                 string cosPath = fileKey;//"exampleobject"; //对象在存储桶中的位置标识符，即称对象键
                 string srcPath = localFile; // "temp-source-file";//本地文件绝对路径  
                 // 上传对象 uploadTask.Pause(); //暂停上传 uploadTask.Resume(); //恢复上传 uploadTask.Cancel(); //取消上传
@@ -234,8 +215,8 @@ namespace XStudio.Common.Clouds {
             // 初始化 TransferManager
             TransferManager transferManager = new TransferManager(cosXml, transferConfig);
             // 存储桶名称，此处填入格式必须为 bucketname-APPID, 其中 APPID 获取参考 https://console.cloud.tencent.com/developer
-            var AppId = EncrypterHelper.Decrypt(APPID);
-            bucket = $"{bucket}-{AppId}";//"examplebucket-1250000000";
+            // var AppId = EncrypterHelper.Decrypt(APPID);
+            // bucket = $"{bucket}-{AppId}";//"examplebucket-1250000000";
             foreach(var fileKey in localFiles.Keys) {
                 // 上传对象
                 string cosPath = fileKey;// "exampleobject" + i; //对象在存储桶中的位置标识符，即称对象键
@@ -252,8 +233,8 @@ namespace XStudio.Common.Clouds {
         public void PutObject(string bucket, string fileKey, string localFile) {
             try {
                 // 存储桶名称，此处填入格式必须为 bucketname-APPID, 其中 APPID 获取参考 https://console.cloud.tencent.com/developer
-                var AppId = EncrypterHelper.Decrypt(APPID);
-                bucket = $"{bucket}-{AppId}";// examplebucket-1250000000";
+                // var AppId = EncrypterHelper.Decrypt(APPID);
+                // bucket = $"{bucket}-{AppId}";// examplebucket-1250000000";
                 string key = fileKey;// "exampleobject"; //对象键
                 string srcPath = localFile; // @"temp-source-file";//本地文件绝对路径
 
@@ -280,8 +261,8 @@ namespace XStudio.Common.Clouds {
         public void PostObject(string bucket, string fileKey, string localFile) {
             try {
                 // 存储桶名称，此处填入格式必须为 bucketname-APPID, 其中 APPID 获取参考 https://console.cloud.tencent.com/developer
-                var AppId = EncrypterHelper.Decrypt(APPID);
-                bucket = $"{bucket}-{AppId}";// "examplebucket-1250000000";
+                // var AppId = EncrypterHelper.Decrypt(APPID);
+                // bucket = $"{bucket}-{AppId}";// "examplebucket-1250000000";
                 string key = fileKey;// "exampleobject"; //对象键
                 string srcPath = localFile; // @"temp-source-file";//本地文件绝对路径
                 PostObjectRequest request = new PostObjectRequest(bucket, key, srcPath);
@@ -308,8 +289,8 @@ namespace XStudio.Common.Clouds {
         public void UploadBytes(string bucket, string fileKey, byte[] localFile) {
             try {
                 // 存储桶名称，此处填入格式必须为 bucketname-APPID, 其中 APPID 获取参考 https://console.cloud.tencent.com/developer
-                var AppId = EncrypterHelper.Decrypt(APPID);
-                bucket = $"{bucket}-{AppId}";// "examplebucket-1250000000";
+                // var AppId = EncrypterHelper.Decrypt(APPID);
+                // bucket = $"{bucket}-{AppId}";// "examplebucket-1250000000";
                 string cosPath = fileKey;// "exampleObject"; // 对象键
                 byte[] data = localFile; //new byte[1024]; // 二进制数据
                 PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, cosPath, data);
@@ -331,8 +312,8 @@ namespace XStudio.Common.Clouds {
         public void PutObjectStream(string bucket, string flieKey, Stream fileStream) {
             try {
                 // 存储桶名称，此处填入格式必须为 bucketname-APPID, 其中 APPID 获取参考 https://console.cloud.tencent.com/developer
-                var AppId = EncrypterHelper.Decrypt(APPID);
-                bucket = $"{bucket}-{AppId}";// "examplebucket-1250000000";
+                // var AppId = EncrypterHelper.Decrypt(APPID);
+                // bucket = $"{bucket}-{AppId}";// "examplebucket-1250000000";
                 string key = flieKey;// "exampleobject"; //对象键
                 //string srcPath = @"temp-source-file";//本地文件绝对路径
                 // 打开只读的文件流对象
@@ -381,8 +362,8 @@ namespace XStudio.Common.Clouds {
 
             // 初始化 TransferManager
             TransferManager transferManager = new TransferManager(cosXml, transferConfig);
-            var AppId = EncrypterHelper.Decrypt(APPID);
-            bucket = $"{bucket}-{AppId}";// "examplebucket-1250000000"; //存储桶，格式：BucketName-APPID
+            // var AppId = EncrypterHelper.Decrypt(APPID);
+            // bucket = $"{bucket}-{AppId}";// "examplebucket-1250000000"; //存储桶，格式：BucketName-APPID
             string cosPath = fileKey;// "exampleobject"; //对象在存储桶中的位置标识符，即称对象键
                                      //string localDir = Path.GetTempPath();//本地文件夹
                                      //string localFileName = "my-local-temp-file"; //指定本地保存的文件名
@@ -424,9 +405,9 @@ namespace XStudio.Common.Clouds {
             // 初始化 TransferManager
             TransferManager transferManager = new TransferManager(cosXml, transferConfig);
             // 存储桶名称，此处填入格式必须为 bucketname-APPID, 其中 APPID 获取参考 https://console.cloud.tencent.com/developer
-            var AppId = EncrypterHelper.Decrypt(APPID);
-            bucket = $"{bucket}-{AppId}";// "examplebucket-1250000000";
-                                         //string localDir = System.IO.Path.GetTempPath();//本地文件夹
+            // var AppId = EncrypterHelper.Decrypt(APPID);
+            // bucket = $"{bucket}-{AppId}";// "examplebucket-1250000000";
+            // string localDir = System.IO.Path.GetTempPath();//本地文件夹
 
             foreach(var fileKey in localFiles.Keys) {
                 // 下载对象
@@ -446,9 +427,9 @@ namespace XStudio.Common.Clouds {
             //下面的操作，把对象列出到列表里，然后异步下载列表中的对象
             string? nextMarker = null;
             List<string> downloadList = new List<string>();
-            bucket = $"{bucket}-{APPID}";// "examplebucket-1250000000";
+            // bucket = $"{bucket}-{APPID}";// "examplebucket-1250000000";
             string prefix = folder; // "folder1/"; //指定前缀
-                                    // 循环请求直到没有下一页数据
+            // 循环请求直到没有下一页数据
             do {
                 // 存储桶名称，此处填入格式必须为 bucketname-APPID, 其中 APPID 获取参考 https://console.cloud.tencent.com/developer
                 GetBucketRequest listRequest = new GetBucketRequest(bucket);
@@ -501,9 +482,8 @@ namespace XStudio.Common.Clouds {
             TransferConfig transferConfig = new TransferConfig();
             // 初始化 TransferManager
             TransferManager transferManager = new TransferManager(cosXml, transferConfig);
-
-            var AppId = EncrypterHelper.Decrypt(APPID);
-            bucket = $"{bucket}-{AppId}";// "examplebucket-1250000000"; //存储桶，格式：BucketName-APPID
+            // var AppId = EncrypterHelper.Decrypt(APPID);
+            // bucket = $"{bucket}-{AppId}";// "examplebucket-1250000000"; //存储桶，格式：BucketName-APPID
             string cosPath = fileKey;// "exampleobject"; //对象在存储桶中的位置标识符，即称对象键
             //string localDir = System.IO.Path.GetTempPath();//本地文件夹
             //string localFileName = "my-local-temp-file"; //指定本地保存的文件名
@@ -521,8 +501,8 @@ namespace XStudio.Common.Clouds {
         public void GetObject(string bucket, string fileKey, string localDir, string localFileName) {
             try {
                 // 存储桶名称，此处填入格式必须为 bucketname-APPID, 其中 APPID 获取参考 https://console.cloud.tencent.com/developer
-                var AppId = EncrypterHelper.Decrypt(APPID);
-                bucket = $"{bucket}-{AppId}";// "examplebucket-1250000000";
+                // var AppId = EncrypterHelper.Decrypt(APPID);
+                // bucket = $"{bucket}-{AppId}";// "examplebucket-1250000000";
                 string key = fileKey;// "exampleobject"; //对象键
                 //string localDir = Path.GetTempPath();//本地文件夹
                 //string localFileName = "my-local-temp-file"; //指定本地保存的文件名
@@ -548,7 +528,7 @@ namespace XStudio.Common.Clouds {
         public void DownloadToMemory(string bucket, string fileKey) {
             try {
                 // 存储桶名称，此处填入格式必须为 bucketname-APPID, 其中 APPID 获取参考 https://console.cloud.tencent.com/developer
-                bucket = $"{bucket}-{APPID}";// "examplebucket-1250000000";
+                // bucket = $"{bucket}-{APPID}";// "examplebucket-1250000000";
                 string key = fileKey;// "exampleobject"; //对象键
 
                 GetObjectBytesRequest request = new GetObjectBytesRequest(bucket, key);
