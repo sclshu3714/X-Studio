@@ -39,12 +39,17 @@ namespace XStudio.Common.Clouds {
         /// <summary>
         /// SecretId
         /// </summary>
-        public string AccessKey { get; set; } = string.Empty;
+        public string SecretId { get; set; } = string.Empty;
 
         /// <summary>
         /// SecretKey
         /// </summary>
         public string SecretKey { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 临时密钥
+        /// </summary>
+        public string SessionToken { get; set; } = string.Empty;
 
         /// <summary>
         /// COS服务地域
@@ -114,17 +119,24 @@ namespace XStudio.Common.Clouds {
         /// <summary>
         /// 初始化COS服务实例
         /// </summary>
-        public void InitCosXml(string region, string tmpSecretId, string tmpSecretKey, string sessionToken, long startTime, long tmpExpiredTime, bool isEncrypt = false) {
-            CosXmlConfig config = new CosXmlConfig.Builder()
-                .SetRegion(region) // 设置默认的地域, COS 地域的简称请参照 https://cloud.tencent.com/document/product/436/6224
-                .Build();
+        public void InitCosXml(string region, string bucket, string tmpSecretId, string tmpSecretKey, string sessionToken,long startTime, long tmpExpiredTime, bool isEncrypt = false) {
+            Region = region;
+            SecretId = tmpSecretId;
+            SecretKey = tmpSecretKey;
+            Bucket = bucket;
             if(isEncrypt) {
                 tmpSecretId = EncrypterHelper.Decrypt(tmpSecretId);
                 tmpSecretKey = EncrypterHelper.Decrypt(tmpSecretKey);
                 sessionToken = EncrypterHelper.Decrypt(sessionToken);
             }
-            QCloudCredentialProvider qCloudCredentialProvider = new DefaultSessionQCloudCredentialProvider(tmpSecretId, tmpSecretKey, startTime, tmpExpiredTime, sessionToken);
+            CosXmlConfig config = new CosXmlConfig.Builder()
+                .SetRegion(region) // 设置默认的地域, COS 地域的简称请参照 https://cloud.tencent.com/document/product/436/6224
+                .Build();
+            var qCloudCredentialProvider = new DefaultSessionQCloudCredentialProvider(tmpSecretId, tmpSecretKey, startTime, tmpExpiredTime, sessionToken);
             this.cosXml = new CosXmlServer(config, qCloudCredentialProvider);
+        }
+        public void InitCosXml(CosXmlServer cosXml) { 
+            this.cosXml = cosXml;
         }
 
         /// <summary>

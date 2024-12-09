@@ -317,6 +317,7 @@ public class XStudioHttpApiHostModule : AbpModule {
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration) {
+        
         EncrypterHelper.EncryptionKey = configuration.GetSection("StringEncryption:DefaultPassPhrase").Value ?? "xstudio_encryptionkey";
         // 禁用自动验证
         Configure<AbpAntiForgeryOptions>(options => {
@@ -343,6 +344,12 @@ public class XStudioHttpApiHostModule : AbpModule {
         //{
         //    options.IsDynamicClaimsEnabled = true;
         //});
+
+        // 限制上传文件大小
+        context.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(options => {
+            // Set the limit to 256 MB
+            options.MultipartBodyLengthLimit = 268435456;
+        });
     }
 
     private void ConfigureJwtAuthentication(ServiceConfigurationContext context, IConfiguration configuration) {
@@ -580,7 +587,7 @@ public class XStudioHttpApiHostModule : AbpModule {
             app.UseErrorPage();
         }
 
-
+        app.UseAuthentication();
         app.UseIpRateLimiting(); // 启用访问限制
         app.UseCorrelationId();
         app.UseStaticFiles();
@@ -590,7 +597,6 @@ public class XStudioHttpApiHostModule : AbpModule {
         app.UseMiddleware<IpRateLimitMiddleware>();
         //app.UseMiddleware<AbpTokenValidationMiddleware>(); // token验证
         //app.UseJwtTokenMiddleware();
-        app.UseAuthentication();
         //app.UseAbpOpenIddictValidation();
 
         if (MultiTenancyConsts.IsEnabled) {

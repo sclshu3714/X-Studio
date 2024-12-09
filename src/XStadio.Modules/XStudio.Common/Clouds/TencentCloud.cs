@@ -4,16 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace XStudio.Clouds {
-    [Serializable]
-    public class TencentCloudDto {
-        public Credentials credentials { get; set; } = new Credentials();
+namespace XStudio.Common.Clouds {
+    public class TencentCloud {
+        public Credentials Credentials { get; set; } = new Credentials();
         public string requestId { get; set; } = string.Empty;
         public string expiration { get; set; } = string.Empty;
         public long startTime { get; set; }
         public long expiredTime { get; set; }
     }
-    [Serializable]
+
     public class Credentials {
 
         /// <summary>

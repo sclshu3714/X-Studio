@@ -4,6 +4,36 @@
         <name>XStudio.Application</name>
     </assembly>
     <members>
+        <member name="M:XStudio.Clouds.TencentCloudService.GetCredentialsAsync">
+            <summary>
+            获取腾讯云临时密钥
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:XStudio.Clouds.TencentCloudService.UploadFileAsync(Microsoft.AspNetCore.Http.IFormFile,XStudio.Clouds.TencentCloudDto,XStudio.Clouds.UploadFileDto)">
+            <summary>
+            上传文件到腾讯云对象存储
+            </summary>
+            <param name="tencent"></param>
+            <param name="file"></param>
+            <param name="form"></param>
+            <returns></returns>
+            <exception cref="T:System.NotImplementedException"></exception>
+        </member>
+        <member name="M:XStudio.Clouds.TencentCloudService.InitCosXmlAsync(XStudio.Clouds.TencentCloudDto,XStudio.Clouds.UploadFileDto)">
+            <summary>
+            初始化COS服务实例
+            </summary>
+        </member>
+        <member name="M:XStudio.Clouds.TencentCloudService.UploadFileAsync(Microsoft.AspNetCore.Http.IFormFile,COSXML.CosXmlServer,XStudio.Clouds.UploadFileDto)">
+            <summary>
+            上传文件到腾讯云对象存储
+            </summary>
+            <param name="cosXml"></param>
+            <param name="file"></param>
+            <param name="form"></param>
+            <returns></returns>
+        </member>
         <member name="M:XStudio.Projects.ProjectService.GetAsync(System.Guid)">
             <summary>
             通过项目Id查询项目

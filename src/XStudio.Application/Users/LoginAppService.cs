@@ -38,20 +38,19 @@ namespace XStudio.Users {
         private readonly ILogger<LoginAppService> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly HttpApiHelper _httpApiHelper;
-        private readonly IAccountManager _accountManager;
+        //private readonly IAccountManager _accountManager;
         public LoginAppService(IdentityUserManager userManager,
                                SignInManager<Volo.Abp.Identity.IdentityUser> signInManager,
                                IConfiguration configuration,
                                IHttpContextAccessor httpContextAccessor,
-                               HttpApiHelper httpApiHelper,
-                               IAccountManager accountManager) {
+                               HttpApiHelper httpApiHelper) {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
             _logger = NullLogger<LoginAppService>.Instance;
             _httpContextAccessor = httpContextAccessor;
             _httpApiHelper = httpApiHelper;
-            _accountManager = accountManager;
+            //_accountManager = accountManager;
         }
 
         //[HttpPost]
@@ -175,22 +174,22 @@ namespace XStudio.Users {
             if (string.IsNullOrEmpty(loginDto.Password) || string.IsNullOrEmpty(loginDto.UserNameOrEmailAddress)) {
                 throw new UserFriendlyException("请输入合理数据！");
             }
+            return  null;
+            //////校验验证码
+            ////ValidationImageCaptcha(input.Uuid, input.Code);
 
-            ////校验验证码
-            //ValidationImageCaptcha(input.Uuid, input.Code);
+            //Volo.Abp.Identity.IdentityUser? user = null;
+            ////校验
+            //await _accountManager.LoginValidationAsync(loginDto.UserNameOrEmailAddress, loginDto.Password, x => user = x);
 
-            Volo.Abp.Identity.IdentityUser? user = null;
-            //校验
-            await _accountManager.LoginValidationAsync(loginDto.UserNameOrEmailAddress, loginDto.Password, x => user = x);
+            //if (user == null) { 
+            //    throw new UserFriendlyException("用户名或密码错误！");
+            //}
 
-            if (user == null) { 
-                throw new UserFriendlyException("用户名或密码错误！");
-            }
-
-            Volo.Abp.Identity.IdentityUser? userInfo = null;
-            //获取token
-            var accessToken = await _accountManager.GetTokenByUserIdAsync(user.Id, (info) => userInfo = info);
-            var refreshToken = _accountManager.CreateRefreshToken(user.Id);
+            //Volo.Abp.Identity.IdentityUser? userInfo = null;
+            ////获取token
+            //var accessToken = await _accountManager.GetTokenByUserIdAsync(user.Id, (info) => userInfo = info);
+            //var refreshToken = _accountManager.CreateRefreshToken(user.Id);
 
             ////这里抛出一个登录的事件,也可以在全部流程走完，在应用层组装
             //if (_httpContextAccessor.HttpContext is not null) {
@@ -201,12 +200,12 @@ namespace XStudio.Users {
             //    await LocalEventBus.PublishAsync(loginEto);
             //}
 
-            IdentityUserDto identityUserDto = ObjectMapper.Map<Volo.Abp.Identity.IdentityUser, IdentityUserDto>(user);
-            identityUserDto.ExtraProperties.Add("AccessToken", accessToken);
-            //identityUserDto.ExtraProperties.Add("TokenType", tokenRes.TokenType);
-            //identityUserDto.ExtraProperties.Add("ExpiresIn", tokenRes.ExpiresIn);
-            identityUserDto.ExtraProperties.Add("RefreshToken", refreshToken);
-            return identityUserDto;
+            //IdentityUserDto identityUserDto = ObjectMapper.Map<Volo.Abp.Identity.IdentityUser, IdentityUserDto>(user);
+            //identityUserDto.ExtraProperties.Add("AccessToken", accessToken);
+            ////identityUserDto.ExtraProperties.Add("TokenType", tokenRes.TokenType);
+            ////identityUserDto.ExtraProperties.Add("ExpiresIn", tokenRes.ExpiresIn);
+            //identityUserDto.ExtraProperties.Add("RefreshToken", refreshToken);
+            //return identityUserDto;
         }
         #endregion
     }
