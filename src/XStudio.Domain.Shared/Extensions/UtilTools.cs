@@ -306,7 +306,7 @@ public static class UtilTools
         key = Convert.FromBase64String(encodingAESKey + "=");
         byte[] iv = new byte[16];
         Array.Copy(key, iv, 16);
-        byte[] btmpMsg = null;
+        byte[] btmpMsg = [];
 
         //RijndaelManaged aes = new RijndaelManaged();
         //aes.KeySize = 256;

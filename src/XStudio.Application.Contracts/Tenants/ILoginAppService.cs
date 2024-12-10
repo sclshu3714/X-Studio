@@ -9,7 +9,7 @@ using XStudio.Users;
 
 namespace XStudio.Tenants {
     public interface ILoginAppService {
-        public Task<ActionResult<IdentityUserDto>> Login(LoginDto loginDto);
-        public Task<IdentityUserDto> LoginV2(LoginDto loginDto);
+        public Task<ActionResult<IdentityUserDto?>> Login(LoginDto loginDto);
+        public Task<IdentityUserDto?> LoginV2(LoginDto loginDto);
     }
 }

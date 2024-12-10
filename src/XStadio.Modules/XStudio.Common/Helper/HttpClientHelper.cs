@@ -219,13 +219,13 @@ namespace XStudio.Common.Helper {
                 HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Delete, endpoint) {
                     Content = content
                 };
-                HttpResponseMessage response = await SendAsync(request);
-                response.EnsureSuccessStatusCode();
-                if(response.IsSuccessStatusCode) {
+                HttpResponseMessage? response = await SendAsync(request);
+                response?.EnsureSuccessStatusCode();
+                if(response?.IsSuccessStatusCode == true) {
                     return await ReadAsAsync<T>(response.Content);
                 }
 
-                throw new Exception($"Error deleting data from API: {response.ReasonPhrase}");
+                throw new Exception($"Error deleting data from API: {response?.ReasonPhrase}");
             });
         }
 
@@ -234,7 +234,7 @@ namespace XStudio.Common.Helper {
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request) {
+        public async Task<HttpResponseMessage?> SendAsync(HttpRequestMessage request) {
 
             return await ExecuteAsync(async () => await httpClient.SendAsync(request));
         }
@@ -244,7 +244,7 @@ namespace XStudio.Common.Helper {
         /// </summary>
         /// <param name="endpoint"></param>
         /// <returns></returns>
-        public async Task<HttpResponseMessage> GetResponseAsync(string endpoint) {
+        public async Task<HttpResponseMessage?> GetResponseAsync(string endpoint) {
             return await ExecuteAsync(async () => await httpClient.GetAsync(endpoint));
         }
 
@@ -254,7 +254,7 @@ namespace XStudio.Common.Helper {
         /// <param name="endpoint"></param>
         /// <param name="content"></param>
         /// <returns></returns>
-        public async Task<HttpResponseMessage> PostResponseAsync(string endpoint, HttpContent content) {
+        public async Task<HttpResponseMessage?> PostResponseAsync(string endpoint, HttpContent content) {
             return await ExecuteAsync(async () => await httpClient.PostAsync(endpoint, content));
         }
 
@@ -264,7 +264,7 @@ namespace XStudio.Common.Helper {
         /// <param name="endpoint"></param>
         /// <param name="content"></param>
         /// <returns></returns>
-        public async Task<HttpResponseMessage> PutResponseAsync(string endpoint, HttpContent content) {
+        public async Task<HttpResponseMessage?> PutResponseAsync(string endpoint, HttpContent content) {
             return await ExecuteAsync(async () => await httpClient.PutAsync(endpoint, content));
         }
 
@@ -273,7 +273,7 @@ namespace XStudio.Common.Helper {
         /// </summary>
         /// <param name="endpoint"></param>
         /// <returns></returns>
-        public async Task<HttpResponseMessage> DeleteResponseAsync(string endpoint) {
+        public async Task<HttpResponseMessage?> DeleteResponseAsync(string endpoint) {
             return await ExecuteAsync(async () => await httpClient.DeleteAsync(endpoint));
         }
 
@@ -282,7 +282,7 @@ namespace XStudio.Common.Helper {
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<HttpResponseMessage> SendResponseAsync(HttpRequestMessage request) {
+        public async Task<HttpResponseMessage?> SendResponseAsync(HttpRequestMessage request) {
             return await ExecuteAsync(async () => await httpClient.SendAsync(request));
         }
 

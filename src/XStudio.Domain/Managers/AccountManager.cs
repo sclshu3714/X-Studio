@@ -147,7 +147,7 @@ namespace XStudio.Managers
         /// <param name="password"></param>
         /// <param name="userAction"></param>
         /// <returns></returns>
-        public async Task LoginValidationAsync(string userName, string password, Action<IdentityUser>? userAction = null)
+        public async Task<bool> LoginValidationAsync(string userName, string password, Action<IdentityUser>? userAction = null)
         {
             //var user = new UserAggregateRoot();
             //if (await ExistAsync(userName, o => user = o))
@@ -163,6 +163,7 @@ namespace XStudio.Managers
             //    throw new UserFriendlyException(UserConst.Login_Error);
             //}
             //throw new UserFriendlyException(UserConst.Login_User_No_Exist);
+            return await Task.FromResult(false);
         }
 
         /// <summary>
@@ -171,7 +172,7 @@ namespace XStudio.Managers
         /// <param name="userName"></param>
         /// <param name="userAction"></param>
         /// <returns></returns>
-        public async Task<bool> ExistAsync(string userName, Action<IdentityUser> userAction = null)
+        public async Task<bool> ExistAsync(string userName, Action<IdentityUser>? userAction = null)
         {
             var user = await _repository.FindByUserNameAsync(userName);
             if (userAction is not null)
@@ -243,7 +244,7 @@ namespace XStudio.Managers
         /// <param name="oldPassword"></param>
         /// <returns></returns>
         /// <exception cref="UserFriendlyException"></exception>
-        public async Task UpdatePasswordAsync(Guid userId, string newPassword, string oldPassword)
+        public async Task<bool> UpdatePasswordAsync(Guid userId, string newPassword, string oldPassword)
         {
             //var user = await _repository.GetAsync(userId);
             //if (!user.JudgePassword(oldPassword))
@@ -253,6 +254,7 @@ namespace XStudio.Managers
             //user.EncryPassword.Password = newPassword;
             //user.BuildPassword();
             //await _repository.UpdateAsync(user);
+            return await Task.FromResult(false);
         }
 
         /// <summary>
@@ -267,7 +269,7 @@ namespace XStudio.Managers
             //user.EncryPassword.Password = password;
             //user.BuildPassword();
             //return await _repository.UpdateAsync(user);
-            return false;
+            return await Task.FromResult(false);
         }
 
         /// <summary>
@@ -277,11 +279,12 @@ namespace XStudio.Managers
         /// <param name="password"></param>
         /// <param name="phone"></param>
         /// <returns></returns>
-        public async Task RegisterAsync(string userName, string password, long phone,string? nick)
+        public async Task<bool> RegisterAsync(string userName, string password, long phone,string? nick)
         {
             //var user = new UserAggregateRoot(userName, password, phone,nick);
             //await _userManager.CreateAsync(user);
             //await _userManager.SetDefautRoleAsync(user.Id);
+            return await Task.FromResult(false);
         }
     }
 

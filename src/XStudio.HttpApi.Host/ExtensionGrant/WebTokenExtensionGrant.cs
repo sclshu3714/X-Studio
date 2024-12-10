@@ -24,13 +24,13 @@ namespace XStudio.ExtensionGrant
 
             try
             {
-                //WebExtensionService extService = new WebExtensionService(SettingManager);
-                IResults _result;
-                //二维码免登授权（企业内部）
-                //var prResult = await extService.GetContactUsersAsync(code);
-                //_result = prResult;
-                //ProviderKey = prResult.Errcode == 0 ? prResult.Result.UnionId : "";
-                return new IResults() { };
+                // WebExtensionService extService = new WebExtensionService(SettingManager);
+                // IResults _result;
+                // 二维码免登授权（企业内部）
+                // var prResult = await extService.GetContactUsersAsync(code);
+                // _result = prResult;
+                // ProviderKey = prResult.Errcode == 0 ? prResult.Result.UnionId : "";
+                return await Task.FromResult(new IResults() { });
             }
             catch (Exception ex)
             {

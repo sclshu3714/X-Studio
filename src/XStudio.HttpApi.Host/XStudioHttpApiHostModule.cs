@@ -87,6 +87,8 @@ using Nacos.V2.Naming;
 using System.Threading.Tasks;
 using System.Threading;
 using XStudio.Users;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 
 namespace XStudio;
 

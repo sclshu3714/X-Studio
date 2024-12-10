@@ -54,7 +54,7 @@ namespace XStudio.Users {
         }
 
         //[HttpPost]
-        public async Task<ActionResult<IdentityUserDto>> Login(LoginDto loginDto) {
+        public async Task<ActionResult<IdentityUserDto?>> Login(LoginDto loginDto) {
             var user = await _userManager.FindByNameAsync(loginDto.UserNameOrEmailAddress);
             if (user == null) {
                 return new OkObjectResult("Invalid username.");
@@ -170,10 +170,11 @@ namespace XStudio.Users {
         }
 
         #region jwt生成token
-        public async Task<IdentityUserDto> LoginV2(LoginDto loginDto) {
+        public async Task<IdentityUserDto?> LoginV2(LoginDto loginDto) {
             if (string.IsNullOrEmpty(loginDto.Password) || string.IsNullOrEmpty(loginDto.UserNameOrEmailAddress)) {
                 throw new UserFriendlyException("请输入合理数据！");
             }
+            await Task.CompletedTask;
             return  null;
             //////校验验证码
             ////ValidationImageCaptcha(input.Uuid, input.Code);

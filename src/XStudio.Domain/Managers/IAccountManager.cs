@@ -13,9 +13,9 @@ namespace XStudio.Managers
     {
         string CreateRefreshToken(Guid userId);
         Task<string> GetTokenByUserIdAsync(Guid userId,Action<IdentityUser>? getUserInfo=null);
-        Task LoginValidationAsync(string userName, string password, Action<IdentityUser>? userAction = null);
-        Task RegisterAsync(string userName, string password, long phone,string? nick);
+        Task<bool> LoginValidationAsync(string userName, string password, Action<IdentityUser>? userAction = null);
+        Task<bool> RegisterAsync(string userName, string password, long phone,string? nick);
         Task<bool> RestPasswordAsync(Guid userId, string password);
-        Task UpdatePasswordAsync(Guid userId, string newPassword, string oldPassword);
+        Task<bool> UpdatePasswordAsync(Guid userId, string newPassword, string oldPassword);
     }
 }

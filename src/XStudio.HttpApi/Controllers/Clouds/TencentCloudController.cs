@@ -46,6 +46,7 @@ namespace XStudio.Controllers.Clouds {
         /// <param name="file"></param>
         /// <returns></returns>
         [HttpPost("uploadFile")]
+        [Consumes("multipart/form-data")]
         public async Task<ActionResult<UploadFileDto>> UploadFileAsync(IFormFile file) {
             try {
                 TencentCloudDto? qCloud = await _tencentCloudService.GetCredentialsAsync();
@@ -61,16 +62,16 @@ namespace XStudio.Controllers.Clouds {
                 }
                 UploadFileDto fileInfo = new UploadFileDto();
                 fileInfo.Form = file;
-                if(string.IsNullOrEmpty(file.FileName)) {
+                if(string.IsNullOrEmpty(fileInfo.FileName)) {
                     fileInfo.FileName = Path.GetFileName(file.FileName);
                 }
                 if(string.IsNullOrEmpty(fileInfo.FileType)) {
-                    fileInfo.FileType = Path.GetFileNameWithoutExtension(file.FileName);
+                    fileInfo.FileType = Path.GetExtension(file.FileName);
                 }
                 if(string.IsNullOrEmpty(fileInfo.FileName) || string.IsNullOrEmpty(fileInfo.FileType)) {
                     return CommonResult<UploadFileDto>.Fail("无法识别上传文件的名称或类型");
                 }
-                fileInfo.FileKey = Guid.NewGuid().ToString("N");
+                fileInfo.FileKey = $"{Guid.NewGuid().ToString("N")}{fileInfo.FileType}";
 
                 Tuple<bool, string> result = await _tencentCloudService.UploadFileAsync(file, qCloud, fileInfo);
                 if(result.Item1) {

@@ -55,10 +55,10 @@ namespace XStudio.Swagger
                     parameter.Description = description.ModelMetadata?.Description;
                 }
 
-                if (parameter.Schema.Default == null && description.DefaultValue != null)
+                if (parameter.Schema.Default == null && description.DefaultValue != null && description.ModelMetadata != null)
                 {
                     // REF: https://github.com/Microsoft/aspnet-api-versioning/issues/429#issuecomment-605402330
-                    var json = JsonSerializer.Serialize(description.DefaultValue, description.ModelMetadata?.ModelType);
+                    var json = JsonSerializer.Serialize(description.DefaultValue, description.ModelMetadata.ModelType);
                     parameter.Schema.Default = OpenApiAnyFactory.CreateFromJson(json);
                 }
 

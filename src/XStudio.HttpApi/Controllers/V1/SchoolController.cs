@@ -24,15 +24,5 @@ namespace XStudio.Controllers.V1
             _schoolService = schoolService;
             _schoolCampusService = schoolCampusService;
         }
-
-        /// <summary>
-        /// 查询学校校区(仅校区，不包括)
-        /// </summary>
-        /// <param name="schoolId"></param>
-        /// <returns></returns>
-        //public async Task<IActionResult<List<SchoolCampusDto>>> GetSchoolCampusList(Guid schoolId)
-        //{
-        //    (await _schoolCampusService..get()).
-        //}
     }
 }

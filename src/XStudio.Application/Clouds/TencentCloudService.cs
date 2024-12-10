@@ -56,13 +56,14 @@ namespace XStudio.Clouds {
                  */
                 string[] allowActions = new string[]
                 {
-                    "name/cos:PutObject",
-                    "name/cos:PostObject",
-                    "name/cos:InitiateMultipartUpload",
-                    "name/cos:ListMultipartUploads",
-                    "name/cos:ListParts",
-                    "name/cos:UploadPart",
-                    "name/cos:CompleteMultipartUpload"
+                    "name/cos:*",
+                    //"name/cos:PutObject",
+                    //"name/cos:PostObject",
+                    //"name/cos:InitiateMultipartUpload",
+                    //"name/cos:ListMultipartUploads",
+                    //"name/cos:ListParts",
+                    //"name/cos:UploadPart",
+                    //"name/cos:CompleteMultipartUpload"
                 };
 
                 //设置参数
@@ -117,6 +118,7 @@ namespace XStudio.Clouds {
                     return await Task.FromResult(credentialDto);
                 }
                 catch(Exception ex) {
+                    Log.Error(ex, "获取腾讯云临时密钥失败");
                     return null;
                 }
             }
@@ -147,8 +149,10 @@ namespace XStudio.Clouds {
         /// 初始化COS服务实例
         /// </summary>
         private async Task<Tuple<bool, CosXmlServer?>> InitCosXmlAsync(TencentCloudDto dto, UploadFileDto fileDto) {
+            string? sessionToken = string.IsNullOrWhiteSpace(dto.credentials?.sessionToken) ? dto.credentials?.token : string.Empty;
             if(string.IsNullOrEmpty(fileDto.Region) || string.IsNullOrEmpty(fileDto.Bucket) ||
-               string.IsNullOrEmpty(dto.credentials?.tmpSecretId) || string.IsNullOrEmpty(dto.credentials?.tmpSecretKey) || string.IsNullOrEmpty(dto.credentials?.sessionToken)) {
+               string.IsNullOrEmpty(dto.credentials?.tmpSecretId) || string.IsNullOrEmpty(dto.credentials?.tmpSecretKey) || 
+               string.IsNullOrEmpty(sessionToken)) {
                 return Tuple.Create<bool, CosXmlServer?>(false, null);
             }
             CosXmlConfig config = new CosXmlConfig.Builder()
@@ -158,7 +162,7 @@ namespace XStudio.Clouds {
             //string tmpSecretId, string tmpSecretKey, long keyStartTimeSecond, long tmpExpiredTime, string sessionToken
             var qCloudCredentialProvider = new CustomQCloudCredentialProvider(dto.credentials.tmpSecretId,
                                                                               dto.credentials.tmpSecretKey,
-                                                                              dto.credentials.sessionToken,
+                                                                              sessionToken,
                                                                               dto.startTime,
                                                                               dto.expiredTime);
             CosXmlServer cosXml = new CosXmlServer(config, qCloudCredentialProvider);
@@ -193,8 +197,6 @@ namespace XStudio.Clouds {
                     });
                     //执行请求
                     PutObjectResult result = cosXml.PutObject(request);
-                    //关闭文件流
-                    fileStream.Close();
                     //打印请求结果
                     Console.WriteLine(result.GetResultInfo());
                     return await Task.FromResult(Tuple.Create(true, "上传成功"));

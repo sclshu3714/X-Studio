@@ -24,13 +24,13 @@ namespace XStudio.Controllers {
 
         [HttpPost("v{version:apiVersion}/login")]
         [ApiVersion(1.0)]
-        public async Task<ActionResult<IdentityUserDto>> Login(LoginDto loginDto) { 
+        public async Task<ActionResult<IdentityUserDto?>> Login(LoginDto loginDto) { 
            return await _loginAppService.Login(loginDto);
         }
 
         [HttpPost("v{version:apiVersion}/login")]
         [ApiVersion(2.0)]
-        public async Task<ActionResult<IdentityUserDto>> LoginV2(LoginDto loginDto) {
+        public async Task<ActionResult<IdentityUserDto?>> LoginV2(LoginDto loginDto) {
             return await _loginAppService.LoginV2(loginDto);
         }
     }

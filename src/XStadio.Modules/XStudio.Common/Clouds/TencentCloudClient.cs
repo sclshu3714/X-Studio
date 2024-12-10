@@ -161,6 +161,222 @@ namespace XStudio.Common.Clouds {
             }
         }
 
+        //当对象 ACL 属性设置为“公有读”时，可以通过以下 SDK 接口生成的 URL 直接访问对象（仅支持生成 COS 默认源站域名的 URL）。
+        public string? GetObjectUrl(string bucket, string key) {
+            try {
+                //// 存储桶名称，此处填入格式必须为 bucketname-APPID, 其中 APPID 获取参考 https://console.cloud.tencent.com/developer
+                //string bucket = "examplebucket-1250000000";
+                //string key = "exampleobject"; //对象键
+                // 生成链接（默认域名访问）
+                string? url = cosXml?.GetObjectUrl(bucket, key);
+                Console.WriteLine("Object Url is: " + url);
+                return url;
+            }
+            catch(COSXML.CosException.CosClientException clientEx) {
+                Console.WriteLine("CosClientException: " + clientEx);
+                return null;
+            }
+            catch(COSXML.CosException.CosServerException serverEx) {
+                Console.WriteLine("CosServerException: " + serverEx.GetInfo());
+                return null;
+            }
+        }
+
+        public void GetPreSignDownloadUrl(string region, string bucket, string key) {
+            if(cosXml == null)
+                return;
+            try {
+                PreSignatureStruct preSignatureStruct = new PreSignatureStruct();
+                preSignatureStruct.appid = bucket.Substring(bucket.LastIndexOf('-'));//"1250000000"; //腾讯云账号 APPID
+                preSignatureStruct.region = region;//"COS_REGION"; //存储桶地域
+                preSignatureStruct.bucket = bucket;// "examplebucket-1250000000"; //存储桶
+                preSignatureStruct.key = key; //对象键
+                preSignatureStruct.httpMethod = "GET"; //HTTP 请求方法
+                preSignatureStruct.isHttps = true; //生成 HTTPS 请求 URL
+                preSignatureStruct.signDurationSecond = 600; //请求签名时间为600s
+                preSignatureStruct.headers = null; //签名中需要校验的 header
+                preSignatureStruct.queryParameters = null; //签名中需要校验的 URL 中请求参数
+                string requestSignURL = cosXml.GenerateSignURL(preSignatureStruct);
+                Console.WriteLine(requestSignURL);
+
+                //下载请求预签名 URL (使用永久密钥方式计算的签名 URL)
+                string localDir = System.IO.Path.GetTempPath(); //本地文件夹
+                string localFileName = "my-local-temp-file"; //指定本地保存的文件名
+                GetObjectRequest request = new GetObjectRequest(null, null, localDir, localFileName);
+                //设置下载请求预签名 URL
+                request.RequestURLWithSign = requestSignURL;
+                //设置进度回调
+                request.SetCosProgressCallback(delegate (long completed, long total)
+                {
+                    Console.WriteLine(String.Format("progress = {0:##.##}%", completed * 100.0 / total));
+                });
+                //执行请求
+                GetObjectResult result = cosXml.GetObject(request);
+                //请求成功
+                Console.WriteLine(result.GetResultInfo());
+            }
+            catch(COSXML.CosException.CosClientException clientEx) {
+                Console.WriteLine("CosClientException: " + clientEx);
+            }
+            catch(COSXML.CosException.CosServerException serverEx) {
+                Console.WriteLine("CosServerException: " + serverEx.GetInfo());
+            }
+        }
+
+        /// <summary>
+        /// 生成预签名上传链接
+        /// </summary>
+        /// <param name="region"></param>
+        /// <param name="bucket"></param>
+        /// <param name="key"></param>
+        /// <param name="srcPath"></param>
+        public void GetPreSignUploadUrl(string region, string bucket, string key, string srcPath) {
+            if(cosXml == null)
+                return;
+            try {
+                PreSignatureStruct preSignatureStruct = new PreSignatureStruct();
+                // APPID 获取参考 https://console.cloud.tencent.com/developer
+                preSignatureStruct.appid = bucket.Substring(bucket.LastIndexOf('-'));//"1250000000";
+                                                                                     // 存储桶所在地域, COS 地域的简称请参照 https://cloud.tencent.com/document/product/436/6224
+                preSignatureStruct.region = region;//"COS_REGION";
+                                                   // 存储桶名称，此处填入格式必须为 bucketname-APPID, 其中 APPID 获取参考 https://console.cloud.tencent.com/developer
+                preSignatureStruct.bucket = bucket;//"examplebucket-1250000000";
+                preSignatureStruct.key = key; //对象键
+                preSignatureStruct.httpMethod = "PUT"; //HTTP 请求方法
+                preSignatureStruct.isHttps = true; //生成 HTTPS 请求 URL
+                preSignatureStruct.signDurationSecond = 600; //请求签名时间为 600s
+                preSignatureStruct.headers = null; //签名中需要校验的 header
+                preSignatureStruct.queryParameters = null; //签名中需要校验的 URL 中请求参数
+                                                           //上传预签名 URL (使用永久密钥方式计算的签名 URL)
+                string requestSignURL = cosXml.GenerateSignURL(preSignatureStruct);
+                Console.WriteLine(requestSignURL);
+
+                //string srcPath = @"local-file-path"; //本地文件绝对路径
+                PutObjectRequest request = new PutObjectRequest(null, null, srcPath);
+                //设置上传请求预签名 URL
+                request.RequestURLWithSign = requestSignURL;
+                //设置进度回调
+                request.SetCosProgressCallback(delegate (long completed, long total)
+                {
+                    Console.WriteLine(String.Format("progress = {0:##.##}%", completed * 100.0 / total));
+                });
+                //执行请求
+                PutObjectResult result = cosXml.PutObject(request);
+                //请求成功
+                Console.WriteLine(result.GetResultInfo());
+            }
+            catch(COSXML.CosException.CosClientException clientEx) {
+                Console.WriteLine("CosClientException: " + clientEx);
+            }
+            catch(COSXML.CosException.CosServerException serverEx) {
+                Console.WriteLine("CosServerException: " + serverEx.GetInfo());
+            }
+        }
+
+        /// <summary>
+        /// 生成预签名 URL，并在签名中携带 Host
+        /// </summary>
+        /// <param name="region"></param>
+        /// <param name="bucket"></param>
+        /// <param name="key"></param>
+        /// <param name="localDir"></param>
+        /// <param name="localFileName"></param>
+        public void GetPreSignUrlWithHost(string region, string bucket, string key, string localDir, string localFileName) {
+            if(cosXml == null)
+                return;
+            try {
+                PreSignatureStruct preSignatureStruct = new PreSignatureStruct();
+                // APPID 获取参考 https://console.cloud.tencent.com/developer
+                preSignatureStruct.appid = bucket.Substring(bucket.LastIndexOf('-'));
+                // 存储桶所在地域, COS 地域的简称请参照 https://cloud.tencent.com/document/product/436/6224
+                preSignatureStruct.region = region;
+                // 存储桶名称，此处填入格式必须为 bucketname-APPID, 其中 APPID 获取参考 https://console.cloud.tencent.com/developer
+                preSignatureStruct.bucket = bucket;
+                preSignatureStruct.key = key; //对象键
+                preSignatureStruct.httpMethod = "GET"; //HTTP 请求方法
+                preSignatureStruct.isHttps = true; //生成 HTTPS 请求 URL
+                preSignatureStruct.signDurationSecond = 600; //请求签名时间为600s
+                preSignatureStruct.signHost = true; // 请求中签入Host，建议开启，能够有效防止越权请求，需要注意，开启后实际请求也需要携带Host请求头
+                preSignatureStruct.headers = null; //签名中需要校验的 header
+                preSignatureStruct.queryParameters = null; //签名中需要校验的 URL 中请求参数
+
+                string requestSignURL = cosXml.GenerateSignURL(preSignatureStruct);
+                Console.WriteLine("requestUrl is:" + requestSignURL);
+
+                ////下载请求预签名 URL (使用永久密钥方式计算的签名 URL)
+                //string localDir = System.IO.Path.GetTempPath(); //本地文件夹
+                //string localFileName = "my-local-temp-file"; //指定本地保存的文件名
+                GetObjectRequest request = new GetObjectRequest(null, null, localDir, localFileName);
+                //设置下载请求预签名 URL
+                request.RequestURLWithSign = requestSignURL;
+                //设置进度回调
+                request.SetCosProgressCallback(delegate (long completed, long total)
+                {
+                    Console.WriteLine(String.Format("progress = {0:##.##}%", completed * 100.0 / total));
+                });
+                //执行请求
+                GetObjectResult result = cosXml.GetObject(request);
+                //请求成功
+                Console.WriteLine(result.GetResultInfo());
+            }
+            catch(COSXML.CosException.CosClientException clientEx) {
+                Console.WriteLine("CosClientException: " + clientEx);
+            }
+            catch(COSXML.CosException.CosServerException serverEx) {
+                Console.WriteLine("CosServerException: " + serverEx.GetInfo());
+            }
+        }
+
+        /// <summary>
+        /// 生成预签名URL，并在签名中携带请求参数
+        /// </summary>
+        public void GetPreSignUrlWithReqParam(string region, string bucket, string key, string localDir, string localFileName) {
+            if(cosXml == null)
+                return;
+            try {
+                PreSignatureStruct preSignatureStruct = new PreSignatureStruct();
+                // APPID 获取参考 https://console.cloud.tencent.com/developer
+                preSignatureStruct.appid = bucket.Substring(bucket.LastIndexOf('-'));
+                // 存储桶所在地域, COS 地域的简称请参照 https://cloud.tencent.com/document/product/436/6224
+                preSignatureStruct.region = region;
+                // 存储桶名称，此处填入格式必须为 bucketname-APPID, 其中 APPID 获取参考 https://console.cloud.tencent.com/developer
+                preSignatureStruct.bucket = bucket;
+                preSignatureStruct.key = key; //对象键
+                preSignatureStruct.httpMethod = "GET"; //HTTP 请求方法
+                preSignatureStruct.isHttps = true; //生成 HTTPS 请求 URL
+                preSignatureStruct.signDurationSecond = 600; //请求签名时间为600s
+                preSignatureStruct.signHost = true; // 请求中签入Host，建议开启，能够有效防止越权请求，需要注意，开启后实际请求也需要携带Host请求头
+                preSignatureStruct.headers = null; // 签名中需要校验的 header
+                string ci_params = "imageMogr2/thumbnail/!50p";
+                preSignatureStruct.queryParameters = new Dictionary<string, string>(); // 签名中需要校验的 URL 中请求参数，以请求万象图片处理为例
+                preSignatureStruct.queryParameters.Add(ci_params, null);
+
+                string requestSignURL = cosXml.GenerateSignURL(preSignatureStruct);
+                Console.WriteLine("requestUrl is:" + requestSignURL);
+
+                ////下载请求预签名 URL (使用永久密钥方式计算的签名 URL)
+                //string localDir = System.IO.Path.GetTempPath(); //本地文件夹
+                //string localFileName = "my-local-temp-file"; //指定本地保存的文件名
+                GetObjectRequest request = new GetObjectRequest(null, null, localDir, localFileName);
+                //设置下载请求预签名 URL
+                request.RequestURLWithSign = requestSignURL;
+                //设置进度回调
+                request.SetCosProgressCallback(delegate (long completed, long total)
+                {
+                    Console.WriteLine(String.Format("progress = {0:##.##}%", completed * 100.0 / total));
+                });
+                //执行请求
+                GetObjectResult result = cosXml.GetObject(request);
+                //请求成功
+                Console.WriteLine(result.GetResultInfo());
+            }
+            catch(COSXML.CosException.CosClientException clientEx) {
+                Console.WriteLine("CosClientException: " + clientEx);
+            }
+            catch(COSXML.CosException.CosServerException serverEx) {
+                Console.WriteLine("CosServerException: " + serverEx.GetInfo());
+            }
+        }
 
         /// <summary>
         /// 上传文件
@@ -168,6 +384,8 @@ namespace XStudio.Common.Clouds {
         /// <param name="localFile"></param>
         /// <returns></returns>
         public async Task<Tuple<bool, string>> UploadFileAsync(string bucket, string fileKey, string localFile) {
+            if(cosXml == null)
+                return Tuple.Create(false, "请先初始化cosXml");
             int index = 0;
             bool NoUpload = false;
             NoUpload = FileIsUsed(localFile);
