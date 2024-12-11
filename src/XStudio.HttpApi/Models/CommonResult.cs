@@ -55,7 +55,7 @@ namespace XStudio.Models {
     //}
 
     [Serializable]
-    public class CommonResult<T> : ActionResult {
+    public class CommonResult<T> {
 
         [Required]
         public HttpStatusCode HttpStatusCode { get; set; } = HttpStatusCode.OK;

@@ -10,7 +10,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:XStudio.Clouds.TencentCloudService.UploadFileAsync(Microsoft.AspNetCore.Http.IFormFile,XStudio.Clouds.TencentCloudDto,XStudio.Clouds.UploadFileDto)">
+        <member name="M:XStudio.Clouds.TencentCloudService.UploadFileAsync(Microsoft.AspNetCore.Http.IFormFile,XStudio.Clouds.TencentCloudCredentialsDto,XStudio.Clouds.UploadFileDto)">
             <summary>
             上传文件到腾讯云对象存储
             </summary>
@@ -20,7 +20,15 @@
             <returns></returns>
             <exception cref="T:System.NotImplementedException"></exception>
         </member>
-        <member name="M:XStudio.Clouds.TencentCloudService.InitCosXmlAsync(XStudio.Clouds.TencentCloudDto,XStudio.Clouds.UploadFileDto)">
+        <member name="M:XStudio.Clouds.TencentCloudService.GetObjectUrl(COSXML.CosXmlServer,System.String,System.String)">
+            <summary>
+            当对象 ACL 属性设置为“公有读”时，可以通过以下 SDK 接口生成的 URL 直接访问对象（仅支持生成 COS 默认源站域名的 URL）。
+            </summary>
+            <param name="cosXml"></param>
+            <param name="bucket"></param>
+            <param name="key"></param>
+        </member>
+        <member name="M:XStudio.Clouds.TencentCloudService.InitCosXmlAsync(XStudio.Clouds.TencentCloudCredentialsDto,XStudio.Clouds.UploadFileDto)">
             <summary>
             初始化COS服务实例
             </summary>

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace XStudio.Clouds {
     public interface ITencentCloudService {
-        Task<TencentCloudDto?> GetCredentialsAsync();
-        Task<Tuple<bool, string>> UploadFileAsync(IFormFile form, TencentCloudDto tencent, UploadFileDto file);
+        Task<TencentCloudCredentialsDto?> GetCredentialsAsync();
+        Task<UploadFileResultDto> UploadFileAsync(IFormFile form, TencentCloudCredentialsDto tencent, UploadFileDto file);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using XStudio.Clouds;
 using XStudio.Projects;
 using XStudio.Schools.Places;
 using XStudio.Schools.Timetable;
@@ -38,5 +39,8 @@ public class XStudioApplicationAutoMapperProfile : Profile
         CreateMap<Schedule, ScheduleDto>().ReverseMap();
         CreateMap<Schedule, UpdateScheduleDto>().ReverseMap();
         CreateMap<Schedule, CreateScheduleDto>().ReverseMap();
+
+        // 腾讯云
+        CreateMap<UploadFileDto, UploadFileResultDto>();
     }
 }

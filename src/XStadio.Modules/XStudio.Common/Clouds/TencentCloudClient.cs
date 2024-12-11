@@ -182,6 +182,12 @@ namespace XStudio.Common.Clouds {
             }
         }
 
+        /// <summary>
+        /// 生成预签名下载链接
+        /// </summary>
+        /// <param name="region"></param>
+        /// <param name="bucket"></param>
+        /// <param name="key"></param>
         public void GetPreSignDownloadUrl(string region, string bucket, string key) {
             if(cosXml == null)
                 return;

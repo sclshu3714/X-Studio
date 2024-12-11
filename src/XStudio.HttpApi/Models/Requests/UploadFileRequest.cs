@@ -15,6 +15,6 @@ namespace XStudio.Models.Requests {
         public UploadFileDto FileInfo { get; set; } = new UploadFileDto();
 
         [JsonProperty("qCloud")]
-        public TencentCloudDto QCloud { get; set; } = new TencentCloudDto();
+        public TencentCloudCredentialsDto QCloud { get; set; } = new TencentCloudCredentialsDto();
     }
 }
