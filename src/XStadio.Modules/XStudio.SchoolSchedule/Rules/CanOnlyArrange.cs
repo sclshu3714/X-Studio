@@ -16,7 +16,7 @@ namespace XStudio.SchoolSchedule.Rules {
             : base(priority, mode, RuleType.CanOnlyArrange) {
             Location = location;
             ClassCourse = classCourse;
-            Id = classCourse.Id;
+            Code = classCourse.Code;
         }
 
         /// <summary>

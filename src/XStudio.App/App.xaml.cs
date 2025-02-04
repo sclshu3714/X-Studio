@@ -198,7 +198,7 @@ public partial class App : PrismApplication {
     }
 
 
-    #region demo
+    #region Skin
     private static Mutex? AppMutex = null;
     internal void UpdateSkin(SkinType skin) {
         var skins0 = Resources.MergedDictionaries[1];

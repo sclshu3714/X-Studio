@@ -11,13 +11,15 @@ namespace XStudio.SchoolSchedule.Rules {
     /// 规则接口
     /// </summary>
     public class IRule {
-        public IRule() {
-
+        public IRule(string id) {
+            Id = id;
         }
-
-        public IRule(PriorityMode priority, RuleMode mode)
-            : this() {
+        public IRule(PriorityMode priority)
+            : this(Guid.NewGuid().ToString()) {
             Priority = priority;
+        }
+        public IRule(PriorityMode priority, RuleMode mode)
+            : this(priority) {
             @Mode = mode;
         }
         public IRule(PriorityMode priority, RuleMode mode, RuleType type)
@@ -32,9 +34,14 @@ namespace XStudio.SchoolSchedule.Rules {
         }
 
         /// <summary>
-        /// 课程编号，主要用于快速识别和查询
+        /// 规则Id，唯一表示
         /// </summary>
-        public virtual string Id { get; set; } = string.Empty;
+        public string Id { get; private set; } = string.Empty;
+
+        /// <summary>
+        /// 课程代码
+        /// </summary>
+        public virtual string Code { get; set; } = string.Empty;
 
         /// <summary>
         /// 使用课时,占用课时,如果为0,不限制
@@ -74,21 +81,33 @@ namespace XStudio.SchoolSchedule.Rules {
 
         /// <summary>
         /// 作用范围：
-        /// RangeType == 0 时，作用范围数量为0
-        /// RangeType == 1 2 3 4 时，作用范围记录范围类型对应的Id, 如果数量为0时表示取全部
+        /// RangeType == 0 时，作用范围数量为0;
+        /// RangeType == 1/2/3/4 时，作用范围记录范围类型对应的Id, 如果数量为0时表示取全部
         /// </summary>
         public List<string> ActionRange { get; set; } = new List<string>();
 
         /// <summary>
         /// 位置信息
+        ///     key: 星期几(1-7)
+        ///     value: 第几节课
         /// </summary>
         public Tuple<DayOfWeek, int>? Location { get; set; }
 
         /// <summary>
+        /// 限制到节次的某个类型
+        ///     默认限制到正课授课, 即SectionType.RegularClass
+        ///     如果限制设置为None, 则不限制,允许放入(自习与正课授课)，不允许放入（活动、午休等非教学课）
+        /// </summary>
+        /// <example>
+        ///     将一个语文课限制安排到早自习内，那么这个语文课就是早读语文
+        /// </example>
+        public SectionType RestrictType { get; set; } = SectionType.RegularClass;
+
+        /// <summary>
         /// 获取属性的DescriptionAttribute注释
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="name"></param>
+        /// <typeparam name="T">泛型类型</typeparam>
+        /// <param name="obj">对象</param>
         /// <returns></returns>
         public static string GetDescription<T>(T obj) {
             if (obj == null) return "未知";

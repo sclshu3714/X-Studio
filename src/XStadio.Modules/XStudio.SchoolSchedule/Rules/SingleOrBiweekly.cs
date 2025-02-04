@@ -12,14 +12,15 @@ namespace XStudio.SchoolSchedule.Rules {
         /// <summary>
         /// 课时,单周或者双周分别占classHour的一半
         /// </summary>
-        public SingleOrBiweekly(PriorityMode priority, ClassCourseRule singleWeekly, ClassCourseRule biWeekly) {
+        public SingleOrBiweekly(PriorityMode priority, ClassCourseRule singleWeekly, ClassCourseRule biWeekly)
+            : base(priority, RuleMode.Course, RuleType.SingleOrBiweekly) {
             SingleWeekly = singleWeekly;
             BiWeekly = biWeekly;
             Type = RuleType.SingleOrBiweekly;
             Mode = RuleMode.Course;
             Priority = priority;
             RangeType = ActionRangeType.Class;
-            Id = $"{singleWeekly.Id};{biWeekly.Id}";
+            Code = $"{singleWeekly.Code};{biWeekly.Code}";
         }
         /// <summary>
         /// 单双周
@@ -34,7 +35,7 @@ namespace XStudio.SchoolSchedule.Rules {
             SingleWeekly = singleWeekly;
             BiWeekly = biWeekly;
             ClassHour = classHour;
-            Id = $"{singleWeekly.Id};{biWeekly.Id}";
+            Code = $"{singleWeekly.Code};{biWeekly.Code}";
         }
         /// <summary>
         /// 显示名称
@@ -51,7 +52,7 @@ namespace XStudio.SchoolSchedule.Rules {
         /// <summary>
         /// 课程编号，主要用于快速识别和查询
         /// </summary>
-        public override string Id { get; set; } = string.Empty;
+        public override string Code { get; set; } = string.Empty;
 
         /// <summary>
         /// 单周课程

@@ -27,13 +27,20 @@ using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Http;
 using static COSXML.Model.Tag.DocumentCensorResult;
 using COSXML.Model.Tag;
+using Volo.Abp.TenantManagement;
+using Microsoft.AspNetCore.Mvc;
+using System.Numerics;
+using TencentCloud.Tat.V20201028.Models;
 
 namespace XStudio.Clouds {
     [RemoteService(false)]
     public class TencentCloudService : ApplicationService, ITencentCloudService {
         private readonly IConfiguration _configuration;
-        public TencentCloudService(IConfiguration configuration) {
+        private IHttpContextAccessor _httpContextAccessor;
+        public TencentCloudService(IConfiguration configuration, 
+                                   IHttpContextAccessor httpContextAccessor) {
             _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         /// <summary>
@@ -184,7 +191,7 @@ namespace XStudio.Clouds {
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         public async Task<UploadFileResultDto> UploadFileAsync(IFormFile form, TencentCloudCredentialsDto tencent, UploadFileDto file) {
-            Tuple<bool, CosXmlServer?> tuple = await InitCosXmlAsync(tencent, file);
+            Tuple<bool, CosXmlServer?> tuple = await InitCosXmlAsync(file.Region, file.Bucket, tencent);
             if(tuple.Item1 && tuple.Item2 is CosXmlServer cosXml) {
                 //_tencentCloudClient.InitCosXml(cosXml);
                 return await UploadFileAsync(form, cosXml, file);
@@ -199,65 +206,216 @@ namespace XStudio.Clouds {
         }
 
         /// <summary>
-        /// 当对象 ACL 属性设置为“公有读”时，可以通过以下 SDK 接口生成的 URL 直接访问对象（仅支持生成 COS 默认源站域名的 URL）。
+        /// 刷新下载链接
         /// </summary>
-        /// <param name="cosXml"></param>
-        /// <param name="bucket"></param>
-        /// <param name="key"></param>
-        public string? GetObjectUrl(CosXmlServer cosXml, string bucket, string key) {
-            try {
-                string url = cosXml.GetObjectUrl(bucket, key);
-                Console.WriteLine("Object Url is: " + url);
-                return url;
+        /// <param name="tencent">授权信息</param>
+        /// <param name="refresh">要刷新的文件key列表</param>
+        /// <returns>
+        ///  true:成功 object:DownloadResultDto列表;
+        ///  false:失败 object: string错误信息
+        /// </returns>
+        public async Task<Tuple<bool, object>> RefreshDownloadUrl(TencentCloudCredentialsDto tencent, DownloadDto refresh) {
+            if(refresh.FileInfos == null || refresh.FileInfos.Count == 0) {
+                return Tuple.Create<bool, object>(false, "需要传入刷新文件的key");
             }
-            catch(COSXML.CosException.CosClientException clientEx) {
-                Console.WriteLine("CosClientException: " + clientEx);
-                return null;
+            Tuple<bool, CosXmlServer?> tuple = await InitCosXmlAsync(refresh.Region, refresh.Bucket, tencent);
+            if(tuple.Item1 && tuple.Item2 is CosXmlServer cosXml) {
+                List<DownloadResultDto> resultList = new List<DownloadResultDto>();
+                foreach(DownloadFileInfo info in refresh.FileInfos) {
+                    DownloadResultDto downloadResultDto = new DownloadResultDto();
+                    downloadResultDto.FileKey = info.FileKey;
+                    try {
+                        downloadResultDto.ObjectUrl = cosXml.GetObjectUrl(refresh.Bucket, info.FileKey);
+                        downloadResultDto.PreSignDownloadUrl = GetPreSignDownloadUrl(cosXml, refresh.Region, refresh.Bucket, info.FileKey);
+                        resultList.Add(downloadResultDto);
+                    }
+                    catch(COSXML.CosException.CosClientException clientEx) {
+                        downloadResultDto.Success = false;
+                        downloadResultDto.Message = clientEx.Message;
+                        resultList.Add(downloadResultDto);
+                    }
+                    catch(COSXML.CosException.CosServerException serverEx) {
+                        downloadResultDto.Success = false;
+                        downloadResultDto.Message = serverEx.GetInfo();
+                        resultList.Add(downloadResultDto);
+                    }
+                }
+                return Tuple.Create<bool, object>(true, resultList);
             }
-            catch(COSXML.CosException.CosServerException serverEx) {
-                Console.WriteLine("CosServerException: " + serverEx.GetInfo());
-                return null;
-            }
+            return Tuple.Create<bool, object>(false, "初始化COS服务实例失败");
         }
 
-        public string? GetPreSignDownloadUrl(CosXmlServer cosXml,string region, string bucket, string key,long signDurationSecond = 12 * 60 * 60) {
+        /// <summary>
+        /// 下载文件(下载到服务器本地)
+        /// </summary>
+        /// <returns></returns>
+        /// <example>
+        /// DownloadObject demo = new DownloadObject();
+        /// 初始化COS服务
+        ///    demo.InitCosXml();
+        /// demo.TransferDownloadObject().Wait();
+        /// </example>
+        public async Task<DownloadResultDto> DownloadObject(TencentCloudCredentialsDto tencent, DownloadDto download) {
+            if(download.FileInfos == null || download.FileInfos.Count != 1) {
+                return new DownloadResultDto() {
+                    Success = false,
+                    Message = "只能下载单个文件"
+                };
+            }
+            Tuple<bool, CosXmlServer?> tuple = await InitCosXmlAsync(download.Region, download.Bucket, tencent);
+            if(tuple.Item1 && tuple.Item2 is CosXmlServer cosXml) {
+                // 初始化 TransferConfig
+                TransferConfig transferConfig = new TransferConfig();
+                // 手动设置高级下载接口的分块阈值为 20MB(默认为20MB), 从5.4.26版本开始支持！
+                //transferConfig.DivisionForDownload = 20 * 1024 * 1024;
+                // 手动设置高级下载接口的分块大小为 10MB(默认为5MB),设置过小的分块值可能导致频繁重试或下载速度不合预期
+                //transferConfig.SliceSizeForDownload = 10 * 1024 * 1024;
+
+                // 初始化 TransferManager
+                TransferManager transferManager = new TransferManager(cosXml, transferConfig);
+                // var AppId = EncrypterHelper.Decrypt(APPID);
+                // bucket = $"{bucket}-{AppId}";// "examplebucket-1250000000"; //存储桶，格式：BucketName-APPID
+                string cosPath = download.FileInfos[0].FileKey;// "exampleobject"; //对象在存储桶中的位置标识符，即称对象键
+                                         //string localDir = Path.GetTempPath();//本地文件夹
+                                         //string localFileName = "my-local-temp-file"; //指定本地保存的文件名
+                                         // 下载对象
+                COSXMLDownloadTask downloadTask = new COSXMLDownloadTask(download.Bucket, cosPath, download.FileInfos[0].LocalDir, download.FileInfos[0].LocalFileName);
+
+                //开启断点续传，当本地存在未下载完成文件时，追加下载到文件末尾
+                //本地文件已存在部分不符合本次下载的内容，可能导致下载失败，请删除文件重试
+                //downloadTask.SetResumableDownload(true);
+
+                // 手动设置高级下载接口的并发数 (默认为5), 从5.4.26版本开始支持！
+                // downloadTask.SetMaxTasks(10);
+
+                //设置进度打印回调函数
+                downloadTask.progressCallback = delegate (long completed, long total) {
+                    Console.WriteLine(String.Format("progress = {0:##.##}%", completed * 100.0 / total));
+                };
+                try {
+                    COSXMLDownloadTask.DownloadTaskResult result = await transferManager.DownloadAsync(downloadTask);
+                    Console.WriteLine(result.GetResultInfo());
+                    return new DownloadResultDto() {
+                        Success = true,
+                        Message = "只能下载单个文件"
+                    };
+                }
+                catch(COSXML.CosException.CosClientException clientEx) {
+                    Console.WriteLine("CosClientException: " + clientEx);
+                    return new DownloadResultDto() {
+                        Success = false,
+                        Message = clientEx.Message
+                    };
+                }
+                catch(COSXML.CosException.CosServerException serverEx) {
+                    Console.WriteLine("CosServerException: " + serverEx.GetInfo());
+                    return new DownloadResultDto() {
+                        Success = false,
+                        Message = serverEx.GetInfo()
+                    };
+                }
+            }
+            return new DownloadResultDto() {
+                Success = false,
+                Message = "初始化COS服务实例失败"
+            };
+        }
+
+        /// <summary>
+        /// 批量下载文件
+        /// </summary>
+        /// <param name="tencent"></param>
+        /// <param name="download"></param>
+        public async void BatchDownload(TencentCloudCredentialsDto tencent, DownloadDto download) {
+            if(download.FileInfos == null || download.FileInfos.Count != 1) {
+                return;
+            }
             try {
-                PreSignatureStruct preSignatureStruct = new PreSignatureStruct();
-                preSignatureStruct.appid = bucket.Substring(bucket.IndexOf("-") + 1);//"1250000000"; //腾讯云账号 APPID
-                preSignatureStruct.region = region;//"COS_REGION"; //存储桶地域
-                preSignatureStruct.bucket = bucket;// "examplebucket-1250000000"; //存储桶
-                preSignatureStruct.key = key; //对象键
-                preSignatureStruct.httpMethod = "GET"; //HTTP 请求方法
-                preSignatureStruct.isHttps = true; //生成 HTTPS 请求 URL
-                preSignatureStruct.signDurationSecond = signDurationSecond; //请求签名时间为600s
-                preSignatureStruct.headers = null; //签名中需要校验的 header
-                preSignatureStruct.queryParameters = null; //签名中需要校验的 URL 中请求参数
-                string requestSignURL = cosXml.GenerateSignURL(preSignatureStruct);
-                Console.WriteLine(requestSignURL);
-                return requestSignURL;
+                Tuple<bool, CosXmlServer?> tuple = await InitCosXmlAsync(download.Region, download.Bucket, tencent);
+                if(tuple.Item1 && tuple.Item2 is CosXmlServer cosXml) {
+                    TransferConfig transferConfig = new TransferConfig();
+                    // 初始化 TransferManager
+                    TransferManager transferManager = new TransferManager(cosXml, transferConfig);
+                   var fileList =download.FileInfos.Select(async info => {
+                        COSXMLDownloadTask downloadTask = new COSXMLDownloadTask(download.Bucket, info.FileKey, info.LocalDir, info.LocalFileName);
+                        await transferManager.DownloadAsync(downloadTask);
+                    });
+                    await Task.WhenAll(fileList);
+                }
             }
             catch(COSXML.CosException.CosClientException clientEx) {
                 Console.WriteLine("CosClientException: " + clientEx);
-                return null;
             }
             catch(COSXML.CosException.CosServerException serverEx) {
                 Console.WriteLine("CosServerException: " + serverEx.GetInfo());
+            }
+
+        }
+
+        /// <summary>
+        /// 下载文件到内存，然后转发到客户端
+        /// </summary>
+        /// <param name="tencent">授权信息</param>
+        /// <param name="download">下载文件信息</param>
+        /// <returns></returns>
+        public async Task<FileStreamResult?> DownloadToMemory(TencentCloudCredentialsDto tencent, DownloadDto download) {
+            if(download.FileInfos == null || download.FileInfos.Count != 1) {
                 return null;
             }
+            Tuple<bool, CosXmlServer?> tuple = await InitCosXmlAsync(download.Region, download.Bucket, tencent);
+            if(tuple.Item1 && tuple.Item2 is CosXmlServer cosXml) {
+                try {
+                    GetObjectBytesRequest request = new GetObjectBytesRequest(download.Bucket, download.FileInfos[0].FileKey);
+                    //设置进度回调
+                    request.SetCosProgressCallback(delegate (long completed, long total) {
+                        Console.WriteLine(String.Format("progress = {0:##.##}%", completed * 100.0 / total));
+                    });
+                    //执行请求
+                    GetObjectBytesResult result = cosXml.GetObject(request);
+                    if(result.IsSuccessful()) {
+                        //请求成功
+                        Console.WriteLine(result.GetResultInfo());
+                        // 使用 MemoryStream 进行下载
+                        using(var memoryStream = new MemoryStream(result.content)) {
+                            // 设置响应内容
+                            memoryStream.Position = 0; // 重置流位置
+                            var mimeType = "application/octet-stream";
+                            if(_httpContextAccessor != null && _httpContextAccessor.HttpContext != null) {
+                                _httpContextAccessor.HttpContext.Response.Headers["Access-Control-Expose-Headers"] = "content-disposition";
+                            }
+                            return new FileStreamResult(memoryStream, mimeType) {
+                                FileDownloadName = download.FileInfos[0].LocalFileName
+                            };
+                        }
+                    }
+                    return null;
+                }
+                catch(COSXML.CosException.CosClientException clientEx) {
+                    Console.WriteLine("CosClientException: " + clientEx);
+                }
+                catch(COSXML.CosException.CosServerException serverEx) {
+                    Console.WriteLine("CosServerException: " + serverEx.GetInfo());
+                }
+            }
+            return null;
         }
+
+        
+
+
         #region 私有方法 不公开
         /// <summary>
         /// 初始化COS服务实例
         /// </summary>
-        private async Task<Tuple<bool, CosXmlServer?>> InitCosXmlAsync(TencentCloudCredentialsDto dto, UploadFileDto fileDto) {
+        private async Task<Tuple<bool, CosXmlServer?>> InitCosXmlAsync(string Region, string Bucket, TencentCloudCredentialsDto dto) {
             string? sessionToken = string.IsNullOrWhiteSpace(dto.Credentials?.SessionToken) ? dto.Credentials?.Token : string.Empty;
-            if(string.IsNullOrEmpty(fileDto.Region) || string.IsNullOrEmpty(fileDto.Bucket) ||
+            if(string.IsNullOrEmpty(Region) || string.IsNullOrEmpty(Bucket) ||
                string.IsNullOrEmpty(dto.Credentials?.TmpSecretId) || string.IsNullOrEmpty(dto.Credentials?.TmpSecretKey) || 
                string.IsNullOrEmpty(sessionToken)) {
                 return Tuple.Create<bool, CosXmlServer?>(false, null);
             }
             CosXmlConfig config = new CosXmlConfig.Builder()
-                .SetRegion(fileDto.Region) // 设置默认的地域, COS 地域的简称请参照 https://cloud.tencent.com/document/product/436/6224
+                .SetRegion(Region) // 设置默认的地域, COS 地域的简称请参照 https://cloud.tencent.com/document/product/436/6224
                 .SetDebugLog(true) // 设置开启日志, 并在日志中查看请求相关信息
                 .Build();
             //string tmpSecretId, string tmpSecretKey, long keyStartTimeSecond, long tmpExpiredTime, string sessionToken
@@ -330,7 +488,55 @@ namespace XStudio.Clouds {
             }
         }
 
-        
+        /// <summary>
+        /// 当对象 ACL 属性设置为“公有读”时，可以通过以下 SDK 接口生成的 URL 直接访问对象（仅支持生成 COS 默认源站域名的 URL）。
+        /// </summary>
+        /// <param name="cosXml"></param>
+        /// <param name="bucket"></param>
+        /// <param name="key"></param>
+        private string? GetObjectUrl(CosXmlServer cosXml, string bucket, string key) {
+            try {
+                string url = cosXml.GetObjectUrl(bucket, key);
+                Console.WriteLine("Object Url is: " + url);
+                return url;
+            }
+            catch(COSXML.CosException.CosClientException clientEx) {
+                Console.WriteLine("CosClientException: " + clientEx);
+                return null;
+            }
+            catch(COSXML.CosException.CosServerException serverEx) {
+                Console.WriteLine("CosServerException: " + serverEx.GetInfo());
+                return null;
+            }
+        }
+
+        private string? GetPreSignDownloadUrl(CosXmlServer cosXml, string region, string bucket, string key, long signDurationSecond = 12 * 60 * 60) {
+            try {
+                PreSignatureStruct preSignatureStruct = new PreSignatureStruct();
+                preSignatureStruct.appid = bucket.Substring(bucket.IndexOf("-") + 1);//"1250000000"; //腾讯云账号 APPID
+                preSignatureStruct.region = region;//"COS_REGION"; //存储桶地域
+                preSignatureStruct.bucket = bucket;// "examplebucket-1250000000"; //存储桶
+                preSignatureStruct.key = key; //对象键
+                preSignatureStruct.httpMethod = "GET"; //HTTP 请求方法
+                preSignatureStruct.isHttps = true; //生成 HTTPS 请求 URL
+                preSignatureStruct.signDurationSecond = signDurationSecond; //请求签名时间为600s
+                preSignatureStruct.headers = null; //签名中需要校验的 header
+                preSignatureStruct.queryParameters = null; //签名中需要校验的 URL 中请求参数
+                string requestSignURL = cosXml.GenerateSignURL(preSignatureStruct);
+                Console.WriteLine(requestSignURL);
+                return requestSignURL;
+            }
+            catch(COSXML.CosException.CosClientException clientEx) {
+                Console.WriteLine("CosClientException: " + clientEx);
+                return null;
+            }
+            catch(COSXML.CosException.CosServerException serverEx) {
+                Console.WriteLine("CosServerException: " + serverEx.GetInfo());
+                return null;
+            }
+        }
+
+
         #endregion
 
     }

@@ -257,15 +257,17 @@ namespace XStudio.SchoolSchedule {
         /// <param name="periods">节次数组</param>
         /// <param name="TimePeriod">时段</param>
         /// <param name="sectionType">节次类型</param>
+        /// <param name="isTeaching">是：授课，否：非授课</param>
         /// <example>
         /// [1,2] 早晨 早读
         /// [3,4,6,7] 上午 正课
         /// [5] 上午 课件活动
         /// </example>
-        public void SetSectionTimePeriod(IEnumerable<int> periods, string TimePeriod, SectionType sectionType) {
+        public void SetSectionTimePeriod(IEnumerable<int> periods, string TimePeriod, SectionType sectionType, bool isTeaching = true) {
             foreach(var item in this[periods]) {
                 item.TimePeriod = TimePeriod;
                 item.Type = sectionType;
+                item.IsTeaching = isTeaching;
             }
         }
 
@@ -482,7 +484,7 @@ namespace XStudio.SchoolSchedule {
         /// <param name="regularClass"></param>
         /// <returns></returns>
         private Section? GetAvailableOtherSections(SectionType regularClass) {
-            var availableSections = this.Sections.Where(s => s.Status == SectionStatus.Normal && s.LinkTo == null && !s.IsMergeCell && s.Type == regularClass && !s.Contents.Any());
+            var availableSections = this.Sections.Where(s => s.IsValidPair(regularClass));
             if(availableSections.Count() == 0)
                 return null; // 如果没有可用的节次
             Random random = new Random();
@@ -509,28 +511,6 @@ namespace XStudio.SchoolSchedule {
             Random random = new Random();
             int it_index = random.Next(availableContinuousSections.Count()); // 随机获取索引
             return availableContinuousSections.ElementAt(it_index); // 返回随机选择的节次
-
-
-            //var availableContinuousSections = this.Sections
-            //            .GroupBy(d => d.Day) //根据星期分组
-            //            .SelectMany(t => t.GroupBy(s => s.TimePeriod) //  根据时间段分组
-            //                              .SelectMany(g => g.SkipLast(1)
-            //                              .Where((s, i) => s.Status == SectionStatus.Normal &&
-            //                                             s.LinkTo == null &&
-            //                                             !s.IsMergeCell &&
-            //                                             s.Type == regularClass &&
-            //                                             !s.Contents.Any() &&
-            //                                             g.ElementAt(i + 1).Status == SectionStatus.Normal &&
-            //                                             g.ElementAt(i + 1).LinkTo == null &&
-            //                                             !g.ElementAt(i + 1).IsMergeCell &&
-            //                                             g.ElementAt(i + 1).Type == regularClass &&
-            //                                             !g.ElementAt(i + 1).Contents.Any())
-            //                              .Select(s => s))); // 形成连续的节次对
-            //if(availableContinuousSections.Count() == 0)
-            //    return null; // 确保列表不为空
-            //Random random = new Random();
-            //int it_index = random.Next(availableContinuousSections.Count()); // 随机获取索引
-            //return availableContinuousSections.ElementAt(it_index); // 返回随机选择的节次
         }
 
 
@@ -552,27 +532,54 @@ namespace XStudio.SchoolSchedule {
         /// <param name="course"></param>
         /// <param name="section"></param>
         /// <returns></returns>
-        public bool CanAssign(IRule course, Section section, List<IRule>? constraint) {
-            return section != null && !section.IsMergeCell && section.LinkTo == null && !HasCourseConflict(section, course, constraint);
+        //public bool CanAssign(Section section, IRule course, List<IRule>? constraint) {
+        //    return section != null &&  !section.IsMergeCell &&  section.LinkTo == null && 
+        //           !HasCourseConflict(section, course, constraint);
+        //}
+        /// <summary>
+        /// 判断是否可以分配课程到节次
+        /// </summary>
+        /// <param name="section"></param>
+        /// <param name="course"></param>
+        /// <param name="constraint"></param>
+        /// <returns></returns>
+        public Tuple<bool, string> CanAssign(Section? section, IRule course, List<IRule>? constraint) {
+            if(section == null) {
+                return new Tuple<bool, string>(false, "没有获取到可用节次");
+            }
+            if(!section.IsValidPair(course.RestrictType)) {
+                return new Tuple<bool, string>(false, "节次类型不匹配");
+            }
+            Tuple<bool, string> tuple = HasCourseConflict(section, course, constraint);
+            if(!tuple.Item1) { 
+                return new Tuple<bool, string>(true, "可以安排课程");
+            }
+            return tuple;
         }
 
         /// <summary>
         /// 判断是否有课程冲突
+        ///     有冲突返回 true
+        ///     没有冲突返回 false
         /// </summary>
         /// <param name="section"></param>
         /// <param name="course"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        private bool HasCourseConflict(Section section, IRule course, List<IRule>? constraint) {
+        public Tuple<bool, string> HasCourseConflict(Section? section, IRule course, List<IRule>? constraint) {
+            if(section == null) {
+                return new Tuple<bool, string>(false, "没有获取到可用节次");
+            }
             if(constraint == null || !constraint.Any()) {
-                return false; // 没有约束直接返回false
+                return Tuple.Create(false, "没有约束"); // 没有约束直接返回false
             }
             foreach(var rule in constraint) {
-                if(VerifyCourseConflict(section, course, rule)) {
-                    return true;
+                Tuple<bool, string> tuple = VerifyCourseConflict(section, course, rule);
+                if(tuple.Item1) {
+                    return tuple;
                 }
             }
-            return false;
+            return Tuple.Create(false, "没有冲突规则");
         }
 
         /// <summary>
@@ -582,28 +589,38 @@ namespace XStudio.SchoolSchedule {
         /// <param name="course"></param>
         /// <param name="rule"></param>
         /// <returns></returns>
-        private bool VerifyCourseConflict(Section section, IRule course, IRule rule) {
+        private Tuple<bool, string> VerifyCourseConflict(Section section, IRule course, IRule rule) {
             switch(rule.Type) {
+                case RuleType.CanOnlyArrange: // 只能排课，
+                    return VerifyCanOnlyArrange(section, course, rule);
                 case RuleType.CannotBeArranged: // 不能排课，
-                    if(VerifyCannotBeArranged(section, course, rule)) {
-                        return true;
-                    }
-                    break;
+                    return VerifyCannotBeArranged(section, course, rule);
                 case RuleType.CentralizedLessonPreparation: // 集中备课，教师教授的课程不能排
-                    if(VerifyCentralizedLessonPreparation(section, course, rule)) {
-                        return true;
-                    }
-                    break;
+                    return VerifyCentralizedLessonPreparation(section, course, rule);
                 case RuleType.CoursesAreNotAdjacent:  // 课程不能相邻
-                    if(VerifyCoursesAreNotAdjacent(section, course, rule)) {
-                        return true;
-                    }
-                    break;
+                    return VerifyCoursesAreNotAdjacent(section, course, rule);
                 case RuleType.Mutex:  // 互斥课，
                 default:
-                    return false;
+                    return Tuple.Create(false, "没有冲突规则");
             }
-            return false;
+        }
+
+        /// <summary>
+        /// 验证只能排课规则
+        /// </summary>
+        /// <param name="section"></param>
+        /// <param name="course"></param>
+        /// <param name="rule"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        private Tuple<bool, string> VerifyCanOnlyArrange(Section section, IRule course, IRule rule) {
+            CanOnlyArrange canOnlyArranged = (CanOnlyArrange)rule;
+            if(!canOnlyArranged.Code.Contains(course.Code) &&
+               canOnlyArranged.Location?.Item1 == section.Day &&
+               canOnlyArranged.Location?.Item2 == section.Period) {
+                return Tuple.Create(true, $"只能排{canOnlyArranged.ClassCourse.DisplayName}");
+            }
+            return Tuple.Create(false, "没有冲突规则");
         }
 
         /// <summary>
@@ -612,15 +629,20 @@ namespace XStudio.SchoolSchedule {
         /// <param name="section"></param>
         /// <param name="course"></param>
         /// <param name="rule"></param>
-        /// <returns></returns>
-        private bool VerifyCoursesAreNotAdjacent(Section section, IRule course, IRule rule) {
+        /// <returns>
+        ///     true: 课程相邻了
+        ///     false: 课程没相邻
+        /// </returns>
+        private Tuple<bool, string> VerifyCoursesAreNotAdjacent(Section section, IRule course, IRule rule) {
             Section upSection = this[section.Day, section.Period - 1];   // 前一节次
             Section downSection = this[section.Day, section.Period + 1]; // 后一节次
-            if(upSection.Contents.Any(c => c.Content != null && c.Content.Id.Contains(course.Id)) ||
-                downSection.Contents.Any(c => c.Content != null && c.Content.Id.Contains(course.Id))) {
-                return true;
+            if(upSection.Contents.Any(c => c.Content != null && c.Content.Code.Contains(course.Code))) {
+                return Tuple.Create(true, $"课程{course.DisplayName}不能与{upSection.Day}-{upSection.Name}的课程{upSection.Contents[0].Content?.DisplayName}相邻");
             }
-            return false;
+            if(downSection.Contents.Any(c => c.Content != null && c.Content.Code.Contains(course.Code))) {
+                return Tuple.Create(true, $"课程{course.DisplayName}不能与{upSection.Day}-{downSection.Name}放入课程{downSection.Contents[0].Content?.DisplayName}相邻");
+            }
+            return Tuple.Create(false, "课程无相邻");
         }
 
         /// <summary>
@@ -630,14 +652,14 @@ namespace XStudio.SchoolSchedule {
         /// <param name="course"></param>
         /// <param name="rule"></param>
         /// <returns></returns>
-        private bool VerifyCentralizedLessonPreparation(Section section, IRule course, IRule rule) {
+        private Tuple<bool, string> VerifyCentralizedLessonPreparation(Section section, IRule course, IRule rule) {
             CentralizedLessonPreparation centralizedLessonPreparation = (CentralizedLessonPreparation)rule;
             if(centralizedLessonPreparation.Location?.Item1 == section.Day &&
                 centralizedLessonPreparation.Location?.Item2 == section.Period &&
-                centralizedLessonPreparation.ClassCourse.Id == course.Id) {
-                return true;
+                centralizedLessonPreparation.ClassCourse.Code == course.Code) {
+                return Tuple.Create(true, $"不能排{course.DisplayName}");
             }
-            return false;
+            return Tuple.Create(false, "没有冲突规则");
         }
 
         /// <summary>
@@ -647,14 +669,14 @@ namespace XStudio.SchoolSchedule {
         /// <param name="course"></param>
         /// <param name="rule"></param>
         /// <returns></returns>
-        private bool VerifyCannotBeArranged(Section section, IRule course, IRule rule) {
+        private Tuple<bool, string> VerifyCannotBeArranged(Section section, IRule course, IRule rule) {
             CannotBeArranged cannotBeArranged = (CannotBeArranged)rule;
-            if(cannotBeArranged.Id.Contains(course.Id) &&
+            if(cannotBeArranged.Code.Contains(course.Code) &&
                 cannotBeArranged.Location?.Item1 == section.Day &&
                 cannotBeArranged.Location?.Item2 == section.Period) {
-                return true;
+                return Tuple.Create(true, $"不能排{course.DisplayName}");
             }
-            return false;
+            return Tuple.Create(false, "没有冲突规则");
         }
 
         /// <summary>
@@ -675,7 +697,7 @@ namespace XStudio.SchoolSchedule {
         public void RunCanOnlyArrange(List<IRule> courses, IEnumerable<IRule> enumerables) {
             foreach(var enumerable in enumerables) {
                 CanOnlyArrange canOnlyArrange = (CanOnlyArrange)enumerable;
-                IEnumerable<IRule> theCourses = courses.FindAll(c => c.Id == canOnlyArrange.Id && c.Type == RuleType.None);
+                IEnumerable<IRule> theCourses = courses.FindAll(c => c.Code == canOnlyArrange.Code && c.Type == RuleType.None);
                 if(theCourses.Any() && canOnlyArrange.Location != null) {
                     DayOfWeek day = canOnlyArrange.Location.Item1;
                     int period = canOnlyArrange.Location.Item2;

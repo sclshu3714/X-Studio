@@ -13,6 +13,8 @@ using Microsoft.Extensions.Hosting;
 using Polly;
 using Serilog;
 using Serilog.Events;
+using Volo.Abp.Modularity;
+using XStudio.Common;
 
 namespace XStudio;
 
@@ -32,13 +34,42 @@ public class Program {
             };
 
             var builder = WebApplication.CreateBuilder(args);
-            builder.Host.AddAppSettingsSecretsJson()
-                .UseAutofac();
+
+            // 根据环境加载不同的配置文件
             builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
-                                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-            if (builder.Configuration.GetValue<bool>("Nacos:IsEnabled")) {
+                .AddJsonFile($"appsettings.json", optional: false, reloadOnChange: true);
+#if DEBUG
+            var configuration = builder.Configuration;
+            // 检查环境变量是否已设置，如果没有，则设置为开发环境
+            var environment = configuration["App:Environment"]; // Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            if(string.IsNullOrEmpty(environment) ||
+                (environment != Environments.Development && environment != Environments.Staging && environment != Environments.Production)) {
+                // 这里可以根据需要设置不同的环境
+                Log.Warning($"当前运行环境：{environment}, 不是常规环境，环境变量将切换到Development环境，但是配置文件依然读取 appsettings.{environment}.json");
+                Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
+            }
+            else {
+                Log.Warning($"当前运行环境：{environment}");
+                Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", environment);
+            }
+
+            // 加载补充配置文件
+            if(File.Exists($"appsettings.{environment}.json")) {
+                builder.Configuration.AddJsonFile($"appsettings.{environment}.json", optional: true, true);
+            }
+            else {
+                Log.Warning($"没有检查到配置文件:appsettings.{environment}.json; 告知：全部配置默认在appsettings.json中");
+            }
+#endif
+            builder.Configuration.AddEnvironmentVariables();
+
+            builder.Host.AddAppSettingsSecretsJson().UseAutofac();
+
+            GlobalConfig.Default.NacosEnabled = builder.Configuration.GetValue<bool>("Nacos:IsEnabled");
+            if (GlobalConfig.Default.NacosEnabled) {
                 builder.Host.UseNacosConfig("Nacos", Nacos.YamlParser.YamlConfigurationStringParser.Instance);
             }
+
             builder.Host.UseSerilog((context, logger) => {
                 logger.ReadFrom.Configuration(context.Configuration)
                                .Enrich

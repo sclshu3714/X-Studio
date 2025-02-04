@@ -131,8 +131,8 @@ public class XStudioDbContext :
             b.Property(x => x.Name).IsRequired().HasMaxLength(128);
             b.HasKey(x => x.Code);
             // 设置 Code 和 Name 为索引列
-            b.HasIndex(x => x.Code).HasDatabaseName("IX_Schools_Code");
-            b.HasIndex(x => x.Name).HasDatabaseName("IX_Schools_Name");
+            b.HasIndex(x => x.Code).HasDatabaseName("IX_Schools_Code").IsUnique(false);
+            b.HasIndex(x => x.Name).HasDatabaseName("IX_Schools_Name").IsUnique(false);
 
             //自动添加注释
             AddCommentsToProperties(b);
@@ -150,9 +150,9 @@ public class XStudioDbContext :
              .HasForeignKey(c => c.SchoolCode);
 
             // 设置 Code 和 Name 为索引列
-            b.HasIndex(x => x.Code).HasDatabaseName("IX_SchoolCampuses_Code");
-            b.HasIndex(x => x.Name).HasDatabaseName("IX_SchoolCampuses_Name");
-            b.HasIndex(x => x.SchoolCode).HasDatabaseName("IX_SchoolCampuses_SchoolCode");
+            b.HasIndex(x => x.Code).HasDatabaseName("IX_SchoolCampuses_Code").IsUnique(false);
+            b.HasIndex(x => x.Name).HasDatabaseName("IX_SchoolCampuses_Name").IsUnique(false);
+            b.HasIndex(x => x.SchoolCode).HasDatabaseName("IX_SchoolCampuses_SchoolCode").IsUnique(false);
 
             //自动添加注释
             AddCommentsToProperties(b);
@@ -170,10 +170,10 @@ public class XStudioDbContext :
              .WithMany(c => c.Buildings)
              .HasForeignKey(b => b.SchoolCampusCode);
             // 设置 Code 和 Name 为索引列
-            b.HasIndex(x => x.Code).HasDatabaseName("IX_SchoolBuildings_Code");
-            b.HasIndex(x => x.Name).HasDatabaseName("IX_SchoolBuildings_Name");
-            b.HasIndex(x => x.SchoolCode).HasDatabaseName("IX_SchoolBuildings_SchoolCode");
-            b.HasIndex(x => x.SchoolCampusCode).HasDatabaseName("IX_SchoolBuildings_SchoolCampusCode");
+            b.HasIndex(x => x.Code).HasDatabaseName("IX_SchoolBuildings_Code").IsUnique(false);
+            b.HasIndex(x => x.Name).HasDatabaseName("IX_SchoolBuildings_Name").IsUnique(false);
+            b.HasIndex(x => x.SchoolCode).HasDatabaseName("IX_SchoolBuildings_SchoolCode").IsUnique(false);
+            b.HasIndex(x => x.SchoolCampusCode).HasDatabaseName("IX_SchoolBuildings_SchoolCampusCode").IsUnique(false);
 
             //自动添加注释
             AddCommentsToProperties(b);
@@ -191,11 +191,11 @@ public class XStudioDbContext :
              .WithMany(b => b.Floors)
              .HasForeignKey(f => f.BuildingCode);
             // 设置 Code 和 Name 为索引列
-            b.HasIndex(x => x.Code).HasDatabaseName("IX_BuildingFloors_Code");
-            b.HasIndex(x => x.Name).HasDatabaseName("IX_BuildingFloors_Name");
-            b.HasIndex(x => x.SchoolCode).HasDatabaseName("IX_BuildingFloors_SchoolCode");
-            b.HasIndex(x => x.SchoolCampusCode).HasDatabaseName("IX_BuildingFloors_SchoolCampusCode");
-            b.HasIndex(x => x.BuildingCode).HasDatabaseName("IX_BuildingFloors_BuildingCode");
+            b.HasIndex(x => x.Code).HasDatabaseName("IX_BuildingFloors_Code").IsUnique(false);
+            b.HasIndex(x => x.Name).HasDatabaseName("IX_BuildingFloors_Name").IsUnique(false);
+            b.HasIndex(x => x.SchoolCode).HasDatabaseName("IX_BuildingFloors_SchoolCode").IsUnique(false);
+            b.HasIndex(x => x.SchoolCampusCode).HasDatabaseName("IX_BuildingFloors_SchoolCampusCode").IsUnique(false);
+            b.HasIndex(x => x.BuildingCode).HasDatabaseName("IX_BuildingFloors_BuildingCode").IsUnique(false);
 
             //自动添加注释
             AddCommentsToProperties(b);
@@ -213,12 +213,12 @@ public class XStudioDbContext :
              .WithMany(f => f.Classrooms)
              .HasForeignKey(c => c.FloorCode);
             // 设置 Code 和 Name 为索引列
-            b.HasIndex(x => x.Code).HasDatabaseName("IX_Classrooms_Code");
-            b.HasIndex(x => x.Name).HasDatabaseName("IX_Classrooms_Name");
-            b.HasIndex(x => x.SchoolCode).HasDatabaseName("IX_Classrooms_SchoolCode");
-            b.HasIndex(x => x.SchoolCampusCode).HasDatabaseName("IX_Classrooms_SchoolCampusCode");
-            b.HasIndex(x => x.BuildingCode).HasDatabaseName("IX_Classrooms_BuildingCode");
-            b.HasIndex(x => x.FloorCode).HasDatabaseName("IX_Classrooms_FloorCode");
+            b.HasIndex(x => x.Code).HasDatabaseName("IX_Classrooms_Code").IsUnique(false);
+            b.HasIndex(x => x.Name).HasDatabaseName("IX_Classrooms_Name").IsUnique(false);
+            b.HasIndex(x => x.SchoolCode).HasDatabaseName("IX_Classrooms_SchoolCode").IsUnique(false);
+            b.HasIndex(x => x.SchoolCampusCode).HasDatabaseName("IX_Classrooms_SchoolCampusCode").IsUnique(false);
+            b.HasIndex(x => x.BuildingCode).HasDatabaseName("IX_Classrooms_BuildingCode").IsUnique(false);
+            b.HasIndex(x => x.FloorCode).HasDatabaseName("IX_Classrooms_FloorCode").IsUnique(false);
 
             //自动添加注释
             AddCommentsToProperties(b);
@@ -231,8 +231,8 @@ public class XStudioDbContext :
             b.Property(x => x.Name).IsRequired().HasMaxLength(128);
             b.HasKey(x => x.Code);
             // 设置 Code 和 Name 为索引列
-            b.HasIndex(x => x.Code).HasDatabaseName("IX_RoomUsage_Code");
-            b.HasIndex(x => x.Name).HasDatabaseName("IX_RoomUsage_Name");
+            b.HasIndex(x => x.Code).HasDatabaseName("IX_RoomUsage_Code").IsUnique(false);
+            b.HasIndex(x => x.Name).HasDatabaseName("IX_RoomUsage_Name").IsUnique(false);
 
             //自动添加注释
             AddCommentsToProperties(b);
@@ -248,8 +248,8 @@ public class XStudioDbContext :
             b.Property(x => x.Name).IsRequired().HasMaxLength(128);
             b.HasKey(x => x.Code);
             // 设置 Code 和 Name 为索引列
-            b.HasIndex(x => x.Code).HasDatabaseName("IX_TimePeriod_Code");
-            b.HasIndex(x => x.Name).HasDatabaseName("IX_TimePeriod_Name");
+            b.HasIndex(x => x.Code).HasDatabaseName("IX_TimePeriod_Code").IsUnique(false);
+            b.HasIndex(x => x.Name).HasDatabaseName("IX_TimePeriod_Name").IsUnique(false);
 
             //自动添加注释
             AddCommentsToProperties(b);

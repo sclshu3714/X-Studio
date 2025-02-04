@@ -20,7 +20,8 @@ namespace XStudio.SchoolSchedule.Rules {
         public JointClassTeaching(PriorityMode priority,
                                   ClassCourseRule rule,
                                   List<SchoolClass> classes,
-                                  int classHour = 1) {
+                                  int classHour = 1)
+                : base(priority, RuleMode.Teacher, RuleType.JointClassTeaching) {
             ClassHour = classHour;
             Course = rule;
             Classes = classes;
@@ -28,7 +29,7 @@ namespace XStudio.SchoolSchedule.Rules {
             RangeType = ActionRangeType.Class;
             Mode = RuleMode.Teacher;
             Type = RuleType.JointClassTeaching;
-            Id = rule.Id;
+            Code = rule.Code;
         }
 
         /// <summary>

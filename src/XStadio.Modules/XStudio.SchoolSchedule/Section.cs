@@ -81,6 +81,11 @@ namespace XStudio.SchoolSchedule
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
+        /// 是否为教学课, 默认为true, 即为教学课(授课)
+        /// </summary>
+        public bool IsTeaching { get; set; } = true;
+
+        /// <summary>
         /// 节次类型(早自习(早读、早早读) 正课授课 课间活动 午自习 午休 晚自习)
         /// </summary>
         public SectionType @Type { get; set; }
@@ -198,33 +203,41 @@ namespace XStudio.SchoolSchedule
 
     /// <summary>
     /// 节次类型
+    ///     传染类型，与节次绑定后，节次放入课程后，课程类型会自动继承节次类型
     /// </summary>
     public enum SectionType
     {
         /// <summary>
-        /// 早自习  (早读、早早读)
+        /// 无类型，非教学课
+        ///     若节次设置为此类型时，表示节次不参与任何课程，节次不允许任何操作；
+        ///     若课程限制类型设置为此类型时，表示课程不限制任何节次类型，可以放入(自习、正课授课)；
+        /// </summary>
+        None = -1,
+        /// <summary>
+        /// 早自习 - 教学课  (早读、早早读)
         /// </summary>
         MorningStudy = 0, // 早间自习  
         /// <summary>
-        /// 正课授课
+        /// 正课授课 - 教学课
         /// </summary>
         RegularClass,     // 正课授课
         /// <summary>
-        /// 课间活动
+        /// 课间活动 - 非教学课
         /// </summary>
         BreakExercise,    // 课间活动
         /// <summary>
-        /// 午间自习
+        /// 午间自习 - 教学课
         /// </summary>
         AfternoonStudy,   // 午间自习
         /// <summary>
-        /// 午休时段
+        /// 午休时段 - 教学课
         /// </summary>
         NoonBreak,        // 午休时段
         /// <summary>
-        /// 晚间自习
+        /// 晚间自习 - 教学课
         /// </summary>
         EveningStudy,     // 晚间自习
+        
     }
 
     /// <summary>

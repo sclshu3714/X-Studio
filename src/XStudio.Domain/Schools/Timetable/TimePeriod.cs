@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -19,6 +20,7 @@ using XStudio.Common;
 
 namespace XStudio.Schools.Timetable {
     [Description("时段")]
+    [Index("Code", Name = "IX_TimePeriod_SchoolCode", IsUnique = false)]
     public class TimePeriod : AuditedAggregateRoot<Guid> {
         /// <summary>
         /// 序号

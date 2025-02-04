@@ -1,94 +1,70 @@
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
+using AspNetCoreRateLimit;
+using Confluent.Kafka;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Nacos.AspNetCore.V2;
+using Nacos.V2;
+using Nacos.V2.DependencyInjection;
+using Nacos.V2.Naming;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
+using OpenIddict.Validation.AspNetCore;
+using Serilog;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using XStudio.EntityFrameworkCore;
-using XStudio.MultiTenancy;
-using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite;
-using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite.Bundling;
-using Microsoft.OpenApi.Models;
-using OpenIddict.Validation.AspNetCore;
+using System.Text;
+using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Account;
 using Volo.Abp.Account.Web;
+using Volo.Abp.AspNetCore.Authentication.OAuth;
 using Volo.Abp.AspNetCore.MultiTenancy;
 using Volo.Abp.AspNetCore.Mvc;
+using Volo.Abp.AspNetCore.Mvc.AntiForgery;
 using Volo.Abp.AspNetCore.Mvc.UI.Bundling;
+using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite;
+using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite.Bundling;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AspNetCore.Serilog;
+using Volo.Abp.AspNetCore.SignalR;
 using Volo.Abp.Autofac;
-using Volo.Abp.Localization;
+using Volo.Abp.BackgroundJobs;
+using Volo.Abp.Caching.StackExchangeRedis;
+using Volo.Abp.EventBus.Kafka;
+using Volo.Abp.Kafka;
 using Volo.Abp.Modularity;
 using Volo.Abp.Security.Claims;
 using Volo.Abp.Swashbuckle;
 using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.VirtualFileSystem;
-using Asp.Versioning.ApplicationModels;
-using Asp.Versioning;
-using Asp.Versioning.ApiExplorer;
-using Microsoft.Extensions.Options;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using XStudio.Swagger;
-using XStudio.Filters;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Volo.Abp.AspNetCore.Authentication.OAuth;
-using Volo.Abp.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using XStudio.Common;
-using XStudio.Converters;
-using Microsoft.EntityFrameworkCore.Internal;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using Newtonsoft.Json.Converters;
-using Nacos.V2.DependencyInjection;
-using Nacos.AspNetCore.V2;
-using static IdentityModel.ClaimComparer;
-using Volo.Abp.OpenIddict.ExtensionGrantTypes;
-using XStudio.ExtensionGrant;
-using Serilog;
-using static Org.BouncyCastle.Math.EC.ECCurve;
-using Nacos.V2;
-using Microsoft.AspNetCore.Identity;
-using AspNetCoreRateLimit;
-using Volo.Abp.AspNetCore.Mvc.UI.MultiTenancy;
-using Volo.Abp.AspNetCore.SignalR;
-using Volo.Abp.BackgroundJobs;
-using Volo.Abp.AspNetCore.Mvc.AntiForgery;
 using XStudio.Common.Nacos;
-using Nacos.V2.Config;
-using Nacos.V2.Utils;
-using Microsoft.AspNetCore.Hosting;
-using Volo.Abp.EventBus.Kafka;
-using Volo.Abp.Kafka;
-using Microsoft.AspNetCore.DataProtection;
-using StackExchange.Redis;
-using Volo.Abp.Caching;
-using Volo.Abp.Caching.StackExchangeRedis;
-using Microsoft.Extensions.Caching.StackExchangeRedis;
-using Confluent.Kafka;
+using XStudio.Converters;
+using XStudio.EntityFrameworkCore;
+using XStudio.Filters;
 using XStudio.Helpers;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Hosting.Internal;
-using Volo.Abp.OpenIddict;
-using Polly;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Volo.Abp.BackgroundWorkers;
-using Volo.Abp.EventBus.Distributed;
 using XStudio.Models;
-using Nacos.V2.Naming;
-using System.Threading.Tasks;
-using System.Threading;
+using XStudio.MultiTenancy;
+using XStudio.Swagger;
 using XStudio.Users;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
 
 namespace XStudio;
 
@@ -114,7 +90,7 @@ public class XStudioHttpApiHostModule : AbpModule {
         var configuration = context.Services.GetConfiguration();
         PreConfigureRouting(context);
         PreConfigureNewtonsoftJson(context);
-        PreConfigureEnvironment(context);
+        //PreConfigureEnvironment(context);
         PreConfigureCertificate(context);
         PreConfigureNacos(context, configuration);
     }
@@ -205,18 +181,19 @@ public class XStudioHttpApiHostModule : AbpModule {
     }
 
     private void PreConfigureNacos(ServiceConfigurationContext context, IConfiguration configuration) {
-        if (configuration.GetValue<bool>("Nacos:IsEnabled")) {
+        if(GlobalConfig.Default.NacosEnabled) {
             context.Services.AddNacosAspNet(configuration, "Nacos");
             context.Services.AddNacosV2Config(configuration);
+
+            // 启用Nacos服务发现
+            context.Services.TryAddSingleton<INacosNamingService, NacosNamingService>();
+            // 制作全局参数变量,方便使用,也可以直接使用IConfiguration,无需使用GlobalConfig.Default.NacosConfig
+            if(GlobalConfig.Default.NacosConfig == null) {
+                GlobalConfig.Default.NacosConfig = new GlobalNacosConfig();
+                configuration.Bind(GlobalConfig.Default.NacosConfig);
+            }
         }
-        // 启用Nacos服务发现
-        context.Services.TryAddSingleton<INacosNamingService, NacosNamingService>();
-        // 制作全局参数变量,方便使用,也可以直接使用IConfiguration,无需使用GlobalConfig.Default.NacosConfig
-        if (GlobalConfig.Default.NacosConfig == null) {
-            GlobalConfig.Default.NacosConfig = new GlobalNacosConfig();
-            configuration.Bind(GlobalConfig.Default.NacosConfig);
-            context.Services.AddSingleton(GlobalConfig.Default.NacosConfig);
-        }
+        context.Services.AddSingleton(GlobalConfig.Default);
     }
 
     #endregion

@@ -1,22 +1,32 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using XStudio.SchoolSchedule.Rules;
 
-namespace XStudio.SchoolSchedule {
+namespace XStudio.SchoolSchedule.Algorithms {
 
     /// <summary>
-    /// 自动排课算法
+    /// 贪心算法
     /// </summary>
-    public class AutomaticSchedulingAlgorithm {
-        private Dictionary<string, List<string>> Conflicts = new Dictionary<string, List<string>>(); // 记录冲突
+    public class GreedyScheduler {
 
+        // 冲突记录字典
+        private Dictionary<string, List<string>> Conflicts;
+
+        // 多线程时使用的锁
+        private readonly object locker = new object();
+
+        public GreedyScheduler() {
+            Conflicts = new Dictionary<string, List<string>>();
+        }
+
+
+        /// <summary>
+        /// 记录没有分配的课程
+        /// </summary>
         public string? NoAssignCourses { get; set; } = null;
-        private readonly object sectionLock = new object(); // 定义一个锁对象
 
         /// <summary>
         /// 自动分配课程的函数
@@ -58,9 +68,10 @@ namespace XStudio.SchoolSchedule {
             var noAssignCoursesList = new List<string>(); // 记录无法分配的课程
             foreach(IRule rule in courses) {
                 // 获取可用节次
-                Section? section = classSchedule.GetAvailableSections(rule, SectionType.RegularClass);
+                Section? section = classSchedule.GetAvailableSections(rule, rule.RestrictType);
                 // 验证是否可以分配到该节次
-                if(section != null && classSchedule.CanAssign(rule, section, constraint)) {
+                Tuple<bool, string> tupleAssign = classSchedule.CanAssign(section, rule, constraint);
+                if(tupleAssign.Item1 && section != null) {
                     // 该课可以分配，分配课程
                     doAutoAssignCourses(classSchedule, rule, section);
                     continue;
@@ -68,6 +79,7 @@ namespace XStudio.SchoolSchedule {
                 // 该课无法分配，添加到无法分配的课程列表
                 noAssignCoursesList.Add(rule.DisplayName);
             };
+            NoAssignCourses = string.Join(",", noAssignCoursesList);
             return !noAssignCoursesList.Any(); // 该课程无法分配，返回失败 
         }
 

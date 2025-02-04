@@ -4,15 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace XStudio.SchoolSchedule.Rules
-{
+namespace XStudio.SchoolSchedule.Rules {
     /// <summary>
     /// 课程
     /// </summary>
-    public class ClassCourseRule : IRule
-    {
+    public class ClassCourseRule : IRule {
         public ClassCourseRule()
-        {
+            : base(PriorityMode.Medium, RuleMode.Course, RuleType.None) {
             Mode = RuleMode.Course;
             Type = RuleType.None;
             RangeType = ActionRangeType.Course;
@@ -20,7 +18,7 @@ namespace XStudio.SchoolSchedule.Rules
         /// <summary>
         /// 课程编号，主要用于快速识别和查询
         /// </summary>
-        public override string Id { get; set; } = string.Empty;
+        public override string Code { get; set; } = string.Empty;
 
         /// <summary>
         /// 课程名称

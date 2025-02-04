@@ -111,9 +111,10 @@ namespace XStudio.Controllers.Clouds {
                 if(qCloud == null) {
                     return CommonResult<List<UploadFileResultDto>>.Fail("获取腾讯云凭证失败");
                 }
-                var uploadTasks = files.Select<IFormFile, Task<UploadFileResultDto>>(async file => {
-                    UploadFileDto fileInfo = new UploadFileDto();
-                    fileInfo.Form = file;
+                var uploadTasks = files.Select(async file => {
+                    UploadFileDto fileInfo = new() {
+                        Form = file
+                    };
                     if(string.IsNullOrEmpty(fileInfo.FileName)) {
                         fileInfo.FileName = Path.GetFileName(file.FileName);
                     }

@@ -6,7 +6,7 @@ pipeline{
         // 使用 Jenkins 凭据管理存储敏感信息
         DOCKER_CREDENTIALS_ID = 'docker-credentials-id' // 替换为您的 Jenkins 凭据 ID
         IMAGE_NAME = 'XStudio' // 替换为您的镜像名称
-        REGISTRY_URL = '172.30.103.227:5000' // Docker 仓库地址
+        REGISTRY_URL = '192.168.31.100:5000' // Docker 仓库地址
         GIT_URL = 'https://github.com/sclshu3714/X-Studio.git' // GitLab 仓库地址
         GIT_BRANCH = 'main' // GitLab 仓库分支
         K8S_DEPLOYMENT_FILE = 'deployment.yaml' // Kubernetes 部署文件名称

@@ -20,15 +20,45 @@
             <returns></returns>
             <exception cref="T:System.NotImplementedException"></exception>
         </member>
-        <member name="M:XStudio.Clouds.TencentCloudService.GetObjectUrl(COSXML.CosXmlServer,System.String,System.String)">
+        <member name="M:XStudio.Clouds.TencentCloudService.RefreshDownloadUrl(XStudio.Clouds.TencentCloudCredentialsDto,XStudio.Clouds.DownloadDto)">
             <summary>
-            当对象 ACL 属性设置为“公有读”时，可以通过以下 SDK 接口生成的 URL 直接访问对象（仅支持生成 COS 默认源站域名的 URL）。
+            刷新下载链接
             </summary>
-            <param name="cosXml"></param>
-            <param name="bucket"></param>
-            <param name="key"></param>
+            <param name="tencent">授权信息</param>
+            <param name="refresh">要刷新的文件key列表</param>
+            <returns>
+             true:成功 object:DownloadResultDto列表;
+             false:失败 object: string错误信息
+            </returns>
         </member>
-        <member name="M:XStudio.Clouds.TencentCloudService.InitCosXmlAsync(XStudio.Clouds.TencentCloudCredentialsDto,XStudio.Clouds.UploadFileDto)">
+        <member name="M:XStudio.Clouds.TencentCloudService.DownloadObject(XStudio.Clouds.TencentCloudCredentialsDto,XStudio.Clouds.DownloadDto)">
+            <summary>
+            下载文件(下载到服务器本地)
+            </summary>
+            <returns></returns>
+            <example>
+            DownloadObject demo = new DownloadObject();
+            初始化COS服务
+               demo.InitCosXml();
+            demo.TransferDownloadObject().Wait();
+            </example>
+        </member>
+        <member name="M:XStudio.Clouds.TencentCloudService.BatchDownload(XStudio.Clouds.TencentCloudCredentialsDto,XStudio.Clouds.DownloadDto)">
+            <summary>
+            批量下载文件
+            </summary>
+            <param name="tencent"></param>
+            <param name="download"></param>
+        </member>
+        <member name="M:XStudio.Clouds.TencentCloudService.DownloadToMemory(XStudio.Clouds.TencentCloudCredentialsDto,XStudio.Clouds.DownloadDto)">
+            <summary>
+            下载文件到内存，然后转发到客户端
+            </summary>
+            <param name="tencent">授权信息</param>
+            <param name="download">下载文件信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:XStudio.Clouds.TencentCloudService.InitCosXmlAsync(System.String,System.String,XStudio.Clouds.TencentCloudCredentialsDto)">
             <summary>
             初始化COS服务实例
             </summary>
@@ -41,6 +71,14 @@
             <param name="file"></param>
             <param name="form"></param>
             <returns></returns>
+        </member>
+        <member name="M:XStudio.Clouds.TencentCloudService.GetObjectUrl(COSXML.CosXmlServer,System.String,System.String)">
+            <summary>
+            当对象 ACL 属性设置为“公有读”时，可以通过以下 SDK 接口生成的 URL 直接访问对象（仅支持生成 COS 默认源站域名的 URL）。
+            </summary>
+            <param name="cosXml"></param>
+            <param name="bucket"></param>
+            <param name="key"></param>
         </member>
         <member name="M:XStudio.Projects.ProjectService.GetAsync(System.Guid)">
             <summary>

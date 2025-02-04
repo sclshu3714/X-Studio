@@ -88,7 +88,7 @@ namespace XStudio.Controllers.V1 {
         public async Task<ActionResult<CommonResult<PagedResultDto<TimePeriodDto>>>> GetListAsync(PagedAndSortedResultRequestDto input) {
             PagedResultDto<TimePeriodDto> timePeriodDtos = await _TimePeriodService.GetListAsync(input);
             return (timePeriodDtos != null && timePeriodDtos.Items.Any()) ?
-                    CommonResult<PagedResultDto<TimePeriodDto>>.Success(timePeriodDtos) :
+                    CommonResult<PagedResultDto<TimePeriodDto>>.Success(timePeriodDtos):
                     CommonResult<PagedResultDto<TimePeriodDto>>.NoContent();
         }
 

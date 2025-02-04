@@ -14,14 +14,15 @@ namespace XStudio.SchoolSchedule.Rules {
         ///     多个课程在学期内按照顺序轮巡上课
         ///     如：[游泳->篮球->乒乓球->足球]
         /// </summary>
-        public AlternatePolling(PriorityMode priority, List<ClassCourseRule> rules, float classHour = 1) {
+        public AlternatePolling(PriorityMode priority, List<ClassCourseRule> rules, float classHour = 1)
+               : base(priority, RuleMode.Course, RuleType.AlternatePolling) {
             ClassHour = classHour;
             PollingCourses = rules;
             Priority = priority;
             RangeType = ActionRangeType.Class;
             Mode = RuleMode.Course;
             Type = RuleType.AlternatePolling;
-            Id = string.Join(";", rules.Select(r => r.Id));
+            Code = string.Join(";", rules.Select(r => r.Code));
             
         }
 

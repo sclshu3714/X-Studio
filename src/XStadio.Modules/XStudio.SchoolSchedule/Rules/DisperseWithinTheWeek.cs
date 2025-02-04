@@ -12,6 +12,9 @@ namespace XStudio.SchoolSchedule.Rules {
     ///     分散在一周内
     /// </summary>
     public class DisperseWithinTheWeek : IRule {
+        public DisperseWithinTheWeek(PriorityMode priority, ClassCourseRule course)
+           : base(priority, RuleMode.Course, RuleType.DisperseWithinTheWeek) {
 
+        }
     }
 }

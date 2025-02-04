@@ -67,6 +67,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{A1D0D6
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XStudio.School.Timetable", "test\XStudio.School.Timetable\XStudio.School.Timetable.csproj", "{ADEC8FCB-4CC2-4CB2-B96B-7E3AABADD030}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XStudio.Win", "XStudio.Win\XStudio.Win.csproj", "{24746795-B82A-46D8-B265-0CD7CF115C23}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +155,10 @@ Global
 		{ADEC8FCB-4CC2-4CB2-B96B-7E3AABADD030}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ADEC8FCB-4CC2-4CB2-B96B-7E3AABADD030}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ADEC8FCB-4CC2-4CB2-B96B-7E3AABADD030}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24746795-B82A-46D8-B265-0CD7CF115C23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24746795-B82A-46D8-B265-0CD7CF115C23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24746795-B82A-46D8-B265-0CD7CF115C23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24746795-B82A-46D8-B265-0CD7CF115C23}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -185,6 +191,7 @@ Global
 		{3531857C-28FC-4E0F-82D9-BFBB70740E04} = {3CCBE074-32DA-4788-860E-4F3125731082}
 		{6F0C9CFF-2269-46A7-9664-478354C582A4} = {3CCBE074-32DA-4788-860E-4F3125731082}
 		{ADEC8FCB-4CC2-4CB2-B96B-7E3AABADD030} = {04DBDB01-70F4-4E06-B468-8F87850B22BE}
+		{24746795-B82A-46D8-B265-0CD7CF115C23} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28315BFD-90E7-4E14-A2EA-F3D23AF4126F}
