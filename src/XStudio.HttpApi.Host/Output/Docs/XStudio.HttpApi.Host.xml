@@ -1,133 +1,22 @@
-<?xml version="1.0"?>
-<doc>
-    <assembly>
-        <name>XStudio.HttpApi.Host</name>
-    </assembly>
-    <members>
-        <member name="T:XStudio.Common.AbpExceptionMiddleware">
-            <summary>
-            异常情况处理的中间件
-            </summary>
-        </member>
-        <member name="T:XStudio.Common.AutoPartitionBackgroundJobService">
-            <summary>
-            数据库分区后台任务
-            说明:
-                当前执行MySql方式,达梦数据库还没有测试
-            </summary>
-        </member>
-        <member name="M:XStudio.Common.AutoPartitionBackgroundJobService.DoWork(System.Object)">
-            <summary>
-            每月执行一次，当数据大于50000时，分区
-            </summary>
-            <param name="state"></param>
-        </member>
-        <member name="M:XStudio.Common.AutoPartitionBackgroundJobService.GetAllTablesAsync">
-            <summary>
-            查询所有表格名称
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:XStudio.Common.AutoPartitionBackgroundJobService.AddMonthlyPartitionAsync(System.String)">
-            <summary>
-            分区
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:XStudio.ExtensionGrant.AbstractTokenExtensionGrant.ServerValidate">
-            <summary>
-            服务器验证
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:XStudio.ExtensionGrant.AbstractTokenExtensionGrant.GetResultsAsync">
-            <summary>
-            根据code得到用户信息
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="T:XStudio.Filters.CustomExceptionFilter">
-            <summary>
-            全局异常过滤器
-            </summary>
-        </member>
-        <member name="M:XStudio.Filters.CustomExceptionFilter.OnException(Microsoft.AspNetCore.Mvc.Filters.ExceptionContext)">
-            <summary>
-            2021 -02-02 -yt
-            </summary>
-            <param name="context"></param>
-        </member>
-        <member name="T:XStudio.Hubs.ChatHub">
-            <summary>
-            SignalR
-            </summary>
-        </member>
-        <member name="M:XStudio.Swagger.ConfigureSwaggerOptions.#ctor(Asp.Versioning.ApiExplorer.IApiVersionDescriptionProvider)">
-            <summary>
-            Initializes a new instance of the <see cref="T:XStudio.Swagger.ConfigureSwaggerOptions"/> class.
-            </summary>
-            <param name="provider">The <see cref="T:Asp.Versioning.ApiExplorer.IApiVersionDescriptionProvider">provider</see> used to generate Swagger documents.</param>
-        </member>
-        <member name="M:XStudio.Swagger.ConfigureSwaggerOptions.Configure(Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenOptions)">
-            <inheritdoc />
-        </member>
-        <member name="T:XStudio.Swagger.SwaggerDefaultValues">
-            <summary>
-            Represents the Swagger/Swashbuckle operation filter used to document the implicit API version parameter.
-            </summary>
-            <remarks>This <see cref="T:Swashbuckle.AspNetCore.SwaggerGen.IOperationFilter"/> is only required due to bugs in the <see cref="T:Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator"/>.
-            Once they are fixed and published, this class can be removed.</remarks>
-        </member>
-        <member name="M:XStudio.Swagger.SwaggerDefaultValues.Apply(Microsoft.OpenApi.Models.OpenApiOperation,Swashbuckle.AspNetCore.SwaggerGen.OperationFilterContext)">
-            <summary>
-            Applies the filter to the specified operation using the given context.
-            </summary>
-            <param name="operation">The operation to apply the filter to.</param>
-            <param name="context">The current operation filter context.</param>
-        </member>
-        <member name="M:XStudio.XStudioHttpApiHostModule.PreConfigureRouting(Volo.Abp.Modularity.ServiceConfigurationContext)">
-            <summary>
-            配置路由
-            </summary>
-            <param name="context"></param>
-        </member>
-        <member name="M:XStudio.XStudioHttpApiHostModule.PreConfigureNewtonsoftJson(Volo.Abp.Modularity.ServiceConfigurationContext)">
-            <summary>
-            配置Newtonsoft格式化
-            </summary>
-            <param name="context"></param>
-        </member>
-        <member name="M:XStudio.XStudioHttpApiHostModule.ConfigureRedis(Volo.Abp.Modularity.ServiceConfigurationContext,Microsoft.Extensions.Configuration.IConfiguration)">
-            <summary>
-            配置Redis
-            </summary>
-            <param name="context"></param>
-            <param name="configuration"></param>
-            <exception cref="T:System.NotImplementedException"></exception>
-        </member>
-        <member name="M:XStudio.XStudioHttpApiHostModule.ConfigureAbpApiVersioning(Volo.Abp.Modularity.ServiceConfigurationContext)">
-            <summary>
-            配置ApiVersioning
-            </summary>
-            <param name="context"></param>
-        </member>
-        <member name="M:XStudio.XStudioHttpApiHostModule.ConfigureBundles">
-            <summary>
-            配置Bundles
-            </summary>
-        </member>
-        <member name="M:XStudio.XStudioHttpApiHostModule.ConfigureUrls(Volo.Abp.Modularity.ServiceConfigurationContext,Microsoft.Extensions.Configuration.IConfiguration)">
-            <summary>
-            配置Url
-            </summary>
-            <param name="context"></param>
-            <param name="configuration"></param>
-        </member>
-        <member name="M:XStudio.XStudioHttpApiHostModule.ConfigureVirtualFileSystem(Volo.Abp.Modularity.ServiceConfigurationContext)">
-            <summary>
-            配置虚拟文件系统
-            </summary>
-            <param name="context"></param>
-        </member>
-    </members>
-</doc>
+69] 状态机切换 [C移动战斗|9] : [未逃跑|10] => [未逃跑_启用治疗|14] [主控: true]
+[2025.02.28-23.00.01:775][847][GameThread]Puerts: Warning: (0x0000000086345290) [556262][W][CombatInfo][WCL][692558][23.0.1:767] [StateMachineNew][EntityId:111290:Proto_Monster:BP_MO1YunhaiyaojingMd00501_C_2146568047] 远端切换状态，root[C主状态机|10007] 激活节点[未逃跑_启用治疗|14]
+[2025.02.28-23.00.01:775][847][GameThread]Puerts: Display: (0x0000000086345290) [556263][I][CombatInfo][WCL][692558][23.0.1:767] [StateMachineNew][EntityId:111290:Proto_Monster:BP_MO1YunhaiyaojingMd00501_C_2146568047] 状态机切换 [C移动战斗|9] : [未逃跑|10] => [未逃跑_启用治疗|14] [主控: true]
+[2025.02.28-23.00.01:775][847][GameThread]Puerts: Display: (0x0000000086345290) [556264][I][CombatInfo][WCL][692558][23.0.1:771] [Ai][EntityId:111394:Proto_Monster:BP_MO1YunhaiyaojingMd00501_C_2146558601] 感知广播 [addIds: [1530134529,1530265601]][removeIds:: [1530396673,1530068993]]
+[2025.02.28-23.00.01:775][847][GameThread]Puerts: Display: (0x0000000086345290) [556265][I][CombatInfo][WCL][692558][23.0.1:771] [Ai][EntityId:111284:Proto_Monster:BP_MO1YunhaiyaojingMd00501_C_2146567869] 感知广播 [addIds: [1530134529,1530265601]][removeIds:: [1530396673,1530068993]]
+[2025.02.28-23.00.01:785][848][GameThread]Puerts: Display: (0x0000000086345290) [556266][I][SceneTeam][LYY][692558][23.0.1:781] 请求切换当前角色 [CreatureDataId: 111058]
+[2025.02.28-23.00.01:785][848][GameThread]Puerts: Display: (0x0000000086345290) [556267][I][SceneTeam][LYY][692558][23.0.1:781] 开始切换角色 [CreatureDataId: 111058]
+[2025.02.28-23.00.01:785][848][GameThread]Puerts: Display: (0x0000000086345290) [556268][I][SceneTeam][LYY][692558][23.0.1:781] 执行战斗换人 [Last: 1530003457][New: 1530068993]
+[2025.02.28-23.00.01:785][848][GameThread]Puerts: Display: (0x0000000086345290) [556269][I][CombatInfo][WCL][692558][23.0.1:781] [Buff][EntityId:111052:Proto_Player:BP_FeiBi_C_2146571806] 本地添加buff [buffId: 1101006002][创建者id: 111052][持有者: 111052][初始激活: undefined][原因: 战斗换人][handle: 268466847][前置行为id: undefined][说明: ][是否迭代: true]
+[2025.02.28-23.00.01:785][848][GameThread]Puerts: Display: (0x0000000086345290) [556270][I][SceneTeam][LYY][692558][23.0.1:782] 角色下场 [Entity: 1530003457]
+[2025.02.28-23.00.01:785][848][GameThread]Puerts: Display: (0x0000000086345290) [556271][I][CombatInfo][WCL][692558][23.0.1:782] [Buff][EntityId:111058:Proto_Player:BP_Kmola_C_2146571734] 本地添加buff [buffId: 3030][创建者id: 111058][持有者: 111058][初始激活: undefined][原因: 换人去除QTE无敌][handle: 268466848][前置行为id: undefined][说明: ][是否迭代: true]
+[2025.02.28-23.00.01:785][848][GameThread]Puerts: Display: (0x0000000086345290) [556272][I][Battle][ZQR][692558][23.0.1:782] 换人进入StateInherit
+[2025.02.28-23.00.01:785][848][GameThread]Puerts: Display: (0x0000000086345290) [556273][I][CombatInfo][WCL][692558][23.0.1:782] [Buff][EntityId:111058:Proto_Player:BP_Kmola_C_2146571734] 本地添加buff [buffId: 2002202311][创建者id: 111062][持有者: 111058][初始激活: undefined][原因: 因为状态继承导致的buff添加][handle: 268466849][前置行为id: 1152921504607254104][说明: ][是否迭代: false]
+[2025.02.28-23.00.01:785][848][GameThread]Puerts: Display: (0x0000000086345290) [556274][I][CombatInfo][WCL][692558][23.0.1:782] [Buff][EntityId:111052:Proto_Player:BP_FeiBi_C_2146571806] 本地移除buff [buffId: 2002202311][持有者: 111052][handle: 268466804][说明: ][原因: 因为状态继承导致的移除]
+[2025.02.28-23.00.01:785][848][GameThread]Puerts: Display: (0x0000000086345290) [556275][I][CombatInfo][WCL][692558][23.0.1:782] [Buff][EntityId:111058:Proto_Player:BP_Kmola_C_2146571734] 本地添加buff [buffId: 2002202314][创建者id: 111062][持有者: 111058][初始激活: undefined][原因: 因为状态继承导致的buff添加][handle: 268466850][前置行为id: 1152921504607254107][说明: ][是否迭代: false]
+[2025.02.28-23.00.01:785][848][GameThread]Puerts: Display: (0x0000000086345290) [556276][I][CombatInfo][WCL][692558][23.0.1:783] [Buff][EntityId:111052:Proto_Player:BP_FeiBi_C_2146571806] 本地移除buff [buffId: 2002202314][持有者: 111052][handle: 268466805][说明: ][原因: 因为状态继承导致的移除]
+[2025.02.28-23.00.01:785][848][GameThread]Puerts: Display: (0x0000000086345290) [556277][I][CombatInfo][WCL][692558][23.0.1:783] [Buff][EntityId:111058:Proto_Player:BP_Kmola_C_2146571734] 本地添加buff [buffId: 680000301][创建者id: 111052][持有者: 111058][初始激活: undefined][原因: 因为状态继承导致的buff添加][handle: 268466851][前置行为id: 1152921504607254405][说明: ][是否迭代: false]
+[2025.02.28-23.00.01:785][848][GameThread]Puerts: Display: (0x0000000086345290) [556278][I][CombatInfo][WCL][692558][23.0.1:783] [Buff][EntityId:111052:Proto_Player:BP_FeiBi_C_2146571806] 本地移除buff [buffId: 680000301][持有者: 111052][handle: 268466813][说明: ][原因: 因为状态继承导致的移除]
+[2025.02.28-23.00.01:785][848][GameThread]Puerts: Display: (0x0000000086345290) [556279][I][CombatInfo][WCL][692558][23.0.1:783] [Buff][EntityId:111058:Proto_Player:BP_Kmola_C_2146571734] 本地添加buff [buffId: 3098][创建者id: 111052][持有者: 111058][初始激活: undefined][原因: 因为状态继承导致的buff添加][handle: 268466852][前置行为id: 1152921504607255253][说明: ][是否迭代: false]
+[2025.02.28-23.00.01:785][848][GameThread]Puerts: Display: (0x0000000086345290) [556280][I][Battle][ZQR][692558][23.0.1:783] 换人进入RoleOnStateInherit
+[2025.02.28-23.00.01:785][848][GameThread]Puerts: Display: (0x0000000086345290) [556281][I][Entity][LFJW][692558][23.0.1:783] DisableActor [CreatureDataId: 111058][PbDataId: 1107][Handle: 11][Reason: [CharacterAnimationComponent.TemporaryHidden] 短暂消失]
+[2025.02.28-23.00.01:785][848][GameThread]Puerts: Display: (0x0000000086345290) [556282][I][Charact

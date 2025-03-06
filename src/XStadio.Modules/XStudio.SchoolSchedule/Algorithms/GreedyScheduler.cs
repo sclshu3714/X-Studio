@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using XStudio.SchoolSchedule.Enums;
 using XStudio.SchoolSchedule.Rules;
 
 namespace XStudio.SchoolSchedule.Algorithms {
@@ -21,7 +17,6 @@ namespace XStudio.SchoolSchedule.Algorithms {
         public GreedyScheduler() {
             Conflicts = new Dictionary<string, List<string>>();
         }
-
 
         /// <summary>
         /// 记录没有分配的课程
@@ -64,11 +59,11 @@ namespace XStudio.SchoolSchedule.Algorithms {
         /// <returns></returns>
         private bool AutoAssignCourses(ClassSchedule classSchedule,
                                         List<IRule> courses,
-                                        List<IRule>? constraint) {
+                                        List<IRule> constraint) {
             var noAssignCoursesList = new List<string>(); // 记录无法分配的课程
             foreach(IRule rule in courses) {
                 // 获取可用节次
-                Section? section = classSchedule.GetAvailableSections(rule, rule.RestrictType);
+                Section? section = classSchedule.GetAvailableSections(rule, rule.RestrictType, constraint);
                 // 验证是否可以分配到该节次
                 Tuple<bool, string> tupleAssign = classSchedule.CanAssign(section, rule, constraint);
                 if(tupleAssign.Item1 && section != null) {
@@ -78,9 +73,10 @@ namespace XStudio.SchoolSchedule.Algorithms {
                 }
                 // 该课无法分配，添加到无法分配的课程列表
                 noAssignCoursesList.Add(rule.DisplayName);
-            };
+            }
+            ;
             NoAssignCourses = string.Join(",", noAssignCoursesList);
-            return !noAssignCoursesList.Any(); // 该课程无法分配，返回失败 
+            return !noAssignCoursesList.Any(); // 该课程无法分配，返回失败
         }
 
         /// <summary>
@@ -93,12 +89,15 @@ namespace XStudio.SchoolSchedule.Algorithms {
                 case RuleType.ConsecutiveClasses: // 连堂课
                     doAssignConsecutiveClassesCourses(classSchedule, rule, section);
                     break;
+
                 case RuleType.AlternatePolling: // 交替轮换课
                     doAssignAlternatePollingCourses(classSchedule, rule, section);
                     break;
+
                 case RuleType.SingleOrBiweekly: // 单双周课
                     classSchedule.AddSectionContent(section.Code, new SectionContent(0, rule, 1));
                     break;
+
                 default:
                     classSchedule.AddSectionContent(section.Code, new SectionContent(0, rule));
                     break;

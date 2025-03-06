@@ -1,0 +1,20 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:XStudio.School.Timetable"
+    xmlns:util="clr-namespace:XStudio.School.Timetable.Utilities">
+    <!--<Style TargetType="{x:Type util:CustomGridPanel}">
+    -->
+    <!--<Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:CustomGridPanel}">
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>-->
+    <!--
+    </Style>-->
+</ResourceDictionary>

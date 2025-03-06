@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using XStudio.SchoolSchedule.Enums;
 
 namespace XStudio.SchoolSchedule.Rules {
 
@@ -11,7 +7,8 @@ namespace XStudio.SchoolSchedule.Rules {
     ///     在周内集中上课
     /// </summary>
     public class ConcentrationWithinTheWeek : IRule {
-        public ConcentrationWithinTheWeek(PriorityMode priority, ClassCourseRule course) 
+
+        public ConcentrationWithinTheWeek(PriorityMode priority, ClassCourseRule course)
             : base(priority, RuleMode.Course, RuleType.ConcentrationWithinTheWeek) {
         }
     }

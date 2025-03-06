@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using XStudio.SchoolSchedule.Rules;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using Serilog;
+using System.Collections.Concurrent;
 using System.Data;
-using System.Reflection.Metadata;
+using System.Diagnostics;
+using XStudio.SchoolSchedule.Enums;
+using XStudio.SchoolSchedule.Rules;
 
 namespace XStudio.SchoolSchedule.Algorithms {
 
@@ -17,10 +15,13 @@ namespace XStudio.SchoolSchedule.Algorithms {
 
         // 种群大小
         private const int PopulationSize = 10;
+
         // 最大迭代次数
         private const int MaxGenerations = 50;
+
         // 交叉率
         private const double CrossoverRate = 0.8;
+
         // 变异率
         private const double MutationRate = 0.1;
 
@@ -28,6 +29,7 @@ namespace XStudio.SchoolSchedule.Algorithms {
         /// 多线程时使用的锁
         /// </summary>
         private readonly object locker = new object(); // 定义一个锁对象
+
         /// <summary>
         /// 记录没有分配的课程
         /// </summary>
@@ -38,7 +40,11 @@ namespace XStudio.SchoolSchedule.Algorithms {
         ///     key:   节次ID
         ///     value: 冲突内容
         /// </summary>
-        public Dictionary<string, List<Conflict>> Conflicts = new Dictionary<string, List<Conflict>>();
+        public Dictionary<string, List<Conflict>> Conflicts { get; set; } = new Dictionary<string, List<Conflict>>();
+
+        private JsonSerializerSettings jsonSettings = new JsonSerializerSettings {
+            TypeNameHandling = TypeNameHandling.All
+        };
 
         /// <summary>
         /// 自动分配课程
@@ -47,13 +53,22 @@ namespace XStudio.SchoolSchedule.Algorithms {
         /// <param name="courses">需要分配的课程</param>
         /// <param name="constraint">课程约束条件</param>
         /// <returns>是否成功分配</returns>
-        public bool StartAutoAssignCourses(ClassSchedule classSchedule, List<IRule> courses, List<IRule>? constraint) {
+        public bool StartAutoAssignCourses(ClassSchedule classSchedule, List<IRule> courses, List<IRule> constraint) {
             if(courses == null || courses.Count == 0)
                 return false;
-
+            constraint.ForEach(rule => {
+                if(rule != null && rule.Location != null) {
+                    classSchedule[rule.Location.Item1, rule.Location.Item2]?.AddSectionConstraint(rule);
+                }
+            });
+            // 开始启动计算代码执行时间
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             // 初始化种群
             var population = InitializePopulation(classSchedule, courses, constraint);
-
+            stopwatch.Stop();
+            Log.Information($"初始化种群耗时：{stopwatch.ElapsedMilliseconds / 1000.0} s");
+            stopwatch.Restart();
             for(int generation = 0; generation < MaxGenerations; generation++) {
                 // 评估适应度
                 var evaluatedPopulation = population.Select(schedule => new EvaluatedSchedule {
@@ -65,6 +80,8 @@ namespace XStudio.SchoolSchedule.Algorithms {
                 if(evaluatedPopulation.First().Fitness == 1.0) {
                     // 找到完美解决方案
                     ApplyBestSchedule(classSchedule, evaluatedPopulation.First().Schedule);
+                    stopwatch.Stop();
+                    Log.Information($"遗传算法耗时：{stopwatch.ElapsedMilliseconds / 1000.0} s");
                     return true;
                 }
 
@@ -77,7 +94,6 @@ namespace XStudio.SchoolSchedule.Algorithms {
                 // 变异
                 population = Mutation(population, classSchedule, courses, constraint);
             }
-
             // 如果达到最大迭代次数，选择最优解
             var finalEvaluatedPopulation = population.Select(schedule => new {
                 Schedule = schedule,
@@ -85,40 +101,49 @@ namespace XStudio.SchoolSchedule.Algorithms {
             }).OrderByDescending(x => x.Fitness).ToList();
 
             ApplyBestSchedule(classSchedule, finalEvaluatedPopulation.First().Schedule);
-            return false;
+            stopwatch.Stop();
+            Log.Information($"遗传算法耗时：{stopwatch.ElapsedMilliseconds / 1000.0} s");
+            return true;
         }
 
         /// <summary>
         /// 初始化种群
         /// </summary>
-        private List<ClassSchedule> InitializePopulation(ClassSchedule baseSchedule, List<IRule> courses, List<IRule>? constraint) {
-            var population = new List<ClassSchedule>();
+        private List<ClassSchedule> InitializePopulation(ClassSchedule baseSchedule, List<IRule> courses, List<IRule> constraint) {
+            var population = new ConcurrentQueue<ClassSchedule>();
             var random = new Random();
-
-            for(int i = 0; i < PopulationSize; i++) {
-                var schedule = JsonConvert.DeserializeObject<ClassSchedule>(JsonConvert.SerializeObject(baseSchedule));
+            Parallel.For(0, PopulationSize, i => {
+                var schedule = JsonConvert.DeserializeObject<ClassSchedule>(JsonConvert.SerializeObject(baseSchedule, jsonSettings), jsonSettings);
                 if(schedule == null)
-                    continue;
+                    return;
                 // 创建课程的副本，避免修改原始列表
-                var remainingCourses = new List<IRule>(courses);
-                foreach(var course in courses) {
-                    var availableSection = schedule.GetAvailableSections(course, course.RestrictType);
-                    Tuple<bool, string> tupleAssign = schedule.CanAssign(availableSection, course, constraint);
-                    if(tupleAssign.Item1 && availableSection != null) {
-                        // 该课可以分配，分配课程
+                var coursesQueue = new ConcurrentQueue<IRule>(courses);
+                var remainingCourses = new ConcurrentQueue<IRule>();
+                while(coursesQueue.Any()) {
+                    if(coursesQueue.TryDequeue(out IRule? course) && course != null) {
+                        var availableSection = schedule.GetAvailableSections(course, course.RestrictType, constraint);
+                        if(availableSection == null) {
+                            remainingCourses.Append(course);
+                            continue;
+                        }
                         doAutoAssignCourses(schedule, course, availableSection);
-                        remainingCourses.Remove(course);
                     }
                 }
                 if(remainingCourses.Any()) {
                     // 未分配的课程, 将课程安排到冲突最少的节次
-
-
+                    //foreach(var course in remainingCourses) {
+                    //    var conflictedSection = schedule.GetAvailableSections(course, SectionType.None);
+                    //    if(conflictedSection == null) {
+                    //        NoAssignCourses.Add(course.DisplayName);
+                    //        continue;
+                    //    }
+                    //    doAutoAssignCourses(schedule, course, conflictedSection);
+                    //}
                 }
-                population.Add(schedule);
-            }
+                population.Enqueue(schedule);
+            });
 
-            return population;
+            return population.ToList();
         }
 
         /// <summary>
@@ -131,12 +156,15 @@ namespace XStudio.SchoolSchedule.Algorithms {
                 case RuleType.ConsecutiveClasses: // 连堂课
                     doAssignConsecutiveClassesCourses(classSchedule, rule, section);
                     break;
+
                 case RuleType.AlternatePolling: // 交替轮换课
                     doAssignAlternatePollingCourses(classSchedule, rule, section);
                     break;
+
                 case RuleType.SingleOrBiweekly: // 单双周课
                     classSchedule.AddSectionContent(section.Code, new SectionContent(0, rule, 1));
                     break;
+
                 default:
                     classSchedule.AddSectionContent(section.Code, new SectionContent(0, rule));
                     break;
@@ -160,12 +188,17 @@ namespace XStudio.SchoolSchedule.Algorithms {
         /// <param name="classSchedule"></param>
         /// <param name="rule"></param>
         /// <param name="section"></param>
-        private void doAssignConsecutiveClassesCourses(ClassSchedule classSchedule, IRule rule, Section section) {
+        private bool doAssignConsecutiveClassesCourses(ClassSchedule classSchedule, IRule rule, Section? section) {
+            if(section == null)
+                return false;
             ConsecutiveClasses continuousClasses = (ConsecutiveClasses)rule;
             continuousClasses.Periods = new List<int>() { section.Period, section.Period + 1 };
             classSchedule.AddSectionContent(section.Code, new SectionContent(0, continuousClasses));
             section = classSchedule[section.Day, section.Period + 1];
-            classSchedule.AddSectionContent(section.Code, new SectionContent(0, continuousClasses));
+            if(section != null) {
+                classSchedule.AddSectionContent(section.Code, new SectionContent(0, continuousClasses));
+            }
+            return true;
         }
 
         /// <summary>
@@ -273,7 +306,8 @@ namespace XStudio.SchoolSchedule.Algorithms {
         /// <returns>子代课表</returns>
         private ClassSchedule CrossoverSchedules(ClassSchedule parent1, ClassSchedule parent2) {
             // 深拷贝父代课表
-            var child = JsonConvert.DeserializeObject<ClassSchedule>(JsonConvert.SerializeObject(parent1));
+            string json = JsonConvert.SerializeObject(parent1, jsonSettings);
+            var child = JsonConvert.DeserializeObject<ClassSchedule>(json, jsonSettings);
 
             if(child == null)
                 return parent1;
@@ -308,8 +342,8 @@ namespace XStudio.SchoolSchedule.Algorithms {
             ClassSchedule baseSchedule,
             List<IRule> courses,
             List<IRule>? constraint) {
-            var mutatedSchedule = JsonConvert.DeserializeObject<ClassSchedule>(JsonConvert.SerializeObject(schedule));
-
+            string json = JsonConvert.SerializeObject(schedule, jsonSettings);
+            var mutatedSchedule = JsonConvert.DeserializeObject<ClassSchedule>(json, jsonSettings);
             if(mutatedSchedule == null)
                 return schedule;
 
@@ -344,7 +378,7 @@ namespace XStudio.SchoolSchedule.Algorithms {
 
                 // 检查是否可以分配
                 Tuple<bool, string> tupleAssign = schedule.CanAssign(newSection, courseToRelocate, constraint);
-                if(tupleAssign.Item1) {
+                if(!tupleAssign.Item1) {
                     newSection.AddSectionContent(new SectionContent(0, courseToRelocate));
                 }
                 else {

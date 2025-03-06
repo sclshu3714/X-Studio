@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using XStudio.SchoolSchedule.Enums;
 
 namespace XStudio.SchoolSchedule.Rules {
 
@@ -12,9 +8,9 @@ namespace XStudio.SchoolSchedule.Rules {
     ///     分散在一周内
     /// </summary>
     public class DisperseWithinTheWeek : IRule {
+
         public DisperseWithinTheWeek(PriorityMode priority, ClassCourseRule course)
            : base(priority, RuleMode.Course, RuleType.DisperseWithinTheWeek) {
-
         }
     }
 }

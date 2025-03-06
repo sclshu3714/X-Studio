@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using XStudio.SchoolSchedule.Models;
 using XStudio.SchoolSchedule.Rules;
 
 namespace XStudio.SchoolSchedule.Algorithms {
@@ -21,7 +17,7 @@ namespace XStudio.SchoolSchedule.Algorithms {
         /// 多线程时使用的锁
         /// </summary>
         private readonly object locker = new object(); // 定义一个锁对象
-        
+
         /// <summary>
         /// 记录没有分配的课程
         /// </summary>
@@ -43,10 +39,10 @@ namespace XStudio.SchoolSchedule.Algorithms {
             //courses = courses.OrderByDescending(c => c.GetConstraints().Count).ToList();
 
             // 尝试为每个课程分配时间和地点
-            foreach (var course in courses) {
+            foreach(var course in courses) {
                 bool assigned = AssignCourseToSchedule(classSchedule, course, constraint);
-                
-                if (!assigned) {
+
+                if(!assigned) {
                     // 如果某个课程无法分配，记录未分配的课程
                     NoAssignCourses += course.DisplayName + ";";
                     return false;
@@ -87,7 +83,8 @@ namespace XStudio.SchoolSchedule.Algorithms {
         /// <param name="constraints">约束条件</param>
         /// <returns>是否满足所有约束</returns>
         private bool IsValidAssignment(IRule course, Classroom classroom, List<IRule>? constraints) {
-            if (constraints == null) return true;
+            if(constraints == null)
+                return true;
             //foreach (var constraint in constraints) {
             //    if (!constraint.CheckRule(course, timeSlot, classroom)) {
             //        // 记录冲突
@@ -104,8 +101,8 @@ namespace XStudio.SchoolSchedule.Algorithms {
         /// <param name="courseName">课程名称</param>
         /// <param name="conflictType">冲突类型</param>
         private void RecordConflict(string courseName, string conflictType) {
-            lock (locker) {
-                if (!Conflicts.ContainsKey(courseName)) {
+            lock(locker) {
+                if(!Conflicts.ContainsKey(courseName)) {
                     Conflicts[courseName] = new List<string>();
                 }
                 Conflicts[courseName].Add(conflictType);

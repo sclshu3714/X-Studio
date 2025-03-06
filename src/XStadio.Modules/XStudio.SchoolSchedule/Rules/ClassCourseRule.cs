@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using XStudio.SchoolSchedule.Enums;
 
 namespace XStudio.SchoolSchedule.Rules {
+
     /// <summary>
     /// 课程
     /// </summary>
     public class ClassCourseRule : IRule {
+
         public ClassCourseRule()
             : base(PriorityMode.Medium, RuleMode.Course, RuleType.None) {
             Mode = RuleMode.Course;
             Type = RuleType.None;
             RangeType = ActionRangeType.Course;
         }
+
         /// <summary>
         /// 课程编号，主要用于快速识别和查询
         /// </summary>
@@ -29,6 +28,7 @@ namespace XStudio.SchoolSchedule.Rules {
         /// 显示名称
         /// </summary>
         public override string DisplayName { get => Name; set => Name = value; }
+
         /// <summary>
         /// 教室Id
         /// </summary>
@@ -39,7 +39,6 @@ namespace XStudio.SchoolSchedule.Rules {
         /// </summary>
         public string ClassroomName { get; set; } = string.Empty;
 
-
         /// <summary>
         /// 年级Id
         /// </summary>
@@ -49,7 +48,6 @@ namespace XStudio.SchoolSchedule.Rules {
         /// 年级名称
         /// </summary>
         public string GradeName { get; set; } = string.Empty;
-
 
         /// <summary>
         /// 班级Id
@@ -70,7 +68,6 @@ namespace XStudio.SchoolSchedule.Rules {
         /// 教师名称
         /// </summary>
         public string TeacherName { get; set; } = string.Empty;
-
 
         /// <summary>
         /// 其他教师(副老师)

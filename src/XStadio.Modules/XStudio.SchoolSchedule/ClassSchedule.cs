@@ -1,17 +1,6 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.Tracing;
-using System.Linq;
-using System.Net.Http.Json;
-using System.Reflection;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using System.Xml;
+using XStudio.SchoolSchedule.Enums;
 using XStudio.SchoolSchedule.Rules;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace XStudio.SchoolSchedule {
     /// <summary>
@@ -84,13 +73,12 @@ namespace XStudio.SchoolSchedule {
     //        {
     //            return Sections[(int)day, index];
     //        }
-    //    }        
+    //    }
     //    public void SetSection(DayOfWeek day, int index, Section section)
     //    {
     //        Sections[(int)day, index] = section;
     //    }
     //}
-
 
     /// <summary>
     /// 班级课表
@@ -99,10 +87,9 @@ namespace XStudio.SchoolSchedule {
     /// 数据量：一周上课节次数 * 教学周 => 12 * 7 * 15
     /// </example>
     public class ClassSchedule {
+
         public ClassSchedule() {
-
         }
-
 
         /// <summary>
         /// 默认周一 - 周日,当然也可以控制周日 - 周六,周六 - 周五等
@@ -116,7 +103,6 @@ namespace XStudio.SchoolSchedule {
         /// 最大节次
         /// </summary>
         public int MaxPeriod { get; set; } = 1;
-
 
         /// <summary>
         /// 节次内容
@@ -150,12 +136,11 @@ namespace XStudio.SchoolSchedule {
         /// </summary>
         /// <param name="code">节次代码</param>
         /// <returns>节次</returns>
-        public Section this[string code] {
+        public Section? this[string code] {
             get {
-                return Sections.First(s => s.Code == code);
+                return Sections.FirstOrDefault(s => s.Code == code);
             }
         }
-
 
         /// <summary>
         /// 索引器定义(获取星期week的所有节次)
@@ -199,7 +184,6 @@ namespace XStudio.SchoolSchedule {
             }
         }
 
-
         /// <summary>
         /// 索引器定义(获取第period节课星期week的课)
         /// </summary>
@@ -209,9 +193,9 @@ namespace XStudio.SchoolSchedule {
         /// <example>
         /// 星期天第3节课 = this[DayOfWeek.Sunday, 3]
         /// </example>
-        public Section this[DayOfWeek day, int period] {
+        public Section? this[DayOfWeek day, int period] {
             get {
-                return Sections.First(s => s.Day == day && s.Period == period);
+                return Sections.FirstOrDefault(s => s.Day == day && s.Period == period);
             }
         }
 
@@ -224,9 +208,9 @@ namespace XStudio.SchoolSchedule {
         /// <example>
         /// 星期天第3节课 = this[7, 3]
         /// </example>
-        public Section this[int iday, int period] {
+        public Section? this[int iday, int period] {
             get {
-                return Sections.First(s => (int)s.Day == iday && s.Period == period);
+                return Sections.FirstOrDefault(s => (int)s.Day == iday && s.Period == period);
             }
         }
 
@@ -305,19 +289,19 @@ namespace XStudio.SchoolSchedule {
         /// 星期一 第3节 合并7 = 第3节课，周一 - 周日 通栏
         /// </example>
         public void SetColumnSpan(DayOfWeek day, int period, int columnSpan) {
-            int span = (int)day + columnSpan - 1;
+            int startDay = LayoutOfWeek.IndexOf(day);
+            int span = (int)startDay + columnSpan - 1;
             Section section = this[day, period];
             IEnumerable<Section> Sections = this[period, day, columnSpan];
             if(Sections.Any(it => (it.ColSpan > 1 || it.RowSpan > 1) && it.LinkTo != null)) {
                 return;
             }
             section.ColSpan = columnSpan;
-            for(int i = (int)day + 1; i <= span; i++) {
+            for(int i = (int)startDay + 1; i <= span; i++) {
                 Section item = this[i, period];
                 item.LinkTo = section;
             }
         }
-
 
         /// <summary>
         /// 设置纵向合并单元格（通栏）
@@ -339,6 +323,29 @@ namespace XStudio.SchoolSchedule {
             }
         }
 
+        /// <summary>
+        /// 获取早自习的节次数量
+        /// </summary>
+        /// <returns></returns>
+        public int GetMorningStudyCount() {
+            return Sections.Count(s => s.Type == SectionType.MorningStudy);
+        }
+
+        /// <summary>
+        /// 获取正课授课的节次数量
+        /// </summary>
+        /// <returns></returns>
+        public int GetRegularClassCount() {
+            return Sections.Count(s => s.Type == SectionType.RegularClass);
+        }
+
+        /// <summary>
+        /// 获取晚自习的节次数量
+        /// </summary>
+        /// <returns></returns>
+        public int GetEveningStudyCount() {
+            return Sections.Count(s => s.Type == SectionType.EveningStudy);
+        }
 
         /// <summary>
         /// 添加节次到课表
@@ -433,6 +440,7 @@ namespace XStudio.SchoolSchedule {
             Section? targetSection = this[targetCode];
             return await ExchangeSessionsAsync(sourceSection, targetSection);
         }
+
         /// <summary>
         /// 交换节次
         ///     既是交换两个节次的内容
@@ -455,26 +463,29 @@ namespace XStudio.SchoolSchedule {
             return new Tuple<bool, string>(true, "交换完成");
         }
 
+        #region 获取无冲突的可用节次
+
         /// <summary>
         /// 获取可用的节次
         /// </summary>
         /// <param name="course">规则</param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Section? GetAvailableSections(IRule rule, SectionType regularClass) {
+        public Section? GetAvailableSections(IRule rule, SectionType regularClass, List<IRule> constraint) {
             if(rule == null) {
                 return null;
             }
             switch(rule.Type) {
                 case RuleType.ConsecutiveClasses: // 连续课，只能取相同时段连续节次，中间无打断
-                    return GetAvailableConsecutiveClassesSections(regularClass);
+                    return GetAvailableConsecutiveClassesSections(rule, regularClass, constraint);
+
                 case RuleType.None: // 无规则约束，在所有可用的节次中都可以分配
                 case RuleType.SingleOrBiweekly:  // 单双周，在所有可用的节次中都可以分配
                 case RuleType.AlternatePolling:  // 轮巡，在所有可用的节次中都可以分配
                 case RuleType.JointClassTeaching:  // 合班，在所有可用的节次中都可以分配
                 case RuleType.CentralizedLessonPreparation:  // 集中备课，只能取指定星期的节次
                 default:
-                    return GetAvailableOtherSections(regularClass);
+                    return GetAvailableOtherSections(rule, regularClass, constraint);
             }
         }
 
@@ -483,36 +494,71 @@ namespace XStudio.SchoolSchedule {
         /// </summary>
         /// <param name="regularClass"></param>
         /// <returns></returns>
-        private Section? GetAvailableOtherSections(SectionType regularClass) {
-            var availableSections = this.Sections.Where(s => s.IsValidPair(regularClass));
+        private Section? GetAvailableOtherSections(IRule rule, SectionType regularClass, List<IRule> constraint) {
+            // 优先获取约束中只能排的节次
+            Section? section = null;
+            IRule? canOnlyArrangeRule = constraint.FirstOrDefault(r =>
+                                            r.Code.Contains(rule.Code) &&
+                                            r.Type == RuleType.CanOnlyArrange);
+            if(canOnlyArrangeRule != null) {
+                section = this.Sections.FirstOrDefault(s =>
+                                s.IsValidPair(regularClass) &&
+                                s.Day == canOnlyArrangeRule.Location?.Item1 &&
+                                s.Period == canOnlyArrangeRule.Location?.Item2);
+                if(section != null) {
+                    return section; // 找到了符合条件的节次}
+                }
+            }
+            var availableSections = this.Sections.Where(s => s.IsValidPair(regularClass)).ToList();
             if(availableSections.Count() == 0)
                 return null; // 如果没有可用的节次
             Random random = new Random();
-            int index = random.Next(availableSections.Count()); // 随机获取索引
-            return availableSections.ElementAt(index); // 返回随机选择的节次
+            int count = availableSections.Count();
+            do {
+                int index = random.Next(count); // 随机获取索引
+                section = availableSections.ElementAt(index); // 返回随机选择的节次
+                availableSections.Remove(section); // 移除已选择的节次
+                count--;
+            }
+            while(count > 0 &&
+                  CanAssign(section, rule, constraint) is Tuple<bool, string> canAssign &&
+                  canAssign.Item1);
+            return section; // 无可用节次
         }
 
         /// <summary>
         /// 获取连堂课的可用的节次
         /// </summary>
         /// <returns></returns>
-        private Section? GetAvailableConsecutiveClassesSections(SectionType regularClass) {
+        private Section? GetAvailableConsecutiveClassesSections(IRule rule, SectionType regularClass, List<IRule> constraint) {
             var availableContinuousSections = this.Sections.GroupBy(d => d.Day) // 根据星期分组
                                                            .SelectMany(t => t.GroupBy(s => s.TimePeriod) // 根据时间段分组
                                                                .SelectMany(g => g.Zip(g.Skip(1), (first, second) => new { first, second }) // 使用 Zip 结合相邻元素
                                                                    .Where(pair => IsValidPair(pair.first, pair.second, regularClass)) // 进行有效性判断
                                                                    .Select(pair => pair.first) // 选择连续的节次
                                                                )
-                                                           );
+                                                           ).ToList();
 
             if(!availableContinuousSections.Any())
                 return null; // 确保列表不为空
-
+            // 需要优先拿约束中只能排的节次
+            Section? section = null;
             Random random = new Random();
-            int it_index = random.Next(availableContinuousSections.Count()); // 随机获取索引
-            return availableContinuousSections.ElementAt(it_index); // 返回随机选择的节次
+            int count = availableContinuousSections.Count();
+
+            do {
+                int it_index = random.Next(count); // 随机获取索引
+                section = availableContinuousSections.ElementAt(it_index); // 返回随机选择的节次
+                availableContinuousSections.RemoveAt(it_index); // 移除已选择的节次
+                count--;
+            }
+            while(count > 0 &&
+                  CanAssign(section, rule, constraint) is Tuple<bool, string> canAssign &&
+                  canAssign.Item1);
+            return section; // 无可用节次
         }
 
+        #endregion 获取无冲突的可用节次
 
         /// <summary>
         /// 判断两个节次是否有效
@@ -533,11 +579,11 @@ namespace XStudio.SchoolSchedule {
         /// <param name="section"></param>
         /// <returns></returns>
         //public bool CanAssign(Section section, IRule course, List<IRule>? constraint) {
-        //    return section != null &&  !section.IsMergeCell &&  section.LinkTo == null && 
+        //    return section != null &&  !section.IsMergeCell &&  section.LinkTo == null &&
         //           !HasCourseConflict(section, course, constraint);
         //}
         /// <summary>
-        /// 判断是否可以分配课程到节次
+        /// 判断是否可以分配课程到节次,true:可以分配，false:不可以分配
         /// </summary>
         /// <param name="section"></param>
         /// <param name="course"></param>
@@ -550,11 +596,7 @@ namespace XStudio.SchoolSchedule {
             if(!section.IsValidPair(course.RestrictType)) {
                 return new Tuple<bool, string>(false, "节次类型不匹配");
             }
-            Tuple<bool, string> tuple = HasCourseConflict(section, course, constraint);
-            if(!tuple.Item1) { 
-                return new Tuple<bool, string>(true, "可以安排课程");
-            }
-            return tuple;
+            return HasCourseConflict(section, course, constraint);
         }
 
         /// <summary>
@@ -593,12 +635,16 @@ namespace XStudio.SchoolSchedule {
             switch(rule.Type) {
                 case RuleType.CanOnlyArrange: // 只能排课，
                     return VerifyCanOnlyArrange(section, course, rule);
+
                 case RuleType.CannotBeArranged: // 不能排课，
                     return VerifyCannotBeArranged(section, course, rule);
+
                 case RuleType.CentralizedLessonPreparation: // 集中备课，教师教授的课程不能排
                     return VerifyCentralizedLessonPreparation(section, course, rule);
+
                 case RuleType.CoursesAreNotAdjacent:  // 课程不能相邻
                     return VerifyCoursesAreNotAdjacent(section, course, rule);
+
                 case RuleType.Mutex:  // 互斥课，
                 default:
                     return Tuple.Create(false, "没有冲突规则");
@@ -634,13 +680,16 @@ namespace XStudio.SchoolSchedule {
         ///     false: 课程没相邻
         /// </returns>
         private Tuple<bool, string> VerifyCoursesAreNotAdjacent(Section section, IRule course, IRule rule) {
-            Section upSection = this[section.Day, section.Period - 1];   // 前一节次
-            Section downSection = this[section.Day, section.Period + 1]; // 后一节次
-            if(upSection.Contents.Any(c => c.Content != null && c.Content.Code.Contains(course.Code))) {
+            CoursesAreNotAdjacent notAdjacent = (CoursesAreNotAdjacent)rule;
+            Section? upSection = this[section.Day, section.Period - 1];   // 前一节次
+            Section? downSection = this[section.Day, section.Period + 1]; // 后一节次
+            if(upSection != null && upSection.Contents.Any(c => c.Content != null &&
+            (c.Content.Code.Contains(course.Code) || notAdjacent.ClassCourses.Any(cc => cc.Code == c.Content.Code)))) {
                 return Tuple.Create(true, $"课程{course.DisplayName}不能与{upSection.Day}-{upSection.Name}的课程{upSection.Contents[0].Content?.DisplayName}相邻");
             }
-            if(downSection.Contents.Any(c => c.Content != null && c.Content.Code.Contains(course.Code))) {
-                return Tuple.Create(true, $"课程{course.DisplayName}不能与{upSection.Day}-{downSection.Name}放入课程{downSection.Contents[0].Content?.DisplayName}相邻");
+            if(downSection != null && downSection.Contents.Any(c => c.Content != null &&
+            (c.Content.Code.Contains(course.Code) || notAdjacent.ClassCourses.Any(cc => cc.Code == c.Content.Code)))) {
+                return Tuple.Create(true, $"课程{course.DisplayName}不能与{downSection.Day}-{downSection.Name}放入课程{downSection.Contents[0].Content?.DisplayName}相邻");
             }
             return Tuple.Create(false, "课程无相邻");
         }
@@ -706,6 +755,54 @@ namespace XStudio.SchoolSchedule {
                 }
                 courses.Remove(theCourses.First());
             }
+        }
+
+        /// <summary>
+        /// 验证需要排课的课时是否超出限制（课程课时必须小于等于节次数量，否则课程不能安排完全）
+        /// </summary>
+        /// <param name="courses"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public bool VerifyCourseHours(List<IRule> courses) {
+            bool result = true;
+            // 验证早自习课时、正课授课课时、晚自习课时
+            float morningStudyCount = courses.Select(c => {
+                if(c.RestrictType == SectionType.MorningStudy && c.Type != RuleType.ConsecutiveClasses) {
+                    return 1;
+                }
+                else if(c.RestrictType == SectionType.MorningStudy && c.Type == RuleType.ConsecutiveClasses) {
+                    return 2;
+                }
+                return 0;
+            }).Sum();
+            if(morningStudyCount > GetMorningStudyCount()) {
+                return false;
+            }
+            float regularClassCount = courses.Select(c => {
+                if(c.RestrictType == SectionType.RegularClass && c.Type != RuleType.ConsecutiveClasses) {
+                    return 1;
+                }
+                else if(c.RestrictType == SectionType.RegularClass && c.Type == RuleType.ConsecutiveClasses) {
+                    return 2;
+                }
+                return 0;
+            }).Sum();
+            if(regularClassCount > GetRegularClassCount()) {
+                return false;
+            }
+            float eveningStudyCount = courses.Select(c => {
+                if(c.RestrictType == SectionType.EveningStudy && c.Type != RuleType.ConsecutiveClasses) {
+                    return 1;
+                }
+                else if(c.RestrictType == SectionType.EveningStudy && c.Type == RuleType.ConsecutiveClasses) {
+                    return 2;
+                }
+                return 0;
+            }).Sum();
+            if(eveningStudyCount > GetEveningStudyCount()) {
+                return false;
+            }
+            return result;
         }
     }
 }

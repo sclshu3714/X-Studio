@@ -1,129 +1,22 @@
-<?xml version="1.0"?>
-<doc>
-    <assembly>
-        <name>XStudio.Application</name>
-    </assembly>
-    <members>
-        <member name="M:XStudio.Clouds.TencentCloudService.GetCredentialsAsync">
-            <summary>
-            获取腾讯云临时密钥
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:XStudio.Clouds.TencentCloudService.UploadFileAsync(Microsoft.AspNetCore.Http.IFormFile,XStudio.Clouds.TencentCloudCredentialsDto,XStudio.Clouds.UploadFileDto)">
-            <summary>
-            上传文件到腾讯云对象存储
-            </summary>
-            <param name="tencent"></param>
-            <param name="file"></param>
-            <param name="form"></param>
-            <returns></returns>
-            <exception cref="T:System.NotImplementedException"></exception>
-        </member>
-        <member name="M:XStudio.Clouds.TencentCloudService.RefreshDownloadUrl(XStudio.Clouds.TencentCloudCredentialsDto,XStudio.Clouds.DownloadDto)">
-            <summary>
-            刷新下载链接
-            </summary>
-            <param name="tencent">授权信息</param>
-            <param name="refresh">要刷新的文件key列表</param>
-            <returns>
-             true:成功 object:DownloadResultDto列表;
-             false:失败 object: string错误信息
-            </returns>
-        </member>
-        <member name="M:XStudio.Clouds.TencentCloudService.DownloadObject(XStudio.Clouds.TencentCloudCredentialsDto,XStudio.Clouds.DownloadDto)">
-            <summary>
-            下载文件(下载到服务器本地)
-            </summary>
-            <returns></returns>
-            <example>
-            DownloadObject demo = new DownloadObject();
-            初始化COS服务
-               demo.InitCosXml();
-            demo.TransferDownloadObject().Wait();
-            </example>
-        </member>
-        <member name="M:XStudio.Clouds.TencentCloudService.BatchDownload(XStudio.Clouds.TencentCloudCredentialsDto,XStudio.Clouds.DownloadDto)">
-            <summary>
-            批量下载文件
-            </summary>
-            <param name="tencent"></param>
-            <param name="download"></param>
-        </member>
-        <member name="M:XStudio.Clouds.TencentCloudService.DownloadToMemory(XStudio.Clouds.TencentCloudCredentialsDto,XStudio.Clouds.DownloadDto)">
-            <summary>
-            下载文件到内存，然后转发到客户端
-            </summary>
-            <param name="tencent">授权信息</param>
-            <param name="download">下载文件信息</param>
-            <returns></returns>
-        </member>
-        <member name="M:XStudio.Clouds.TencentCloudService.InitCosXmlAsync(System.String,System.String,XStudio.Clouds.TencentCloudCredentialsDto)">
-            <summary>
-            初始化COS服务实例
-            </summary>
-        </member>
-        <member name="M:XStudio.Clouds.TencentCloudService.UploadFileAsync(Microsoft.AspNetCore.Http.IFormFile,COSXML.CosXmlServer,XStudio.Clouds.UploadFileDto)">
-            <summary>
-            上传文件到腾讯云对象存储
-            </summary>
-            <param name="cosXml"></param>
-            <param name="file"></param>
-            <param name="form"></param>
-            <returns></returns>
-        </member>
-        <member name="M:XStudio.Clouds.TencentCloudService.GetObjectUrl(COSXML.CosXmlServer,System.String,System.String)">
-            <summary>
-            当对象 ACL 属性设置为“公有读”时，可以通过以下 SDK 接口生成的 URL 直接访问对象（仅支持生成 COS 默认源站域名的 URL）。
-            </summary>
-            <param name="cosXml"></param>
-            <param name="bucket"></param>
-            <param name="key"></param>
-        </member>
-        <member name="M:XStudio.Projects.ProjectService.GetAsync(System.Guid)">
-            <summary>
-            通过项目Id查询项目
-            </summary>
-            <param name="id">项目Id</param>
-            <returns>项目信息</returns>
-            <exception cref="T:Volo.Abp.Domain.Entities.EntityNotFoundException">没有查询到项目信息</exception>
-        </member>
-        <member name="T:XStudio.Schools.Timetable.ScheduleAggregateService">
-            <summary>
-            课表聚合服务
-                1、学校
-                2、年级
-                3、班级
-                4、课表
-                    4.1、节次
-                    4.2、教师
-                    4.3、课程
-                    4.4、周次
-                    4.5、节数
-                    4.6、上课时间
-                    4.7、上课地点
-            </summary>
-        </member>
-        <member name="M:XStudio.Schools.Timetable.ScheduleService.InsertManyAsync(System.Collections.Generic.List{XStudio.Schools.Timetable.CreateScheduleDto})">
-            <summary>
-            批量插入
-            </summary>
-            <param name="inputs"></param>
-            <returns></returns>
-            <exception cref="T:Microsoft.EntityFrameworkCore.DbUpdateException"></exception>
-        </member>
-        <member name="M:XStudio.Schools.Timetable.ScheduleService.DeleteManyAsync(System.Collections.Generic.List{System.Guid})">
-            <summary>
-            批量删除
-            </summary>
-            <param name="ids"></param>
-            <returns></returns>
-        </member>
-        <member name="M:XStudio.Users.LoginAppService.GetRequestUrl">
-            <summary>
-            获取当前请求的Host
-            </summary>
-            <returns></returns>
-        </member>
-    </members>
-</doc>
+arning: FBoneReference::Initialize BoneIndex for Bone 'WeaponProp01' does not exist in Skeleton 'ME1JingNiaoMd00401_Skeleton'
+[2025.02.28-22.45.48:526][470][GameThread]LogAnimation: Warning: FBoneReference::Initialize BoneIndex for Bone 'WeaponProp02' does not exist in Skeleton 'ME1JingNiaoMd00401_Skeleton'
+[2025.02.28-22.45.48:526][470][GameThread]LogAnimation: Warning: FBoneReference::Initialize BoneIndex for Bone 'Bone_Weapon002' does not exist in Skeleton 'ME1JingNiaoMd00301_Skeleton'
+[2025.02.28-22.45.48:526][470][GameThread]LogAnimation: Warning: FBoneReference::Initialize BoneIndex for Bone 'Bone_Weapon01' does not exist in Skeleton 'ME1JingNiaoMd00301_Skeleton'
+[2025.02.28-22.45.48:526][470][GameThread]LogAnimation: Warning: FBoneReference::Initialize BoneIndex for Bone 'WeaponProp01' does not exist in Skeleton 'ME1JingNiaoMd00301_Skeleton'
+[2025.02.28-22.45.48:526][470][GameThread]LogAnimation: Warning: FBoneReference::Initialize BoneIndex for Bone 'WeaponProp02' does not exist in Skeleton 'ME1JingNiaoMd00301_Skeleton'
+[2025.02.28-22.45.48:526][470][GameThread]Puerts: Display: (0x0000000086345290) [493248][I][CombatInfo][WCL][642180][22.45.48:520] [Ai][EntityId:106440:Proto_Monster:BP_ME1JingNiaoMd00301_C_2146632746] 感知广播 [addIds: undefined][removeIds:: [1312620545,1312489473,1312030721]]
+[2025.02.28-22.45.48:537][470][GameThread]Puerts: Display: (0x0000000086345290) [493249][I][CombatInfo][WCL][642181][22.45.48:534] [Skill][EntityId:106442:Proto_Monster:BP_ME1JingNiaoMd00401_C_2146632776] CharacterSkillComponent.BeginSkill [技能Id: 77005001][技能名: 冲锋转身][上下文: TsTaskUseSkill.ReceiveTickAI]
+[2025.02.28-22.45.48:537][470][GameThread]Puerts: Display: (0x0000000086345290) [493250][I][CombatInfo][WCL][642181][22.45.48:534] [FightState][EntityId:106442:Proto_Monster:BP_ME1JingNiaoMd00401_C_2146632776] 切换本地主状态失败，[目标状态：普通技能(1|0)]，[当前状态(2):普通受击(2|0)]
+[2025.02.28-22.45.48:537][470][GameThread]Puerts: Display: (0x0000000086345290) [493251][I][CombatInfo][WCL][642181][22.45.48:534] [Skill][EntityId:106442:Proto_Monster:BP_ME1JingNiaoMd00401_C_2146632776] 技能释放失败，状态不满足 [技能Id: 77005001][技能名: 冲锋转身]
+[2025.02.28-22.45.48:537][470][GameThread]Puerts: Display: (0x0000000086345290) [493252][I][CombatInfo][WCL][642181][22.45.48:535] [Ai][EntityId:106442:Proto_Monster:BP_ME1JingNiaoMd00401_C_2146632776] 感知广播 [addIds: [1312489473]][removeIds:: [1312620545,1312030721]]
+[2025.02.28-22.45.48:570][472][GameThread]Puerts: Display: (0x0000000086345290) [493253][I][CombatInfo][WCL][642183][22.45.48:567] [Ai][EntityId:106440:Proto_Monster:BP_ME1JingNiaoMd00301_C_2146632746] 感知广播 [addIds: [1312030721,1312489473,1312620545]][removeIds:: undefined]
+[2025.02.28-22.45.48:591][474][GameThread]Puerts: Display: (0x0000000086345290) [493254][I][CombatInfo][WCL][642184][22.45.48:582] [Skill][EntityId:106442:Proto_Monster:BP_ME1JingNiaoMd00401_C_2146632776] CharacterSkillComponent.BeginSkill [技能Id: 77005001][技能名: 冲锋转身][上下文: TsTaskUseSkill.ReceiveTickAI]
+[2025.02.28-22.45.48:591][474][GameThread]Puerts: Display: (0x0000000086345290) [493255][I][CombatInfo][WCL][642184][22.45.48:582] [FightState][EntityId:106442:Proto_Monster:BP_ME1JingNiaoMd00401_C_2146632776] 切换本地主状态失败，[目标状态：普通技能(1|0)]，[当前状态(2):普通受击(2|0)]
+[2025.02.28-22.45.48:591][474][GameThread]Puerts: Display: (0x0000000086345290) [493256][I][CombatInfo][WCL][642184][22.45.48:582] [Skill][EntityId:106442:Proto_Monster:BP_ME1JingNiaoMd00401_C_2146632776] 技能释放失败，状态不满足 [技能Id: 77005001][技能名: 冲锋转身]
+[2025.02.28-22.45.48:591][474][GameThread]Puerts: Display: (0x0000000086345290) [493257][I][CombatInfo][WCL][642184][22.45.48:584] [Ai][EntityId:106442:Proto_Monster:BP_ME1JingNiaoMd00401_C_2146632776] 感知广播 [addIds: [1312030721,1312620545]][removeIds:: [1312489473]]
+[2025.02.28-22.45.48:621][476][GameThread]Puerts: Display: (0x0000000086345290) [493258][I][CombatInfo][WCL][642186][22.45.48:616] [Ai][EntityId:106440:Proto_Monster:BP_ME1JingNiaoMd00301_C_2146632746] 感知广播 [addIds: undefined][removeIds:: [1312620545,1312489473,1312030721]]
+[2025.02.28-22.45.48:642][477][GameThread]Puerts: Display: (0x0000000086345290) [493259][I][CombatInfo][WCL][642187][22.45.48:632] [Skill][EntityId:106442:Proto_Monster:BP_ME1JingNiaoMd00401_C_2146632776] CharacterSkillComponent.BeginSkill [技能Id: 77005001][技能名: 冲锋转身][上下文: TsTaskUseSkill.ReceiveTickAI]
+[2025.02.28-22.45.48:642][477][GameThread]Puerts: Display: (0x0000000086345290) [493260][I][CombatInfo][WCL][642187][22.45.48:632] [FightState][EntityId:106442:Proto_Monster:BP_ME1JingNiaoMd00401_C_2146632776] 切换本地主状态失败，[目标状态：普通技能(1|0)]，[当前状态(2):普通受击(2|0)]
+[2025.02.28-22.45.48:642][477][GameThread]Puerts: Display: (0x0000000086345290) [493261][I][CombatInfo][WCL][642187][22.45.48:632] [Skill][EntityId:106442:Proto_Monster:BP_ME1JingNiaoMd00401_C_2146632776] 技能释放失败，状态不满足 [技能Id: 77005001][技能名: 冲锋转身]
+[2025.02.28-22.45.48:642][477][GameThread]Puerts: Display: (0x0000000086345290) [493262][I][CombatInfo][WCL][642187][22.45.48:633] [Ai][EntityId:106442:Proto_Monster:BP_ME1JingNiaoMd00401_C_2146632776] 感知广播 [addIds: [1312489473]][removeIds:: [1312620545,1312030721]]
+[2025.02.28-22.45.48:674][479][GameThread]Puerts: Display: (0x0000000086345290) [493263][I][CombatInfo][WCL][642189][22.45.48:667] [Ai][EntityId:106440:Proto_Monster:BP_ME1JingNiaoMd00301_C_2146632746] 感知广播 [addIds: [1312030721,1312489473,131262

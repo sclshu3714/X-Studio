@@ -8,14 +8,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Xml;
 using XStudio.School.Timetable.Models;
 using XStudio.SchoolSchedule;
 using XStudio.SchoolSchedule.Algorithms;
+using XStudio.SchoolSchedule.Enums;
 using XStudio.SchoolSchedule.Rules;
-using DayOfWeek = XStudio.SchoolSchedule.DayOfWeek;
 
 namespace XStudio.School.Timetable.ViewModels {
     /// <summary>
@@ -344,7 +345,8 @@ namespace XStudio.School.Timetable.ViewModels {
             List<IRule> constraint = new() {
                 new CanOnlyArrange(PriorityMode.Highest, RuleMode.Course, classCourses["语文"], Tuple.Create(DayOfWeek.Monday, 3)),
                 new CanOnlyArrange(PriorityMode.Highest, RuleMode.Course, classCourses["数学"], Tuple.Create(DayOfWeek.Wednesday, 3)),
-                new CannotBeArranged(PriorityMode.Highest, RuleMode.Course, classCourses["数学"], Tuple.Create(DayOfWeek.Thursday, 3))
+                new CannotBeArranged(PriorityMode.Highest, RuleMode.Course, new List<ClassCourseRule>() { classCourses["语文"], classCourses["数学"] }, Tuple.Create(DayOfWeek.Thursday, 3)),
+                new CoursesAreNotAdjacent(PriorityMode.Highest,   new List<ClassCourseRule>() { classCourses["语文"],classCourses["数学"],classCourses["英语"] }),
             };
             return constraint;
         }
@@ -410,8 +412,8 @@ namespace XStudio.School.Timetable.ViewModels {
             rules.AddRange(GetRules(new List<ClassCourse>() { topicRules["生物"] }, RuleType.None, SectionType.MorningStudy, 2, PriorityMode.Highest));
             rules.AddRange(GetRules(new List<ClassCourse>() { topicRules["政治"] }, RuleType.None, SectionType.MorningStudy, 2, PriorityMode.Highest));
 
-            rules.AddRange(GetRules(new List<ClassCourse>() { topicRules["数学"] }, RuleType.None, SectionType.EveningStudy, 2, PriorityMode.Highest));
-            rules.AddRange(GetRules(new List<ClassCourse>() { topicRules["英语"] }, RuleType.None, SectionType.EveningStudy, 2, PriorityMode.Highest));
+            rules.AddRange(GetRules(new List<ClassCourse>() { topicRules["数学"] }, RuleType.None, SectionType.EveningStudy, 1, PriorityMode.Highest));
+            rules.AddRange(GetRules(new List<ClassCourse>() { topicRules["英语"] }, RuleType.None, SectionType.EveningStudy, 1, PriorityMode.Highest));
             rules.AddRange(GetRules(new List<ClassCourse>() { topicRules["物理"] }, RuleType.None, SectionType.EveningStudy, 2, PriorityMode.Highest));
             rules.AddRange(GetRules(new List<ClassCourse>() { topicRules["化学"] }, RuleType.None, SectionType.EveningStudy, 2, PriorityMode.Highest));
             rules.AddRange(GetRules(new List<ClassCourse>() { topicRules["历史"] }, RuleType.None, SectionType.EveningStudy, 2, PriorityMode.Highest));
@@ -440,17 +442,29 @@ namespace XStudio.School.Timetable.ViewModels {
                 switch(ruleType) {
                     case RuleType.ConsecutiveClasses:
                         // 连堂课
-                        ConsecutiveClasses consecutiveClasses = new ConsecutiveClasses(priority, classCourseRules.First()) { ClassHour = 2 };
+                        ConsecutiveClasses consecutiveClasses = new ConsecutiveClasses(priority, classCourseRules.First()) {
+                            ClassHour = 2,
+                            Priority = priority,
+                            RestrictType = sectionType
+                        };
                         rules.Add(consecutiveClasses);
                         break;
                     case RuleType.AlternatePolling:
                         // 交替轮换课
-                        AlternatePolling alternatePolling = new AlternatePolling(priority, classCourseRules) { ClassHour = 1 };
+                        AlternatePolling alternatePolling = new AlternatePolling(priority, classCourseRules) {
+                            ClassHour = 1,
+                            Priority = priority,
+                            RestrictType = sectionType
+                        };
                         rules.Add(alternatePolling);
                         break;
                     case RuleType.SingleOrBiweekly:
                         // 单双周课
-                        SingleOrBiweekly singleOrBiweekly = new SingleOrBiweekly(priority, classCourseRules.First(), classCourseRules.Last()) { ClassHour = 1 };
+                        SingleOrBiweekly singleOrBiweekly = new SingleOrBiweekly(priority, classCourseRules.First(), classCourseRules.Last()) {
+                            ClassHour = 1,
+                            Priority = priority,
+                            RestrictType = sectionType
+                        };
                         rules.Add(singleOrBiweekly);
                         break;
                     case RuleType.None:
@@ -499,7 +513,7 @@ namespace XStudio.School.Timetable.ViewModels {
             IRule rule = courses[index];
 
             // 遍历所有时段尝试分配
-            var section = classSchedule.GetAvailableSections(rule, SectionType.RegularClass);
+            var section = classSchedule.GetAvailableSections(rule, SectionType.RegularClass, constraint);
             Tuple<bool, string> tupleAssign = classSchedule.CanAssign(section, rule, constraint);
             if(tupleAssign.Item1) {
                 switch(rule.Type) {

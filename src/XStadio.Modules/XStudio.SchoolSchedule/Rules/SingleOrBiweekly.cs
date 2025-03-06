@@ -1,14 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using XStudio.SchoolSchedule.Enums;
 
 namespace XStudio.SchoolSchedule.Rules {
+
     /// <summary>
     /// 单双周
     /// </summary>
     public class SingleOrBiweekly : IRule {
+
+        public SingleOrBiweekly() :
+            base(PriorityMode.Highest, RuleMode.Course, RuleType.SingleOrBiweekly) {
+            SingleWeekly = null;
+            BiWeekly = null;
+            Type = RuleType.SingleOrBiweekly;
+            Mode = RuleMode.Course;
+            RangeType = ActionRangeType.Class;
+            Code = "";
+        }
+
         /// <summary>
         /// 课时,单周或者双周分别占classHour的一半
         /// </summary>
@@ -22,6 +30,7 @@ namespace XStudio.SchoolSchedule.Rules {
             RangeType = ActionRangeType.Class;
             Code = $"{singleWeekly.Code};{biWeekly.Code}";
         }
+
         /// <summary>
         /// 单双周
         /// </summary>
@@ -37,12 +46,13 @@ namespace XStudio.SchoolSchedule.Rules {
             ClassHour = classHour;
             Code = $"{singleWeekly.Code};{biWeekly.Code}";
         }
+
         /// <summary>
         /// 显示名称
         /// </summary>
         public override string DisplayName {
             get {
-                if (SingleWeekly != null && BiWeekly != null) {
+                if(SingleWeekly != null && BiWeekly != null) {
                     return $"{SingleWeekly.DisplayName}|{BiWeekly.DisplayName}\r\n({GetDescription(Type)})";
                 }
                 return "无";

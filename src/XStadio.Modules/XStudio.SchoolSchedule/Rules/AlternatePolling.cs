@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using XStudio.SchoolSchedule.Enums;
 
 namespace XStudio.SchoolSchedule.Rules {
+
     /// <summary>
     /// 交替轮巡
     /// </summary>
     public class AlternatePolling : IRule {
+
         /// <summary>
         /// 课时,单周或者双周分别占classHour的一半
         ///     多个课程在学期内按照顺序轮巡上课
@@ -22,8 +20,9 @@ namespace XStudio.SchoolSchedule.Rules {
             RangeType = ActionRangeType.Class;
             Mode = RuleMode.Course;
             Type = RuleType.AlternatePolling;
-            Code = string.Join(";", rules.Select(r => r.Code));
-            
+            if(rules != null && rules.Any()) {
+                Code = string.Join(";", rules.Select(r => r.Code));
+            }
         }
 
         /// <summary>
@@ -31,12 +30,22 @@ namespace XStudio.SchoolSchedule.Rules {
         /// </summary>
         public override string DisplayName {
             get {
-                if (PollingCourses != null && PollingCourses.Any()) {
+                if(PollingCourses != null && PollingCourses.Count == 2 && Interval == 1) {
+                    return $"{string.Join("|", PollingCourses.Select(r => r.DisplayName))}\r\n({GetDescription(RuleType.SingleOrBiweekly)})";
+                }
+                else if(PollingCourses != null && PollingCourses.Any()) {
                     return $"{string.Join("|", PollingCourses.Select(r => r.DisplayName))}\r\n({GetDescription(Type)})";
                 }
                 return "无";
             }
         }
+
+        /// <summary>
+        /// 交替轮巡间隔
+        ///     间隔默认为1,即每周轮巡一次
+        ///     间隔为N,则每N周轮巡一次
+        /// </summary>
+        public int Interval { get; set; } = 1;
 
         /// <summary>
         /// 轮巡的课程

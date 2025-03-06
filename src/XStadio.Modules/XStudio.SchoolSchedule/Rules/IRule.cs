@@ -1,27 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using XStudio.SchoolSchedule.Enums;
 
 namespace XStudio.SchoolSchedule.Rules {
+
     /// <summary>
     /// 规则接口
     /// </summary>
+    [Serializable]
     public class IRule {
+
         public IRule(string id) {
             Id = id;
         }
+
         public IRule(PriorityMode priority)
             : this(Guid.NewGuid().ToString()) {
             Priority = priority;
         }
+
         public IRule(PriorityMode priority, RuleMode mode)
             : this(priority) {
             @Mode = mode;
         }
+
         public IRule(PriorityMode priority, RuleMode mode, RuleType type)
             : this(priority, mode) {
             @Type = type;
@@ -76,7 +78,7 @@ namespace XStudio.SchoolSchedule.Rules {
         /// <summary>
         /// 作用范围类型
         /// </summary>
-        [Description("范围类型")]
+        [Description("作用范围类型")]
         public ActionRangeType RangeType { get; set; } = ActionRangeType.None;
 
         /// <summary>
@@ -110,168 +112,12 @@ namespace XStudio.SchoolSchedule.Rules {
         /// <param name="obj">对象</param>
         /// <returns></returns>
         public static string GetDescription<T>(T obj) {
-            if (obj == null) return "未知";
+            if(obj == null)
+                return "未知";
             Type type = obj.GetType();
             var field = type.GetField($"{obj}");
             var descriptionAttribute = field?.GetCustomAttribute<DescriptionAttribute>();
             return descriptionAttribute?.Description ?? $"{obj}";
         }
-    }
-
-    public enum PriorityMode {
-        [Description("最高")]
-        Highest = 2,
-        [Description("高")]
-        High = 1,
-        [Description("中")]
-        Medium = 0,
-        [Description("低")]
-        Low = -1,
-        [Description("最低")]
-        Lowest = -2
-    }
-
-    /// <summary>
-    /// 作用类型
-    /// </summary>
-    public enum RuleMode {
-        [Description("无")]
-        None = 0,
-        /// <summary>
-        /// 课程
-        /// </summary>
-        [Description("课程")]
-        Course,
-        /// <summary>
-        /// 教师
-        /// </summary>
-        [Description("教师")]
-        Teacher,
-    }
-
-    /// <summary>
-    /// 规则类型(顺序表示规则顺序)
-    /// </summary>
-    public enum RuleType {
-        /// <summary>
-        /// 只能排[课程、教师]
-        /// </summary>
-        [Description("只能排")]
-        CanOnlyArrange = 0,
-
-        /// <summary>
-        /// 不能排[课程、教师]
-        /// </summary>
-        [Description("不能排")]
-        CannotBeArranged = 1,
-        /// <summary>
-        /// 连堂[课程]
-        /// </summary>
-        [Description("连堂")]
-        ConsecutiveClasses = 2,
-
-        /// <summary>
-        /// 单周[课程]
-        /// </summary>
-        [Description("单周")]
-        Single = 3,
-
-        /// <summary>
-        /// 双周[课程]
-        /// </summary>
-        [Description("双周")]
-        Biweekly = 4,
-
-        /// <summary>
-        /// 单双周[课程]
-        ///     两门课交替轮询
-        /// </summary>
-        [Description("单双周")]
-        SingleOrBiweekly = 5,
-
-        /// <summary>
-        /// 交替轮询[课程]
-        ///     多门课交替轮询
-        /// </summary>
-        [Description("交替轮询")]
-        AlternatePolling = 6,
-
-        /// <summary>
-        /// 合班[教师]
-        /// </summary>
-        [Description("合班")]
-        JointClassTeaching = 7,
-
-        /// <summary>
-        /// 集中备课[教师]
-        /// </summary>
-        [Description("集中备课")]
-        CentralizedLessonPreparation = 8,
-
-        /// <summary>
-        /// 互斥[教师]
-        ///     两个老师不能同时上课
-        /// </summary>
-        [Description("互斥")]
-        Mutex = 9,
-
-        /// <summary>
-        /// 同步[教师]
-        ///     两个老师必须同时上课
-        /// </summary>
-        [Description("同步")]
-        Sync = 10,
-
-        /// <summary>
-        /// 无规则
-        /// </summary>
-        [Description("无规则")]
-        None = 11,
-
-        /// <summary>
-        /// 教案齐平[课程]
-        /// </summary>
-        [Description("教案齐平")]
-        LessonPlanAligned = 12,
-
-        /// <summary>
-        /// 课程不相邻[课程]
-        /// </summary>
-        [Description("课程不相邻")]
-        CoursesAreNotAdjacent = 13,
-
-        /// <summary>
-        /// 周内分散[课程、教师]
-        /// </summary>
-        [Description("周内分散")]
-        DisperseWithinTheWeek = 14,
-
-        /// <summary>
-        /// 周内集中[教师]
-        /// </summary>
-        [Description("周内集中")]
-        ConcentrationWithinTheWeek = 15,
-
-        /// <summary>
-        /// 未知
-        /// </summary>
-        [Description("未知")]
-        Unknown = 16,
-    }
-
-    /// <summary>
-    /// 作用范围
-    /// </summary>
-    public enum ActionRangeType {
-        [Description("无")]
-        None = 0,
-        [Description("课程")]
-        Course = 1,
-        [Description("教师")]
-        Teacher = 2,
-        [Description("班级")]
-        Class = 3,
-        [Description("场所")]
-        Place = 4
     }
 }

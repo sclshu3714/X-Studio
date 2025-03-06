@@ -1,4 +1,5 @@
 ﻿using Prism.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -6,10 +7,14 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
-using XStudio.SchoolSchedule;
+using XStudio.SchoolSchedule.Enums;
 using XStudio.SchoolSchedule.Rules;
 
 namespace XStudio.School.Timetable.Models {
+
+    /// <summary>
+    /// 节次管理绑定数据
+    /// </summary>
     public class TimetableRow : BindableBase {
         private string timeSlot;
         private int period;

@@ -1,23 +1,17 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using XStudio.SchoolSchedule.Rules;
+﻿using XStudio.SchoolSchedule.Rules;
 
-namespace XStudio.SchoolSchedule
-{
+namespace XStudio.SchoolSchedule {
+
     /// <summary>
     /// 课程表中的节次
     /// </summary>
     /// <example>
     /// 第一周星期一上午第二节
     /// </example>
-    public class Section
-    {
+    public class Section {
         private List<SectionContent> theContents = new List<SectionContent>();
+        private List<IRule> theConstraints = new List<IRule>();
+
         /// <summary>
         /// 教学周
         ///     从第0周开始计数,但是教学周从1开始，0为模版
@@ -93,23 +87,43 @@ namespace XStudio.SchoolSchedule
         /// <summary>
         /// 内容
         /// </summary>
-        public List<SectionContent> Contents
-        {
+        public List<SectionContent> Contents {
             get {
-                if (LinkTo != null)
-                {
+                if(LinkTo != null) {
                     return LinkTo.Contents;
                 }
                 return theContents;
             }
             set {
-                if (LinkTo != null)
-                {
+                if(LinkTo != null) {
                     LinkTo.Contents = value;
                 }
                 theContents = value;
             }
         }
+
+        /// <summary>
+        /// 约束条件，只能排，不能排，限制条件
+        /// </summary>
+        public List<IRule> Constraints {
+            get => theConstraints;
+            set => theConstraints = value;
+        }
+
+        /// <summary>
+        /// 节次冲突内容
+        /// </summary>
+        public List<Conflict> Conflicts { get; set; } = new List<Conflict>();
+
+        /// <summary>
+        /// 冲突数量
+        /// </summary>
+        public int ConflictCount { get { return Conflicts.Count; } }
+
+        /// <summary>
+        /// 是否有冲突
+        /// </summary>
+        public bool HasConflicts { get { return Conflicts.Any(); } }
 
         /// <summary>
         /// 节次状态
@@ -133,8 +147,7 @@ namespace XStudio.SchoolSchedule
         /// <param name="day">星期几，如果不设置，默认使用当前节次的星期</param>
         /// <param name="week">第几教学周，默认为0</param>
         /// <returns></returns>
-        public void SetSectionCode(int period, DayOfWeek day, int week = 0)
-        { 
+        public void SetSectionCode(int period, DayOfWeek day, int week = 0) {
             this.Day = day;
             Period = period;
             Code = $"{week:D2}{(int)day}{period:D2}";
@@ -147,9 +160,18 @@ namespace XStudio.SchoolSchedule
         /// Contents.Sort((x, y) => x.Index.CompareTo(y.Index));
         /// </summary>
         /// <param name="content"></param>
-        public void AddSectionContent(SectionContent content)
-        {
+        public void AddSectionContent(SectionContent content) {
             Contents.Add(content);
+        }
+
+        /// <summary>
+        /// 添加内容
+        /// 添加完成后注意排序
+        /// Contents.Sort((x, y) => x.Index.CompareTo(y.Index));
+        /// </summary>
+        /// <param name="content"></param>
+        public void AddSectionConstraint(IRule content) {
+            Constraints.Add(content);
         }
 
         /// <summary>
@@ -170,16 +192,15 @@ namespace XStudio.SchoolSchedule
     /// 节次内容
     ///     显示: 课程、教师、场所、时间、规则
     /// </summary>
-    public class SectionContent : IContent<IRule>
-    {
+    public class SectionContent : IContent<IRule> {
+
         /// <summary>
         /// 内容
         /// </summary>
         /// <param name="index"> 内容序号 </param>
         /// <param name="rule"> 规则 </param>
         /// <param name="interval"> 周间隔 </param>
-        public SectionContent(int index, IRule rule, int interval = 0)
-        { 
+        public SectionContent(int index, IRule rule, int interval = 0) {
             Content = rule;
             WeeklyInterval = interval;
             Index = index;
@@ -205,58 +226,66 @@ namespace XStudio.SchoolSchedule
     /// 节次类型
     ///     传染类型，与节次绑定后，节次放入课程后，课程类型会自动继承节次类型
     /// </summary>
-    public enum SectionType
-    {
+    public enum SectionType {
+
         /// <summary>
         /// 无类型，非教学课
         ///     若节次设置为此类型时，表示节次不参与任何课程，节次不允许任何操作；
         ///     若课程限制类型设置为此类型时，表示课程不限制任何节次类型，可以放入(自习、正课授课)；
         /// </summary>
         None = -1,
+
         /// <summary>
         /// 早自习 - 教学课  (早读、早早读)
         /// </summary>
-        MorningStudy = 0, // 早间自习  
+        MorningStudy = 0, // 早间自习
+
         /// <summary>
         /// 正课授课 - 教学课
         /// </summary>
         RegularClass,     // 正课授课
+
         /// <summary>
         /// 课间活动 - 非教学课
         /// </summary>
         BreakExercise,    // 课间活动
+
         /// <summary>
         /// 午间自习 - 教学课
         /// </summary>
         AfternoonStudy,   // 午间自习
+
         /// <summary>
         /// 午休时段 - 教学课
         /// </summary>
         NoonBreak,        // 午休时段
+
         /// <summary>
         /// 晚间自习 - 教学课
         /// </summary>
         EveningStudy,     // 晚间自习
-        
     }
 
     /// <summary>
     /// 节次状态
     /// </summary>
-    public enum SectionStatus
-    {
+    public enum SectionStatus {
+
         /// <summary>
         /// 正常
         /// </summary>
         Normal,
+
         /// <summary>
         /// 锁定
         /// </summary>
         Lock,
+
         /// <summary>
         /// 禁用
         /// </summary>
         Disable,
+
         /// <summary>
         /// 未启用
         ///     与禁用的区别在于，未启用只是一个占位符号，一旦设置不参与一切活动；禁用此次操作禁止操作，如规则冲突、禁止交换等

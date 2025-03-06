@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using XStudio.SchoolSchedule.Enums;
 
 namespace XStudio.SchoolSchedule.Rules {
 
@@ -11,6 +7,7 @@ namespace XStudio.SchoolSchedule.Rules {
     ///     在集中备课教研组内的老师不能排课，只能参加集中备课教学。
     /// </summary>
     public class CentralizedLessonPreparation : IRule {
+
         public CentralizedLessonPreparation(PriorityMode priority,
                                             RuleMode mode,
                                             ClassCourseRule classCourse,
@@ -26,18 +23,19 @@ namespace XStudio.SchoolSchedule.Rules {
         /// </summary>
         public override string DisplayName {
             get {
-                switch (Mode) {
+                switch(Mode) {
                     case RuleMode.Course:
                         return $"{ClassCourse.DisplayName}\r\n({GetDescription(Type)})";
+
                     case RuleMode.Teacher:
                         return $"{ClassCourse.TeacherName}\r\n({GetDescription(Type)})";
+
                     default:
                         break;
                 }
                 return "无";
             }
         }
-
 
         /// <summary>
         /// 课程和老师信息

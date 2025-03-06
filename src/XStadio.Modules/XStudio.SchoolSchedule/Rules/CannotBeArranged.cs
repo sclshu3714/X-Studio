@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using XStudio.SchoolSchedule.Constraints;
+using XStudio.SchoolSchedule.Enums;
 
 namespace XStudio.SchoolSchedule.Rules {
 
@@ -11,12 +7,13 @@ namespace XStudio.SchoolSchedule.Rules {
     /// 不能排
     ///     指定位置(星期+节次)在指定班级(或者全部班级)内不能排指定的课程或者指定老师的课程
     /// </summary>
-    public class CannotBeArranged : IRule, IConstraint {
-        public CannotBeArranged(PriorityMode priority, RuleMode mode, ClassCourseRule classCourse, Tuple<DayOfWeek, int> location)
+    public class CannotBeArranged : Constraint {
+
+        public CannotBeArranged(PriorityMode priority, RuleMode mode, List<ClassCourseRule> classCourses, Tuple<DayOfWeek, int>? location)
             : base(priority, mode, RuleType.CannotBeArranged) {
             Location = location;
-            ClassCourse = classCourse;
-            Code = classCourse.Code;
+            ClassCourses = classCourses;
+            Code = string.Join(",", classCourses.Select(x => x.Code));
         }
 
         /// <summary>
@@ -24,11 +21,13 @@ namespace XStudio.SchoolSchedule.Rules {
         /// </summary>
         public override string DisplayName {
             get {
-                switch (Mode) {
+                switch(Mode) {
                     case RuleMode.Course:
-                        return $"{ClassCourse.DisplayName}\r\n({GetDescription(Type)})";
+                        return $"{string.Join(",", ClassCourses.Select(x => x.DisplayName))}\r\n({GetDescription(Type)})";
+
                     case RuleMode.Teacher:
-                        return $"{ClassCourse.TeacherName}\r\n({GetDescription(Type)})";
+                        return $"{string.Join(",", ClassCourses.Select(x => x.TeacherName))}\r\n({GetDescription(Type)})";
+
                     default:
                         break;
                 }
@@ -39,6 +38,6 @@ namespace XStudio.SchoolSchedule.Rules {
         /// <summary>
         /// 课程和老师信息
         /// </summary>
-        public ClassCourseRule ClassCourse { get; set; }
+        public List<ClassCourseRule> ClassCourses { get; set; } = new List<ClassCourseRule>();
     }
 }

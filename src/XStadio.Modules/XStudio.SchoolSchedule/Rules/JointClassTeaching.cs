@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using XStudio.SchoolSchedule.Enums;
 
 namespace XStudio.SchoolSchedule.Rules {
 
@@ -10,6 +6,7 @@ namespace XStudio.SchoolSchedule.Rules {
     /// 合班
     /// </summary>
     public class JointClassTeaching : IRule {
+
         /// <summary>
         /// 合班课
         /// </summary>
@@ -37,13 +34,12 @@ namespace XStudio.SchoolSchedule.Rules {
         /// </summary>
         public override string DisplayName {
             get {
-                if (Course != null) {
+                if(Course != null) {
                     return $"{Course.Name}\r\n({GetDescription(Type)})";
                 }
                 return "无";
             }
         }
-
 
         /// <summary>
         /// 合并课程

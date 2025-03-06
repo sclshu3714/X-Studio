@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using XStudio.SchoolSchedule.Enums;
 
 namespace XStudio.SchoolSchedule.Rules {
+
     public class ConsecutiveClasses : IRule {
+
+        public ConsecutiveClasses()
+                : base(PriorityMode.Highest, RuleMode.Course, RuleType.ConsecutiveClasses) {
+        }
+
         /// <summary>
         /// 连堂课
         /// </summary>
@@ -20,6 +22,7 @@ namespace XStudio.SchoolSchedule.Rules {
             Mode = RuleMode.Course;
             Code = classCourse.Code;
         }
+
         /// <summary>
         /// 连堂课
         /// </summary>
@@ -33,12 +36,13 @@ namespace XStudio.SchoolSchedule.Rules {
             ClassHour = classHour;
             Code = classCourse.Code;
         }
+
         /// <summary>
         /// 显示名称
         /// </summary>
         public override string DisplayName {
             get {
-                if (ClassCourse != null) {
+                if(ClassCourse != null) {
                     return $"{ClassCourse.DisplayName}\r\n({GetDescription(Type)})";
                 }
                 return "无";

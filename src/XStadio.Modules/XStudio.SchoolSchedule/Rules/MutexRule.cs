@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using XStudio.SchoolSchedule.Enums;
 
 namespace XStudio.SchoolSchedule.Rules {
 
@@ -11,9 +7,9 @@ namespace XStudio.SchoolSchedule.Rules {
     ///     两个老师不能同时上课
     /// </summary>
     public class MutexRule : IRule {
+
         public MutexRule(PriorityMode priority, ClassCourseRule CourseA, ClassCourseRule CourseB)
            : base(priority, RuleMode.Course, RuleType.Mutex) {
-
         }
     }
 }

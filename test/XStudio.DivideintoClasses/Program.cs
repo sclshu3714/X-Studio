@@ -5,8 +5,9 @@ using System.Security.Authentication;
 using XStudio.DivideintoClasses.Excels;
 using XStudio.DivideintoClasses.Test;
 using XStudio.SchoolSchedule;
+using XStudio.SchoolSchedule.Enums;
 using XStudio.SchoolSchedule.Rules;
-using DayOfWeek = XStudio.SchoolSchedule.DayOfWeek;
+using DayOfWeek = XStudio.SchoolSchedule.Enums.DayOfWeek;
 
 
 
@@ -35,9 +36,9 @@ classSchedule.SetSectionTimePeriod(new List<int>() { 9 }, "中午", SectionType.
 classSchedule.SetSectionTimePeriod(new List<int>() { 10, 11, 12, 13 }, "下午", SectionType.RegularClass); // 35 = 98
 classSchedule.SetSectionTimePeriod(new List<int>() { 14, 15, 16 }, "晚上", SectionType.EveningStudy);     // 21 = 119
 // 设置通栏即合并单元格 - 不参与排课与自动排课
-classSchedule.SetColumnSpan(DayOfWeek.Monday, 5, 7); // 设置第5|8|9节从周1到周日合并单元格(通栏) - 不参与排课与自动排课
-classSchedule.SetColumnSpan(DayOfWeek.Monday, 8, 7);
-classSchedule.SetColumnSpan(DayOfWeek.Monday, 9, 7);
+classSchedule.SetColumnSpan(classSchedule.LayoutOfWeek.First(), 5, 7); // 设置第5|8|9节从周1到周日合并单元格(通栏) - 不参与排课与自动排课
+classSchedule.SetColumnSpan(classSchedule.LayoutOfWeek.First(), 8, 7);
+classSchedule.SetColumnSpan(classSchedule.LayoutOfWeek.First(), 9, 7);
 // 排课 总课时: 16 * 7 = 112; 早读: 2 * 7 = 14 课时; 正课: 8 * 7 = 56 课时; 晚自习: 3 * 7 = 21 课时; 课间操: 1 * 7 = 7 课时; 午休: 2 * 7 = 14 课时;
 List<string> ClassCourseList = new() { "语文", "数学", "英语", "物理", "化学", "生物", "历史", "地理", "政治", "公共课", "体育", "美术", "音乐", "舞蹈", "戏剧", "电影", "健康课", "心理课", "综合课" };
 Dictionary<string, ClassCourseRule> classCourses = ClassCourseList.ToDictionary(k => k, v => new ClassCourseRule() { Name = v, Mode = RuleMode.Course, Priority = PriorityMode.Medium, Type = RuleType.None });

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using XStudio.SchoolSchedule.Rules;
+﻿using XStudio.SchoolSchedule.Rules;
+
+/*
+ * 1. 一个排课方案只有一个年级有多个班 - 查询年级节次方案 - 排课 - 跨班级验证
+ * 2. 一个排课方案有多个年级只有多个班 - 先按照年级分组 - 遍历年级 - 查询年级节次方案 - 排课 - 跨年级班级验证
+ * 3. 验证: 只验证本方案数据; 跨指定方案验证(不能跨任意方案验证)
+ */
 
 namespace XStudio.SchoolSchedule.Algorithms {
 
@@ -13,6 +12,7 @@ namespace XStudio.SchoolSchedule.Algorithms {
     /// 启发式算法
     /// </summary>
     public class HeuristicScheduler {
+
         // 锁对象
         private readonly object locker = new object();
 
@@ -45,17 +45,53 @@ namespace XStudio.SchoolSchedule.Algorithms {
         ///     作用类型是老师的只能排、互斥与同步
         /// 互斥与同步: 未指定时间的，两个老师在整个周期内互斥或者同步；   指定时间坐标的，两个老师在指定时间坐标互斥或者同步(指定位置不一定有这两个老师的课)。
         /// </example>
-        public bool StartAutoAssignCourses(SchedulerType schedulerType, ClassSchedule classSchedule, List<IRule> courses, List<IRule>? constraint) {
-            switch (schedulerType) {
+        public bool StartAutoAssignCourses(SchedulerType schedulerType, ClassSchedule classSchedule, List<IRule> courses, List<IRule> constraint) {
+            // 验证需要安排的课程占用的课时是否超过课表的容量, 否则无法分配
+            if(!classSchedule.Sections.Any()) {
+                // 课表为空，无法分配
+                return false;
+            }
+            else if(!courses.Any()) {
+                // 科目为空，无法分配
+                return false;
+            }
+            else if(!classSchedule.VerifyCourseHours(courses)) {
+                // 课表课时不足，无法分配
+                return false;
+            }
+            switch(schedulerType) {
                 case SchedulerType.Greedy:
                     return StartGreedyAssignCourses(classSchedule, courses, constraint);
+
                 case SchedulerType.Backtrack:
                     return StartBacktrackingAssignCourses(classSchedule, courses, constraint);
-                    case SchedulerType.Genetic:
+
+                case SchedulerType.Genetic:
                     return StartGeneticAssignCourses(classSchedule, courses, constraint);
+
+                case SchedulerType.ML:
+                    return StartMLAssignCourses(classSchedule, courses, constraint);
+
                 default:
                     return false;
             }
+        }
+
+        /// <summary>
+        /// 使用机器学习算法自动分配课程
+        /// </summary>
+        /// <param name="classSchedule"></param>
+        /// <param name="courses"></param>
+        /// <param name="constraint"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        private bool StartMLAssignCourses(ClassSchedule classSchedule, List<IRule> courses, List<IRule>? constraint) {
+            MLCourseScheduler geneticScheduler = new MLCourseScheduler();
+            if(geneticScheduler.StartAutoAssignCourses(classSchedule, courses, constraint)) {
+                return true;
+            }
+            NoAssignCourses = string.Join(",", geneticScheduler.NoAssignCourses);
+            return false;
         }
 
         /// <summary>
@@ -66,9 +102,9 @@ namespace XStudio.SchoolSchedule.Algorithms {
         /// <param name="constraint"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        private bool StartGeneticAssignCourses(ClassSchedule classSchedule, List<IRule> courses, List<IRule>? constraint) {
+        private bool StartGeneticAssignCourses(ClassSchedule classSchedule, List<IRule> courses, List<IRule> constraint) {
             GeneticScheduler geneticScheduler = new GeneticScheduler();
-            if (geneticScheduler.StartAutoAssignCourses(classSchedule, courses, constraint)) {
+            if(geneticScheduler.StartAutoAssignCourses(classSchedule, courses, constraint)) {
                 return true;
             }
             NoAssignCourses = string.Join(",", geneticScheduler.NoAssignCourses);

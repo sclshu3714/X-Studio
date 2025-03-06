@@ -11,8 +11,8 @@ using System.Windows.Media.Imaging;
 using XStudio.School.Timetable.Models;
 using XStudio.School.Timetable.ViewModels;
 using XStudio.SchoolSchedule;
+using XStudio.SchoolSchedule.Enums;
 using XStudio.SchoolSchedule.Rules;
-using DayOfWeek = XStudio.SchoolSchedule.DayOfWeek;
 
 namespace XStudio.School.Timetable.Views.ContentViews {
     /// <summary>
@@ -121,19 +121,35 @@ namespace XStudio.School.Timetable.Views.ContentViews {
                 return;
             }
             Section draggedSection = sectionControlViewModel.classSchedule[draggedCell.Day, draggedCell.Row.Period];
-            if (draggedSection.Contents.Any(x => x.Content.Type == RuleType.CanOnlyArrange)) {
+            Section targetSection = sectionControlViewModel.classSchedule[targetCell.Day, targetCell.Row.Period];
+            if(draggedSection.Constraints.FirstOrDefault(x => x.Type == RuleType.CanOnlyArrange) is CanOnlyArrange theDCanOnlyArrange &&
+               !targetSection.Contents.Any(x => theDCanOnlyArrange.Code.Contains(x.Content.Code))) {
                 // 包含只能排课，不能交换
                 return;
             }
-            Section targetSection = sectionControlViewModel.classSchedule[targetCell.Day, targetCell.Row.Period];
-            if (targetSection.IsMergeCell || targetSection.LinkTo != null || targetSection.Status != SectionStatus.Normal || targetSection.Type != draggedSection.Type) {
+            else if(targetSection.Constraints.FirstOrDefault(x => x.Type == RuleType.CanOnlyArrange) is CanOnlyArrange theTCanOnlyArrange &&
+               !draggedSection.Contents.Any(x => theTCanOnlyArrange.Code.Contains(x.Content.Code))) {
+                // 包含只能排课，不能交换
                 return;
             }
-            if (targetCell.Day == draggedCell.Day && targetCell.Row.Period == draggedCell.Row.Period) {
+            else if(draggedSection.Constraints.FirstOrDefault(x => x.Type == RuleType.CannotBeArranged) is CannotBeArranged theDCannotBeArranged &&
+               targetSection.Contents.Any(x => theDCannotBeArranged.Code.Contains(x.Content.Code))) {
+                // 包含只能排课，不能交换
                 return;
             }
-            if (targetSection.Contents.FirstOrDefault(x => x.Content.Type == RuleType.ConsecutiveClasses)?.Content is ConsecutiveClasses theConsecutiveClasses ||
-                targetSection.Contents.FirstOrDefault(x => x.Content.Type == RuleType.CanOnlyArrange)?.Content is CanOnlyArrange theCanOnlyArrange) {
+            else if(targetSection.Constraints.FirstOrDefault(x => x.Type == RuleType.CannotBeArranged) is CannotBeArranged theTCannotBeArranged &&
+               draggedSection.Contents.Any(x => theTCannotBeArranged.Code.Contains(x.Content.Code))) {
+                // 包含只能排课，不能交换
+                return;
+            }
+            else if(targetSection.IsMergeCell || targetSection.LinkTo != null || 
+                targetSection.Status != SectionStatus.Normal || targetSection.Type != draggedSection.Type) {
+                return;
+            }
+            else if (targetCell.Day == draggedCell.Day && targetCell.Row.Period == draggedCell.Row.Period) {
+                return;
+            }
+            if (targetSection.Contents.FirstOrDefault(x => x.Content.Type == RuleType.ConsecutiveClasses)?.Content is ConsecutiveClasses theConsecutiveClasses) {
                 // 目标位置有连堂课/只能排时 不能交换
                 return;
             }
