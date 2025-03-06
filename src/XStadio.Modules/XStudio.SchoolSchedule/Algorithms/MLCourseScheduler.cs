@@ -1,4 +1,5 @@
-﻿using XStudio.SchoolSchedule.Rules;
+﻿using XStudio.SchoolSchedule.Constraints;
+using XStudio.SchoolSchedule.Rules;
 
 namespace XStudio.SchoolSchedule.Algorithms {
 
@@ -24,7 +25,7 @@ namespace XStudio.SchoolSchedule.Algorithms {
         /// <param name="courses">需要分配的课程</param>
         /// <param name="constraint">课程约束条件</param>
         /// <returns>是否成功分配</returns>
-        public bool StartAutoAssignCourses(ClassSchedule classSchedule, List<IRule> courses, List<IRule>? constraint) {
+        public bool StartAutoAssignCourses(ClassSchedule classSchedule, List<IRule> courses, List<IConstraint>? constraint) {
             // 清空之前的冲突记录
             NoAssignCourses = null;
             // TODO: 使用ML.Net实现自动排课功能

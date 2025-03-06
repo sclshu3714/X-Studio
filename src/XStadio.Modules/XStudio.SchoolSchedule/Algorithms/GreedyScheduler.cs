@@ -1,4 +1,5 @@
-﻿using XStudio.SchoolSchedule.Enums;
+﻿using XStudio.SchoolSchedule.Constraints;
+using XStudio.SchoolSchedule.Enums;
 using XStudio.SchoolSchedule.Rules;
 
 namespace XStudio.SchoolSchedule.Algorithms {
@@ -38,7 +39,7 @@ namespace XStudio.SchoolSchedule.Algorithms {
         ///     作用类型是老师的只能排、互斥与同步
         /// 互斥与同步: 未指定时间的，两个老师在整个周期内互斥或者同步；   指定时间坐标的，两个老师在指定时间坐标互斥或者同步(指定位置不一定有这两个老师的课)。
         /// </example>
-        public bool StartAutoAssignCourses(ClassSchedule classSchedule, List<IRule> courses, List<IRule>? constraint) {
+        public bool StartAutoAssignCourses(ClassSchedule classSchedule, List<IRule> courses, List<IConstraint>? constraint) {
             NoAssignCourses = null;
             if(constraint != null && constraint.Count > 0) {
                 // 先检查约束, 看看是否存在只能排，如果存在只能排，则优先排只能排的课程
@@ -59,7 +60,7 @@ namespace XStudio.SchoolSchedule.Algorithms {
         /// <returns></returns>
         private bool AutoAssignCourses(ClassSchedule classSchedule,
                                         List<IRule> courses,
-                                        List<IRule> constraint) {
+                                        List<IConstraint> constraint) {
             var noAssignCoursesList = new List<string>(); // 记录无法分配的课程
             foreach(IRule rule in courses) {
                 // 获取可用节次

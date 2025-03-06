@@ -4,7 +4,7 @@ using XStudio.SchoolSchedule.Rules;
 namespace XStudio.SchoolSchedule.Constraints {
 
     [Serializable]
-    public class Constraint : IRule, IConstraint {
+    public class Constraint : IConstraint {
 
         public Constraint(string id) : base(id) {
         }

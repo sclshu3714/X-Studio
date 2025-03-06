@@ -15,6 +15,7 @@ using System.Xml;
 using XStudio.School.Timetable.Models;
 using XStudio.SchoolSchedule;
 using XStudio.SchoolSchedule.Algorithms;
+using XStudio.SchoolSchedule.Constraints;
 using XStudio.SchoolSchedule.Enums;
 using XStudio.SchoolSchedule.Rules;
 
@@ -229,7 +230,7 @@ namespace XStudio.School.Timetable.ViewModels {
             Dictionary<string, ClassCourse> pairs = classCourses.ToDictionary(k => k.Name, v => v);
             Dictionary<string, ClassCourseRule> topicRules = ToClassCourseRules(pairs);
             List<IRule> rules = DefaultRules(pairs);
-            List<IRule> constraint = DefaultConstraint(topicRules);
+            List<IConstraint> constraint = DefaultConstraint(topicRules);
             NoAssignCourses = null;
             algorithm.StartAutoAssignCourses(SchedulerType.Genetic, classSchedule, rules, constraint);
             NoAssignCourses = algorithm.NoAssignCourses;
@@ -276,7 +277,7 @@ namespace XStudio.School.Timetable.ViewModels {
                 Dictionary<string, ClassCourse> pairs = classCourses.ToDictionary(k => k.Name, v => v);
                 Dictionary<string, ClassCourseRule> topicRules = ToClassCourseRules(pairs);
                 List<IRule> rules = DefaultRules(pairs);
-                List<IRule> constraint = DefaultConstraint(topicRules);
+                List<IConstraint> constraint = DefaultConstraint(topicRules);
                 NoAssignCourses = null;
                 algorithm.StartAutoAssignCourses(SchedulerType.Genetic, classSchedule, rules, constraint);
                 NoAssignCourses = algorithm.NoAssignCourses;
@@ -341,8 +342,8 @@ namespace XStudio.School.Timetable.ViewModels {
         /// </summary>
         /// <param name="classCourses"></param>
         /// <returns></returns>
-        private List<IRule> DefaultConstraint(Dictionary<string, ClassCourseRule> classCourses) {
-            List<IRule> constraint = new() {
+        private List<IConstraint> DefaultConstraint(Dictionary<string, ClassCourseRule> classCourses) {
+            List<IConstraint> constraint = new() {
                 new CanOnlyArrange(PriorityMode.Highest, RuleMode.Course, classCourses["语文"], Tuple.Create(DayOfWeek.Monday, 3)),
                 new CanOnlyArrange(PriorityMode.Highest, RuleMode.Course, classCourses["数学"], Tuple.Create(DayOfWeek.Wednesday, 3)),
                 new CannotBeArranged(PriorityMode.Highest, RuleMode.Course, new List<ClassCourseRule>() { classCourses["语文"], classCourses["数学"] }, Tuple.Create(DayOfWeek.Thursday, 3)),
@@ -498,7 +499,7 @@ namespace XStudio.School.Timetable.ViewModels {
         /// <param name="constraint">约束</param>
         /// <param name="index"></param>
         /// <returns></returns>
-        private bool AutoAssignCourses(ClassSchedule classSchedule, List<IRule> courses, List<IRule> constraint, int index) {
+        private bool AutoAssignCourses(ClassSchedule classSchedule, List<IRule> courses, List<IConstraint> constraint, int index) {
             if(index >= courses.Count) {
                 return true; // 所有课程都成功分配
             }

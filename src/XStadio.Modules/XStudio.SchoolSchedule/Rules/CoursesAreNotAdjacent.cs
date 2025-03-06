@@ -1,4 +1,5 @@
-﻿using XStudio.SchoolSchedule.Enums;
+﻿using XStudio.SchoolSchedule.Constraints;
+using XStudio.SchoolSchedule.Enums;
 
 namespace XStudio.SchoolSchedule.Rules {
 
@@ -6,7 +7,7 @@ namespace XStudio.SchoolSchedule.Rules {
     /// 课程不能相邻
     ///      指定的课程不能在相邻的节次上课，相邻指的是中间无间隔的节次
     /// </summary>
-    public class CoursesAreNotAdjacent : IRule {
+    public class CoursesAreNotAdjacent : IConstraint {
 
         public CoursesAreNotAdjacent(PriorityMode priority, List<ClassCourseRule> classCourses)
             : base(priority, RuleMode.Course, RuleType.CoursesAreNotAdjacent) {

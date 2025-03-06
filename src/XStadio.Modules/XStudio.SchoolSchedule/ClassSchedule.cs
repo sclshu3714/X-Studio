@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using XStudio.SchoolSchedule.Constraints;
 using XStudio.SchoolSchedule.Enums;
 using XStudio.SchoolSchedule.Rules;
 
@@ -471,7 +472,7 @@ namespace XStudio.SchoolSchedule {
         /// <param name="course">规则</param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Section? GetAvailableSections(IRule rule, SectionType regularClass, List<IRule> constraint) {
+        public Section? GetAvailableSections(IRule rule, SectionType regularClass, List<IConstraint> constraint) {
             if(rule == null) {
                 return null;
             }
@@ -494,10 +495,10 @@ namespace XStudio.SchoolSchedule {
         /// </summary>
         /// <param name="regularClass"></param>
         /// <returns></returns>
-        private Section? GetAvailableOtherSections(IRule rule, SectionType regularClass, List<IRule> constraint) {
+        private Section? GetAvailableOtherSections(IRule rule, SectionType regularClass, List<IConstraint> constraint) {
             // 优先获取约束中只能排的节次
             Section? section = null;
-            IRule? canOnlyArrangeRule = constraint.FirstOrDefault(r =>
+            IConstraint? canOnlyArrangeRule = constraint.FirstOrDefault(r =>
                                             r.Code.Contains(rule.Code) &&
                                             r.Type == RuleType.CanOnlyArrange);
             if(canOnlyArrangeRule != null) {
@@ -530,7 +531,7 @@ namespace XStudio.SchoolSchedule {
         /// 获取连堂课的可用的节次
         /// </summary>
         /// <returns></returns>
-        private Section? GetAvailableConsecutiveClassesSections(IRule rule, SectionType regularClass, List<IRule> constraint) {
+        private Section? GetAvailableConsecutiveClassesSections(IRule rule, SectionType regularClass, List<IConstraint> constraint) {
             var availableContinuousSections = this.Sections.GroupBy(d => d.Day) // 根据星期分组
                                                            .SelectMany(t => t.GroupBy(s => s.TimePeriod) // 根据时间段分组
                                                                .SelectMany(g => g.Zip(g.Skip(1), (first, second) => new { first, second }) // 使用 Zip 结合相邻元素
@@ -589,7 +590,7 @@ namespace XStudio.SchoolSchedule {
         /// <param name="course"></param>
         /// <param name="constraint"></param>
         /// <returns></returns>
-        public Tuple<bool, string> CanAssign(Section? section, IRule course, List<IRule>? constraint) {
+        public Tuple<bool, string> CanAssign(Section? section, IRule course, List<IConstraint>? constraint) {
             if(section == null) {
                 return new Tuple<bool, string>(false, "没有获取到可用节次");
             }
@@ -608,7 +609,7 @@ namespace XStudio.SchoolSchedule {
         /// <param name="course"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Tuple<bool, string> HasCourseConflict(Section? section, IRule course, List<IRule>? constraint) {
+        public Tuple<bool, string> HasCourseConflict(Section? section, IRule course, List<IConstraint>? constraint) {
             if(section == null) {
                 return new Tuple<bool, string>(false, "没有获取到可用节次");
             }
@@ -631,7 +632,7 @@ namespace XStudio.SchoolSchedule {
         /// <param name="course"></param>
         /// <param name="rule"></param>
         /// <returns></returns>
-        private Tuple<bool, string> VerifyCourseConflict(Section section, IRule course, IRule rule) {
+        private Tuple<bool, string> VerifyCourseConflict(Section section, IRule course, IConstraint rule) {
             switch(rule.Type) {
                 case RuleType.CanOnlyArrange: // 只能排课，
                     return VerifyCanOnlyArrange(section, course, rule);
@@ -659,7 +660,7 @@ namespace XStudio.SchoolSchedule {
         /// <param name="rule"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        private Tuple<bool, string> VerifyCanOnlyArrange(Section section, IRule course, IRule rule) {
+        private Tuple<bool, string> VerifyCanOnlyArrange(Section section, IRule course, IConstraint rule) {
             CanOnlyArrange canOnlyArranged = (CanOnlyArrange)rule;
             if(!canOnlyArranged.Code.Contains(course.Code) &&
                canOnlyArranged.Location?.Item1 == section.Day &&
@@ -679,7 +680,7 @@ namespace XStudio.SchoolSchedule {
         ///     true: 课程相邻了
         ///     false: 课程没相邻
         /// </returns>
-        private Tuple<bool, string> VerifyCoursesAreNotAdjacent(Section section, IRule course, IRule rule) {
+        private Tuple<bool, string> VerifyCoursesAreNotAdjacent(Section section, IRule course, IConstraint rule) {
             CoursesAreNotAdjacent notAdjacent = (CoursesAreNotAdjacent)rule;
             Section? upSection = this[section.Day, section.Period - 1];   // 前一节次
             Section? downSection = this[section.Day, section.Period + 1]; // 后一节次
@@ -701,7 +702,7 @@ namespace XStudio.SchoolSchedule {
         /// <param name="course"></param>
         /// <param name="rule"></param>
         /// <returns></returns>
-        private Tuple<bool, string> VerifyCentralizedLessonPreparation(Section section, IRule course, IRule rule) {
+        private Tuple<bool, string> VerifyCentralizedLessonPreparation(Section section, IRule course, IConstraint rule) {
             CentralizedLessonPreparation centralizedLessonPreparation = (CentralizedLessonPreparation)rule;
             if(centralizedLessonPreparation.Location?.Item1 == section.Day &&
                 centralizedLessonPreparation.Location?.Item2 == section.Period &&
@@ -718,7 +719,7 @@ namespace XStudio.SchoolSchedule {
         /// <param name="course"></param>
         /// <param name="rule"></param>
         /// <returns></returns>
-        private Tuple<bool, string> VerifyCannotBeArranged(Section section, IRule course, IRule rule) {
+        private Tuple<bool, string> VerifyCannotBeArranged(Section section, IRule course, IConstraint rule) {
             CannotBeArranged cannotBeArranged = (CannotBeArranged)rule;
             if(cannotBeArranged.Code.Contains(course.Code) &&
                 cannotBeArranged.Location?.Item1 == section.Day &&
@@ -743,17 +744,20 @@ namespace XStudio.SchoolSchedule {
         /// <param name="courses">需要安排的课程集合</param>
         /// <param name="enumerable">只能排课程集合</param>
         /// <exception cref="NotImplementedException"></exception>
-        public void RunCanOnlyArrange(List<IRule> courses, IEnumerable<IRule> enumerables) {
+        public void RunCanOnlyArrange(List<IRule> courses, IEnumerable<IConstraint> enumerables) {
             foreach(var enumerable in enumerables) {
                 CanOnlyArrange canOnlyArrange = (CanOnlyArrange)enumerable;
                 IEnumerable<IRule> theCourses = courses.FindAll(c => c.Code == canOnlyArrange.Code && c.Type == RuleType.None);
                 if(theCourses.Any() && canOnlyArrange.Location != null) {
                     DayOfWeek day = canOnlyArrange.Location.Item1;
                     int period = canOnlyArrange.Location.Item2;
-                    Section section = this[day, period];
-                    AddSectionContent(section.Code, new SectionContent(0, canOnlyArrange));
+                    Section? section = this[day, period];
+                    if(section != null) {
+                        IRule theCourse = theCourses.First();
+                        AddSectionContent(section.Code, new SectionContent(0, theCourse));
+                        courses.Remove(theCourse);
+                    }
                 }
-                courses.Remove(theCourses.First());
             }
         }
 

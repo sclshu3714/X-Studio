@@ -3,6 +3,7 @@ using Serilog;
 using System.Collections.Concurrent;
 using System.Data;
 using System.Diagnostics;
+using XStudio.SchoolSchedule.Constraints;
 using XStudio.SchoolSchedule.Enums;
 using XStudio.SchoolSchedule.Rules;
 
@@ -53,7 +54,7 @@ namespace XStudio.SchoolSchedule.Algorithms {
         /// <param name="courses">需要分配的课程</param>
         /// <param name="constraint">课程约束条件</param>
         /// <returns>是否成功分配</returns>
-        public bool StartAutoAssignCourses(ClassSchedule classSchedule, List<IRule> courses, List<IRule> constraint) {
+        public bool StartAutoAssignCourses(ClassSchedule classSchedule, List<IRule> courses, List<IConstraint> constraint) {
             if(courses == null || courses.Count == 0)
                 return false;
             constraint.ForEach(rule => {
@@ -109,7 +110,7 @@ namespace XStudio.SchoolSchedule.Algorithms {
         /// <summary>
         /// 初始化种群
         /// </summary>
-        private List<ClassSchedule> InitializePopulation(ClassSchedule baseSchedule, List<IRule> courses, List<IRule> constraint) {
+        private List<ClassSchedule> InitializePopulation(ClassSchedule baseSchedule, List<IRule> courses, List<IConstraint> constraint) {
             var population = new ConcurrentQueue<ClassSchedule>();
             var random = new Random();
             Parallel.For(0, PopulationSize, i => {
@@ -204,7 +205,7 @@ namespace XStudio.SchoolSchedule.Algorithms {
         /// <summary>
         /// 评估适应度
         /// </summary>
-        private double EvaluateFitness(ClassSchedule schedule, List<IRule> courses, List<IRule>? constraint) {
+        private double EvaluateFitness(ClassSchedule schedule, List<IRule> courses, List<IConstraint>? constraint) {
             int totalCourses = courses.Count;
             int placedCourses = 0;
 
@@ -278,7 +279,7 @@ namespace XStudio.SchoolSchedule.Algorithms {
         /// <summary>
         /// 变异
         /// </summary>
-        private List<ClassSchedule> Mutation(List<ClassSchedule> population, ClassSchedule baseSchedule, List<IRule> courses, List<IRule>? constraint) {
+        private List<ClassSchedule> Mutation(List<ClassSchedule> population, ClassSchedule baseSchedule, List<IRule> courses, List<IConstraint>? constraint) {
             var random = new Random();
 
             for(int i = 0; i < population.Count; i++) {
@@ -341,7 +342,7 @@ namespace XStudio.SchoolSchedule.Algorithms {
             ClassSchedule schedule,
             ClassSchedule baseSchedule,
             List<IRule> courses,
-            List<IRule>? constraint) {
+            List<IConstraint>? constraint) {
             string json = JsonConvert.SerializeObject(schedule, jsonSettings);
             var mutatedSchedule = JsonConvert.DeserializeObject<ClassSchedule>(json, jsonSettings);
             if(mutatedSchedule == null)

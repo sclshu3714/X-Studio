@@ -1,4 +1,5 @@
-﻿using XStudio.SchoolSchedule.Enums;
+﻿using XStudio.SchoolSchedule.Constraints;
+using XStudio.SchoolSchedule.Enums;
 
 namespace XStudio.SchoolSchedule.Rules {
 
@@ -6,7 +7,7 @@ namespace XStudio.SchoolSchedule.Rules {
     /// 集中备课
     ///     在集中备课教研组内的老师不能排课，只能参加集中备课教学。
     /// </summary>
-    public class CentralizedLessonPreparation : IRule {
+    public class CentralizedLessonPreparation : IConstraint {
 
         public CentralizedLessonPreparation(PriorityMode priority,
                                             RuleMode mode,

@@ -1,4 +1,5 @@
-﻿using XStudio.SchoolSchedule.Rules;
+﻿using XStudio.SchoolSchedule.Constraints;
+using XStudio.SchoolSchedule.Rules;
 
 namespace XStudio.SchoolSchedule {
 
@@ -10,7 +11,7 @@ namespace XStudio.SchoolSchedule {
     /// </example>
     public class Section {
         private List<SectionContent> theContents = new List<SectionContent>();
-        private List<IRule> theConstraints = new List<IRule>();
+        private List<IConstraint> theConstraints = new List<IConstraint>();
 
         /// <summary>
         /// 教学周
@@ -105,7 +106,7 @@ namespace XStudio.SchoolSchedule {
         /// <summary>
         /// 约束条件，只能排，不能排，限制条件
         /// </summary>
-        public List<IRule> Constraints {
+        public List<IConstraint> Constraints {
             get => theConstraints;
             set => theConstraints = value;
         }
@@ -170,7 +171,7 @@ namespace XStudio.SchoolSchedule {
         /// Contents.Sort((x, y) => x.Index.CompareTo(y.Index));
         /// </summary>
         /// <param name="content"></param>
-        public void AddSectionConstraint(IRule content) {
+        public void AddSectionConstraint(IConstraint content) {
             Constraints.Add(content);
         }
 
@@ -198,7 +199,7 @@ namespace XStudio.SchoolSchedule {
         /// 内容
         /// </summary>
         /// <param name="index"> 内容序号 </param>
-        /// <param name="rule"> 规则 </param>
+        /// <param name="rule"> 规则(课程、单双周、轮巡、合班) </param>
         /// <param name="interval"> 周间隔 </param>
         public SectionContent(int index, IRule rule, int interval = 0) {
             Content = rule;
